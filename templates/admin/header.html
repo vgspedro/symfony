@@ -1,0 +1,80 @@
+
+<!-- Top container -->
+<div class="w3-card-2 w3-bar w3-top w3-large w3-white" style="z-index:9999999">
+  <span style="cursor:pointer" class="w3-bar-item" onclick="w3_open()">
+    <i class="fa-2x fa fa-bars"></i>
+  </span>
+  <span class="w3-bar-item w3-right" style="color: #05788D;line-height: 40px">Taruga Tours</span>
+</div>
+
+<!-- Sidebar/menu -->
+
+<nav class="w3-sidebar w3-hide w3-collapse w3-white w3-animate-left w3-border-right" style="z-index:999999;margin-top: 48px">
+  <br>
+  <div class="w3-container w3-row">
+    <div class="w3-col s12 w3-center">
+      <i style="cursor:pointer" onclick="w3_open()" class="w3-right fa-2x fas fa-times fa-fw"></i>
+      <img src="{{ asset('images/logo.png') }}" style=" z-index: -1;position: absolute;left: 0;margin-top: -60px;width: 196px;opacity: 0.15">
+    </div>
+    <div class="w3-col s12 w3-center">
+      <span>Olá, 
+        <b class="js-user-rating" style="text-transform:capitalize" data-is-authenticated="{{ app.user ? 'true' : 'false' }}">{{ app.user.username }}</b>
+      </span>
+    </div>
+  </div>
+  <div class="w3-bar-block">
+    <a href="#" onclick="ajaxUpload(this.id)" id="dashboard" class="nav w3-bar-item w3-button w3-padding w3-sand w3-border-top w3-border-brown">
+      <i class="fas fa-tachometer-alt"></i> Painel Controlo
+    </a>
+    <div class="w3-dropdown-click">
+      <button onclick="dropDownMenu('category')" class="w3-tooltip nav w3-hover-grey w3-bar-item w3-padding w3-sand w3-border-top w3-border-brown">
+        <i class="fa fa-tags fa-fw"></i> Categorias</button>
+      <div id="category" class="w3-dropdown-content w3-bar-block" style="position:relative">
+        <a href="#" onclick="ajaxUpload(this.id)" id="category-new" class="w3-right-align nav w3-border-brown w3-border-bottom w3-border-top w3-bar-item w3-button w3-padding">
+          <i class="far fa-plus-square fa-fw"></i> Nova
+        </a>
+        <a href="#" onclick="ajaxUpload(this.id)" id="category-list" class="w3-right-align nav w3-bar-item w3-button w3-padding">
+          <i class="far fa-edit fa-fw"></i> Editar
+        </a>
+      </div>
+    </div>
+
+    <a href="#" onclick="ajaxUpload(this.id)" id="booking" class="nav w3-bar-item w3-button w3-padding w3-sand w3-border-top w3-border-brown">
+      <i class="far fa-calendar-alt fa-fw"></i> Reservas
+    </a>
+    <a href="#" onclick="ajaxUpload(this.id)" id="block-date-edit" class="nav w3-bar-item w3-button w3-padding w3-sand w3-border-top w3-border-brown">
+      <i class="fas fa-calendar-times fa-fw"></i> Bloquear Datas
+    </a>
+    <a href="#" onclick="ajaxUpload(this.id)" id="easy-text" class="nav w3-bar-item w3-button w3-padding w3-sand w3-border-top w3-border-brown">
+      <i class="fas fa-signal"></i> Texto Facil
+    </a>
+    <a href="#" onclick="ajaxUpload(this.id)" id="warning" class="nav w3-bar-item w3-button w3-padding w3-sand w3-border-top w3-border-brown">
+      <i class="fa fa-exclamation-triangle fa-fw"></i> Aviso
+    </a>
+    <a href="#" onclick="ajaxUpload(this.id)" id="app-users" class="nav w3-bar-item w3-button w3-padding w3-sand w3-border-top w3-border-brown">
+      <i class="fas fa-user-shield"></i> Utilizadores
+    </a>
+    <a href="#" onclick="ajaxUpload(this.id)" id="rgpd" class="nav w3-bar-item w3-button w3-padding w3-sand w3-border-top w3-border-brown">
+      <i class="far fa-file-alt"></i> Rgpd
+    </a>
+    <a href="{{ path('index') }}" target="_blank" class="w3-bar-item w3-button w3-padding w3-sand w3-border-top w3-border-brown">
+      <i class="fas fa-external-link-alt fa-fw"></i> Ver Site
+    </a>
+    <a href="{{ path('logout') }}" class="w3-bar-item w3-button w3-padding w3-sand w3-border-top w3-border-bottom w3-border-brown">
+      <i class="fas fa-sign-out-alt fa-fw"></i> Sair
+    </a>
+    <br><br>
+  </div>
+</nav>
+
+<i class="fas fa-user-circle"></i>
+
+<div class="w3-overlay w3-animate-opacity" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay">
+    <div class="w3-display-container" style="height:100vh">
+      <div class="w3-display-middle">
+        <i class="w3-text-white fas fa-4x fa-spinner fa-pulse"></i>
+      </div>
+    </div>
+</div>
+<div class="w3-margin-top"> 
+ <!-- Header -->

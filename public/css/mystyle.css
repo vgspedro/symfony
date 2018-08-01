@@ -1,0 +1,490 @@
+@font-face {
+    font-family: 'weather';
+    src: url('../font/artill_clean_icons-webfont.eot');
+    src: url('../font/artill_clean_icons-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../font/artill_clean_icons-webfont.woff') format('woff'),
+         url('../font/artill_clean_icons-webfont.ttf') format('truetype'),
+         url('../font/artill_clean_icons-webfont.svg#artill_clean_weather_iconsRg') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'taruga';
+    src: url('../font/taruga_font.eot');
+    src: url('../font/taruga_font.eot?#iefix') format('embedded-opentype'),
+         url('../font/taruga_font.woff') format('woff'),
+         url('../font/taruga_font.ttf') format('truetype'),
+         url('../font/taruga_font.svg') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif;}
+
+body, html {height: 100%; color: #05788d;line-height: 1.8; font-weight:600}
+
+.ggl{padding: 8px 0px}
+
+body{min-width:300px!important}
+
+.bootstrap-datetimepicker-widget table td.day,.bootstrap-datetimepicker-widget table th {line-height: 25px}
+
+
+@keyframes fade {
+    from { opacity: 1.0; }
+    50% { opacity: 0.4; }
+    to { opacity: 1.0; }
+}
+ 
+@-webkit-keyframes fade {
+    from { opacity: 1.0; }
+    50% { opacity: 0.4; }
+    to { opacity: 1.0; }
+}
+ 
+.blink {
+    animation:fade 3000ms infinite;
+    -webkit-animation:fade 3000ms infinite;
+}
+
+
+table.dataTable thead > tr > th {padding-left: 8px;padding-right: 20px}
+.buttons-columnVisibility{margin-bottom: 8px}
+.buttons-columnVisibility.active{background: #FFF!important;color:#000!important}
+.buttons-columnVisibility{background: #818181!important;color:#FFF!important}
+.pagination>li:first-child>a, .pagination>li:first-child>span {border-top-left-radius: 0px;border-bottom-left-radius: 0px}
+.pagination>li>a, .pagination>li>span {padding: 12px 16px}
+.pagination>li:last-child>a, .pagination>li:last-child>span {border-top-right-radius: 0px;border-bottom-right-radius: 0px}
+
+a{text-decoration: none!important}
+
+.w3-dropdown-click, .w3-dropdown-hover { display: block}
+
+.equipa-img img {margin-bottom: 12px}
+
+.no-txt-dec{text-decoration:none!important}
+
+.ticket-cont {margin:0 auto; width:90%}
+
+.reservas-cont{color:#05788d!important}
+
+.mymap{width:100%; height:375px;-webkit-filter: grayscale(50%);filter: grayscale(50%)}
+
+.lang-only{width:110px;height:10px;margin:-3px}
+
+.font-30{font-size: 30px}
+
+.font-22{font-size:22px}
+
+.font-20{font-size: 20px}
+
+.font-17{font-size: 17px}
+
+.banner-img{width:100%;margin-bottom: -9px}
+
+.nav-desk-ytb{ padding: 16px 16px 0px 5px}
+
+.nav-desk-inst{padding: 16px 2px 0px 5px}
+
+.nav-desk-fcb {padding: 16px 2px 0px 0px}
+
+.w3-text-left{text-align:left}
+
+.nav-desk-center {margin-left:calc(50% - 315px)}
+
+.nav-desk-right-top{padding: 0px 10px}
+
+.nav-desk-socials{margin-top: 14px}
+
+.socials-mob{display:inline-flex; margin-left: 17px}
+
+.lang-mob{display:inline-flex; margin-left:62px}
+
+.width-100p{width:100%}
+
+.precos-cont, .equipa-cont{width:85%; margin:0 auto}
+
+.w3-overlay{cursor:pointer;z-index:99999920}
+
+.w3-sidenav{display:none; z-index:99999930}
+
+.w3-top{z-index:999}
+
+.qr-code{width:110px; padding: 1px; border: 1px solid #05788d}
+
+[readonly]{ cursor: default;-moz-user-select: none; user-select: none}
+
+.bold{font-weight: bold}
+
+.nav-text-m {font-size: 17px; text-transform: capitalize}
+
+.w630, .w370, .w304, .w696{ width:99.9999%; margin-top: 3px;padding:0;}
+
+.padding-top-100{padding: 24px 0px 24px 0px;}
+
+.g-recaptcha{width:304px; margin: 0 auto;}
+
+.form-control, .input-group-addon{ background: none!important; border-radius: 0px; border-top: 0px; border-left: 0px; border-bottom: 3px solid #05788d;color: #05788d;font-size: 19px;border-right: 0px;}
+
+.form-control{padding: 0px 0px 0px 4px; padding-bottom: 13px;-webkit-box-shadow: inset 0 0px 0px rgba(0,0,0,.0)!important;box-shadow: inset 0 0px 0px rgba(0,0,0,.0)!important;}
+
+.mrg-bt10{margin-bottom:-10px;}
+
+.input-group-addon{border: 0px;}
+
+.w3-t-tour{color: #05788d}
+
+.input-group{padding-top: 20px;display: block}
+
+.form-group { padding: 28px 5px;margin-top: 10px;margin-bottom: 0px;}
+
+/* Create a Parallax Effect */
+.bgimg-1, .bgimg-2, .bgimg-3, .bgimg-4, .bgimg-5, .bgimg-6,.bgimg-7{background-attachment: fixed;background-position: center;background-repeat: no-repeat;background-size: cover;}
+
+.bgimg-1 {background-image: url('../images/onde_estamos.jpg');}
+
+.bgimg-2 {background-image: url('../images/equipa.jpg');}
+
+.bgimg-3 {background-image: url('../images/info.jpg');}
+
+.bgimg-4 {background-image: url('../images/infoimportante.jpg');}
+
+.bgimg-5 {background-image: url('../images/horario.jpg');}
+
+.bgimg-6 {background-image: url('../images/ticket.jpg');}
+
+.bgimg-7 {background-image: url('../images/contatos.jpg');}
+
+.rope-1 {background-image: url(../images/rope_1.png);background-size: cover;background-repeat: no-repeat;height: 41px;position: absolute;margin-top: -23px;width: 100%;z-index:1;}
+
+.top{right: -5px;width: 62px;position: fixed;bottom: 10px;z-index:2;}
+
+.w3-animate-zoomOut {-webkit-animation: animatezoomout 0.6s;animation: animatezoomout 0.6s;}
+
+@-webkit-keyframes animatezoomout{
+0% { transform: scale(1);}
+100% {transform: scale(0);}
+}
+
+@keyframes animatezoomout{
+0% { transform: scale(1);}
+100% {transform: scale(0);}
+}
+
+.loader {border: 15px solid #FFF;border-radius: 50%;position: absolute;border-top: 15px solid #FF0000;width: 120px;border-bottom: 15px solid #FF0000;height: 120px;left: -60px;z-index: 999;-webkit-animation: spin 3s linear infinite;animation: spin 3s linear infinite;}
+
+.loader-mob{width:200px; height:200px; left:-100px;top: -80px;
+  border: 25px solid #FFF;
+  border-top: 25px solid #FF0000;
+  border-bottom: 25px solid #FF0000
+}
+
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.logo-lg {background-image: url(../images/logo.png); width: 130px;height: 153px;background-repeat: no-repeat;position: absolute;background-size: contain;z-index: 1;left: 20px}
+.logo-md{background-image: url(../images/logo.png);width: 103px;height: 119px;background-repeat: no-repeat;position: absolute;
+background-size: contain;top: 3px;left: 5px;z-index:1}
+.logo-sm {
+background-image: url(../images/logo_mobile.jpg);width: 65%;height: 40px;background-repeat: no-repeat;position: absolute;background-size: contain;z-index: 1;left: 15px;top: 15%}
+
+.rope-2 {background-image: url('../images/rope_2.png'); background-size: cover; background-repeat: no-repeat; height: 41px;position: absolute; margin-top: -23px; width: 100%; z-index:1;}
+
+.no-cave-rides{background:rgba(255, 40, 40,0.65);width: 100%; color: #FFF; white-space: nowrap;}
+
+a.lang-action{padding: 2px 10px!important;color: #05788d;}
+
+.active-lang {color: #FFF!important;background: #05788d;}
+
+.team-images{width:100%;margin-bottom: -8px; cursor:pointer;}
+
+a.nav-text{text-align: center;color:#05788d;}
+
+a.nav-text-m{text-align: left;color:#05788d;}
+
+.opacity{opacity: 1;}
+
+a.ball-link{ border-radius: 50%; border: 2px solid;color:#05788d; margin-top: 10px;}
+
+.border-top-bottom{ border-top:2px solid #05788d; border-bottom:2px solid #05788d;}
+
+.mySlides{padding-top: 61px;}
+
+.w3-navbar{border-top:1px solid #05788d;background: rgba(255,255,255,1);border-bottom:1px solid #05788d;}
+
+.w3-wide {letter-spacing: 10px;}
+
+.w3-hover-opacity {cursor: pointer;}
+
+.w3-input{background: transparent;border-bottom: 3px solid #05788d;}
+
+.circle-lg{width:160px;height:160px;margin:0 auto;margin-bottom: -10px!important;padding: 3px;background: #05788d;}
+
+.circle-lg-inner{border-radius: 50%;width:100%;height: 100%;border: 3px solid #FFF;}
+
+.circle-sm {margin-top: -74px;margin-left: 110px;width:65px;border:3px solid #FFF;cursor:pointer;}
+
+.circle-txt{text-align: center;margin: -10px;}
+
+.w3-quarter{padding-top:20px;}
+
+::-webkit-input-placeholder { color: #05788d!important;opacity: 1}
+
+::-moz-placeholder {color: #05788d!important;opacity: 1}
+
+:-ms-input-placeholder { color: #05788d!important;opacity: 1}
+
+:-moz-placeholder {color: #05788d!important; opacity: 1}
+
+.my-btn{background-color: transparent;color :#05788d;border: 2px solid #05788d;}
+
+input, select, textarea{color: #05788d!important;}
+
+.w3-navbar li a {padding: 8px;float: left;}
+.tickets-container{padding: 10px 10px;border: 1px solid #05788d}
+.opacity-05{opacity: 0.05}
+
+.pt:hover, .en:hover, .fa-bars:hover, .fa-times:hover{color:#333!important;opacity:0.8}
+
+.fa-bars{color: #05788d}
+
+.mobile-call{text-decoration:none;}
+
+.totop{background-color: #05788d;}
+
+.margin-5{margin:5px;}
+
+.circle-sm:hover, .ta-28:hover,.mobile-call:hover,.team-images:hover, .totop:hover, .links:hover, .input-group-addon:hover,.qr-code:hover {-webkit-filter: grayscale(75%);filter: grayscale(75%);}
+
+.w3-sidenav a:hover, .w3-navbar li a:hover {color: #444;background-color: transparent;-webkit-filter: grayscale(75%);filter: grayscale(75%)}
+
+.fa-facebook{font-size: 20px;border: 2px solid #05788d;border-radius: 50%;padding: 5px 9px 5px 9px;color:#05788d;}
+
+.fa-info{ border: 5px solid #006280;border-radius: 50%;padding: 6px 12px 6px 27px;color: #006280;}
+
+.fa-instagram{font-size: 20px;border: 2px solid #05788d;border-radius: 50%;padding: 5px 6px 5px 6px;color:#05788d;}
+
+.fa-youtube{ font-size: 20px; border: 2px solid #05788d;border-radius: 50%;padding: 5px 6px 5px 6px; color:#05788d;}
+
+.marquee { padding: 6px 0px 0px 0px; width: 100%;margin: 0 auto;overflow: hidden;white-space: nowrap;box-sizing: border-box; animation: marquee 100s linear infinite; -webkit-animation: marquee 50s linear infinite;}
+
+.table-condensed>tbody>tr>td, .table-condensed>tbody>tr>th, .table-condensed>tfoot>tr>td, .table-condensed>tfoot>tr>th, .table-condensed>thead>tr>td, .table-condensed>thead>tr>th {padding: 2px!important; border: 3px solid #FFF!important;}
+
+
+.bootstrap-datetimepicker-widget table td.disabled{
+ background:  rgba(255,0,0,0.45);
+  color: #FFF
+}
+
+.bootstrap-datetimepicker-widget table td.disabled:hover{
+ background:  rgba(255,0,0,0.75);
+  color: #FFF
+  /*text-decoration: line-through;*/
+}
+
+.w3-select-input{margin-top: 12px}
+
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+       -webkit-appearance: none;
+    margin: 0;
+}
+
+
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type=number] {
+    -moz-appearance:textfield;
+}
+
+
+.mgl{padding-left:0px; padding-right:0px;}
+
+.mgr{padding-right:15px; padding-left:0px;}
+
+
+@-webkit-keyframes marquee {
+    0%   { text-indent: 27.5em }
+    100% { text-indent: -105em }
+}
+
+/* Make it move */
+@keyframes marquee {
+    0%   { text-indent: 27.5em }
+    100% { text-indent: -105em }
+}
+
+.marquee:hover {animation-play-state: paused}
+
+.nav-container{padding:2px 0px; background:#FFF;}
+
+.info-txt{padding:10px 0px;}
+
+.weather i, .weather-mob i {color: #05788d;font-family: weather;font-size: 34px;font-weight: normal;font-style: normal;line-height: 1.0;text-transform: none;}
+
+.weather p, .weather-mob p {color: #05788d;}
+
+a, a:active, a:focus, button, button:focus, button:active, input, input:focus, input:active{outline: none !important;}
+
+.icon-0:before { content: ":"; }
+.icon-1:before { content: "p"; }
+.icon-2:before { content: "S"; }
+.icon-3:before { content: "Q"; }
+.icon-4:before { content: "S"; }
+.icon-5:before { content: "W"; }
+.icon-6:before { content: "W"; }
+.icon-7:before { content: "W"; }
+.icon-8:before { content: "W"; }
+.icon-9:before { content: "I"; }
+.icon-10:before { content: "W"; }
+.icon-11:before { content: "I"; }
+.icon-12:before { content: "I"; }
+.icon-13:before { content: "I"; }
+.icon-14:before { content: "I"; }
+.icon-15:before { content: "W"; }
+.icon-16:before { content: "I"; }
+.icon-17:before { content: "W"; }
+.icon-18:before { content: "U"; }
+.icon-19:before { content: "Z"; }
+.icon-20:before { content: "Z"; }
+.icon-21:before { content: "Z"; }
+.icon-22:before { content: "Z"; }
+.icon-23:before { content: "Z"; }
+.icon-24:before { content: "E"; }
+.icon-25:before { content: "E"; }
+.icon-26:before { content: "3"; }
+.icon-27:before { content: "a"; }
+.icon-28:before { content: "A"; }
+.icon-29:before { content: "a"; }
+.icon-30:before { content: "A"; }
+.icon-31:before { content: "6"; }
+.icon-32:before { content: "1"; }
+.icon-33:before { content: "6"; }
+.icon-34:before { content: "1"; }
+.icon-35:before { content: "W"; }
+.icon-36:before { content: "1"; }
+.icon-37:before { content: "S"; }
+.icon-38:before { content: "S"; }
+.icon-39:before { content: "S"; }
+.icon-40:before { content: "M"; }
+.icon-41:before { content: "W"; }
+.icon-42:before { content: "I"; }
+.icon-43:before { content: "W"; }
+.icon-44:before { content: "a"; }
+.icon-45:before { content: "S"; }
+.icon-46:before { content: "U"; }
+.icon-47:before { content: "S"; }
+
+.fa-ta { color:#05788d;font: normal normal normal 14px/1 taruga;font-size: inherit;text-rendering: auto; -webkit-font-smoothing: antialiased;}
+
+.ta-2{font-size: 22px;}
+.ta-28{font-size: 28px;}
+.ta-3{font-size: 33px;}
+.ta-4{font-size: 44px;}
+.ta-5{font-size: 55px;}
+.ta-6{font-size: 66px;}
+.ta-7{font-size: 77px;}
+
+.fa-ta-exclamation-triangle:before { content: "A"; }
+.fa-ta-waves:before { content: "B"; }
+.fa-ta-umbrella:before { content: "C"; }
+.fa-ta-car-parking:before { content: "D"; }
+.fa-ta-sun:before { content: "E"; }
+.fa-ta-booking:before { content: "F"; }
+.fa-ta-team:before { content: "G"; }
+.fa-ta-ticket-shop:before { content: "H"; }
+.fa-ta-boat:before { content: "I"; }
+.fa-ta-marker:before { content: "J"; }
+.fa-ta-euro:before { content: "K"; }
+.fa-ta-wind:before { content: "L"; }
+.fa-ta-email:before { content: "M"; }
+.fa-ta-mobile:before { content: "N"; }
+.fa-ta-contact:before { content: "O"; }
+.fa-ta-schedule:before { content: "P"; }
+.fa-ta-children:before { content: "Q"; }
+.fa-ta-captain:before { content: "R"; }
+.fa-ta-duration:before { content: "S"; }
+.fa-ta-info:before { content: "T"; }
+.fa-ta-n:before { content: "U"; }
+.fa-ta-n:before { content: "V"; }
+
+@font-face {
+    font-family: 'taruga2';
+    src: url('../font/Taru-Regular.eot');
+    src: url('../font/Taru-Regular.eot?#iefix') format('embedded-opentype'),
+         url('../font/Taru-Regular.woff') format('woff'),
+         url('../font/Taru-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+.fa-ta-2 {font: normal normal normal 14px/1 taruga2;font-size: inherit;text-rendering: auto; -webkit-font-smoothing: antialiased;}
+
+.fa-ta-2-kayak:before { content: "O"; }
+.fa-ta-2-kayak1:before { content: "P"; }
+.fa-ta-2-kayak2:before { content: "N"; }
+
+@media only screen and (max-device-width: 1024px) {
+
+.bgimg-1, .bgimg-2, .bgimg-3, .bgimg-4, .bgimg-5, .bgimg-6, .bgimg-7 {background-attachment: scroll;}
+
+}
+
+
+@media only screen and (min-width: 993px){
+
+.padding-top-100{padding: 50px 0px 0px 0px}
+
+.w630{width: 63%;margin-top: 0px} 
+
+.w370{width: 37%;margin-top: 0px} 
+
+.w304{width: 30.4%; margin-top: 0px}
+
+.w696{ width: 69.6%;margin-top: 0px}
+}
+
+
+@media only screen and (max-width: 993px) {
+.mySlides { padding-top: 57px}
+}
+
+
+@media only screen and (max-width: 768px) {
+.mgr{padding:0px}
+.precos-cont{width:100%}
+}
+
+@media only screen and (min-width: 601px){
+
+.padding-top-100{padding: 50px 0px 0px 0px}
+
+.w630{width: 63%; margin-top: 0px} 
+
+.w370{width: 37%; margin-top: 0px} 
+
+.w304{width: 30.4%; margin-top: 0px}
+
+.w696{width: 69.6%;margin-top: 0px}
+
+}
+
+@media only screen and (max-width: 380px){
+
+.mail-txt{font-size:15px;font-weight:bold}
+
+}
+input::-moz-placeholder { opacity:1!important}

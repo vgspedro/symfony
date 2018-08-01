@@ -1,0 +1,79 @@
+<script>
+
+$(function(){
+    ajaxUpload('dashboard')
+})
+
+function ajaxUpload(block){
+    block == 'category-new' || block == 'category-list' ? false : $('#category').removeClass('w3-show')
+
+    switch (block){
+        case 'dashboard': 
+            url = '{{ path("admin_dashboard") }}' 
+        break
+        case 'category-new': 
+            url = '{{ path("admin_category_new") }}' 
+        break
+        case 'category-list': 
+            url = '{{ path("admin_category_list") }}' 
+        break
+        case 'booking': 
+            url = '{{ path("admin_booking") }}' 
+        break
+        case 'block-date-edit': 
+            url = '{{ path("admin_block_date_edit") }}' 
+        break
+        case 'easy-text': 
+            url = '{{ path("admin_easy_text") }}' 
+        break
+        case 'app-users': 
+            url = '{{ path("list_user") }}' 
+        break
+        case 'warning': 
+            url = '{{ path("admin_warning") }}' 
+        break
+        case 'rgpd': 
+            url = '{{ path("admin_rgpd") }}' 
+        break
+    }
+
+    $('.w3-overlay').show() 
+    setTimeout(function(){
+        $.ajax({
+            url:url,
+            type: "POST",
+            async: true,
+            cache:false,
+            success: function (data){
+                $('.nav').removeClass('w3-blue')
+                $('#'+block).addClass('w3-blue')    
+                $('#add').html(data)
+                $('.w3-overlay').hide()
+                $('.w3-sidebar').addClass('w3-hide')
+            },
+            error: function (data){
+                $('.w3-overlay').hide() 
+                $('#modal-error').show()
+            }
+        })
+    }, 500)        
+}
+
+function dropDownMenu(menu) {
+    var x = document.getElementById(menu)
+    if (x.className.indexOf("w3-show") == -1) {
+        x.className += " w3-show"
+    } else { 
+        x.className = x.className.replace(" w3-show", "")
+    }
+}
+
+
+function w3_open() {
+    $('.w3-sidebar').hasClass('w3-hide') ? 
+        $('.w3-sidebar').removeClass('w3-hide') :
+        $('.w3-sidebar').addClass('w3-hide')
+}
+
+
+</script>

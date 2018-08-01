@@ -1,0 +1,174 @@
+
+login:
+    path: /login
+    controller: App\Controller\SecurityController::login
+
+login_clients:
+    path: /login-clients
+    controller: App\Controller\SecurityController::loginClients
+
+logout:
+    path: /logout    
+
+index:
+    path: /
+    controller: App\Controller\HomeController::html
+
+index_translate:
+    path: /translate
+    controller: App\Controller\TranslationController::translate
+
+
+
+###
+# GET CATEGORY BLOCKED DATES
+###
+index_get_blocked_dates:
+    path: /index/get-blocked-dates/
+    controller: App\Controller\BookingController::getBlockedDatesCategory
+    #condition: 'request.isXmlHttpRequest()'
+
+
+index_admin:
+    path: /admin/
+    controller: App\Controller\AdminController::html
+
+####
+# template ajax load with twig
+####
+
+admin_dashboard:
+    path: /admin-dashboard/
+    controller: App\Controller\AdminController::adminDashboard
+
+##
+# CATEGORIES
+##
+
+admin_category_new:
+    path: /admin-category-new/
+    controller: App\Controller\CategoryController::adminCategoryNew
+
+admin_category_list:
+    path: /admin-category-list/
+    controller: App\Controller\CategoryController::adminCategoryList
+
+admin_category_edit:
+    path: /admin-category-edit/
+    controller: App\Controller\CategoryController::adminCategoryEdit
+    condition: 'request.isXmlHttpRequest()'
+
+admin_category_delete:
+    path: /admin-category-delete/
+    controller: App\Controller\CategoryController::adminCategoryDelete
+    #condition: 'request.isXmlHttpRequest()'
+
+##
+# BOOKINGS ADMIN EVENTS
+##
+
+admin_booking:
+    path: /admin-booking/
+    controller: App\Controller\AdminController::adminBooking
+
+admin_booking_search:
+    path: /admin-booking-search
+    controller: App\Controller\AdminController::adminBookingSearch
+    condition: 'request.isXmlHttpRequest()'
+
+admin_booking_set_status:
+    path: /admin-booking-set-status/
+    controller: App\Controller\AdminController::adminBookingSetStatus
+    #condition: 'request.isXmlHttpRequest()'
+
+admin_booking_send_status:
+    path: /admin-booking-send-status/
+    controller: App\Controller\AdminController::adminBookingSendStatus
+    #condition: 'request.isXmlHttpRequest()'
+
+##
+# EASY TEXT
+##
+
+admin_easy_text:
+    path: /admin-easy-text/
+    controller: App\Controller\EasyTextController::EasyText
+    #condition: 'request.isXmlHttpRequest()'
+
+admin_easy_text_delete:
+    path: /admin-easy-text-delete/
+    controller: App\Controller\EasyTextController::EasyTextDelete
+
+##
+# RGPD
+##
+
+admin_rgpd:
+    path: /admin-rgpd/
+    controller: App\Controller\RgpdController::rgpd
+    #condition: 'request.isXmlHttpRequest()'
+
+admin_rgpd_delete:
+    path: /admin-easy-rgpd-delete/
+    controller: App\Controller\RgpdController::rgpdDelete
+
+index_rgpd:
+    path: /index-rgpd/
+    controller: App\Controller\RgpdController::rgpdShow
+    #condition: 'request.isXmlHttpRequest()'
+
+##
+# BLOCK DATES
+##
+
+admin_block_date_edit:
+    path: /admin-block-date-edit/
+    controller: App\Controller\BlockDateController::adminBlockDateEdit
+
+admin_block_date_set_values:
+    path: /admin-block-date-set-values/
+    controller: App\Controller\BlockDateController::adminBlockDateSetValues
+    condition: 'request.isXmlHttpRequest()'
+
+##
+# WARNING
+##
+
+admin_warning:
+    path: /admin-warning/
+    controller: App\Controller\WarningController::adminWarning
+
+admin_warning_edit:
+    path: /admin-warning-edit/
+    controller: App\Controller\WarningController::adminWarningEdit
+
+##
+# USERS
+##
+
+list_user:
+    path: /list-user/
+    controller: App\Controller\UserController::listUser
+
+status_user:
+    path: /status-user/
+    controller: App\Controller\UserController::statusUser
+    #condition: 'request.isXmlHttpRequest()'
+
+delete_user:
+    path: /delete-user/
+    controller: App\Controller\UserController::deleteUser
+    #condition: 'request.isXmlHttpRequest()'
+
+password_user:
+    path: /password-user/
+    controller: App\Controller\UserController::passwordUser
+    #condition: 'request.isXmlHttpRequest()'
+
+##
+# USERS REGISTRY
+##
+
+user_registration:
+    path: /register
+    controller: App\Controller\RegistrationController::register

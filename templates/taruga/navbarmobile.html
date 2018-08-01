@@ -1,0 +1,66 @@
+
+<nav class="w3-sidenav w3-card-2 w3-animate-left w3-hide-large" style="background: #eeeeff" id="mySidenav">
+ 
+ <div class="w3-border-top w3-border-bottom w3-right-align" style="margin-top:2px; padding: 6px 0px 10px 0px">
+ <span onclick="w3_close()" class="w3-transparent w3-margin w3-padding-4" style="cursor:pointer">
+  <i class="fa fa-2x fa-times"></i>
+ <span>
+ </div>
+
+ <span class="w3-center w3-padding-8 weather-mob">&nbsp;</span>
+ 
+ <a href="javascript:void(0)" onclick="navigation('#ondeestamos')" class='w3-padding-8 w3-border-top nav-text-m'>
+  <i class="fa-ta ta-2 fa-ta-marker"></i> - 
+  <span class='ONDEESTAMOS'>{% trans %}link.where_we_are{% endtrans %}</span>
+ </a>
+  
+ <a href="javascript:void(0)" onclick="navigation('#aequipa')" class='w3-padding-8 nav-text-m'>
+  <i class="fa-ta ta-2 fa-ta-team"></i> - 
+  <span class='AEQUIPA'>{% trans %}link.the_team{% endtrans %}</span>
+ </a>
+  
+ <a href="javascript:void(0)" onclick="navigation('#precos')" class='w3-padding-8 nav-text-m'>
+  <i class="fa-ta ta-2 fa-ta-euro"></i> - 
+  <span class='PRECOS'>{% trans %}link.price{% endtrans %}</span>
+ </a>
+
+ <a href="javascript:void(0)" onclick="navigation('#kayak')" class='w3-padding-8 nav-text-m'>
+  <i class="fa-ta-2 w3-xxlarge fa-ta-2-kayak"></i> - 
+  <span class='KAYAKS'>{% trans %}link.kayak{% endtrans %}</span>
+ </a>
+
+ <a href="javascript:void(0)" onclick="navigation('#horarios')" class='w3-padding-8 nav-text-m'>
+  <i class="fa-ta ta-2 fa-ta-schedule"></i> - 
+  <span class='HORARIO'>{% trans %}link.schedule{% endtrans %}</span>
+ </a>
+ 
+ <a href="javascript:void(0)" onclick="navigation('#contatos')" class='w3-padding-8 nav-text-m'>
+  <i class="fa-ta ta-2 fa-ta-contact"></i> - 
+  <span class='CONTATOS'>{% trans %}link.contact{% endtrans %}</span>
+ </a>
+  
+ <a href="javascript:void(0)" onclick="navigation('#reservas')" class='w3-padding-8 nav-text-m'>
+  <i class="fa-ta ta-2 fa-ta-booking"></i> - 
+  <span class='RESERVAS'>{% trans %}link.booking{% endtrans %}</span>
+ </a>
+
+<div class="w3-border-top">
+ <li class='w3-center w3-padding-16 lang-mob'>
+   <a class="lang-action pt active-lang w3-border" href="javascript:void(0)" title="pt_PT" onclick="languages(this.title,1)">PT</a>
+   <a class="w3-border lang-action en" href="javascript:void(0)" title="en_EN" onclick="languages(this.title,2)">EN</a>
+ </li>
+
+</div>
+
+ <li class='w3-center socials-mob'>
+  <a href="https://facebook.com/Taruga-benagil-tours-1429577477372009/" target="_blank">
+   <i class="fa fa-facebook"></i>
+  </a>
+  <a href="https://instagram.com/tarugabenagiltours/" target="_blank">
+   <i class="fa fa-instagram"></i>
+  </a>
+  <a href="https://youtube.com/channel/UCXdOWNzDhQCvrO05cekWV8A" target="_blank">
+   <i class="fa fa-youtube"></i>
+  </a>
+ </li>
+</nav>

@@ -1,0 +1,25 @@
+<section class="w3-row-padding bgimg-2 w3-padding-32" id="aequipa">
+  <div class="w3-padding-16">
+    <h2 class="w3-center">
+      <i class="fa-ta ta-4 fa-ta-team">&nbsp;</i>
+      <span class='AEQUIPA'>{% trans %}link.the_team{% endtrans %}</span>
+    </h2>
+    <div class="w3-row-padding equipa-img">
+      <div class="w3-third">
+      {% for b1 in b1 %}
+        <img class='team-images w3-card-2' alt="Taruga Benagil Tours, caves, Benagil, Algarve, sup" src="{{b1.img|e}}" onclick="onClick(this)">
+      {% endfor %}
+      </div>
+      <div class="w3-third">
+      {% for b2 in b2 %}
+        <img class='team-images w3-card-2' alt="Taruga Benagil Tours, caves, Benagil, Algarve, sup" src="{{b2.img|e}}" onclick="onClick(this)">
+      {% endfor %}
+      </div>
+      <div class="w3-third">
+      {% for b3 in b3 %}
+        <img class='team-images w3-card-2' alt="Taruga Benagil Tours, caves, Benagil, Algarve, sup" src="{{b3.img|e}}" onclick="onClick(this)">
+      {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,366 @@
+<link href="{{ asset('css/bootstrap-datepicker.min.css') }}" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"/>
+<link href="{{ asset('css/admin-booking.css') }}" rel="stylesheet">
+
+<div id="results" class="w3-hide" style="top:66px;right:16px;position: fixed;z-index: 9999999">
+  <span class="w3-center w3-padding w3-light-blue w3-large w3-animate-right" id="results_txt"></span>
+</div>
+
+<header class="w3-container" style="padding-top:22px">
+   <h5><b><i class="far fa-calendar-alt"></i> Reservas</b></h5>
+</header>
+  <div class="w3-row-padding">
+    <div class="w3-col l3 m6 s6 w3-margin-bottom">
+      <div class="w3-container w3-card w3-red w3-padding" onclick="setStatusTable('PENDING')">
+        <div class="w3-left"><i class="far fa-hand-point-up w3-xxxlarge"></i></div>
+        <div class="w3-right">
+          <h3 class="set-pending"></h3>
+        </div>
+        <div class="w3-clear"></div>
+        <h5>Pendentes</h5>
+      </div>
+    </div>
+    <div class="w3-col l3 m6 s6 w3-margin-bottom">
+      <div class="w3-container w3-blue w3-card w3-padding" onclick="setStatusTable('CANCELED')">
+        <div class="w3-left"><i class="far fa-hand-paper w3-xxxlarge"></i></div>
+        <div class="w3-right">
+          <h3 class="set-canceled"></h3>
+        </div>
+        <div class="w3-clear"></div>
+        <h5>Canceladas</h5>
+      </div>
+    </div>
+    <div class="w3-col l3 m6 s6 w3-margin-bottom">
+      <div class="w3-container w3-green w3-card w3-padding" onclick="setStatusTable('CONFIRMED')">
+        <div class="w3-left"><i class="far fa-thumbs-up w3-xxxlarge"></i></div>
+        <div class="w3-right">
+          <h3 class="set-confirmed"></h3>
+        </div>
+        <div class="w3-clear"></div>
+        <h5>Confirmadas</h5>
+      </div>
+    </div>
+    <div class="w3-col l3 m6 s6 w3-margin-bottom">
+      <div class="w3-container w3-card w3-black w3-text-white w3-padding" onclick="setStatusTable()">
+        <div class="w3-left"><i class="far fa-hand-peace w3-xxxlarge"></i></div>
+        <div class="w3-right">
+          <h3 class="set-total"></h3>
+        </div>
+        <div class="w3-clear"></div>
+        <h5>Total</h5>
+      </div>
+    </div>
+  </div>
+
+<div class="w3-row-padding w3-sand w3-padding-32 w3-border-top w3-border-bottom w3-large">
+  <div class="w3-col l1 w3-hide-medium w3-hide-small">&nbsp;</div>
+  <div class="w3-col l3 m6 s12 w3-margin-bottom">
+      <input class="w3-input w3-border" id='startDate' readonly type="text" placeholder="&#xF274; Inicio" style="font-family:Raleway, FontAwesome;cursor:pointer">
+  </div>
+    <div class="w3-col l3 m6 s12 w3-margin-bottom">
+      <input class="w3-input w3-border" id='endDate' readonly type="text" placeholder="&#xF273; Fim" style="font-family:Raleway, FontAwesome;cursor:pointer">
+  </div>
+  <div class="w3-col l2 m6 s6">
+    <button class="w3-white w3-border w3-btn w3-block" onclick="clearBookSearch()"><i class="fas fa-eraser"></i> <span class="w3-hide-small">Limpar</span></button>
+  </div>
+  <div class="w3-col l2 m6 s6">
+    <button class="w3-light-green w3-border w3-btn w3-block" onclick="searchValue()"><i class="fab fa-searchengin"></i> <span class="w3-hide-small">Procurar</span></button>
+  </div>
+
+</div>
+
+<div class="w3-row-padding">
+  <div class="w3-col s12">
+  <table id="dataTables" class="w3-border table table-striped centered hover table-bordered" style="width:100%">
+    <thead class="w3-sand">
+      <tr>
+      <th>Reserva</th>    
+      <th>Estado</th>    
+      <th>Tour</th>    
+      <th>Data</th>    
+      <th>Hora</th>    
+      <th>Adulto</th>    
+      <th>Criança</th>    
+      <th>Bébé</th>    
+      <th>Obs</th>    
+      <th>Notas</th>    
+      <th>Cliente</th>    
+      <th>Email</th>    
+      <th>Morada</th>    
+      <th>Telefone</th>    
+      </tr>
+    </thead>
+    <tbody>
+    </tbody>
+    <tfoot class="w3-sand">
+      <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+    </tfoot>
+  </table>
+</div>
+</div>
+
+<script src="{{ asset('js/moment-with-locales.min.js') }}"></script>
+<script src="{{ asset('js/bootstrap-datepicker.min.js') }}"></script>
+
+<script>
+
+  function clearBookSearch(){
+    $('#startDate, #endDate').datepicker('clearDates')
+  }
+
+  $(function(){
+    jQuery('#startDate').datepicker({
+      format: 'dd/mm/yyyy',
+      weekStart: 1,
+      todayHighlight: true,
+      autoclose: true
+    }).on("changeDate",function (e) {
+      jQuery('#endDate').datepicker("setStartDate", e.date)
+    })
+
+    jQuery('#endDate').datepicker({
+      format: 'dd/mm/yyyy',
+      todayHighlight: true,
+      weekStart: 1,
+      autoclose: true
+    }).on("changeDate",function (e) {
+      jQuery('#startDate').datepicker("setEndDate", e.date)
+    })
+
+  tablebooking = [0, 9 , 11, 12, 13]
+
+  if(!localStorage.getItem("tablebooking") ){
+    localStorage.setItem("tablebooking", JSON.stringify(tablebooking))
+    bookingstored = JSON.parse(localStorage.getItem("tablebooking"))
+  }
+  else
+    bookingstored = JSON.parse(localStorage.getItem("tablebooking"))
+  })
+
+  function searchValue(){
+  my_total = 0
+  id_table = []
+  $('.show-results, #results').addClass('w3-hide')
+  $('.w3-overlay').show()
+  data ='startDate='+$('#startDate').val()+'&endDate='+$('#endDate').val() 
+    //console.log(data)
+    setTimeout(function(){
+      table = $('#dataTables').DataTable({
+      dom: 'lBfrtip',
+      rowId: "id",
+      "paging": true,
+      "serverside":true,
+      "drawCallback": function( settings ) {},
+      "ajax": 
+        {
+        "url" :'{{ path('admin_booking_search') }}?'+data,
+        "dataSrc": function (j) {  
+        console.log(j.data)
+        $('.w3-overlay, .table-overlay').hide()
+        if( j.options > 1500){
+          $('#results_txt').html('+ de 1500 resultados, restrinja a pesquisa e tente novamente.')
+          $('#results').removeClass('w3-hide')
+          j.data = []
+          $('.set-total, .set-canceled, .set-confirmed, .set-pending').text('-/-')
+          return j.data
+        }
+        else if (j.options == 0)
+        {
+          $('#results_txt').html('0 resultados')
+          $('#results').removeClass('w3-hide')
+          j.data = []
+          $('.set-total, .set-canceled, .set-confirmed, .set-pending').text('0')
+          return j.data
+        } 
+        else
+        {
+          $('.set-total').text(j.options)
+          $('.set-canceled').text(j.canceled)
+          $('.set-confirmed').text(j.confirmed)
+          $('.set-pending').text(j.pending)
+
+          return j.data
+        }
+      }
+      },
+      order:[],
+      columns: [
+      { data: "booking"},
+      { data: "status", render: function(data, type,row){
+        if (data == 'PENDING') color = 'w3-red'
+        else if (data == 'CANCELED') color = 'w3-blue'
+        else if (data == 'CONFIRMED') color = 'w3-green'
+        
+        return '<button id="'+row.booking+'" class="'+color+' w3-btn w3-border" onclick="modalBookingSetStatus('+row.booking+')">'+row.booking+'#'+data+'</button>'
+      }},
+      { data: "tour"},
+      { data: "date"},
+      { data: "hour"},
+      { data: "adult"},
+      { data: "children"},
+      { data: "baby"},
+      { data: "message"},
+      { data: "notes"},
+      { data: "username"},
+      { data: "email"},
+      { data: "address"},
+      { data: "telephone"}
+    ],
+     "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+    buttons: [
+        {
+        extend:    'excelHtml5',
+        text:      '<i class="far fa-file-excel"></i>',
+        titleAttr: 'Excel',
+        exportOptions: {
+          columns: [2, 3, 4, 5, 6, 7]
+          }
+        },
+        {
+        extend:    'pdfHtml5',
+        text:      '<i class="far fa-file-pdf"></i>',
+        titleAttr: 'PDF',
+        exportOptions: {
+          columns: [ 2, 3, 4, 5, 6, 7]
+          },
+          customize: function (doc) {
+            //doc.content[1].table.widths = Array(doc.content[1].table.body[0].length + 1).join('*').split('')
+              doc['footer']=(function(page, pages) {
+                return {
+                  columns: [
+                    {
+                      alignment: 'right',
+                      text: ['']
+                    },
+                  ],
+                  margin: 20
+                }
+              })
+            }
+        },
+        {
+        extend: 'colvis',
+        columns: ':gt(0)',
+        text:      '<i class="far fa-eye-slash"></i>',
+        titleAttr: 'Colunas',
+        exportOptions: {
+          columns: [ 0, 1, 2, 3, 4,5]
+        }
+      }
+    ],
+    "columnDefs": [
+      //{ className:"my_class", "targets": [4] },
+    //  { "orderData":[ 1 ],   "targets": [ 2 ] },
+        {
+          "targets": tablebooking,
+          "visible": false
+          //"searchable": false
+        }
+    ],
+    language: {
+        "lengthMenu": "Mostrar _MENU_ por pagina",
+        "zeroRecords": "0 Resultados",
+        "info": "Mostrar _PAGE_ de _PAGES_",
+        "infoEmpty": "Sem resultados",
+        "search": "Pesquisar",
+        "paginate": {
+        "previous": "Anterior",
+        "next": "Seguinte",
+        }
+    },
+    "footerCallback": function ( row, data, start, end, display ) {
+          var api = this.api(), data
+          // Remove the formatting to get integer data for summation
+          var intVal = function ( i ) {
+            return typeof i === 'string' ?
+              i.replace(/[\€,]/g, '')*1 :
+              typeof i === 'number' ?
+              i : 0;
+          }
+          // Total over all pages
+        
+        for (k = 5; k<8;k++){
+          total = api
+            .column( k )
+            .data()
+            .reduce( function (a, b) {
+              return intVal(a) + intVal(b)
+            }, 0 )
+            // Total over this page
+            pageTotal = api
+              .column( k, { page: 'current'} )
+              .data()
+              .reduce( function (a, b) {
+                  return intVal(a) + intVal(b);
+              }, 0 )
+            // Update footer
+            $( api.column( k ).footer() ).html(pageTotal+' ('+total+')'
+          )
+        }
+
+        },
+    "destroy": true,
+    responsive: true
+  })
+  .on( 'error.dt', function ( e, settings, techNote, message ) {
+    $('.w3-overlay').hide()
+    $('#modal-error').show()
+    return true
+  })
+    table.ajax.reload()
+    // table.colReorder.order(orderby)
+    table.draw()
+    /*DATATABLE NO ALERT*/
+    $.fn.dataTable.ext.errMode = 'none'
+  $('#dataTables_length, .dt-buttons').addClass('w3-center w3-col s12 m6 l4 w3-section')
+  $('#dataTables_filter').addClass('w3-col s8 m12 l4 w3-center w3-section')
+  }, 750)
+}
+
+function setStatusTable(v){
+  $('input.form-control.input-sm').val(v).trigger("keyup")
+}
+
+function modalBookingSetStatus(bookingId){
+  $('.w3-overlay').show()
+  setTimeout(function(){
+    $.ajax({  
+      url:'{{ path('admin_booking_set_status') }}',
+      type: "POST",
+      data:'id='+bookingId,
+      success: function(data){
+        //console.log(data)
+        $('.w3-overlay').hide()
+        $('#set-booking').html(data)
+        $('#booking-id').text(bookingId)
+        $('#modal-booking-set-status').show()
+        $('#bookingstatus_id').val(bookingId)
+        if(data.data == 'success'){
+        
+        }
+      },
+      error:function(data){
+        $('.w3-overlay').hide()
+        $('#modal-error').show()
+      }
+    })
+  }, 500)
+}
+
+
+</script>

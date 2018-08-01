@@ -1,0 +1,23 @@
+﻿label {margin-top: 8px;margin-bottom:0px}
+.margin-top-8{margin-top: -8px}
+textarea {resize: none}
+.dt-button{background: #FFF;border:1px solid #ccc;
+ display: inline-block; padding: 8px 16px; vertical-align: middle;overflow: hidden;text-decoration: none; color: inherit;
+    background-color: inherit;text-align: center; cursor: pointer; white-space: nowrap;color: #000!important;background-color: #87CEEB!important;font-size:18px}
+select.input-sm, input .form-control .input-sm {height: 36px}
+table.dataTable.dtr-inline.collapsed > tbody > tr > td:first-child:before, table.dataTable.dtr-inline.collapsed > tbody > tr > th:first-child:before {
+    height: 24px;width: 24px;border-radius: 16px; text-align: center;line-height: 23px;font-size: 24px;border-radius: 0px;border: 1px solid #ddd;box-shadow: 0 0 0 #000}
+table.dataTable.dtr-inline.collapsed > tbody > tr > td:first-child, table.dataTable.dtr-inline.collapsed > tbody > tr > th:first-child {padding-left: 38px}
+.dt-button-collection{ width:100%;background: rgba(0,0,0,0.3);position: fixed;left:0px;padding: 96px 16px; z-index:99999;margin-top: 0px!important;top:0px}
+::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+  color: #333;opacity: 0.7;font-size:18px}
+::-moz-placeholder { /* Firefox 19+ */
+  color: #333;opacity: 0.7;font-size:18px}
+:-ms-input-placeholder { /* IE 10+ */
+  color: #333;opacity: 0.7;font-size:18px}
+:-moz-placeholder { /* Firefox 18- */
+  color: #333;opacity: 0.7;font-size:18px}
+  .dropdown-menu  {width:auto!important;border-radius: 0px!important;margin-top: 48px}
+.table-condensed>tbody>tr>td, .table-condensed>tbody>tr>th, .table-condensed>tfoot>tr>td, .table-condensed>tfoot>tr>th, .table-condensed>thead>tr>td, .table-condensed>thead>tr>th {padding: 2px 8px!important;text-align: center}
+.datepicker table tr td.disabled, .datepicker table tr td.disabled:hover {cursor: not-allowed}
+.datepicker-inline {width: 100%}

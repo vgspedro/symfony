@@ -1,0 +1,156 @@
+
+<link href="{{ asset('css/bootstrap-datetimepicker.min.css') }}" rel="stylesheet">
+<style>
+li { list-style-type:none}
+ul{padding: 0px}
+.timepicker{background:#fdf5e6;border:1px solid #DDD;padding: 8px 0px}
+.bootstrap-datetimepicker-widget table td span {border-radius: 0px}
+.bootstrap-datetimepicker-widget table td span:hover {background: #DDD}
+.table-condensed>tbody>tr>td, .table-condensed>tbody>tr>th, .table-condensed>tfoot>tr>td, .table-condensed>tfoot>tr>th, .table-condensed>thead>tr>td, .table-condensed>thead>tr>th {border: 0px solid #FFF!important}
+</style>
+<header class="w3-container" style="padding-top:22px">
+    <h5><b><i class="fa fa-tags"></i> Categoria <i class="far fa-plus-square fa-fw"></i></b></h5>
+</header>
+<style>
+</style>
+
+<div class="w3-container">
+  {{ form_start(form, {'attr': {'id': 'category-form'}})  }}
+    <div class="w3-center w3-padding-16 w3-row-padding w3-large w3-border w3-sand">
+      <div class="w3-col l4 m3 s2">&nbsp;</div>
+        <div class="w3-col l4 m6 s8">
+          {{ form_widget(form.is_active)}}
+        </div>
+      <div class="w3-col l6 m6 s12">
+        {{ form_widget(form.name_pt) }}
+      </div>
+      <div class="w3-col l6 m6 s12">
+        {{ form_widget(form.name_en)}}
+      </div>
+      <div class="w3-col l6 m6 s12">
+        {{ form_widget(form.children_price)}}
+      </div>
+      <div class="w3-col l6 m6 m6 s12">
+        {{ form_widget(form.adult_price)}}
+      </div>
+      <div class="w3-col l6 m12 s12">
+        {{ form_widget(form.description_pt)}}
+      </div>
+        <div class="w3-col l6 m12 s12">
+        {{ form_widget(form.description_en)}}
+      </div>
+      <div class="w3-col l3 m1 s0 w3-hide-small">&nbsp;</div>
+
+      <div class="w3-col l6 m10 s12">
+        
+        <textarea class="w3-input" readonly id="receive-hour" placeholder="Escolha as horas, no relógio, de quando se realiza o evento" rows="2"></textarea>
+        <div class="w3-row-padding w3-margin-top">
+          <div class="w3-col s6">
+            <span class="w3-btn w3-border w3-block w3-white" id="clear-hour"><i class="fa fa-eraser"></i> Limpar</span>
+          </div>
+          <div class="w3-col s6">
+            <span class="w3-btn w3-block w3-border w3-light-green" id="add-hour"><i class="fa fa-check"></i> <span class="w3-hide-small">Adicionar</span> Hora</span>
+          </div>
+        </div>
+        <div class="w3-col s12">
+          <div style="position:relative" class="w3-padding">
+            <input type="text" class="w3-hide" id="datetimepicker3">
+          </div>
+        </div>
+        {{ form_widget(form.event)}}
+      </div>
+
+        {{ form_widget(form.blockdate)}}
+      <div class="w3-hide">
+        {{ form_widget(form.submit)}}
+      </div>
+      <div class="w3-col l6 m0 s0 w3-hide-small w3-hide-medium">&nbsp;</div>
+      <div class="w3-col l3 m6 s6 w3-margin-top w3-margin-bottom">
+        <button type="reset" class="w3-button w3-block w3-border w3-white">
+          <i class="fa fa-eraser"></i> Limpar
+        </button>
+      </div>
+      <div class="w3-col l3 m6 s6 w3-margin-top w3-margin-bottom">
+        <span class="w3-btn w3-block w3-border w3-green" onclick="$('#category-form').trigger('submit')">
+            <i class="fa fa-check"></i> Guardar
+          </span>
+      </div>
+
+  </div>
+      {{ form_end(form) }}
+  </div>
+
+<script src="{{ asset('js/moment-with-locales.min.js') }}"></script>
+<script src="{{ asset('js/bootstrap-datetimepicker.min.js') }}"></script>
+
+<script>
+
+hoursn = []
+uniquen = []
+position = 0
+
+eventObj = $('#category_event').data("prototype")
+blockdateObj = $('#category_blockdate').data("prototype")
+
+$('#category_event').html('<div class="w3-hide">'+eventObj+'</div>')
+
+$('#category_blockdate').html('<div class="w3-hide">'+blockdateObj+'</div>')
+
+$('#clear-hour').click(function(){
+  hoursn = []
+  uniquen = []
+  $('#receive-hour').text('')
+  $('#category_event___name___event').val('')
+})
+
+
+$('#add-hour').click(function(){
+  hoursn.push($('.timepicker-hour').text()+':'+$('.timepicker-minute').text())
+
+  $.each(hoursn, function(i, el){
+    if($.inArray(el, uniquen) === -1) uniquen.push(el)
+  })  
+  $('#receive-hour').text(uniquen)
+  $('#category_event___name___event').val(uniquen)
+  $('#category_blockdate___name___event').val(uniquen)
+})
+
+$('#datetimepicker3').datetimepicker({keepOpen: true,format: 'H:m',stepping:5,inline: true,sideBySide:true, icons: {
+  time: "fa fa-clock-o",
+  date: "fa fa-calendar",
+  up: "fa fa-chevron-up",
+  down: "fa fa-chevron-down"
+  }
+})
+
+  $('#category-form').on('submit',function(e){
+  e.preventDefault()
+  $('.w3-overlay').show()
+  $('.required').addClass('w3-hide')
+  setTimeout(function(){
+    $.ajax({  
+      url:'{{ path('admin_category_new') }}',
+      type: "POST",
+      data:$('#category-form').serialize(),
+      success: function(data){  
+        $('.w3-overlay').hide()
+        if (data.message == 'success'){
+          $('#datetimepicker3').data('DateTimePicker').destroy()
+          ajaxUpload('category-new')
+        }
+        else if (data.message=='fail'){
+          for(i=0;i<data.data.length;i++)
+            $('.'+data.data[i]).removeClass('w3-hide')
+          $('#modal-fields').show()
+        }
+      },
+      error:function(data){
+        $('.w3-overlay').hide()
+        $('#modal-error').show()
+      }
+    })
+  }, 500)
+})
+
+</script>
+

@@ -1,0 +1,538 @@
+<script src="{{ asset('js/jquery-2.1.1.min.js') }}"></script>
+<script src="{{ asset('js/jquery.simpleWeather.min.js') }}"></script>
+<script src="{{ asset('js/moment-with-locales.min.js') }}"></script>
+<script src="{{ asset('js/bootstrap-datetimepicker.min.js') }}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.js"></script>
+<script>
+
+
+
+var video = document.getElementById("video")
+//var video_full = document.getElementById("video_full")
+var btn = document.getElementById("video_btn")
+
+var xhr = new XMLHttpRequest()
+xhr.open('GET', '{{ asset('videos/bg.mp4') }}', true)
+xhr.responseType = 'blob'
+xhr.onload = function(e) {
+  if (this.status == 200) {
+    var myBlob = this.response
+    var vid = (window.webkitURL || window.URL).createObjectURL(myBlob)
+    var banner = document.getElementById("banner")
+  //  video_full.src = vid
+    video.src = vid
+//    videoLoaded()
+   }
+  }
+
+xhr.send()
+
+function videoLoaded(){
+  setTimeout(function(){
+    banner.classList.add('w3-hide')
+    video_full.classList.remove('w3-hide')
+    btn.classList.remove('w3-hide')
+  },1500)
+}
+
+function mobilePlayVideo() {
+  if (video_full.paused) {
+    video_full.play()
+    $('#mobile').hasClass('w3-show') ? $('#mobile').remove() : false
+    btn.innerHTML = '<i class="fa fa-pause"></i>'
+  } else {
+    video_full.pause()
+    
+
+    btn.innerHTML = '<i class="fa fa-play"></i>'
+  }
+}
+
+
+    window.addEventListener("load", function(){
+        window.cookieconsent.initialise({
+            "palette": {
+                "popup":{"background":"rgba(214,209,156,0.85)","text":"#333"},
+                "button":{"background":"#05788d","text":"#FFF"}},
+                "content": {"message": "{% trans %}cookies.txt{% endtrans %}", 
+                "dismiss": "{% trans %}cookies.btn{% endtrans %}",
+                "link": "{% trans %}cookies.link{% endtrans %}",
+                "href": "https://cookiesandyou.com/"
+            }
+        })
+    })
+
+$('#booking_tourtype option:first-child').addClass('TOUR')
+
+arrTour=[]
+
+$("#booking_tourtype option").each(function(){ 
+  if($(this).val()) { 
+    lang = $(this).attr('class').split('/')
+    tours = {val:$(this).val(), en:lang[0], pt:lang[1]}
+    arrTour.push(tours)}
+})
+
+$('#booking-form').on('submit',function(e){
+  e.preventDefault()
+  $('#booking_submit').attr('disabled',true)
+
+  setTimeout(function(){
+    $('#booking_submit').attr('disabled',false)
+  }, 2500)  
+ 
+  $("#myOverlay, #loader-cont").show()
+  $('.required').addClass('w3-hide')
+
+  setTimeout(function(){
+    $.ajax({ 
+      url:'{{ path('index') }}',
+      type: "POST",
+      data:$('#booking-form').serialize()+'&language='+setLang,
+      success: function(data){  
+        $("#myOverlay, #loader-cont").hide()
+        //console.log(data)
+        if (data.message == 'success'){
+          $('.set-order-id').html(data.data)
+          $('#modal-success').show()
+          $('.at-last').addClass('w3-hide')
+          $('#booking-form').trigger('reset')
+          $('#booking_tourtype, #booking_hour').val('')
+        }        
+        else if (data.message=='fail'){
+          obj=''
+          for(i=0;i<data.data.length;i++)
+            $('.'+data.data[i]).removeClass('w3-hide')
+          $('#modal-fields').show()
+        }
+        else if (data.message=='expired'){
+          console.log(data.session)
+          $('#modal-check').show()
+        }
+      },
+      error:function(data){
+        $("#myOverlay, #loader-cont").hide()
+        $('#modal-error').show()
+      }
+    })
+  }, 500)
+})
+
+
+function languages(vl,tp){
+
+  $("#myOverlay, #loader-cont").show()
+  $.ajax({
+    type: "POST",
+    url :'{{ path('index_translate') }}',
+    data:'lang='+vl,
+    cache:false,
+    dataType:'json',
+    success: function(data) {
+      
+      data = data.data
+      $(".ONDEESTAMOS").html(data.link.where_we_are)
+      $(".AEQUIPA").html(data.link.the_team)
+      $(".PRECOS").html(data.link.price)
+      $(".HORARIO").html(data.link.schedule)
+      $(".CONTATOS").html(data.link.contact)
+      $(".RESERVAS").html(data.link.booking)
+      $(".KAYAKS").html(data.link.kayak)
+
+      $(".INTRO").html(data.part_one.intro)
+      $(".LOCAL").html(data.part_one.local)
+      $(".FIND_US").attr('title',data.part_one.find_us)
+      $(".TICKET_SHOP").html(data.part_one.ticket_shop)
+
+      $(".IMPORTANTINFO").html(data.part_two.important_info)
+      $(".RESERVAS").html(data.part_two.booking)
+      $(".RESERVAS_TXT").html(data.part_two.booking_txt)
+      $(".LUMINOSIDADE").html(data.part_two.light)
+      $(".LUMINOSIDADE_TXT").html(data.part_two.light_txt)
+      $(".ESTACIONAMENTO").html(data.part_two.parking)
+      $(".ESTACIONAMENTO_TXT").html(data.part_two.parking_txt)
+      $(".PARAAVISITA").html(data.part_two.what_to_take)
+      $(".PARAAVISITA_TXT").html(data.part_two.what_to_take_txt)
+      $(".MARES").html(data.part_two.ties)
+      $(".MARES_TXT").html(data.part_two.ties_txt)
+      $(".ATENCAO").html(data.part_two.attention).text(data.part_two.attention)
+      $(".ATENCAO_TXT").html(data.part_two.attention_txt)
+      $(".VERIFIQUE").html(data.part_two.check)
+      $(".DATES_RED_TXT").html(data.part_two.no_bookings_txt)
+
+      $(".ADULTO").html(data.part_tree.adult)
+      $(".CRIANCA").html(data.part_tree.children)
+      $(".DURACAOPASSEIO").html(data.part_tree.duration)
+
+      $(".KAYAK_TXT_INTRO").html(data.part_four.kayak_txt)
+      $(".KAYAK_INFO").html(data.part_four.kayak_txt_i_info)
+      $(".KAYAK_CONDITIONS").html(data.part_four.kayak_txt_conditions)
+      $(".KAYAK_SCHEDULES").html(data.part_four.kayak_schedules)
+      $(".KAYAK_SINGLE").html(data.part_four.kayak_single+' '+data.part_four.kayak_single_price)
+      $(".KAYAK_DOUBLE").html(data.part_four.kayak_double+' '+data.part_four.kayak_double_price)
+      $(".PADDLE").html(data.part_four.paddle+' '+data.part_four.paddle_price)
+
+      $(".HORARIO_TXT").html(data.part_five.schedule_txt)
+      $(".HORARIO_TEMPO1").html(data.part_five.schedule_summer)
+      $(".HORARIO_TEMPO_TXT1").html(data.part_five.schedule_summer_txt)
+      $(".HORARIO_TEMPO2").html(data.part_five.schedule_winter)
+      $(".HORARIO_TEMPO_TXT2").html(data.part_five.schedule_winter_txt)
+      $(".CONTATOS_TXT").html(data.part_six.contact_txt)
+
+      $(".NAME").attr("placeholder",data.part_seven.name).text(data.part_seven.name)
+      $(".ADDRESS").attr("placeholder",data.part_seven.address).text(data.part_seven.address)
+      $(".ADULT").attr("placeholder",data.part_seven.adult).text(data.part_seven.adult)
+      $(".CHILDREN").attr("placeholder",data.part_seven.children).text(data.part_seven.children)
+      $(".BABY").attr("placeholder",data.part_seven.baby).text(data.part_seven.baby)
+      $(".DATE").attr("placeholder",data.part_seven.date).text(data.part_seven.date)
+      $(".MESSAGE").attr("placeholder",data.part_seven.message)
+      $(".EMAIL").attr("placeholder",data.part_seven.email).text(data.part_seven.email)
+      $(".TELEPHONE").attr("placeholder",data.part_seven.telephone).text(data.part_seven.telephone)
+      $(".SUBMIT").text(data.part_seven.submit)
+      $(".HOUR_TXT0, .HOUR_TXT, .HOUR").text(data.part_seven.hour)
+      $(".TOUR").html(data.part_seven.tour)
+      $(".RGPD").text(data.part_seven.rgpd)
+      $(".RGPD_TXT").html(data.part_seven.rgpd_txt)
+      $(".BOOKING").text(data.part_seven.booking)
+      $(".SPAM_TXT").text(data.part_seven.spam_txt)
+      $(".BOOK_EMAIL").text(data.part_seven.book_email)
+      $(".BOOK_PHONE").text(data.part_seven.book_phone)
+      $(".BOOK_AFTER").text(data.part_seven.book_after)
+
+      $(".DATE_HOUR").text(data.info.choose_date_hour)
+      $(".CHOOSE_DATE_CALENDAR").attr("placeholder",data.info.choose_date_calendar)
+      $(".CHOOSE_HOUR").text(data.info.choose_hour)
+
+      $(".CLOSE").text(data.info.close)
+      $(".SAVE").text(data.info.save)
+      $(".ERROR").text(data.error)
+      $(".WIFIERROR").text(data.wifi_error)
+      $(".SUCCESS").text(data.success)
+      $(".ORDER").text(data.order)
+      $(".THANKYOU").text(data.thank_you)
+      
+      $(".MESSAGE_TXT").text(data.part_seven.message)
+
+      $(".ARBITRARY").html(data.arbitrary.txt)
+      $(".ARBITRARY_CENTER").text(data.arbitrary.name)
+      $(".REQUIRED").text(data.required)
+
+      $(".SESSION").text(data.session)
+      $(".CHECK").text(data.check)
+      $(".SESSION_INFO").text(data.session_info)
+
+      $(".cc-dismiss").text(data.cookies.btn)
+      $(".cc-message").html(data.cookies.txt+'<br><a class="cc-link" target="_blank" href="https://cookiesandyou.com/">'+data.cookies.link+'</a>')
+      $(".DATES_RED").val(data.DATES_RED)
+      $(".DATES_RED_TXT").text(data.DATES_RED)
+
+
+      switch (tp){
+        case 1:
+          $(".pt").addClass("active-lang")
+          $('.EN').addClass('w3-hide')
+          $('.PT').removeClass('w3-hide')
+          $(".en").removeClass("active-lang")
+          for(e=0;e<arrTour.length;e++)
+            $('#booking_tourtype option[value="'+arrTour[e].val+'"]').text(arrTour[e].pt)
+        break
+        case 2:
+          $(".en").addClass("active-lang")
+          $(".pt").removeClass("active-lang")
+          $('.PT').addClass('w3-hide')
+          $('.EN').removeClass('w3-hide')
+          for(e=0;e<arrTour.length;e++)
+            $('#booking_tourtype option[value="'+arrTour[e].val+'"]').text(arrTour[e].en)
+        break
+      }
+
+      $("#lang-opt").val(tp)
+      setTimeout(function(){
+        w3_close()
+        $("#myOverlay, #loader-cont").hide()
+      }, 250)
+    },
+
+    error:function(data){
+      console.log(data)
+      alert(data.link.where_we_are)
+      setTimeout(function(){
+        w3_close()
+        $("#myOverlay, #loader-cont").hide()
+      }, 250)
+    }
+  })
+}
+
+
+mySidenav = document.getElementById("mySidenav")
+overlayBg = document.getElementById("myOverlay")
+loader = document.getElementById("loader-cont")
+
+count = 0
+
+path = "https://www.google.pt/maps/@37.087802,-8.4264864,3a,75y,185.03h,76.94t/data=!3m6!1e1!3m4!1s9suOi359S8Fqb6ihifQaAQ!2e0!7i13312!8i6656"
+
+function w3_open() {
+    if (mySidenav.style.display === "block") {
+        mySidenav.style.display = "none"
+         overlayBg.style.display = "none"
+         loader.style.display = "none"
+    } else {
+        mySidenav.style.display = "block"
+         overlayBg.style.display = "block"
+         loader.style.display = "none"
+    }
+}
+
+function w3_close() {
+    mySidenav.style.display = "none"
+    overlayBg.style.display = "none"
+}
+
+
+window.onscroll = function() {myFunction()}
+function myFunction() {
+    var topo = document.getElementById("bt-top")
+    document.body.scrollTop > 4000 || document.documentElement.scrollTop > 4000 ?
+    topo.className = "top w3-animate-zoom w3-hide-small" : 
+    topo.className = topo.className.replace("top w3-animate-zoom w3-hide-small", "top w3-hide w3-hide-small")
+}
+
+function onClick(element) {
+  document.getElementById("img01").src = element.src
+  document.getElementById("modal01").style.display = "block"
+  var captionText = document.getElementById("caption")
+  captionText.innerHTML = element.alt
+}
+
+
+function navigation(pos){
+  w3_close()
+  vl=45
+  $(".nav-space").val() ? vl = vl + parseInt($(".nav-space").val()) : vl
+  $("html, body").animate({
+    scrollTop: $(pos).offset().top -vl
+  }, 1000)
+}
+
+function weather(){
+  $.simpleWeather({
+    location: "Benagil, Faro",
+    unit: "c",
+    success: function(weather) {
+      html = '<p style="margin:-3px"><i class="icon-'+weather.code+'"></i> '+weather.temp+'&deg'+weather.units.temp+'</br><span class="fa-ta fa-ta-wind" style="font-size: 22px"></span> '+weather.wind.speed+' '+weather.units.speed+'</p><li style="margin-left:20px"><a class="lang-action pt active-lang" href="javascript:void(0)" title="pt_PT" onclick = "languages(this.title,1)">PT</a></li><li><a class="lang-action en"  href="javascript:void(0)"  title="en_EN" onclick = "languages(this.title,2)">EN</a></li>'
+      html_mob = '<p><i class="icon-'+weather.code+'"></i> '+weather.temp+'&deg'+weather.units.temp+'</br><span class="fa-ta fa-ta-wind" style="font-size: 22px"></span> '+weather.wind.speed+' '+weather.units.speed+'</p>'
+      $(".weather").html(html)
+      $(".weather-mob").html(html_mob)
+      wind = weather.wind.speed
+    },
+    error: function(error) {
+      count++
+      html = '<p class="lang-only"></p><li style="margin-left:20px"><a class="lang-action pt active-lang" href="javascript:void(0)" title="pt_PT" onclick = "languages(this.title,1)">PT</a></li><li><a class="lang-action en"  href="javascript:void(0)"  title="en_EN" onclick = "languages(this.title,2)">EN</a></li>'
+      $(".weather").html(html)
+      count <= 3 ? weather() : false
+    }
+  })
+}
+
+function myMap() {
+    
+  var myCenter = new google.maps.LatLng(37.0872609,-8.4263386)
+  var mapCanvas = document.getElementById("map")
+  var mapOptions = {
+    center: myCenter,
+    scrollwheel: false,
+    draggable: false,    
+    zoom: 13,
+    panControl: true,
+    zoomControl: true,
+    mapTypeControl: false,
+    scaleControl: false,
+    streetViewControl: false,
+    overviewMapControl: false,
+    rotateControl: false,
+  }
+
+  var map = new google.maps.Map(mapCanvas, mapOptions)
+
+  var marker = new google.maps.Marker({position:myCenter})
+
+  marker.setMap(map)
+
+google.maps.event.addListener(marker,"click",function() {
+  map.setZoom(17)
+  map.setCenter(marker.getPosition())
+  })
+  var infowindow = new google.maps.InfoWindow({
+    content: "Taruga Tours"
+  })
+  infowindow.open(map,marker)
+}
+
+setLang = 'pt-pt'
+
+function getAvailability(v){
+
+ setLang = $('.lang-action.active-lang').attr('title') == 'pt_PT' ? 'pt-pt' : 'en'
+
+  hours = ''
+  $('.at-last, .required').addClass('w3-hide')
+  $('.get-dates, #booking_date, .set-hours, #booking_hour').val('')
+  $('.order_available').datetimepicker()
+
+  $('.removal').remove()
+
+  if(!v) return
+
+  $('.w3-overlay, #loader-cont').show()
+
+  dataValue='id='+v
+  setTimeout(function(){
+    $.ajax({  
+      url:'{{ path('index_get_blocked_dates') }}',
+      type: "POST",
+      data:dataValue,
+      cache:false,
+      success: function(data){
+        console.log(data)
+        $('.order_available').data("DateTimePicker").date(null)
+        $('.get-dates').val('') 
+        $('#modal-available-dates').show()
+        $('.no-hours').addClass('w3-hide')
+        $('.HOUR_TXT_'+v).removeClass('w3-hide')
+        $('.w3-overlay').hide()
+        $('.order_available').data('DateTimePicker').destroy() 
+                
+        if (data.event){
+          h = data.event.split(",")
+          for (j = 0; j < h.length;j++)
+            hours += '<option class="removal" value="'+h[j]+'">'+h[j]+'</option>'
+          }
+        
+        $('.CHOOSE_HOUR').after(hours) 
+        
+        if (data.blocked){
+    
+          if(data.blocktype == true){
+            $('.order_available').datetimepicker({
+              format : 'DD/MM/YYYY',
+              ignoreReadonly: true,
+              inline: true,
+              sideBySide:false,
+              icons: {
+                time: "fa-3x fa fa-clock-o",
+                date: "fa-3x fa fa-calendar",
+                up: "fa-3x fa fa-arrow-up",
+                down: "fa-3x fa fa-arrow-down",
+                left: "fa-3x fa fa-arrow-left",
+                right: "fa-3x fa fa-arrow-right"
+              },
+              keepOpen: true,
+              //debug:true,
+              enabledDates: data.blocked,
+              locale:setLang,
+              minDate: data.minDate
+            })
+            
+          }
+          else{
+            $('.order_available').datetimepicker({
+              format : 'DD/MM/YYYY',
+              ignoreReadonly: true,
+              inline: true,
+              sideBySide:false,
+              icons: {
+                time: "fa-3x fa fa-clock-o",
+                date: "fa-3x fa fa-calendar",
+                up: "fa-3x fa fa-arrow-up",
+                down: "fa-3x fa fa-arrow-down",
+                left: "fa-3x fa fa-arrow-left",
+                right: "fa-3x fa fa-arrow-right"
+            },
+            keepOpen: true,
+            //debug:true,
+            disabledDates: data.blocked,
+            locale:setLang,
+            minDate: data.minDate
+          })
+        }
+        $('.order_available').data("DateTimePicker").date(null)
+        $('.order_available').on('dp.change', function(e){ $('.get-dates').val(moment(e.date).format('DD/MM/YYYY'))}) 
+        $('.get-dates').val('') 
+      }
+    },
+    error:function(data){
+      $('.w3-overlay').hide()
+      $('#info-client').show()                
+      $('#info-client-head').removeClass('w3-green amber').addClass('w3-red').html('<span onclick="$(\'#info-client\').hide()" class="w3-button w3-display-topright w3-large"><i class="fa fa-times"></i></span><h1><i class="fa fa-exclamation-triangle"></i> error</h1>')
+        $('#client-txt').html(wifi_connection)
+    }
+  })
+}, 500)
+}
+
+function closeModalEvents(){
+  $('#modal-available-dates').hide()
+  $('#booking_tourtype').val('')
+  $('.at-last').addClass('w3-hide')
+  $('.order_available').data('DateTimePicker').destroy()
+  $('.get-dates, .set-hours').val('').removeClass('w3-pale-red')
+}
+
+function changeEventGetHour(v){
+  $('#booking_hour').val(v)
+}
+
+function saveModalEvents(){
+  $('.required').addClass('w3-hide')
+
+  if (!$('.get-dates').val()) $('.date').removeClass('w3-hide')
+  if (!$('.set-hours').val()) $('.hour').removeClass('w3-hide')
+
+  if ($('.get-dates').val() && $('.set-hours').val()) {
+    $('#booking_date').val($('.get-dates').val())
+    $('#modal-available-dates').hide()
+    $('.at-last').removeClass('w3-hide')
+    $('.order_available').data("DateTimePicker").date(null)
+    navigation('#booking_tourtype')
+  }
+
+}
+
+
+function showRgpd(){
+  $("#myOverlay, #loader-cont").show()
+  id = $('.active-lang').hasClass('pt') ? 3 : 2
+  setTimeout(function(){
+    $.ajax({ 
+      url:'{{ path('index_rgpd') }}',
+      type: "POST",
+      data:'rgpdId='+id,
+      success: function(data){  
+        console.log(data)
+        $("#myOverlay, #loader-cont").hide()
+        if (data.message == 'success'){
+          $('#modal-rgpd').show()
+          //data.name
+          //data.rgpd
+        }        
+        else {
+          obj=''
+          for(i=0;i<data.data.length;i++)
+            $('.'+data.data[i]).removeClass('w3-hide')
+          $('#modal-fields').show()
+        }
+      },
+      error:function(data){
+        $("#myOverlay, #loader-cont").hide()
+        $('#modal-error').show()
+      }
+    })
+  }, 500)
+}
+
+weather()
+
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAcWwuJpAyu4XwgbPwJxexBO0fsZ2SxDk8&callback=myMap"></script>

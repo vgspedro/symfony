@@ -1,0 +1,108 @@
+<link href="{{ asset('css/bootstrap-datepicker.min.css') }}" rel="stylesheet">
+<link href="{{ asset('css/datecss.css') }}" rel="stylesheet">
+
+<style type="text/css">
+th.next, th.prev{width:auto!important}
+</style>
+
+<header class="w3-container" style="padding-top:22px">
+    <h5><b><i class="fas fa-calendar-times"></i> Bloquear Datas</b></h5>
+</header>
+
+<div class="w3-container">
+  {{ form_start(form, {'attr': {'id': 'date-form'}}) }}
+    <div class="w3-center w3-padding-16 w3-row-padding w3-large w3-sand w3-border">
+      <div class="w3-col l6 m6 s12">
+        {{ form_widget(form.category)}}
+      </div>
+        <div class="w3-col l6 m6 s12">
+        {{ form_widget(form.onlydates)}}
+      </div>
+      <div class="w3-col l12 m12 s12">
+          <div class="input-group date" id="datepicker">
+            <input class="dates" type="hidden" onchange="$('#blockdates_date').text($(this).val())">
+            {{ form_widget(form.date)}}
+        </div>
+      </div>
+      <div class="w3-hide">
+        {{ form_widget(form.submit)}}
+      </div>
+      <div class="w3-col l6 m0 s0 w3-hide-small w3-hide-medium">&nbsp;</div>
+      <div class="w3-col l3 m6 s6 w3-margin-top w3-margin-bottom">
+        <span class="clear w3-button w3-block w3-border w3-white">
+          <i class="fa fa-eraser"></i> Limpar
+        </span>
+      </div>
+      <div class="w3-col l3 m6 s6 w3-margin-top w3-margin-bottom">
+        <span class="w3-btn w3-block w3-border w3-green" onclick="$('#date-form').trigger('submit')">
+            <i class="fa fa-check"></i> Guardar
+          </span>
+      </div>
+    </div>
+    {{ form_end(form) }}
+  </div>
+
+<script src="{{ asset('js/bootstrap-datepicker.min.js') }}"></script>
+<script>
+
+$('#datepicker').datepicker({inline:true,multidate:true,clearBtn:true,format:'dd/mm/yyyy',weekStart: 1,startDate:'0d',todayHighlight: true})
+
+$('.clear').click(function(){$('#blockdates_date').text('')})
+
+$('#date-form').on('submit',function(e){
+  e.preventDefault()
+  $('.w3-overlay').show()
+  $('.required').addClass('w3-hide')
+  setTimeout(function(){
+    $.ajax({  
+      url:'{{ path('admin_block_date_edit') }}',
+      type: "POST",
+      data:$('#date-form').serialize(),
+      success: function(data){
+        $('.clear').trigger('click')
+        $('#blockdates_category').val('')
+        $('.w3-overlay').show().hide()
+      },
+      error:function(data){
+        $('.w3-overlay').hide()
+        $('#modal-error').show()
+      }
+    })
+  }, 500)
+})
+
+function getBlockedDates(categoryId){
+
+  if(!categoryId) {
+     $('.w3-overlay').hide()
+    $('.clear').trigger('click')
+    $('#blockdates_onlydates').val(0)
+  return
+  }
+ $('.w3-overlay').show()
+  arr = []
+  setTimeout(function(){
+    $.ajax({  
+      url:'{{ path('admin_block_date_set_values') }}',
+      type: "POST",
+      data:'id='+categoryId,
+      dataType:'json',
+      success: function(data){
+        //console.log(data)
+         $('.w3-overlay').hide()
+        if(data.data == 'success'){
+          arr.push(data.result.split(","))    
+          $('#datepicker').datepicker("setDate", arr[0])
+          $('#blockdates_date').text(data.result)
+          data.type == true ? $('#blockdates_onlydates').val(1) : $('#blockdates_onlydates').val(0)
+        }
+      },
+      error:function(data){
+        $('.w3-overlay').hide()
+        $('#modal-error').show()
+      }
+    })
+  }, 500)
+}
+
+</script>

@@ -1,0 +1,56 @@
+@font-face {
+    font-family: 'taruga';
+    src: url('../font/taruga_font.eot');
+    src: url('../font/taruga_font.eot?#iefix') format('embedded-opentype'),
+         url('../font/taruga_font.woff') format('woff'),
+         url('../font/taruga_font.ttf') format('truetype'),
+         url('../font/taruga_font.svg') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+.fa-ta {font: normal normal normal 14px/1 taruga;font-size: inherit;text-rendering: auto; -webkit-font-smoothing: antialiased;}
+
+.fa-ta-exclamation-triangle:before { content: "A"; }
+.fa-ta-waves:before { content: "B"; }
+.fa-ta-umbrella:before { content: "C"; }
+.fa-ta-car-parking:before { content: "D"; }
+.fa-ta-sun:before { content: "E"; }
+.fa-ta-booking:before { content: "F"; }
+.fa-ta-team:before { content: "G"; }
+.fa-ta-ticket-shop:before { content: "H"; }
+.fa-ta-boat:before { content: "I"; }
+.fa-ta-marker:before { content: "J"; }
+.fa-ta-euro:before { content: "K"; }
+.fa-ta-wind:before { content: "L"; }
+.fa-ta-email:before { content: "M"; }
+.fa-ta-mobile:before { content: "N"; }
+.fa-ta-contact:before { content: "O"; }
+.fa-ta-schedule:before { content: "P"; }
+.fa-ta-children:before { content: "Q"; }
+.fa-ta-captain:before { content: "R"; }
+.fa-ta-duration:before { content: "S"; }
+.fa-ta-info:before { content: "T"; }
+.fa-ta-n:before { content: "U"; }
+.fa-ta-n:before { content: "V"; }
+
+.ta-2{font-size: 28px; font-weight: bold;}
+
+@font-face {
+    font-family: 'taruga2';
+    src: url('../font/Taru-Regular.eot');
+    src: url('../font/Taru-Regular.eot?#iefix') format('embedded-opentype'),
+         url('../font/Taru-Regular.woff') format('woff'),
+         url('../font/Taru-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+.fa-ta-2 {font: normal normal normal 14px/1 taruga2;font-size: inherit;text-rendering: auto; -webkit-font-smoothing: antialiased;}
+
+.fa-ta-2-kayak:before { content: "O"; }
+.fa-ta-2-kayak1:before { content: "P"; }
+.fa-ta-2-kayak2:before { content: "N"; }
+
+
+

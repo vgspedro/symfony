@@ -1,0 +1,68 @@
+
+<header class="w3-container" style="padding-top:22px">
+    <h5><b><i class="fa fa-exclamation-triangle"></i> Aviso</b></h5>
+</header>
+
+<div class="w3-container">
+  
+  {{ form_start(form, {'attr': {'id': 'warning-form'}})  }}
+    <div class="w3-center w3-padding-16 w3-row-padding w3-large w3-sand w3-border">
+       <div class="w3-col l4 m3 s2">&nbsp;</div>
+      <div class="w3-col l4 m6 s8">
+        {{ form_widget(form.visible)}}
+      </div>
+      <div class="w3-col l6 m12 s12">
+        {{ form_widget(form.info_pt) }}
+      </div>
+      <div class="w3-col l6 m12 s12">
+        {{ form_widget(form.info_en)}}
+      </div>
+      <div class="w3-hide">
+        {{ form_widget(form.submit)}}
+      </div>
+      <div class="w3-col l6 m0 s0 w3-hide-small w3-hide-medium">&nbsp;</div>
+      <div class="w3-col l3 m6 s6 w3-margin-top w3-margin-bottom">
+        <button type="reset" class="w3-button w3-block w3-border w3-white">
+          <i class="fa fa-eraser"></i> Limpar
+        </button>
+      </div>
+      <div class="w3-col l3 m6 s6 w3-margin-top w3-margin-bottom">
+        <span class="w3-btn w3-block w3-border w3-green" onclick="$('#warning-form').trigger('submit')">
+            <i class="fa fa-check"></i> Guardar
+          </span>
+      </div>
+  </div>
+      {{ form_end(form) }}
+  </div>
+  
+<script>
+
+  $('#warning-form').on('submit',function(e){
+    e.preventDefault()
+    $('.w3-overlay').show()
+    $('.required').addClass('w3-hide')
+    setTimeout(function(){
+      $.ajax({  
+        url:'{{ path('admin_warning_edit') }}',
+        type: "POST",
+        data: $('#warning-form').serialize(),
+        success: function(data){
+          $('.w3-overlay').hide()
+            if (data.message != 'success'){
+              obj=''
+              for(i=0;i<data.data.length;i++)
+                obj+= data.data[i]+'<br>'
+              $('#set-fields').html(obj)
+              $('#modal-fields').show()
+            }
+        },
+        error:function(data){
+          $('.w3-overlay').hide()
+          $('#modal-error').show()
+        }
+      })
+    }, 500)
+  })
+
+</script>
+

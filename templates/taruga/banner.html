@@ -1,0 +1,24 @@
+{% set platform = 'w3-hide' %}
+{% if (browser.platform == 'Android' or browser.platform == 'iPad' or browser.platform == 'iPhone' or browser.platform == 'iPod') %}
+{% set platform = 'w3-show' %}
+{% endif %}
+
+<style type="text/css">
+	.btn-yt{padding: 1px 18px 1px 24px;border-radius: 20%}
+</style>
+
+<div class="mySlides w3-display-container w3-center" id="home">
+    <!--
+	<video id="video_full" autoplay muted loop class="banner-img w3-hide w3-animate-opacity"></video>
+	<div id="mobile" class="w3-display-middle w3-margin-top w3-center {{platform}}">
+		<button class="btn-yt w3-btn w3-red w3-xlarge w3-transparent w3-hide-large w3-hide-medium w3-hide" id="video_btn" onclick="mobilePlayVideo()">
+		<i class="fa fa-play"></i>
+	</button>
+</div>
+-->
+ 	<img id="banner" class="banner-img" alt="Taruga Benagil Tours, caves, Benagil, Algarve, Portugal, sup"
+src="{{ asset('images/banner.jpg') }}"/>
+</div>
+<div class="w3-row">
+ <div class="rope-2 l1 s12"></div>
+</div>

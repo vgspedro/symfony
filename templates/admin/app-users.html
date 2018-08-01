@@ -1,0 +1,267 @@
+
+<style>
+
+ .dt-button{background: #FFF;border:1px solid #ccc;
+ display: inline-block; padding: 8px 16px; vertical-align: middle;overflow: hidden;text-decoration: none; color: inherit;
+    background-color: inherit;text-align: center; cursor: pointer; white-space: nowrap;color: #000!important;background-color: #87CEEB!important;font-size:18px}
+
+
+select.input-sm, input .form-control .input-sm {height: 36px}
+table.dataTable.dtr-inline.collapsed > tbody > tr > td:first-child:before, table.dataTable.dtr-inline.collapsed > tbody > tr > th:first-child:before {
+    height: 24px;width: 24px;border-radius: 16px; text-align: center;line-height: 23px;font-size: 24px;border-radius: 0px;border: 1px solid #ddd;box-shadow: 0 0 0 #000}
+table.dataTable.dtr-inline.collapsed > tbody > tr > td:first-child, table.dataTable.dtr-inline.collapsed > tbody > tr > th:first-child {padding-left: 38px}
+.dt-button-collection{ width:100%;background: rgba(0,0,0,0.3);position: fixed;left:0px;padding: 96px 16px; z-index:99999;margin-top: 0px!important;top:0px}
+
+::-webkit-input-placeholder {opacity: 0.3}
+::-moz-placeholder {opacity: 0.3}
+:-ms-input-placeholder{opacity: 0.3}
+:-moz-placeholder {opacity: 0.3}
+
+
+</style>
+
+<header class="w3-container" style="padding-top:22px">
+   <h5><b><i class="fas fa-user-shield"></i> Utilizadores</b></h5>
+</header>
+<div class="w3-row-padding">
+  <div class="w3-col s12">
+  <table id="dataTable" class="w3-border table table-striped centered hover table-bordered" style="width:100%">
+    <thead class="w3-sand">
+      <tr>
+      <th style="text-align: center">#</th>    
+      <th style="text-align: center">Nome</th>    
+      <th style="text-align: center">Email</th>       
+      </tr>
+    </thead>
+    <tbody>
+      {% for user in users%}
+       <tr>
+        <td>
+          <div class="w3-block">
+          <button class="w3-btn w3-border w3-red w3-margin-bottom" style="width:19px" onclick="deleteUserConfirm({{ user.id }},'{{ user.username }}')">
+            <i class="fas fa-trash-alt"></i>
+          </button>
+          <button class="w3-btn w3-border w3-blue w3-margin-bottom" style="width:19px" onclick="passwordUser({{ user.id }},'{{ user.username }}')">
+            <i class="fas fa-unlock-alt"></i>
+          </button>
+          {% if user.status == 1 %}
+          <button class="w3-btn w3-border w3-margin-bottom" style="width:19px" onclick="statusUserConfirm({{ user.id }},'{{ user.username }}',0)">
+            <i class="w3-text-green far fa-check-circle" style="font-size:17px"></i>
+          </button>
+          {% else %}
+          <button class="w3-btn w3-border w3-margin-bottom" style="width:19px" onclick="statusUserConfirm({{ user.id }},'{{ user.username }}',1)">
+            <i class="fas fa-ban w3-text-red" style="font-size:17px"></i>
+          </button>
+          {% endif %}
+        </div>
+        </td>
+        <td>{{ user.username }}</td>
+        <td>{{ user.email }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+    <tfoot class="w3-sand">
+      <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+    </tfoot>
+  </table>
+</div>
+</div>
+
+<div id="modal-edit-password" class="w3-modal" style="z-index:9999999;padding-top: 12px;padding-bottom:32px">
+  <div class="w3-modal-content w3-animate-zoom" style="max-width:400px">
+      <div class="w3-container w3-blue w3-padding">
+          <span onclick="$('#modal-edit-password').hide()" class="w3-padding w3-button w3-display-topright">
+            <i class="w3-xlarge fa fa-times"></i>
+          </span>
+          <h2>
+            <i class="fas fa-unlock-alt"></i>
+            <span>Password</span>
+          </h2>
+      </div>
+      <input type="hidden" id="set-user-id">
+      <div class="w3-container w3-padding w3-large" id="set-password"></div>
+    <div class="w3-row-padding w3-xlarge w3-padding-large w3-border-top">
+      <div class="w3-col s6">
+      <span style="padding: 0 8px" class="w3-block w3-border w3-btn" onclick="$('#modal-edit-password').hide()">
+        <i class="fa fa-times"></i>
+      </span>
+      </div>
+      <div class="w3-col s6">
+        <span style="padding: 0 8px" class="w3-green w3-border w3-block w3-btn" onclick="$('#change-password').trigger('submit')">
+        <i class="fas fa-check"></i>
+      </span>
+    </div>
+    </div>
+  </div>
+</div>
+
+
+
+<script>
+ 
+function deleteUserConfirm(id,n){
+  $('#delete-user').html('<p class="w3-center w3-large">Tem a certeza que pretende apagar o utilizador, <b>'+n+'</b> ?</p>')
+  $('#user-id').val(id)
+  $('#modal-delete-user').show()
+}
+
+function passwordUser(id,n){
+  $('.w3-overlay').show()
+  setTimeout(function(){
+    $.ajax({  
+      url: '{{ path('password_user') }}',
+      type: 'GET',
+      data: 'id='+id,
+      success: function(data){
+        $('#set-user-id').val(id)
+        $('.w3-overlay').hide()
+        $('#set-password').html(data)
+        $('#modal-edit-password').show()
+      },
+      error:function(data){
+        $('.w3-overlay').hide()
+        $('#modal-error').show()
+      }
+    })
+  }, 500)
+}
+
+function deleteUser(id){
+  $('#modal-delete-user').hide()
+  $('.w3-overlay').show()
+  setTimeout(function(){
+  $.ajax({  
+    url:'{{ path('delete_user') }}',
+    type: "POST",
+    data:'id='+id,
+    success: function(data){
+      $('.w3-overlay').hide()
+      if (data.message == 'success')
+        ajaxUpload('app-users')
+      else{
+        $('#modal-fields').show()
+        $('#set-fields').html(data.data)
+      }
+    },
+    error:function(data){
+      $('.w3-overlay').hide()
+      $('#modal-error').show()
+    }
+  })
+}, 500)
+}
+
+function statusUserConfirm(id,n,v){
+  $('#confirm').html('<p class="w3-center w3-large">Tem a certeza que pretende mudar o acesso ao utilizador, <b>'+n+'</b> ?</p>')
+  $('#confirm-id').val(id)
+  $('#action-confirm').html('<span style="padding: 0 8px" class="w3-amber w3-border w3-block w3-btn" onclick="statusUser('+id+','+v+')"><i class="fas fa-check"></i></span>')
+  $('#modal-confirm').show()
+}
+
+function statusUser(id,v){
+  $('#modal-confirm').hide()
+  $('.w3-overlay').show()
+  setTimeout(function(){
+  $.ajax({  
+    url:'{{ path('status_user') }}',
+    type: "POST",
+    data:'id='+id+'&status='+v,
+    success: function(data){
+      $('.w3-overlay').hide()
+      if (data.message == 'success')
+       ajaxUpload('app-users')
+      else{
+        $('#modal-fields').show()
+        $('#set-fields').html(data.data)
+      }
+    },
+    error:function(data){
+      $('.w3-overlay').hide()
+      $('#modal-error').show()
+    }
+  })
+}, 500)
+}
+
+
+
+$(function(){
+
+  table = $('#dataTable').DataTable({
+        dom: 'lBfrtip',
+        order: [ 3, "ASC" ],
+        buttons: [
+        {
+        extend:    'excelHtml5',
+        text:      '<i class="far fa-file-excel"></i>',
+        titleAttr: 'Excel',
+        exportOptions: {
+          columns: [ 0, 1, 2, 3]
+          }
+        },
+        {
+        extend:    'pdfHtml5',
+        text:      '<i class="far fa-file-pdf"></i>',
+        titleAttr: 'PDF',
+        exportOptions: {
+          columns: [ 0, 1, 2, 3]
+          },
+          customize: function (doc) {
+            doc.content[1].table.widths = Array(doc.content[1].table.body[0].length + 1).join('*').split('')
+              doc['footer']=(function(page, pages) {
+                return {
+                  columns: [
+                    {
+                      alignment: 'right',
+                      text: ['']
+                    },
+                  ],
+                  margin: 20
+                }
+              })
+            }
+        },
+        {
+        extend: 'colvis',
+        columns: ':gt(0)',
+        text:      '<i class="far fa-eye-slash"></i>',
+        titleAttr: 'Colunas',
+        exportOptions: {
+          columns: [ 0, 1, 2, 3, 4, 5]
+        }
+      }
+    ],
+    "columnDefs": [
+      //{ className:"my_class", "targets": [4] },
+      //{ "orderData":[ 2 ], "targets": [ 3 ] },
+        {
+          //"targets": stored,
+          "visible": false
+          //"searchable": false
+        }
+    ],
+    "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+      responsive: true,
+      searching: true,
+      language: {
+        "lengthMenu": "Mostrar _MENU_ por pagina",
+        "zeroRecords": "0 Resultados",
+        "info": "Mostrar _PAGE_ de _PAGES_",
+        "infoEmpty": "Sem resultados",
+        "search": "Pesquisar",
+        "paginate": {
+        "previous": "Anterior",
+        "next": "Seguinte",
+      }
+    },
+    order: [[ 1, 'asc' ]]
+  })
+  $('#dataTable_length, .dt-buttons').addClass('w3-center w3-col s12 m6 l4 w3-section')
+  $('#dataTable_filter').addClass('w3-col s8 m12 l4 w3-center w3-section')
+})
+
+</script>

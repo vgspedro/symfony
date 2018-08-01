@@ -1,0 +1,67 @@
+
+<section class="w3-container w3-padding-32 bgimg-3 reservas-cont" id="reservas">
+
+ <div class="w3-padding-16">
+  <h2 class="w3-center">
+    <i class="fa-ta ta-4 fa-ta-booking">&nbsp;</i>
+    <span class="RESERVAS">{% trans %}link.booking{% endtrans %}</span>
+  </h2>
+
+  {{ form_start(form, {'attr': {'id': 'booking-form'}})  }}
+
+    <div class="w3-content w3-center w3-padding-16 w3-row-padding w3-xlarge">
+      <div class="w3-col m6 s12">
+        {{ form_widget(form.name) }}
+      </div>
+      <div class="w3-col m6 s12">
+        {{ form_widget(form.email) }}
+      </div>
+      <div class="w3-col m5 s12">
+        {{ form_widget(form.telephone) }}
+      </div>
+      <div class="w3-col m7 s12">
+        {{ form_widget(form.address) }}
+      </div>
+      <div class="w3-col s12">
+        {{ form_widget(form.tourtype) }}
+      </div>
+      <div class="w3-col m6 s12 w3-hide at-last">
+        {{ form_widget(form.date) }}
+      </div>
+      <div class="w3-col m6 s12 w3-hide at-last">
+        {{ form_widget(form.hour) }}
+      </div>
+      <div class="w3-col l4 m6 s12 w3-hide at-last">
+        {{ form_widget(form.adult) }}
+      </div>
+      <div class="w3-col l4 m6 s12 w3-hide at-last">
+        {{ form_widget(form.children) }}
+      </div>
+      <div class="w3-col l4 m6 s12 w3-hide at-last">
+        {{ form_widget(form.baby) }}
+      </div>
+      <div class="w3-col s12 w3-hide at-last">
+        {{ form_widget(form.message) }}
+      </div>
+      <div class="w3-col s12 w3-hide at-last w3-left-align" style="line-height: 22px">
+        <div class="w3-padding-16 RGPD">{% trans %}part_seven.rgpd{% endtrans %}</div>
+        {{ form_widget(form.rgpd) }}
+        <span id="setit" class="RGPD_TXT w3-medium">{% trans %}part_seven.rgpd_txt{% endtrans %}</span>
+        <span class="w3-text-blue" onclick='showRgpd()'>ver +</span>
+      </div>
+      <div class="w3-col s12 w3-hide at-last">
+        {{ form_widget(form.submit, {'attr': {'onclick': '$(".user-info").addClass("w3-hide"); $(".user-info-txt").empty()'}}) }}
+      </div>
+    </div>
+  {{ form_end(form) }}
+   <h4 class="w3-center w3-content">
+    <p class='SPAM_TXT blink'>{% trans %}part_seven.spam_txt{% endtrans %}</p>
+    <p class='BOOKING bold'>{% trans %}part_seven.booking{% endtrans %}</p>
+    <p class='BOOK_EMAIL w3-text-red'>{% trans %}part_seven.book_email{% endtrans %}</p>
+    <p class='BOOK_PHONE'>{% trans %}part_seven.book_phone{% endtrans %}</p>
+   </h4>
+   <h4 class="w3-center w3-content">
+    <span class='BOOK_AFTER'>{% trans %}part_seven.book_after{% endtrans %}</span>
+   </h4>
+ </div>
+</section>

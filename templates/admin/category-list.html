@@ -1,0 +1,222 @@
+
+<style>
+
+ .dt-button{background: #FFF;border:1px solid #ccc;
+ display: inline-block; padding: 8px 16px; vertical-align: middle;overflow: hidden;text-decoration: none; color: inherit;
+    background-color: inherit;text-align: center; cursor: pointer; white-space: nowrap;color: #000!important;background-color: #87CEEB!important;font-size:18px}
+
+
+select.input-sm, input .form-control .input-sm {height: 36px}
+table.dataTable.dtr-inline.collapsed > tbody > tr > td:first-child:before, table.dataTable.dtr-inline.collapsed > tbody > tr > th:first-child:before {
+    height: 24px;width: 24px;border-radius: 16px; text-align: center;line-height: 23px;font-size: 24px;border-radius: 0px;border: 1px solid #ddd;box-shadow: 0 0 0 #000}
+table.dataTable.dtr-inline.collapsed > tbody > tr > td:first-child, table.dataTable.dtr-inline.collapsed > tbody > tr > th:first-child {padding-left: 38px}
+.dt-button-collection{ width:100%;background: rgba(0,0,0,0.3);position: fixed;left:0px;padding: 96px 16px; z-index:99999;margin-top: 0px!important;top:0px}
+</style>
+
+<header class="w3-container" style="padding-top:22px">
+   <h5><b><i class="far fa-edit fa-fw"></i> Categorias</b></h5>
+</header>
+<div class="w3-row-padding">
+  <div class="w3-col s12">
+  <table id="dataTable" class="w3-border table table-striped centered hover table-bordered" style="width:100%">
+    <thead class="w3-sand">
+      <tr >
+      <th style="text-align: center">#</th>    
+      <th style="text-align: center">Nome PT</th>    
+      <th style="text-align: center">Nome EN</th>    
+      <th style="text-align: center">Preço Adulto</th>    
+      <th style="text-align: center">Preço Criança</th>    
+      <th style="text-align: center;min-width: 300px">Descriçao PT</th>    
+      <th style="text-align: center;min-width: 300px">Descriçao EN</th>    
+      <th style="text-align: center">Horas</th>    
+      <th style="text-align: center">Activo</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for category in categories%}
+       <tr>
+        <td>
+           <button class="w3-btn w3-border w3-blue w3-margin-bottom" onclick="editCategory({{ category.category.id}})">
+            <i class="far fa-edit fa-fw"></i>
+          </button>
+          <button class="w3-btn w3-border w3-red w3-margin-bottom" style="width: 19px" onclick="deleteCategoryConfirm({{ category.category.id}},'{{ category.category.namePt }}')">
+            <i class="fas fa-trash-alt"></i>
+          </button>
+        </td>
+        <td>{{ category.category.namePt }}</td>
+        <td>{{ category.category.nameEn }}</td>
+        <td>{{ category.category.AdultPrice }}</td>
+        <td>{{ category.category.ChildrenPrice }}</td>
+        <td>{{ category.category.DescriptionPt }}</td>
+        <td>{{ category.category.DescriptionEn }}</td>
+        <td>{{ category.event }}</td>
+        <td>
+          {% if category.category.IsActive == 1 %}
+            Sim
+          {% else %}
+            Não
+          {% endif %}
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+    <tfoot class="w3-sand">
+      <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+    </tfoot>
+  </table>
+</div>
+</div>
+
+<script>
+ 
+tablecategory = [2,6]
+
+if(!localStorage.getItem("tablecategory") ){
+  localStorage.setItem("tablecategory", JSON.stringify(tablecategory))
+  stored = JSON.parse(localStorage.getItem("tablecategory"))
+}
+else
+  stored = JSON.parse(localStorage.getItem("tablecategory"))
+
+function editCategory(id){
+  $('.w3-overlay').show()
+  setTimeout(function(){
+  $.ajax({  
+    url:'{{ path('admin_category_edit') }}',
+    type: "POST",
+    data:'id='+id,
+    success: function(data){
+      $('.w3-overlay').hide()
+      $('#set-id').text(id)
+      $('#set-category').html(data)
+      $('#modal-edit-category').show()
+      if (data.message == 'success'){
+        $('#info-client').show()                
+        $('#info-client-head').removeClass('w3-red').addClass('w3-green').html('<span onclick="$(\'#info-client\').hide()" class="w3-button w3-display-topright w3-large"><i class="fa fa-times"></i></span><h1><i class="fa fa-check"></i> Sucesso</h1>')
+        $('#client-txt').html('')
+      }
+    },
+    error:function(data){
+      $('.w3-overlay').hide()
+      $('#modal-error').show()
+    }
+  })
+  }, 500)
+}
+
+function deleteCategoryConfirm(id,n){
+  $('#delete-category').html('<p class="w3-center w3-large">Tem a certeza que pretende apagar a categoria, <b>'+n+'</b> ?</p>')
+  $('#delete-id').val(id)
+  $('#modal-delete-category').show()
+}
+
+function deleteCategory(id){
+  $('.w3-overlay').show()
+  setTimeout(function(){
+  $.ajax({  
+    url:'{{ path('admin_category_delete') }}',
+    type: "POST",
+    data:'id='+id,
+    success: function(data){
+      $('.w3-overlay').hide()
+      //console.log(data)
+      if (data.message == 'success'){
+        ajaxUpload('category-list')
+        $('#modal-delete-category').hide()
+      }
+    },
+    error:function(data){
+      $('.w3-overlay').hide()
+      $('#modal-error').show()
+    }
+  })
+}, 500)
+}
+
+$(function(){
+
+table = $('#dataTable').DataTable({
+        dom: 'lBfrtip',
+        order: [ 3, "ASC" ],
+        buttons: [
+        {
+        extend:    'excelHtml5',
+        text:      '<i class="far fa-file-excel"></i>',
+        titleAttr: 'Excel',
+        exportOptions: {
+          columns: [ 0, 1, 2, 3, 4, 5]
+          }
+        },
+
+        {
+        extend:    'pdfHtml5',
+        text:      '<i class="far fa-file-pdf"></i>',
+        titleAttr: 'PDF',
+        exportOptions: {
+          columns: [ 0, 1, 2, 3, 4,5]
+          },
+          customize: function (doc) {
+            //doc.content[1].table.widths = Array(doc.content[1].table.body[0].length + 1).join('*').split('')
+              doc['footer']=(function(page, pages) {
+                return {
+                  columns: [
+                    {
+                      alignment: 'right',
+                      text: ['']
+                    },
+                  ],
+                  margin: 20
+                }
+              })
+            }
+        },
+        {
+        extend: 'colvis',
+        columns: ':gt(0)',
+        text:      '<i class="far fa-eye-slash"></i>',
+        titleAttr: 'Colunas',
+        exportOptions: {
+          columns: [ 0, 1, 2, 3, 4, 5]
+        }
+      }
+    ],
+    "columnDefs": [
+      //{ className:"my_class", "targets": [4] },
+      //{ "orderData":[ 2 ], "targets": [ 3 ] },
+        {
+          "targets": stored,
+          "visible": false
+          //"searchable": false
+        }
+    ],
+    "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+      responsive: true,
+      searching: true,
+      language: {
+        "lengthMenu": "Mostrar _MENU_ por pagina",
+        "zeroRecords": "0 Resultados",
+        "info": "Mostrar _PAGE_ de _PAGES_",
+        "infoEmpty": "Sem resultados",
+        "search": "Pesquisar",
+        "paginate": {
+        "previous": "Anterior",
+        "next": "Seguinte",
+      }
+    },
+    order: [[ 1, 'asc' ]]
+  })
+  $('#dataTable_length, .dt-buttons').addClass('w3-center w3-col s12 m6 l4 w3-section')
+  $('#dataTable_filter').addClass('w3-col s8 m12 l4 w3-center w3-section')
+})
+
+</script>

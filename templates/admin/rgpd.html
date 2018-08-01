@@ -1,0 +1,141 @@
+<style>
+.note-editor {border-radius: 0px}
+textarea {color: #FFF!important}
+.btn-fullscreen{display: none}
+</style>
+
+<header class="w3-container" style="padding-top:22px">
+   <h5><b><i class="far fa-file-alt"></i> RGPD</b></h5>
+</header>
+
+<div class="w3-row-padding">
+  {% for category in rgpd%}
+  <div class="w3-col s6 m4 l3 w3-margin-bottom">
+     <input type="hidden" id='{{category.id}}-rgpd' value="{{category.rgpdhtml}}">
+    <div class="w3-card-2 w3-sand w3-border">
+      <div class="w3-center w3-col s12 w3-padding-small">
+      {{category.name}}
+      </div>
+      <div class="w3-row">
+        <div class="w3-col s6">
+          <button class="w3-btn w3-block w3-border w3-blue" onclick="editRgpd('{{category.id}}','{{category.name}}')">
+            <i class="far fa-edit fa-fw"></i>
+          </button>
+        </div>
+        <div class="w3-col s6">
+        <button class="w3-btn w3-block w3-border w3-red" onclick="deleteRgpdConfirm('{{ category.id}}','{{ category.name }}')">
+          <i class="fas fa-trash-alt"></i>
+        </button>
+        </div>
+      </div>
+    </div>
+  </div>  
+  {% endfor %}
+</div>
+
+<div class="w3-container">
+{{form_start(form, {'attr': {'id': 'rgpd-form'}})}}
+<div class="w3-row-padding w3-large w3-sand w3-border">
+{{form_widget(form.rgpdhtml)}}
+
+{{form_widget(form.name)}}
+
+	 <div id="summernote"></div>
+    <div class="w3-col l6 m0 s0 w3-hide-small w3-hide-medium">&nbsp;</div> 
+      	<div class="w3-col l3 m6 s6 w3-margin-top w3-margin-bottom">
+        	<button type="reset" class="w3-button w3-block w3-border w3-white" onclick="clearRgpd()">
+          	<i class="fa fa-eraser"></i> Limpar
+        	</button>
+      	</div>
+      	<div class="w3-col l3 m6 s6 w3-margin-top w3-margin-bottom">
+        	<button class="w3-btn w3-block w3-border w3-green">
+          		<i class="fa fa-check"></i> Guardar
+          	</button>
+      	</div>
+	</div>
+  <input type="hidden" name="id" id="rgpd_id">
+  {{ form_end(form) }}
+</div>
+
+<script>
+
+$('#summernote').summernote({
+  placeholder: 'Insira ....',
+  tabsize: 3,
+  height: 375,
+  fontName:'Arial'
+})
+
+
+function deleteRgpdConfirm(id, n)
+{
+  $('#delete-rgpd').html('<p class="w3-center w3-large">Tem a certeza que pretende apagar,<br><b>'+n+'</b> ?</p>')
+  $('#rgpd-id').val(id)
+  $('#modal-delete-rgpd').show()
+}
+
+function deleteRgpd(id){
+  $('#modal-delete-rgpd').hide()
+  $('.w3-overlay').show()
+  setTimeout(function(){ 
+  $.ajax({
+    url:'{{ path('admin_rgpd_delete') }}',  
+    type: "POST",
+    data:'id='+id,
+    success: function(data){
+      $('.w3-overlay').hide()
+      if (data.message == 'success'){
+        ajaxUpload('rgpd')
+      }
+    },
+    error:function(data){
+      $('.w3-overlay').hide()
+      $('#modal-error').show()
+    }
+  })
+  }, 500)
+}
+
+function clearRgpd(){
+  $('#summernote').summernote('reset')
+  //$('#easytext, #easy_text_name').val('')
+} 
+
+
+function editRgpd(id,name){
+	$('#summernote').summernote('code', $('#'+id+'-rgpd').val())
+  $('#rgpd_id').val(id)
+  $('#rgpd_name').val(name)
+}
+
+$('#rgpd-form').on('submit',function(e){
+  e.preventDefault()
+  $('.required').addClass('w3-hide')
+  $('.w3-overlay').show()
+  $('#rgpd_rgpdhtml').val($('#summernote').summernote('code'))
+  setTimeout(function(){
+    $.ajax({  
+      url:'{{ path('admin_rgpd') }}',
+      type: "POST",
+      data:$('#rgpd-form').serialize(),
+      success: function(data){  
+        $('.w3-overlay').hide()
+         if (data.message == 'success'){
+          ajaxUpload('rgpd')
+          clearRgpd()
+          $('#easy_text_name').val('')
+        }
+        else if (data.message=='fail'){
+          for(i=0;i<data.data.length;i++)
+            $('.'+data.data[i]).removeClass('w3-hide')
+          $('#modal-fields').show()
+        }
+      },
+      error:function(data){
+        $('.w3-overlay').hide()
+        $('#modal-error').show()
+      }
+    })
+  }, 500)
+})
+</script>
