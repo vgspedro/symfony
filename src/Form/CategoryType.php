@@ -10,8 +10,10 @@ use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 
@@ -20,41 +22,50 @@ class CategoryType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('image', FileType::class, array(
+                'label' => false,
+                'required' => false,
+                'attr' => ['class' => 'w3-hide set-image','onchange' => 'loadFile(event)']
+            ))
             ->add('name_pt', TextType::class,
             array(
                 'required' => false,
-                'attr' => ['class' => 'w3-input w3-padding-16','placeholder'=>'Nome (PT)*',]
+                'label' => 'Nome (PT)*',
+                'attr' => ['class' => 'w3-input w3-border','placeholder'=>'Nome (PT)*',]
             ))
             ->add('name_en', TextType::class, array(
                 'required' => false,
-                'attr' => ['class' => 'w3-input w3-padding-16 ','placeholder'=>'Nome (EN)*']
+                'label' => 'Nome (EN)*',
+                'attr' => ['class' => 'w3-input w3-border','placeholder'=>'Nome (EN)*']
             ))
             ->add('description_pt', TextareaType::class,
             array(
                 'required' => false,
-                'attr' => ['class' => 'w3-input w3-padding-16','placeholder'=>'Descrição (PT)*',]
+                'label' => 'Descrição (PT)*',
+                'attr' => ['class' => 'w3-input w3-border','placeholder'=>'Descrição (PT)*', 'rows' => 5 ]
             ))
             ->add('description_en', TextareaType::class, array(
                 'required' => false,
-                'attr' => ['class' => 'w3-input w3-padding-16 ','placeholder'=>'Descrição (EN)*']
+                'label' => 'Descrição (EN)*',
+                'attr' => ['class' => 'w3-input w3-border','placeholder'=>'Descrição (EN)*', 'rows' => 5 ]
             ))
             ->add('children_price', IntegerType::class, array(
-                'label' => false,
+                'label' => 'Preço Criança (€)*',
                 'required'  => false,
-                'attr' => ['class' => 'w3-input w3-padding-16 ','placeholder'=>'Preço Criança (€)*', 'min'=>'0', 'step'=>'any']
+                'attr' => ['class' => 'w3-input w3-border','placeholder'=>'Preço Criança (€)*', 'min'=>'0', 'step'=>'any', 'type'=>'number']
             ))
             ->add('adult_price', IntegerType::class, array(
-                'label' => false,
+                'label' =>'Preço Adulto (€)*',
                 'required' => false,
-                'attr' => ['class' => 'w3-input w3-padding-16 ','placeholder'=>'Preço Adulto (€)*', 'min'=>'0','step'=>'any']
+                'attr' => ['class' => 'w3-input w3-border', 'placeholder'=>'Preço Adulto (€)*', 'min'=>'0','step'=>'any', 'type'=>'number']
             ))
             ->add('event', CollectionType::class, array(
-                    'entry_type' => EventType::class,
-                    'entry_options' => array('label' => false),
-                    'allow_add' => true,
-                    'allow_delete' => true,                 
-                    'by_reference' => false,
-                    'label' => false   
+                'entry_type' => EventType::class,
+                'entry_options' => array('label' => false),
+                'allow_add' => true,
+                'allow_delete' => true,                 
+                'by_reference' => false,
+                'label' => false   
             ))
             ->add('blockdate', CollectionType::class, array(
                     'entry_type' => BlockdatesType::class,
@@ -64,12 +75,10 @@ class CategoryType extends AbstractType
                     'by_reference' => false,
                     'label' => false   
             ))
-            ->add('is_active', ChoiceType::class, array(
-                'choices' => array(
-                    'Activo Não' => 0,
-                    'Activo Sim' => 1
-                ),
-                    'attr' => ['class' => 'w3-input w3-select']
+            ->add('is_active', CheckboxType::class, array(
+                'label'    => 'Ativa?',
+                'required' => false,
+                'attr' => ['class' => 'w3-check']
             ))
             ->add('submit', SubmitType::class,
             array(
@@ -78,10 +87,11 @@ class CategoryType extends AbstractType
             ))
         ;
     }
+    /*
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
             'data_class' => Category::class,
         ));
-    }
+    }*/
 }

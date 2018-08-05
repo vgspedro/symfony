@@ -9,6 +9,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Doctrine\ORM\EntityRepository;
 
 class WarningType extends AbstractType
@@ -19,18 +20,16 @@ class WarningType extends AbstractType
             ->add('info_pt', TextareaType::class,
             array(
                 'required' => false,
-                'attr' => ['class' => 'w3-input w3-padding-16','placeholder'=>'Aviso (PT)*',]
+                'attr' => ['class' => 'w3-input w3-border','placeholder'=>'Aviso (PT)', 'rows' => 3]
             ))
             ->add('info_en', TextareaType::class, array(
                 'required' => false,
-                'attr' => ['class' => 'w3-input w3-padding-16 ','placeholder'=>'Aviso (EN)*']
+                'attr' => ['class' => 'w3-input w3-border','placeholder'=>'Aviso (EN)', 'rows' => 3]
             ))
-            ->add('visible', ChoiceType::class, array( 
-                'choices' => array(
-                    'Activo Não' => 0,
-                    'Activo Sim' => 1
-                ),
-                    'attr' => ['class' => 'w3-input w3-select']
+            ->add('visible', CheckboxType::class, array(
+                'label'    => 'Visivel ?',
+                'required' => false,
+                'attr' => ['class' => 'w3-check']
             ))
             ->add('submit', SubmitType::class,
             array(

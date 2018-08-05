@@ -1,10 +1,10 @@
     <script src="{{ asset('js/image-resize.min.js') }}"></script>
 
     <style>
-    .setflag{background:url({{ asset('images/') }}{{ seeBooking.language }}.png);
+    /*.setflag{background:url({{ asset('images/') }}{{ seeBooking.language }}.png);
     background-repeat: no-repeat;
     background-position: center center;
-    background-size: cover}
+    background-size: cover}*/
     .icon{background:url({{ asset('images/icon-') }}{{ seeBooking.language }}.jpg);
     height: 48px;width: 48px;background-size: contain}
     </style>
@@ -13,47 +13,47 @@
       <div class="w3-col l4 m6 s12">
         <input type="hidden" id="bookingstatus_id" name="bookingstatusId">
         <label><i class="fas fa-user-tie"></i> Nome</label>
-        <input class="w3-input margin-top-8 w3-padding-small w3-border-black w3-text-black" readonly value="{{ seeBooking.username }}">
+        <input class="w3-input w3-border" readonly value="{{ seeBooking.username }}">
       </div>
       <div class="w3-col l4 m6 s12">
         <label><i class="fas fa-phone-square"></i> Telefone</label>
-        <input class="w3-input w3-padding-small margin-top-8 w3-border-black w3-text-black" readonly value="{{ seeBooking.telephone }}">
+        <input class="w3-input w3-border" readonly value="{{ seeBooking.telephone }}">
       </div>
       <div class="w3-col l4 m5 s12">
         <label style="color:#05788d"><i class="fas fa-envelope-square"></i> Email</label>
-        <input id="bookingstatus_email" name="email" class="w3-input margin-top-8 w3-padding-small EMAIL" placeholder="Email" value="{{ seeBooking.email }}">
+        <input id="bookingstatus_email" name="email" class="w3-input w3-border EMAIL" placeholder="Email" value="{{ seeBooking.email }}">
       </div>
       <div class="w3-col l4 m7 s12">
         <label><i class="fas fa-address-card"></i> Morada</label>
-        <input class="w3-input w3-padding-small w3-border-black w3-text-black margin-top-8" readonly value="{{ seeBooking.address }}">
+        <input class="w3-input w3-border" readonly value="{{ seeBooking.address }}">
       </div>
       <div class="w3-col l8 s12">
         <label><i class="fas fa-ship"></i> Tour</label>
-        <input class="w3-input w3-padding-small w3-border-black w3-text-black margin-top-8" readonly value="{{ seeBooking.tour }}">
+        <input class="w3-input w3-border" readonly value="{{ seeBooking.tour }}">
       </div>
       <div class="w3-col l4 m4 s12">
         <label><i class="fas fa-calendar-check"></i> Data</label>
-        <input class="w3-input w3-padding-small w3-border-black w3-text-black margin-top-8" readonly value="{{ seeBooking.date }}">
+        <input class="w3-input w3-border" readonly value="{{ seeBooking.date }}">
       </div>
       <div class="w3-col l4 m4 s12">
         <label><i class="fas fa-clock"></i> Hora</label>
-        <input class="w3-input w3-padding-small w3-border-black w3-text-black margin-top-8" readonly value="{{ seeBooking.hour }}">
+        <input class="w3-input w3-border" readonly value="{{ seeBooking.hour }}">
       </div>
       <div class="w3-col l4 m4 s4">
         <label><i class="far fa-user"></i> Adulto</label>
-         <input class="w3-input w3-center w3-padding-small margin-top-8 w3-border-black w3-text-black" readonly value="{{ seeBooking.adult }}">
+         <input class="w3-input w3-border" readonly value="{{ seeBooking.adult }}">
       </div>
       <div class="w3-col l4 m4 s4">
         <label><i class="fas fa-child"></i> Criança</label>
-         <input class="w3-input w3-center w3-padding-small w3-border-black margin-top-8 w3-text-black" readonly value="{{ seeBooking.children }}">
+         <input class="w3-input w3-border" readonly value="{{ seeBooking.children }}">
       </div>
       <div class="w3-col l4 m4 s4">
         <label><i class="far fa-smile"></i> Bébé</label>
-         <input class="w3-input w3-padding-small w3-center w3-border-black w3-text-black margin-top-8" readonly value="{{ seeBooking.baby }}">
+         <input class="w3-input w3-border" readonly value="{{ seeBooking.baby }}">
       </div>
       <div class="w3-col l4 m4 s12">
         <label style="color:#05788d"><i class="fas fa-user-cog"></i> Alterar Estado</label>
-        <select id='bookingstatus_status' name="status" class="w3-input w3-padding-small" style="margin-top:3px">
+        <select id='bookingstatus_status' name="status" class="w3-input w3-border" style="height: 50px">
           <option value='{{ seeBooking.status }}'>{{ seeBooking.status }}</option>
           <option value='CANCELED'>CANCELED</option>
           <option value='CONFIRMED'>CONFIRMED</option>
@@ -62,7 +62,7 @@
       </div>
       <div class="w3-col l12 s12">
         <label><i class="fas fa-signal"></i> Mensagem</label>
-         <textarea class="w3-input w3-padding-small w3-border-black w3-text-black margin-top-8" readonly>{{ seeBooking.message}}</textarea>
+         <textarea class="w3-input w3-border" readonly>{{ seeBooking.message}}</textarea>
       </div>
       <div class="w3-col l12 s12">
         <label style="color:#05788d"><i class="fas fa-notes-medical"></i> Notas</label>
@@ -72,13 +72,14 @@
       </div>
       <div class="w3-col l3 m6 s12">
         <label style="color:#05788d"><i class="fas fa-paste"></i> Texto Fácil</label>
-        <select id="booking_easy_text" onchange="setEasyText($(this).find(':selected').data('quill'))" class="w3-input NOTES margin-top-8">
+        <select id="booking_easy_text" onchange="setEasyText($(this).find(':selected').data('quill'))" class="w3-input NOTES w3-border" style="height: 50px">
           <option data-html='' data-quill=''>Escolha </option>
          {% for easytext in seeBooking.easyText%}
           <option value="{{ easytext.id }}" data-html="{{ easytext.easytexthtml }}" data-quill="{{ easytext.easytext }}" >{{easytext.name}}</option>
          {% endfor %}
         </select>
       </div>
+      <div class="w3-col s12 w3-border-bottom">&nbsp;</div>
     </form>
 
 <script>

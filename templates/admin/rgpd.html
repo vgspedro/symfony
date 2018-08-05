@@ -2,6 +2,7 @@
 .note-editor {border-radius: 0px}
 textarea {color: #FFF!important}
 .btn-fullscreen{display: none}
+.w3-input {border-bottom: 0px solid #05788d}
 </style>
 
 <header class="w3-container" style="padding-top:22px">
@@ -34,28 +35,37 @@ textarea {color: #FFF!important}
 </div>
 
 <div class="w3-container">
-{{form_start(form, {'attr': {'id': 'rgpd-form'}})}}
-<div class="w3-row-padding w3-large w3-sand w3-border">
-{{form_widget(form.rgpdhtml)}}
+  {{form_start(form, {'attr': {'id': 'rgpd-form'}})}}
+  <div class="w3-row-padding w3-large w3-sand w3-border w3-padding-16">
+    <div class="w3-col s12">
+      <label>Titulo</label>
+      {{form_widget(form.name)}}
+      {{form_widget(form.rgpdhtml)}}
+    </div>
 
-{{form_widget(form.name)}}
+    <div class="w3-col s12">
+      <label>Texto</label>
+	     <div id="summernote"></div>
+    </div>
 
-	 <div id="summernote"></div>
+    <div class="w3-col s12 w3-border-bottom">&nbsp;</div> 
     <div class="w3-col l6 m0 s0 w3-hide-small w3-hide-medium">&nbsp;</div> 
-      	<div class="w3-col l3 m6 s6 w3-margin-top w3-margin-bottom">
-        	<button type="reset" class="w3-button w3-block w3-border w3-white" onclick="clearRgpd()">
-          	<i class="fa fa-eraser"></i> Limpar
-        	</button>
-      	</div>
-      	<div class="w3-col l3 m6 s6 w3-margin-top w3-margin-bottom">
-        	<button class="w3-btn w3-block w3-border w3-green">
-          		<i class="fa fa-check"></i> Guardar
-          	</button>
-      	</div>
-	</div>
-  <input type="hidden" name="id" id="rgpd_id">
+      <div class="w3-col l3 m6 s6 w3-margin-top w3-margin-bottom">
+        <button type="reset" class="w3-button w3-block w3-border w3-white" onclick="clearRgpd()">
+        	<i class="fa fa-eraser"></i> Limpar
+      	</button>
+      </div>
+      <div class="w3-col l3 m6 s6 w3-margin-top w3-margin-bottom">
+        <button class="w3-btn w3-block w3-border w3-green">
+          <i class="fa fa-check"></i> Guardar
+        </button>
+      </div>
+
+    <input type="hidden" name="id" id="rgpd_id">
+  </div>
   {{ form_end(form) }}
 </div>
+
 
 <script>
 

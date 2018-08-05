@@ -164,9 +164,11 @@ class AdminController extends AbstractController
 
         $start = $request->query->get('startDate') ? date_create_from_format("d/m/Y", $request->query->get('startDate')) : null; 
         $end = $request->query->get('endDate') ? date_create_from_format("d/m/Y", $request->query->get('endDate')) : null; 
-        
+
         $start = $start != null ? $start->format('Y-m-d') : null;
         $end = $end != null ? $end->format('Y-m-d') : null;
+
+    if ($start || $end){
 
         $canceled = 0;
         $pending = 0;
@@ -233,6 +235,14 @@ class AdminController extends AbstractController
         else 
             $response = array(
                 'data' => '', 
+                'options' => 0, 
+                'pending' => '', 
+                'confirmed' => '', 
+                'canceled' => '');
+        }
+        else 
+            $response = array(
+                'data' => 'fields', 
                 'options' => 0, 
                 'pending' => '', 
                 'confirmed' => '', 

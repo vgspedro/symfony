@@ -1,3 +1,6 @@
+<style type="text/css">
+.w3-input {border-bottom: 0px solid #05788d}
+</style>
 
 <header class="w3-container" style="padding-top:22px">
     <h5><b><i class="fa fa-exclamation-triangle"></i> Aviso</b></h5>
@@ -5,21 +8,26 @@
 
 <div class="w3-container">
   
-  {{ form_start(form, {'attr': {'id': 'warning-form'}})  }}
-    <div class="w3-center w3-padding-16 w3-row-padding w3-large w3-sand w3-border">
-       <div class="w3-col l4 m3 s2">&nbsp;</div>
-      <div class="w3-col l4 m6 s8">
+  {{ form_start(form, {'attr': {'id': 'warning-form'}})}}
+    <div class="w3-padding-16 w3-row-padding w3-large w3-sand w3-border">
+      <div class="w3-col l12">
         {{ form_widget(form.visible)}}
+        <label title="Mostrar o aviso no site aos clientes">Visivel ?</label>
       </div>
       <div class="w3-col l6 m12 s12">
+        <label>Aviso (PT)</label>
         {{ form_widget(form.info_pt) }}
       </div>
       <div class="w3-col l6 m12 s12">
+       <label>Aviso (EN)</label>
         {{ form_widget(form.info_en)}}
       </div>
       <div class="w3-hide">
         {{ form_widget(form.submit)}}
       </div>
+
+      <div class="w3-col s12 w3-border-bottom">&nbsp;</div>
+
       <div class="w3-col l6 m0 s0 w3-hide-small w3-hide-medium">&nbsp;</div>
       <div class="w3-col l3 m6 s6 w3-margin-top w3-margin-bottom">
         <button type="reset" class="w3-button w3-block w3-border w3-white">
@@ -32,7 +40,7 @@
           </span>
       </div>
   </div>
-      {{ form_end(form) }}
+    {{ form_end(form) }}
   </div>
   
 <script>

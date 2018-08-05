@@ -1,13 +1,23 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
+    categories_images_directory: '%kernel.project_dir%/public/upload/category'
+    categories_images_width: '640'
+    categories_images_height: '480'
     locale: 'pt'
-
-security:
-    encoders:
-        App\Entity\User: bcrypt
         
 services:
+
+    App\Service\FileUploader: '@file_uploader.categories'
+
+    image_resizer.categories:
+        class: App\Service\ImageResizer
+        arguments:
+            $path: '%categories_images_directory%'
+            $width: '%categories_images_width%'
+            $height: '%categories_images_height%'
+    
+
     # default configuration for services in *this* file
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.
@@ -30,3 +40,23 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+    file_uploader.categories:
+        class: App\Service\FileUploader
+        arguments:
+            $targetDir: '%categories_images_directory%'
+
+
+    App\Service\ImageResizer: '@image_resizer.categories'
+
+    App\Controller\CategoryController:
+        bind:
+            App\Service\FileUploader: '@file_uploader.categories'
+            App\Service\ImageResizer: '@image_resizer.categories' 
+        
+        arguments:
+            - '%categories_images_directory%'
+
+security:
+    encoders:
+        App\Entity\User: bcrypt

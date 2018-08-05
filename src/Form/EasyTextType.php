@@ -27,7 +27,7 @@ class EasyTextType extends AbstractType
                 array(
                 'label'=>false, 
                 'required' => false,
-                'attr' => ['class' => 'w3-input w3-padding-16 NAME','placeholder'=>'part_seven.name']
+                'attr' => ['class' => 'w3-input w3-border w3-margin-bottom NAME','placeholder'=>'part_seven.name']
             ))
         ;
     }

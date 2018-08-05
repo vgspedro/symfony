@@ -74,6 +74,9 @@
     "evenement/evenement": {
         "version": "v3.0.1"
     },
+    "eventviva/php-image-resize": {
+        "version": "1.6.8"
+    },
     "fig/link-util": {
         "version": "1.0.0"
     },

@@ -7,7 +7,8 @@
 .bootstrap-datetimepicker-widget table td span {border-radius: 0px}
 .bootstrap-datetimepicker-widget table td span:hover {background: #DDD}
 #category_event_0_event{display:none}
-.table-condensed>tbody>tr>td, .table-condensed>tbody>tr>th, .table-condensed>tfoot>tr>td, .table-condensed>tfoot>tr>th, .table-condensed>thead>tr>td, .table-condensed>thead>tr>th {border: 3px solid transparent!important;
+.table-condensed>tbody>tr>td, .table-condensed>tbody>tr>th, .table-condensed>tfoot>tr>td, .table-condensed>tfoot>tr>th, .table-condensed>thead>tr>td, .table-condensed>thead>tr>th {border: 3px solid transparent!important} 
+ .w3-input {border-bottom: 0px solid #05788d}
 </style>
 <header class="w3-container" style="padding-top:22px">
     <h5>
@@ -18,34 +19,58 @@
 </header>
 <div class="">
   {{ form_start(form, {'attr': {'id': 'category-form'}})  }}
-    <div class="w3-center w3-padding-16 w3-row-padding w3-large w3-border w3-sand">
-      <div class="w3-col l4 m3 s2">&nbsp;</div>
-      <div class="w3-col l4 m6 s8">
-        {{ form_widget(form.is_active)}}
+
+    <input type="hidden" name="id" value="{{ category.id }}">
+  
+    <div class="w3-padding-16 w3-row-padding w3-large w3-border w3-sand">
+
+    <div class="w3-col s12 l4 m2" title="Vamos mostrar esta categoria aos clientes no site">
+      {{ form_widget(form.is_active)}}
+      {{ form_label(form.is_active)}}
+    </div>
+
+    <div class="w3-col s12 l4 m8 w3-center" title="Vamos meter uma imagem para esta categoria">
+      <div class="w3-center w3-margin-bottom w3-border w3-imput w3-section set-image-container w3-padding" style="cursor:pointer"onclick="$('.set-image').trigger('click')">
+
+        {% if category.image %}
+        {% set url=category.image|split('/public') %}
+          <img id="output" src="{{ url[1] }}" class="w3-image w3-animate-zoom">
+        {% else %}
+        <i class="fa fa-camera w3-jumbo" style="color:#05788d"></i>
+        {% endif %}
       </div>
-      <div class="w3-col l6 m6 s12">
+      {{ form_widget(form.image)}}
+    </div>
+
+      <div class="w3-col l6 m6 s12 w3-margin-bottom">
+        {{ form_label(form.name_pt) }}
         {{ form_widget(form.name_pt) }}
       </div>
-      <div class="w3-col l6 m6 s12">
+      <div class="w3-col l6 m6 s12 w3-margin-bottom">
+        {{ form_label(form.name_en) }}
         {{ form_widget(form.name_en)}}
       </div>
-      <div class="w3-col l6 m6 s12">
+      <div class="w3-col l6 m6 s6 w3-margin-bottom">
+        {{ form_label(form.children_price)}}
         {{ form_widget(form.children_price)}}
       </div>
-      <div class="w3-col l6 m6 m6 s12">
+      <div class="w3-col l6 m6 m6 s6 w3-margin-bottom">
+        {{ form_label(form.adult_price)}}
         {{ form_widget(form.adult_price)}}
       </div>
-      <div class="w3-col s12">
+      <div class="w3-col s12 w3-margin-bottom">
+        {{ form_label(form.description_pt)}}
         {{ form_widget(form.description_pt)}}
       </div>
-        <div class="w3-col s12">
+        <div class="w3-col s12 w3-margin-bottom">
+        {{ form_label(form.description_en)}}
         {{ form_widget(form.description_en)}}
       </div>
       <div class="w3-col l3 m1 s0 w3-hide-small">&nbsp;</div>
 
       <div class="w3-col l6 m10 s12">
-        
-        <textarea class="w3-input" readonly id="receive-hour" placeholder="Escolha as horas, no relógio, de quando se realiza o evento" rows="2"></textarea>
+        <label for="category_name_pt">Horas a q se realiza *</label>
+        <textarea class="w3-input w3-border" readonly id="receive-hour" placeholder="Escolha as horas, no relógio, de quando se realiza o evento" rows="2"></textarea>
         <div class="w3-row-padding w3-margin-top">
           <div class="w3-col s6">
             <span class="w3-btn w3-border w3-block w3-white" id="clear-hour"><i class="fa fa-eraser"></i> Limpar</span>
@@ -66,14 +91,8 @@
       <div class="w3-hide">
         {{ form_widget(form.submit)}}
       </div>
-      <div class="w3-col l6 m0 s0 w3-hide-small w3-hide-medium">&nbsp;</div>
-      <div class="w3-col l3 m6 s6 w3-margin-top w3-margin-bottom">
-        <button type="reset" class="w3-button w3-block w3-border w3-white">
-          <i class="fa fa-eraser"></i> Limpar
-        </button>
-      </div>
-      <div class="w3-col l3 m6 s6 w3-margin-top w3-margin-bottom">
-        <span class="w3-btn w3-block w3-border w3-green" onclick="$('#category-form').trigger('submit')">
+      <div class="w3-col s12 w3-margin-top w3-margin-bottom w3-border-top">
+        <span class="w3-btn w3-border w3-green w3-right w3-margin-top" onclick="$('#category-form').trigger('submit')">
             <i class="fa fa-check"></i> Guardar
           </span>
       </div>
@@ -86,6 +105,13 @@
 <script src="{{ asset('js/bootstrap-datetimepicker.min.js') }}"></script>
 
 <script>
+
+
+  var loadFile = function(event) {
+    $('.set-image-container').html('<img id="output" class="w3-image w3-animate-zoom">')
+    var output = document.getElementById('output')
+    output.src = URL.createObjectURL(event.target.files[0])
+  }
 
 hours = []
 unique = []
@@ -124,14 +150,20 @@ $('#datetimepicker2').datetimepicker({keepOpen: true,format: 'H:m',stepping:5,in
 
 $('#category-form').on('submit',function(e){
   e.preventDefault()
+  obj=''
   $('.w3-overlay').show()
+  console.log(new FormData($(this)))
   $('.required').addClass('w3-hide')
-  setTimeout(function(){
+  //setTimeout(function(){
     $.ajax({
       url:'{{ path('admin_category_edit') }}',
       type: "POST",
-      data:$('#category-form').serialize()+'&id='+$('#set-id').text(),
+      data: new FormData($(this)[0]),
+      processData: false,
+      contentType: false,
+      cache: false,
       success: function(data){  
+        console.log(data)
         $('.w3-overlay').hide()
         if (data.message == 'success'){
           $('#datetimepicker2').data('DateTimePicker').destroy() 
@@ -142,7 +174,10 @@ $('#category-form').on('submit',function(e){
         }
         else if (data.message=='fail'){
           for(i=0;i<data.data.length;i++)
-            $('.'+data.data[i]).removeClass('w3-hide')
+            obj += data.data[i]+'<br>'
+          $('#set-fields').html(obj)
+
+
           $('#modal-fields').show()
         }
       },
@@ -151,7 +186,7 @@ $('#category-form').on('submit',function(e){
         $('#modal-error').show()
       }
     })
-  }, 500)
+//  }, 500)
 })
 
 </script>

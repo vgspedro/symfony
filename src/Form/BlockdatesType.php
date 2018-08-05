@@ -32,12 +32,12 @@ class BlockdatesType extends AbstractType
             'choice_attr' => function($val, $key, $index) {
                 return ['class' =>'TOUR_TXT'];
             },
-            'attr' => ['class' => 'w3-input w3-select w3-padding-16', 'onchange'=>"getBlockedDates(this.value)"]           
+            'attr' => ['class' => 'w3-input w3-border', 'onchange'=>"getBlockedDates(this.value)", 'style' => "height:50px"]           
             ))
             ->add('date', TextareaType::class, array(
                 'label' => true,
                 'required' => false,
-                'attr' => ['readonly'=>true, 'id'=>'display', 'rows'=>'2', 'class'=>'w3-input','placeholder'=>'Escolha, no Calendário as Datas']
+                'attr' => ['readonly'=>true, 'id'=>'display', 'rows'=>'3', 'class'=>'w3-input w3-border w3-margin-bottom','placeholder'=>'Escolha, no Calendário as Datas']
             ))
 
             ->add('onlydates', ChoiceType::class, array(
@@ -45,7 +45,7 @@ class BlockdatesType extends AbstractType
                     'Bloquear estas Datas' => 0,
                     'Desbloquear só estas Datas' => 1
                 ),
-                    'attr' => ['class' => 'w3-input w3-select w3-padding-16']
+                    'attr' => ['class' => 'w3-input w3-border' , 'style' => "height:50px"]
             ))
             ->add('submit', SubmitType::class,
             array(

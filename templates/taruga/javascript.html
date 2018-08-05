@@ -255,7 +255,7 @@ function languages(vl,tp){
 
     error:function(data){
       console.log(data)
-      alert(data.link.where_we_are)
+      //alert(data.link.where_we_are)
       setTimeout(function(){
         w3_close()
         $("#myOverlay, #loader-cont").hide()
@@ -396,6 +396,8 @@ function getAvailability(v){
       cache:false,
       success: function(data){
         console.log(data)
+
+
         $('.order_available').data("DateTimePicker").date(null)
         $('.get-dates').val('') 
         $('#modal-available-dates').show()
@@ -461,6 +463,11 @@ function getAvailability(v){
         $('.order_available').on('dp.change', function(e){ $('.get-dates').val(moment(e.date).format('DD/MM/YYYY'))}) 
         $('.get-dates').val('') 
       }
+
+
+      $('td.disabled').click(function(){
+        alert('1')
+      })
     },
     error:function(data){
       $('.w3-overlay').hide()

@@ -59,6 +59,26 @@ class Category
     /** @ORM\Column(type="boolean", name="is_active", options={"default":0}) */
     private $isActive;
 
+    /**
+     * @ORM\Column(type="string", name="image")
+     * @Assert\File(mimeTypes={"image/gif", "image/png", "image/jpeg"})
+     */
+    private $image;
+
+
+    public function getImage()
+    {
+        return $this->image;
+    }
+
+    public function setimage($image)
+    {
+        $this->image = $image;
+
+        return $this;
+    }
+
+
     public function __construct()
     {   
         $this->event = new ArrayCollection();

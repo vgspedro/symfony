@@ -3,6 +3,8 @@
 
 <style type="text/css">
 th.next, th.prev{width:auto!important}
+.w3-input {border-bottom: 0px solid #05788d}
+.input-group {padding-top: 0px}
 </style>
 
 <header class="w3-container" style="padding-top:22px">
@@ -11,19 +13,23 @@ th.next, th.prev{width:auto!important}
 
 <div class="w3-container">
   {{ form_start(form, {'attr': {'id': 'date-form'}}) }}
-    <div class="w3-center w3-padding-16 w3-row-padding w3-large w3-sand w3-border">
+    <div class="w3-padding-16 w3-row-padding w3-large w3-sand w3-border">
       <div class="w3-col l6 m6 s12">
+        <label>Categoria</label>
         {{ form_widget(form.category)}}
       </div>
         <div class="w3-col l6 m6 s12">
+        <label>Tipo Bloqueio</label> 
         {{ form_widget(form.onlydates)}}
       </div>
       <div class="w3-col l12 m12 s12">
-          <div class="input-group date" id="datepicker">
+          <div class="input-group date w3-margin-bottom" id="datepicker">
+            <label>Datas</label>
             <input class="dates" type="hidden" onchange="$('#blockdates_date').text($(this).val())">
             {{ form_widget(form.date)}}
         </div>
       </div>
+      <div class="w3-col l12 m12 s12 w3-border-bottom">&nbsp;</div>
       <div class="w3-hide">
         {{ form_widget(form.submit)}}
       </div>

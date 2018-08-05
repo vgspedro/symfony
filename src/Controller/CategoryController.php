@@ -8,27 +8,64 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\HttpFoundation\File\File;
 use App\Form\CategoryType;
+use App\Service\FileUploader;
+use App\Service\ImageResizer;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
+
+
 
 class CategoryController extends AbstractController
 {
 
-    public function adminCategoryNew(Request $request, ValidatorInterface $validator)
+    private $categories_images_directory;
+    
+    public function __construct($categories_images_directory)
     {
-        $validate = new Category();
+        $this->categories_images_directory = $categories_images_directory;
+    }
+    
 
-        $form = $this->createForm(CategoryType::class, $validate);
 
-        if ($request->isXmlHttpRequest() && $request->request->get($form->getName())) {
+    public function categoryNew(Request $request)
+    {
+        $category = new Category();
+        $form = $this->createForm(CategoryType::class, $category);
+        $form->handleRequest($request);
+        return $this->render('admin/category-new.html',array(
+            'form' => $form->createView()));
+    }
 
-            $form->submit($request->request->get($form->getName()));
-            
+
+    public function categoryAdd(Request $request, ValidatorInterface $validator, FileUploader $fileUploader,ImageResizer $imageResizer)
+    {
+        $category = new Category();
+
+        $form = $this->createForm(CategoryType::class, $category);
+
+        $form->handleRequest($request);
+
             if($form->isSubmitted()){
                 
                 if($form->isValid()){
 
                     $em = $this->getDoctrine()->getManager();
-                    $category = $form->getData();
+
+                    $file = $category->getImage();
+
+                    if ($file) {
+                        $fileName = $fileUploader->upload($file);               
+                        $imageResizer->resize($fileName);
+                        $category->setImage($fileName);
+                    }
+                    else{
+                        $category->setImage($this->categories_images_directory.'/no-image.png');
+                    }
+
                     $em->persist($category);
                     $em->flush();
 
@@ -50,15 +87,13 @@ class CategoryController extends AbstractController
                     'result' => 2,
                     'message' => 'fail not submitted',
                     'data' => '');
-                return new JsonResponse($response);
-       
-        }
-        return $this->render('admin/category-new.html',array(
-            'form' => $form->createView()));
+
+        return new JsonResponse($response);
     }
 
 
-    public function adminCategoryList(Request $request)
+
+    public function categoryList(Request $request)
     {
 
         $em = $this->getDoctrine()->getManager();
@@ -70,7 +105,8 @@ class CategoryController extends AbstractController
     }
 
 
-    public function adminCategoryEdit(Request $request, ValidatorInterface $validator)
+
+    public function categoryShowEdit(Request $request, ValidatorInterface $validator, FileUploader $fileUploader, ImageResizer $imageResizer)
     {
 
         $categoryId = $request->request->get('id');
@@ -79,49 +115,112 @@ class CategoryController extends AbstractController
 
         $category = $em->getRepository(Category::class)->find($categoryId);
 
+        if ($category->getImage()) {
+
+            file_exists($this->categories_images_directory.'/'.$category->getImage()) ?
+
+            $category->setImage(new File($this->categories_images_directory.'/'.$category->getImage()))
+            :
+            $category->setImage(new File($this->categories_images_directory.'/no-image.png'));
+        }
+        else
+            $category->setImage(new File($this->categories_images_directory.'/no-image.png'));
+
         $form = $this->createForm(CategoryType::class, $category);
 
-           if ($request->isXmlHttpRequest() && $request->request->get($form->getName())) {
-
-            $form->submit($request->request->get($form->getName()));
-            
-            if($form->isSubmitted()){
-                
-                if($form->isValid()){ 
-
-                    $em = $this->getDoctrine()->getManager();
-                    $category = $form->getData();
-                    $em->persist($category);
-                    $em->flush();
-
-                    $response = array(
-                        'result' => 1,
-                        'message' => 'success',
-                        'data' => $category->getId());
-                }
-                else{   
-                    $response = array(
-                        'result' => 0,
-                        'message' => 'fail',
-                        'data' => $this->getErrorMessages($form)
-                    );
-                }
-            }
-            else
-                $response = array(
-                    'result' => 2,
-                    'message' => 'fail not submitted',
-                    'data' => '');
-                return new JsonResponse($response);
-        }
-
-
         return $this->render('admin/category-edit.html',array(
-            'form' => $form->createView()));
+            'form' => $form->createView(),
+            'category' => $category
+        ));
     }
 
- public function adminCategoryDelete(Request $request)
+
+
+
+    public function categoryEdit(Request $request, ValidatorInterface $validator, FileUploader $fileUploader, ImageResizer $imageResizer)
     {
+
+        $categoryId = $request->request->get('id');
+        
+        $em = $this->getDoctrine()->getManager();
+
+        $category = $em->getRepository(Category::class)->find($categoryId);
+
+        $img = $category->getImage();
+
+        if ($category->getImage()) {
+            
+            $path = file_exists($this->categories_images_directory.'/'.$category->getImage()) ?
+
+            $this->categories_images_directory.'/'.$category->getImage()
+            :
+            $this->categories_images_directory.'/no-image.png';
+
+            $category->setImage(new File($path));
+        }
+
+        else
+
+            $category->setImage(new File($this->categories_images_directory.'/no-image.png'));
+
+        $form = $this->createForm(CategoryType::class, $category);
+
+        $form->handleRequest($request);
+            
+        if($form->isSubmitted()){
+                
+            if($form->isValid()){ 
+                
+                $deleted = 1;
+                $category = $form->getData();
+                $file = $category->getImage();
+
+                if (is_object($file)) {
+                    $fileName = $fileUploader->upload($file);               
+                    $imageResizer->resize($fileName);
+                    $category->setImage($fileName);
+                    
+                    //remove from folder older image
+
+                    $fileSystem = new Filesystem();
+
+                    if ($img && $img != 'no-image.png') {
+                        try {
+                            $fileSystem->remove($this->categories_images_directory.'/'.$img);
+                        } 
+                        catch (IOExceptionInterface $exception) {
+                            $deleted = '0 '.$exception->getPath();
+                        }
+                    }
+                }
+                else
+                    $category->setImage($img);
+
+                $em->persist($category);
+                $em->flush();
+
+                $response = array(
+                    'result' => 1,
+                    'message' => 'success',
+                    'image' => $deleted,
+                    'data' => $category->getId());
+            }
+            
+            else{   
+                $response = array(
+                    'result' => 0,
+                    'message' => 'fail',
+                    'data' => $this->getErrorMessages($form)
+                );
+            }
+        }
+        return new JsonResponse($response);
+    }
+
+
+ public function categoryDelete(Request $request)
+    {
+        $deleted = 1;
         $response = array();
         $categoryId = $request->request->get('id');
         $entity = $this->getDoctrine()->getManager();
@@ -134,13 +233,30 @@ class CategoryController extends AbstractController
             $response = array('message'=>'fail', 'status' => 'Categoria #'.$categoryId . ' não existe.');
         }
         else{
+
+            $img = $category->getImage();
+
             $entity->remove($blocked);
             $entity->flush();
             $entity->remove($event);
             $entity->flush();
             $entity->remove($category);
             $entity->flush();
-            $response = array('message'=>'success', 'status' => $categoryId);
+
+            //remove from folder image
+
+            $fileSystem = new Filesystem();
+
+            if ($img && $img != 'no-image.png') {
+                try {
+                    $fileSystem->remove($this->categories_images_directory.'/'.$img);
+                } 
+                catch (IOExceptionInterface $exception) {
+                    $deleted = '0 '.$exception->getPath();
+                }
+            }
+            
+            $response = array('message'=>'success', 'image' => $deleted, 'status' => $categoryId);
         }
         return new JsonResponse($response);
     }
@@ -158,6 +274,13 @@ class CategoryController extends AbstractController
             }
         }
         return $errors;
+    }
+
+    private function generateUniqueFileName()
+    {
+        // md5() reduces the similarity of the file names generated by
+        // uniqid(), which is based on timestamps
+        return md5(uniqid());
     }
 
 
