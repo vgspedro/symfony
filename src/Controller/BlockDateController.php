@@ -14,7 +14,6 @@ use App\Form\BlockdatesType;
 class BlockDateController extends AbstractController
 {
 
-
     public function adminBlockDateEdit(Request $request)
     {
         $form = $this->createForm(BlockdatesType::class);

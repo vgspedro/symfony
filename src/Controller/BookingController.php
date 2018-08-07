@@ -19,7 +19,7 @@ class BookingController extends AbstractController
 
         $blockingDate = array();
         
-        $now = new \Datetime('now');
+        $now = new \Datetime('tomorrow');
         
         $minDate='';
 
@@ -48,7 +48,6 @@ class BookingController extends AbstractController
         }
         $event = $this->getDoctrine()->getRepository(Event::class)
         ->findOneBy(['category' => $categoryId]);
-
 
         !$event ? 
             $response = array(

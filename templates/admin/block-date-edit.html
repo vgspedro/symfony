@@ -56,11 +56,14 @@ $('#date-form').on('submit',function(e){
   e.preventDefault()
   $('.w3-overlay').show()
   $('.required').addClass('w3-hide')
+  
+//console.log($('#date-form').serialize())
   setTimeout(function(){
     $.ajax({  
       url:'{{ path('admin_block_date_edit') }}',
       type: "POST",
       data:$('#date-form').serialize(),
+
       success: function(data){
         $('.clear').trigger('click')
         $('#blockdates_category').val('')
