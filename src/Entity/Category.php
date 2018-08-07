@@ -41,6 +41,7 @@ class Category
     private $descriptionEn;
 
     /**
+    * @Assert\NotBlank(message="CHILDREN_PRICE")
      * @ORM\Column(type="decimal", scale=2)
      */
     private $childrenPrice;

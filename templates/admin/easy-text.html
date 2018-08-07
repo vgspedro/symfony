@@ -2,6 +2,7 @@
 
 <style type="text/css">
 .w3-input {border-bottom: 0px solid #05788d}
+.ql-snow{background: white}
 </style>
 
 <header class="w3-container" style="padding-top:22px">
@@ -36,13 +37,13 @@
   {{form_start(form, {'attr': {'id': 'easytext-form'}})}}
     <div class="w3-row-padding w3-large w3-sand w3-border w3-padding-16">
       <div class="w3-col s12">
-        <label>Nome *</label>
+        {{form_label(form.name)}}
         {{form_widget(form.name)}}
       </div>
 
       <div class="w3-col s12">
         <label>Texto</label>
-        <div id="editor" class="w3-col s12" style="height: 375px"></div>
+        <div id="editor" class="w3-white" style="height: 375px"></div>
       </div>
       
       <div class="w3-col s12 w3-border-bottom">&nbsp;</div> 

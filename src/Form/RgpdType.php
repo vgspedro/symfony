@@ -21,9 +21,9 @@ class RgpdType extends AbstractType
             ))
             ->add('name', TextType::class,
                 array(
-                'label'=>false, 
+                'label'=> 'Titulo *',
                 'required' => false,
-                'attr' => ['class' => 'w3-input w3-border NAME','placeholder'=>'Titulo']
+                'attr' => ['class' => 'w3-input w3-border w3-white','placeholder'=>'Titulo *']
             ))
         ;
     }

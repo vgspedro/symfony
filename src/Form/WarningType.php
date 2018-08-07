@@ -20,11 +20,11 @@ class WarningType extends AbstractType
             ->add('info_pt', TextareaType::class,
             array(
                 'required' => false,
-                'attr' => ['class' => 'w3-input w3-border','placeholder'=>'Aviso (PT)', 'rows' => 3]
+                'attr' => ['class' => 'w3-input w3-border w3-white','placeholder'=>'Aviso (PT)', 'rows' => 3]
             ))
             ->add('info_en', TextareaType::class, array(
                 'required' => false,
-                'attr' => ['class' => 'w3-input w3-border','placeholder'=>'Aviso (EN)', 'rows' => 3]
+                'attr' => ['class' => 'w3-input w3-border w3-white','placeholder'=>'Aviso (EN)', 'rows' => 3]
             ))
             ->add('visible', CheckboxType::class, array(
                 'label'    => 'Visivel ?',

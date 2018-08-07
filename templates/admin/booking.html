@@ -63,10 +63,10 @@ div.dataTables_length select {height: 50px}
 <div class="w3-row-padding w3-sand w3-padding-32 w3-border-top w3-border-bottom w3-large">
   <div class="w3-col l1 w3-hide-medium w3-hide-small">&nbsp;</div>
   <div class="w3-col l3 m6 s12 w3-margin-bottom">
-      <input class="w3-input w3-border" id='startDate' readonly type="text" placeholder="&#xF274; Inicio" style="font-family:Raleway, FontAwesome;cursor:pointer">
+      <input class="w3-input w3-border w3-white" id='startDate' readonly type="text" placeholder="&#xF274; Inicio" style="font-family:Raleway, FontAwesome;cursor:pointer">
   </div>
     <div class="w3-col l3 m6 s12 w3-margin-bottom">
-      <input class="w3-input w3-border" id='endDate' readonly type="text" placeholder="&#xF273; Fim" style="font-family:Raleway, FontAwesome;cursor:pointer">
+      <input class="w3-input w3-border w3-white" id='endDate' readonly type="text" placeholder="&#xF273; Fim" style="font-family:Raleway, FontAwesome;cursor:pointer">
   </div>
   <div class="w3-col l2 m6 s6">
     <button class="w3-white w3-border w3-btn w3-block" onclick="clearBookSearch()"><i class="fas fa-eraser"></i> <span class="w3-hide-small">Limpar</span></button>
@@ -121,27 +121,26 @@ div.dataTables_length select {height: 50px}
   </table>
 </div>
 </div>
-
-<script src="{{ asset('js/moment-with-locales.min.js') }}"></script>
 <script src="{{ asset('js/bootstrap-datepicker.min.js') }}"></script>
-
+<script src="{{ asset('js/ui.datepicker-pt-BR.js') }}"></script>
 <script>
-
   function clearBookSearch(){
     $('#startDate, #endDate').datepicker('clearDates')
   }
 
   $(function(){
     jQuery('#startDate').datepicker({
+      language:'pt-BR',
       format: 'dd/mm/yyyy',
       weekStart: 1,
       todayHighlight: true,
-      autoclose: true
+      autoclose: true,
     }).on("changeDate",function (e) {
       jQuery('#endDate').datepicker("setStartDate", e.date)
     })
 
     jQuery('#endDate').datepicker({
+      language:'pt-BR',
       format: 'dd/mm/yyyy',
       todayHighlight: true,
       weekStart: 1,

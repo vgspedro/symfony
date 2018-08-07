@@ -5,6 +5,7 @@
     background-repeat: no-repeat;
     background-position: center center;
     background-size: cover}*/
+    .ql-snow{background: white}
     .icon{background:url({{ asset('images/icon-') }}{{ seeBooking.language }}.jpg);
     height: 48px;width: 48px;background-size: contain}
     </style>
@@ -20,8 +21,8 @@
         <input class="w3-input w3-border" readonly value="{{ seeBooking.telephone }}">
       </div>
       <div class="w3-col l4 m5 s12">
-        <label style="color:#05788d"><i class="fas fa-envelope-square"></i> Email</label>
-        <input id="bookingstatus_email" name="email" class="w3-input w3-border EMAIL" placeholder="Email" value="{{ seeBooking.email }}">
+        <label><i class="fas fa-envelope-square"></i> Email</label>
+        <input id="bookingstatus_email" name="email" class="w3-input w3-white w3-border EMAIL" placeholder="Email" value="{{ seeBooking.email }}">
       </div>
       <div class="w3-col l4 m7 s12">
         <label><i class="fas fa-address-card"></i> Morada</label>
@@ -52,8 +53,8 @@
          <input class="w3-input w3-border" readonly value="{{ seeBooking.baby }}">
       </div>
       <div class="w3-col l4 m4 s12">
-        <label style="color:#05788d"><i class="fas fa-user-cog"></i> Alterar Estado</label>
-        <select id='bookingstatus_status' name="status" class="w3-input w3-border" style="height: 50px">
+        <label><i class="fas fa-user-cog"></i> Alterar Estado</label>
+        <select id='bookingstatus_status' name="status" class="w3-input w3-white w3-border" style="height: 50px">
           <option value='{{ seeBooking.status }}'>{{ seeBooking.status }}</option>
           <option value='CANCELED'>CANCELED</option>
           <option value='CONFIRMED'>CONFIRMED</option>
@@ -65,14 +66,14 @@
          <textarea class="w3-input w3-border" readonly>{{ seeBooking.message}}</textarea>
       </div>
       <div class="w3-col l12 s12">
-        <label style="color:#05788d"><i class="fas fa-notes-medical"></i> Notas</label>
-        <div id="editor" class="w3-col s12 w3-sand" style="height: 375px">
+        <label><i class="fas fa-notes-medical"></i> Notas</label>
+        <div id="editor" class="w3-col s12 w3-white" style="height: 375px">
         {{ seeBooking.notes | raw }}
         </div>
       </div>
       <div class="w3-col l3 m6 s12">
-        <label style="color:#05788d"><i class="fas fa-paste"></i> Texto Fácil</label>
-        <select id="booking_easy_text" onchange="setEasyText($(this).find(':selected').data('quill'))" class="w3-input NOTES w3-border" style="height: 50px">
+        <label><i class="fas fa-paste"></i> Texto Fácil</label>
+        <select id="booking_easy_text" onchange="setEasyText($(this).find(':selected').data('quill'))" class="w3-input w3-white NOTES w3-border" style="height: 50px">
           <option data-html='' data-quill=''>Escolha </option>
          {% for easytext in seeBooking.easyText%}
           <option value="{{ easytext.id }}" data-html="{{ easytext.easytexthtml }}" data-quill="{{ easytext.easytext }}" >{{easytext.name}}</option>

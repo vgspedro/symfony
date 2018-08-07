@@ -38,7 +38,7 @@ textarea {color: #FFF!important}
   {{form_start(form, {'attr': {'id': 'rgpd-form'}})}}
   <div class="w3-row-padding w3-large w3-sand w3-border w3-padding-16">
     <div class="w3-col s12">
-      <label>Titulo</label>
+      {{form_label(form.name)}}
       {{form_widget(form.name)}}
       {{form_widget(form.rgpdhtml)}}
     </div>
@@ -120,7 +120,8 @@ function editRgpd(id,name){
 
 $('#rgpd-form').on('submit',function(e){
   e.preventDefault()
-  $('.required').addClass('w3-hide')
+  obj=''
+  //$('.required').addClass('w3-hide')
   $('.w3-overlay').show()
   $('#rgpd_rgpdhtml').val($('#summernote').summernote('code'))
   setTimeout(function(){
@@ -128,7 +129,8 @@ $('#rgpd-form').on('submit',function(e){
       url:'{{ path('admin_rgpd') }}',
       type: "POST",
       data:$('#rgpd-form').serialize(),
-      success: function(data){  
+      success: function(data){ 
+      console.log(data) 
         $('.w3-overlay').hide()
          if (data.message == 'success'){
           ajaxUpload('rgpd')
@@ -137,7 +139,8 @@ $('#rgpd-form').on('submit',function(e){
         }
         else if (data.message=='fail'){
           for(i=0;i<data.data.length;i++)
-            $('.'+data.data[i]).removeClass('w3-hide')
+            obj += data.data[i]+'<br>'
+          $('#set-fields').html(obj)
           $('#modal-fields').show()
         }
       },

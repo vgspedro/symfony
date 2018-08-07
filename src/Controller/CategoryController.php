@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Entity\Category;
+use App\Entity\BlockDates;
 use App\Entity\Event;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -16,6 +17,7 @@ use App\Service\FileUploader;
 use App\Service\ImageResizer;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
+use Doctrine\DBAL\DBALException;
 
 
 
@@ -66,6 +68,8 @@ class CategoryController extends AbstractController
                         $category->setImage($this->categories_images_directory.'/no-image.png');
                     }
 
+                try {
+
                     $em->persist($category);
                     $em->flush();
 
@@ -73,6 +77,23 @@ class CategoryController extends AbstractController
                         'result' => 1,
                         'message' => 'success',
                         'data' => $category->getId());
+                    } 
+                    catch(DBALException $e){
+
+                        if (preg_match("/'event'/i", $e))
+                            $a = array( "Insira pelo menos 1 hora.");
+
+                        else if (preg_match("/'children_price'/i", $e))
+                            $a = array("Preço Criança (€)* não pode ser vazio, insira 0 ou maior.");
+
+                        else
+                            $a = array("Contate administrador sistema sobre: ".$e->getMessage());
+
+                        $response = array(
+                            'result' => 0,
+                            'message' => 'fail',
+                            'data' => $a);
+                    }
                 }
                 else{   
                     $response = array(
@@ -117,12 +138,14 @@ class CategoryController extends AbstractController
 
         if ($category->getImage()) {
 
-            file_exists($this->categories_images_directory.'/'.$category->getImage()) ?
+            $path = file_exists($this->categories_images_directory.'/'.$category->getImage()) ?
+                $this->categories_images_directory.'/'.$category->getImage()
+                :
+                $this->categories_images_directory.'/no-image.png';
 
-            $category->setImage(new File($this->categories_images_directory.'/'.$category->getImage()))
-            :
-            $category->setImage(new File($this->categories_images_directory.'/no-image.png'));
+            $category->setImage(new File($path));
         }
+
         else
             $category->setImage(new File($this->categories_images_directory.'/no-image.png'));
 
@@ -196,14 +219,32 @@ class CategoryController extends AbstractController
                 else
                     $category->setImage($img);
 
-                $em->persist($category);
-                $em->flush();
+                try {
+                    $em->persist($category);
+                    $em->flush();
 
-                $response = array(
-                    'result' => 1,
-                    'message' => 'success',
-                    'image' => $deleted,
-                    'data' => $category->getId());
+                    $response = array(
+                        'result' => 1,
+                        'message' => 'success',
+                        'image' => $deleted,
+                        'data' => $category->getId());
+                } 
+                catch(DBALException $e){
+
+                    if (preg_match("/'event'/i", $e))
+                        $a = array( "Insira pelo menos 1 hora.");
+
+                    else if (preg_match("/'children_price'/i", $e))
+                        $a = array("Preço Criança (€)* não pode ser vazio, insira 0 ou maior.");
+
+                    else
+                        $a = array("Contate administrador sistema sobre: ".$e->getMessage());
+
+                    $response = array(
+                        'result' => 0,
+                        'message' => 'fail',
+                        'data' => $a);
+                }
             }
             
             else{   
@@ -217,8 +258,7 @@ class CategoryController extends AbstractController
         return new JsonResponse($response);
     }
 
-
- public function categoryDelete(Request $request)
+    public function categoryDelete(Request $request)
     {
         $deleted = 1;
         $response = array();
@@ -264,6 +304,7 @@ class CategoryController extends AbstractController
     protected function getErrorMessages(\Symfony\Component\Form\Form $form) 
     {
         $errors = array();
+        $err = array();
         foreach ($form->getErrors() as $key => $error) {
             $errors[] = $error->getMessage();
         }
@@ -273,17 +314,26 @@ class CategoryController extends AbstractController
                 $errors [] = $this->getErrorMessages($child);
             }
         }
-        return $errors;
+
+        foreach ($errors as $error) {
+            if ($error == 'NAME_PT')
+                $err [] = 'Nome (PT)*';
+            else if ($error == 'NAME_EN')
+                $err [] = 'Nome (EN)*';
+            else if ($error == 'DESCRIPTION_PT')
+                $err [] = 'Descrição (PT)*';
+            else if ($error == 'DESCRIPTION_EN')
+                $err [] = 'Descrição (EN)*';
+            else if ($error == 'ADULT_PRICE')
+                $err [] = 'Preço Adulto (€)*';
+            else if ($error == 'CHILDREN_PRICE')
+                $err [] = 'Preço Criança (€)*';
+            else 
+                $err [] = $error;
+        }
+
+        return $err;
     }
-
-    private function generateUniqueFileName()
-    {
-        // md5() reduces the similarity of the file names generated by
-        // uniqid(), which is based on timestamps
-        return md5(uniqid());
-    }
-
-
 }
 
 ?>

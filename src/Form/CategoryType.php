@@ -31,33 +31,33 @@ class CategoryType extends AbstractType
             array(
                 'required' => false,
                 'label' => 'Nome (PT)*',
-                'attr' => ['class' => 'w3-input w3-border','placeholder'=>'Nome (PT)*',]
+                'attr' => ['class' => 'w3-input w3-border w3-white','placeholder'=>'Nome (PT)*',]
             ))
             ->add('name_en', TextType::class, array(
                 'required' => false,
                 'label' => 'Nome (EN)*',
-                'attr' => ['class' => 'w3-input w3-border','placeholder'=>'Nome (EN)*']
+                'attr' => ['class' => 'w3-input w3-border w3-white','placeholder'=>'Nome (EN)*']
             ))
             ->add('description_pt', TextareaType::class,
             array(
                 'required' => false,
                 'label' => 'Descrição (PT)*',
-                'attr' => ['class' => 'w3-input w3-border','placeholder'=>'Descrição (PT)*', 'rows' => 5 ]
+                'attr' => ['class' => 'w3-input w3-border w3-white','placeholder'=>'Descrição (PT)*', 'rows' => 5 ]
             ))
             ->add('description_en', TextareaType::class, array(
                 'required' => false,
                 'label' => 'Descrição (EN)*',
-                'attr' => ['class' => 'w3-input w3-border','placeholder'=>'Descrição (EN)*', 'rows' => 5 ]
+                'attr' => ['class' => 'w3-input w3-border w3-white','placeholder'=>'Descrição (EN)*', 'rows' => 5 ]
             ))
             ->add('children_price', IntegerType::class, array(
                 'label' => 'Preço Criança (€)*',
                 'required'  => false,
-                'attr' => ['class' => 'w3-input w3-border','placeholder'=>'Preço Criança (€)*', 'min'=>'0', 'step'=>'any', 'type'=>'number']
+                'attr' => ['class' => 'w3-input w3-border w3-white','placeholder'=>'Preço Criança (€)*', 'min'=>'0', 'step'=>'any', 'type'=>'number']
             ))
             ->add('adult_price', IntegerType::class, array(
                 'label' =>'Preço Adulto (€)*',
                 'required' => false,
-                'attr' => ['class' => 'w3-input w3-border', 'placeholder'=>'Preço Adulto (€)*', 'min'=>'0','step'=>'any', 'type'=>'number']
+                'attr' => ['class' => 'w3-input w3-border w3-white', 'placeholder'=>'Preço Adulto (€)*', 'min'=>'0','step'=>'any', 'type'=>'number']
             ))
             ->add('event', CollectionType::class, array(
                 'entry_type' => EventType::class,

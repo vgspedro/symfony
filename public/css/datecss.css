@@ -1,5 +1,5 @@
 .datepicker-dropdown {position: absolute;background: #FFF;width: 94%;left: 0px!important;margin-left: 3%; margin-top: 30px}
-.datepicker table{width: 100%; font-size: 18px;background: #fdf5e6}
+.datepicker table{width: 100%; font-size: 18px;background: #FFF}
 .datepicker { -webkit-border-radius: 0px;-moz-border-radius: 0px;border-radius: 0px;direction: ltr;border: 1px solid #DDD}
 td {border-radius: 0px!important}
 .table-condensed>tbody>tr>td, .table-condensed>tbody>tr>th, .table-condensed>tfoot>tr>td, .table-condensed>tfoot>tr>th, .table-condensed>thead>tr>td, .table-condensed>thead>tr>th{border:1px solid#FFF!important}
@@ -7,5 +7,5 @@ td {border-radius: 0px!important}
 .datepicker table tr td.disabled{opacity:0.3;background: #FF1111!important;color:#FFF!important}
 .datepicker table tr td.disabled:hover {opacity:1;cursor: not-allowed}
 .datepicker table tr td.active.active{background: #87CEEB}
-.datepicker-inline {width: 100%}
+.datepicker-inline {width: 100%; background: #FFF}
 .datepicker td, .datepicker th {-webkit-border-radius: 0px;-moz-border-radius: 0px; border-radius: 0px}
