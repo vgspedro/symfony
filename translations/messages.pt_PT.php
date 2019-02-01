@@ -91,6 +91,7 @@ return array(
     'date'=>'Data *',
     'hour'=>'Hora *',
     'tour'=>'Passeio *',
+    'email_invalid'=>'Email Inválido',
     'telephone'=>'Telefone *',
     'email'=>'Email *',
     'submit'=>'Enviar',

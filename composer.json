@@ -6,6 +6,7 @@
         "ext-iconv": "*",
         "cboden/ratchet": "^0.4.1",
         "eventviva/php-image-resize": "^1.6",
+        "nojacko/email-validator": "~1.0",
         "sensio/framework-extra-bundle": "^5.1",
         "spipu/html2pdf": "^5.1",
         "swiftmailer/swiftmailer": "^6.0",

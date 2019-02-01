@@ -98,6 +98,7 @@ return array(
     'date'=>'Date *',
     'hour'=>'Hour *',
     'tour'=>'Tour *',
+    'email_invalid'=>'Invalid Email',
     'telephone'=>'Telephone *',
     'booking_email'=>'Email *',
     'booking_submit'=>'Send',

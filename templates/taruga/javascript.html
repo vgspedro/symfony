@@ -48,7 +48,6 @@ function mobilePlayVideo() {
   }
 }
 
-
     window.addEventListener("load", function(){
         window.cookieconsent.initialise({
             "palette": {
@@ -91,21 +90,21 @@ $('#booking-form').on('submit',function(e){
       data:$('#booking-form').serialize()+'&language='+setLang,
       success: function(data){  
         $("#myOverlay, #loader-cont").hide()
-        //console.log(data)
-        if (data.message == 'success'){
+        console.log(data)
+        if (data.result == 1 ){
           $('.set-order-id').html(data.data)
           $('#modal-success').show()
           $('.at-last').addClass('w3-hide')
           $('#booking-form').trigger('reset')
           $('#booking_tourtype, #booking_hour').val('')
         }        
-        else if (data.message=='fail'){
+        else if (data.result == 0){
           obj=''
           for(i=0;i<data.data.length;i++)
             $('.'+data.data[i]).removeClass('w3-hide')
           $('#modal-fields').show()
         }
-        else if (data.message=='expired'){
+        else if (data.result == 2){
           console.log(data.session)
           $('#modal-check').show()
         }
@@ -198,6 +197,7 @@ function languages(vl,tp){
       $(".BOOK_EMAIL").text(data.part_seven.book_email)
       $(".BOOK_PHONE").text(data.part_seven.book_phone)
       $(".BOOK_AFTER").text(data.part_seven.book_after)
+      $(".EMAIL_INVALID").text(data.part_seven.email_invalid)
 
       $(".DATE_HOUR").text(data.info.choose_date_hour)
       $(".CHOOSE_DATE_CALENDAR").attr("placeholder",data.info.choose_date_calendar)

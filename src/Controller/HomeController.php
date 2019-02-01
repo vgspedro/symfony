@@ -17,6 +17,8 @@ use App\Entity\Blockdates;
 use App\Entity\Client;
 use App\Form\BookingType;
 use App\Entity\User;
+/*https://github.com/nojacko/email-validator*/
+use EmailValidator\EmailValidator;
 
 class HomeController extends AbstractController
 {
@@ -34,7 +36,7 @@ class HomeController extends AbstractController
 
         if (!$request->isXmlHttpRequest()) {
             $session->clear();
-            $session->set('expire', $time->getTimestamp());
+            $session->set('expired', $time->getTimestamp());
         }
 
         $form = $this->createForm(BookingType::class, $validate);        
@@ -42,19 +44,39 @@ class HomeController extends AbstractController
         //clients dont need this so we remove it 
         $form->remove('notes'); 
         
-        $sessionEnd = ($time->getTimestamp() - $session->get('expire')) < $this->getExpirationTime() ? true : false; 
+        $sessionEnd = ($time->getTimestamp() - $session->get('expired')) < $this->getExpirationTime() ? true : false; 
 
         if ($request->isXmlHttpRequest()) {
-
+          
             $form->submit($request->request->get($form->getName()));
             
             if($form->isSubmitted() && $sessionEnd == true){
                 
                 if($form->isValid()){ 
-
+                    $err = array();
                     $newBook = $request->request->get($form->getName());
-                    
                     //set email language
+
+                    //CHECK IF EMAIL IF VALID
+                    if($newBook['email']){
+                        $validator = new \EmailValidator\Validator();
+                        $validator->isEmail($newBook['email']) ? false : $err[] = 'EMAIL_INVALID';
+                        $validator->isSendable($newBook['email']) ? false : $err[] = 'EMAIL_INVALID';
+                        $validator->hasMx($newBook['email']) ? false : $err[] = 'EMAIL_INVALID';
+                        $validator->hasMx($newBook['email']) != null ? false : $err[] = 'EMAIL_INVALID';
+                        $validator->isValid($newBook['email']) ? false : $err[] = 'EMAIL_INVALID';
+                    }
+
+                    if($err){
+                        $response = array(
+                        'result' => 0,
+                        'message' => 'mail_invalid',
+                        'data' => $err,
+                        'mail' =>'',
+                        'session' => 1
+                        );
+                        return new JsonResponse($response);
+                    }
                     
                     $language = $request->request->get('language');
 
@@ -93,9 +115,9 @@ class HomeController extends AbstractController
 
                     $date = date_create_from_format("Y-m-d", $booking->getDate());
 
-                    $transport = (new \Swift_SmtpTransport('smtp.sapo.com', 465, 'ssl'))
+                    $transport = (new \Swift_SmtpTransport('smtp.sapo.pt', 465, 'ssl'))
                         ->setUsername('vgspedro15@sapo.pt')
-                        ->setPassword('');
+                        ->setPassword('ledcpu');
 
                     $mailer = new \Swift_Mailer($transport);
                     

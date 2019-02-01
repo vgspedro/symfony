@@ -92,6 +92,12 @@
     "nikic/php-parser": {
         "version": "v4.0.1"
     },
+    "nojacko/email-data-disposable": {
+        "version": "1.0.4"
+    },
+    "nojacko/email-validator": {
+        "version": "1.1.2"
+    },
     "ocramius/proxy-manager": {
         "version": "2.1.1"
     },
