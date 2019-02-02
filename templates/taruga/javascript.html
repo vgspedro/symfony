@@ -1,5 +1,4 @@
 <script src="{{ asset('js/jquery-2.1.1.min.js') }}"></script>
-<script src="{{ asset('js/jquery.simpleWeather.min.js') }}"></script>
 <script src="{{ asset('js/moment-with-locales.min.js') }}"></script>
 <script src="{{ asset('js/bootstrap-datetimepicker.min.js') }}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.js"></script>
@@ -8,7 +7,7 @@
 
 
 var video = document.getElementById("video")
-//var video_full = document.getElementById("video_full")
+var video_full = document.getElementById("video_full")
 var btn = document.getElementById("video_btn")
 
 var xhr = new XMLHttpRequest()
@@ -18,10 +17,10 @@ xhr.onload = function(e) {
   if (this.status == 200) {
     var myBlob = this.response
     var vid = (window.webkitURL || window.URL).createObjectURL(myBlob)
-    var banner = document.getElementById("banner")
-  //  video_full.src = vid
+    //var banner = document.getElementById("banner")
+    video_full.src = vid
     video.src = vid
-//    videoLoaded()
+    videoLoaded()
    }
   }
 
@@ -29,7 +28,7 @@ xhr.send()
 
 function videoLoaded(){
   setTimeout(function(){
-    banner.classList.add('w3-hide')
+    //banner.classList.add('w3-hide')
     video_full.classList.remove('w3-hide')
     btn.classList.remove('w3-hide')
   },1500)
@@ -307,33 +306,20 @@ function onClick(element) {
 }
 
 
-function navigation(pos){
+function navigation(pos,id){
   w3_close()
   vl=45
   $(".nav-space").val() ? vl = vl + parseInt($(".nav-space").val()) : vl
   $("html, body").animate({
     scrollTop: $(pos).offset().top -vl
   }, 1000)
+if (id)
+  $('#booking_tourtype').val(id).trigger('change')
 }
 
 function weather(){
-  $.simpleWeather({
-    location: "Benagil, Faro",
-    unit: "c",
-    success: function(weather) {
-      html = '<p style="margin:-3px"><i class="icon-'+weather.code+'"></i> '+weather.temp+'&deg'+weather.units.temp+'</br><span class="fa-ta fa-ta-wind" style="font-size: 22px"></span> '+weather.wind.speed+' '+weather.units.speed+'</p><li style="margin-left:20px"><a class="lang-action pt active-lang" href="javascript:void(0)" title="pt_PT" onclick = "languages(this.title,1)">PT</a></li><li><a class="lang-action en"  href="javascript:void(0)"  title="en_EN" onclick = "languages(this.title,2)">EN</a></li>'
-      html_mob = '<p><i class="icon-'+weather.code+'"></i> '+weather.temp+'&deg'+weather.units.temp+'</br><span class="fa-ta fa-ta-wind" style="font-size: 22px"></span> '+weather.wind.speed+' '+weather.units.speed+'</p>'
-      $(".weather").html(html)
-      $(".weather-mob").html(html_mob)
-      wind = weather.wind.speed
-    },
-    error: function(error) {
-      count++
       html = '<p class="lang-only"></p><li style="margin-left:20px"><a class="lang-action pt active-lang" href="javascript:void(0)" title="pt_PT" onclick = "languages(this.title,1)">PT</a></li><li><a class="lang-action en"  href="javascript:void(0)"  title="en_EN" onclick = "languages(this.title,2)">EN</a></li>'
       $(".weather").html(html)
-      count <= 3 ? weather() : false
-    }
-  })
 }
 
 function myMap() {
