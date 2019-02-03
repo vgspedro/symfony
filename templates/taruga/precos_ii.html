@@ -5,181 +5,38 @@
 </style>
 
 <section>
-<div class="w3-row">
- <div class="rope-1 l1 s12"></div>
-</div>
-
-<div class="w3-container bgimg-6 w3-padding-32" id="precos">
- <div class="w3-padding-8 w3-content">
-  <h2 class="w3-center">
-   <i class="fa-ta ta-4 fa-ta-euro">&nbsp;</i>
-   <span class='PRECOS'>{% trans %}link.price{% endtrans %}</span>
-  </h2>
-    {% if categories %}
-  <div class="w3-cell-row">
-
-    <div class="w3-container w3-half w3-mobile w3-cell w3-padding w3-padding-16">
-
-          <img class="w3-card-4" src="/upload/category/{{ categories[0].image }}" onerror="this.src='/upload/category/no-image.png'" style="width:100%">
-
-          <div class="w3-padding-8">
-            <p class="w3-text-brown" style="text-transform: uppercase">
-            <span class="TOUR_TXT0 PT bold">{{ categories[0].namePt }}</span>
-            <span class="TOUR_TXT0 EN w3-hide bold">{{ categories[0].nameEn }}</span>
-          </p>
-            <button class="w3-btn w3-blue w3-right" onclick="navigation('#reservas'{{ categories[0].id }})">Book Now</button>
-            <p class="">
-            {% if categories[0].adultPrice > 0 %}
-                <span class='ADULTO'>{% trans %}part_tree.adult{% endtrans %}</span>&nbsp;
-                <span class="PT">{{ categories[0].adultPrice|number_format(2, '.', ',') }}€</span>
-                <span class="EN w3-hide">{{ categories[0].adultPrice|number_format(2, '.', ',') }}€</span>
-                <br>
-              {% else %}
-                <span class='ADULTO'>{% trans %}part_tree.adult{% endtrans %}</span>&nbsp;
-                <span class="PT">-/-</span>
-                <span class="EN w3-hide">-/-</span>
-                <br>
-              {% endif %}
-              {% if categories[0].childrenPrice > 0 %}
-                <span class='CRIANCA'>{% trans %}part_tree.children{% endtrans %}</span>&nbsp;
-                <span class="PT">{{ categories[0].childrenPrice|number_format(2, '.', ',') }}€</span>
-                <span class="EN w3-hide">{{ categories[0].childrenPrice|number_format(2, '.', ',') }}€</span>
-                <br>
-              {% else %}
-                <span class='CRIANCA'>{% trans %}part_tree.children{% endtrans %}</span>&nbsp;
-                <span class="PT">-/-</span>
-                <span class="EN w3-hide">-/-</span>
-                <br>
-              {% endif %}
-          </p>
-
-          <p class="w3-center">
-          {% if categories %}
-            <span class="PT">{{ categories[0].descriptionPt }}</span>
-            <span class="EN w3-hide">{{ categories[0].descriptionEn }}</span>
-          {% endif %}
-          </p>
-        </div>
-    </div>
-
-
- <div class="w3-container w3-half w3-mobile w3-cell w3-padding w3-padding-16">
-
-          <img class="w3-card-4" src="/upload/category/{{ categories[1].image }}" onerror="this.src='/upload/category/no-image.png'" style="width:100%">
-
-          <p class="w3-center w3-large w3-text-brown" style="text-transform: uppercase">
-            <span class="TOUR_TXT1 PT bold">{{ categories[1].namePt }}</span>
-            <span class="TOUR_TXT1 EN w3-hide bold">{{ categories[1].nameEn }}</span>
-          </p>
-          <div class="w3-padding-8">
-            <button class="w3-btn w3-blue w3-right" onclick="navigation('#reservas',{{ categories[1].id }})">Book Now</button>
-            <p class="">
-            {% if categories[1].adultPrice > 0 %}
-                <span class='ADULTO'>{% trans %}part_tree.adult{% endtrans %}</span>&nbsp;
-                <span class="PT">{{ categories[1].adultPrice|number_format(2, '.', ',') }}€</span>
-                <span class="EN w3-hide">{{ categories[1].adultPrice|number_format(2, '.', ',') }}€</span>
-                <br>
-              {% else %}
-                <span class='ADULTO'>{% trans %}part_tree.adult{% endtrans %}</span>&nbsp;
-                <span class="PT">-/-</span>
-                <span class="EN w3-hide">-/-</span>
-                <br>
-              {% endif %}
-              {% if categories[1].childrenPrice > 0 %}
-                <span class='CRIANCA'>{% trans %}part_tree.children{% endtrans %}</span>&nbsp;
-                <span class="PT">{{ categories[1].childrenPrice|number_format(2, '.', ',') }}€</span>
-                <span class="EN w3-hide">{{ categories[1].childrenPrice|number_format(2, '.', ',') }}€</span>
-                <br>
-              {% else %}
-                <span class='CRIANCA'>{% trans %}part_tree.children{% endtrans %}</span>&nbsp;
-                <span class="PT">-/-</span>
-                <span class="EN w3-hide">-/-</span>
-                <br>
-              {% endif %}
-          </p>
-
-          <p class="w3-center">
-          {% if categories %}
-            <span class="PT">{{ categories[1].descriptionPt }}</span>
-            <span class="EN w3-hide">{{ categories[1].descriptionEn }}</span>
-          {% endif %}
-          </p>
-        </div>
-    </div>
-
+  <div class="w3-row">
+    <div class="rope-1 l1 s12"></div>
   </div>
-  <div class="w3-cell-row">
 
-    <div class="w3-container w3-half w3-mobile w3-cell w3-padding w3-padding-16">
-          <p class="w3-left-align w3-xlarge w3-text-brown" style="text-transform: uppercase">
-            <span class="TOUR_TXT0 PT bold">{{ categories[2].namePt }}</span>
-            <span class="TOUR_TXT0 EN w3-hide bold">{{ categories[2].nameEn }}</span>
-          </p>
+  <div class="w3-container bgimg-6 w3-padding-32" id="precos">
+    <div class="w3-padding-8 w3-content">
+      <h2 class="w3-center">
+        <i class="fa-ta ta-4 fa-ta-euro">&nbsp;</i>
+        <span class='PRECOS'>{% trans %}link.price{% endtrans %}</span>
+      </h2>
+      {% if categories %}
 
-          <img class="w3-card-4" src="/upload/category/{{ categories[2].image }}" onerror="this.src='/upload/category/no-image.png'" style="width:100%">
+      <div class="w3-cell-row">
+        {% for category in categories %}
 
-          <div class="w3-padding-8">
-          <p class="w3-center">
-          {% if categories %}
-            <span class="PT">{{ categories[2].descriptionPt }}</span>
-            <span class="EN w3-hide">{{ categories[2].descriptionEn }}</span>
-          {% endif %}
-          </p>
-
-
-            <button class="w3-btn w3-blue w3-right" onclick="navigation('#reservas',{{ categories[2].id }})">Book Now</button>
-            <p class="">
-            {% if categories[2].adultPrice > 0 %}
-                <span class='ADULTO'>{% trans %}part_tree.adult{% endtrans %}</span>&nbsp;
-                <span class="PT">{{ categories[2].adultPrice|number_format(2, '.', ',') }}€</span>
-                <span class="EN w3-hide">{{ categories[2].adultPrice|number_format(2, '.', ',') }}€</span>
-                <br>
-              {% else %}
-                <span class='ADULTO'>{% trans %}part_tree.adult{% endtrans %}</span>&nbsp;
-                <span class="PT">-/-</span>
-                <span class="EN w3-hide">-/-</span>
-                <br>
-              {% endif %}
-              {% if categories[2].childrenPrice > 0 %}
-                <span class='CRIANCA'>{% trans %}part_tree.children{% endtrans %}</span>&nbsp;
-                <span class="PT">{{ categories[2].childrenPrice|number_format(2, '.', ',') }}€</span>
-                <span class="EN w3-hide">{{ categories[2].childrenPrice|number_format(2, '.', ',') }}€</span>
-                <br>
-              {% else %}
-                <span class='CRIANCA'>{% trans %}part_tree.children{% endtrans %}</span>&nbsp;
-                <span class="PT">-/-</span>
-                <span class="EN w3-hide">-/-</span>
-                <br>
-              {% endif %}
-          </p>
-
-
-        </div>
-    </div>
-
-
- <div class="w3-container w3-half w3-mobile w3-cell w3-padding w3-padding-16">
+        <div class="w3-container w3-half w3-mobile w3-cell w3-padding w3-padding-16">
           <p class="w3-center w3-xlarge w3-text-brown" style="text-transform: uppercase">
-            <span class="TOUR_TXT1 PT bold">{{ categories[3].namePt }}</span>
-            <span class="TOUR_TXT1 EN w3-hide bold">{{ categories[3].nameEn }}</span>
+            <span class="TOUR_TXT1 PT bold">{{ category.namePt }}</span>
+            <span class="TOUR_TXT1 EN w3-hide bold">{{ category.nameEn }}</span>
           </p>
-          
-          <img class="w3-card-4" src="/upload/category/{{ categories[3].image }}" onerror="this.src='/upload/category/no-image.png'" style="width:100%">
-
+          <img class="w3-card-4" src="/upload/category/{{ category.image }}" onerror="this.src='/upload/category/no-image.png'" style="width:100%">
           <p class="w3-center">
-          {% if categories %}
-            <span class="PT">{{ categories[3].descriptionPt }}</span>
-            <span class="EN w3-hide">{{ categories[3].descriptionEn }}</span>
-          {% endif %}
+            <span class="PT">{{ category.descriptionPt }}</span>
+            <span class="EN w3-hide">{{ category.descriptionEn }}</span>
           </p>
-
           <div class="w3-padding-8 w3-border-top">
-            <button class="w3-btn w3-blue w3-right" onclick="navigation('#reservas'{{ categories[3].id }})">Book Now</button>
+            <button class="w3-btn w3-blue w3-right w3-large BUY_NOW" onclick="navigation('#reservas', {{ category.id }})">Comprar</button>
             <p class="">
-            {% if categories[3].adultPrice > 0 %}
+            {% if category.adultPrice > 0 %}
                 <span class='ADULTO'>{% trans %}part_tree.adult{% endtrans %}</span>&nbsp;
-                <span class="PT">{{ categories[3].adultPrice|number_format(2, '.', ',') }}€</span>
-                <span class="EN w3-hide">{{ categories[3].adultPrice|number_format(2, '.', ',') }}€</span>
+                <span class="PT">{{ category.adultPrice|number_format(2, '.', ',') }}€</span>
+                <span class="EN w3-hide">{{ category.adultPrice|number_format(2, '.', ',') }}€</span>
                 <br>
               {% else %}
                 <span class='ADULTO'>{% trans %}part_tree.adult{% endtrans %}</span>&nbsp;
@@ -187,112 +44,27 @@
                 <span class="EN w3-hide">-/-</span>
                 <br>
               {% endif %}
-              {% if categories[3].childrenPrice > 0 %}
-                <span class='CRIANCA'>{% trans %}part_tree.children{% endtrans %}</span>&nbsp;
-                <span class="PT">{{ categories[3].childrenPrice|number_format(2, '.', ',') }}€</span>
-                <span class="EN w3-hide">{{ categories[3].childrenPrice|number_format(2, '.', ',') }}€</span>
-                <br>
-              {% else %}
-                <span class='CRIANCA'>{% trans %}part_tree.children{% endtrans %}</span>&nbsp;
-                <span class="PT">-/-</span>
-                <span class="EN w3-hide">-/-</span>
-                <br>
-              {% endif %}
-          </p>
-
-
-        </div>
-    </div>
-
-  </div>
-
-
-
-    {% endif %}
-<!--
-
-
-    <div class="w3-col l3 m6 s6 w3-center w3-container w3-padding-8">
-      <div class="w3-container">
-        <div class="info-txt">
-          <h3 class="w3-center">
-           <i class="fa-ta ta-6 fa-ta-captain"></i>
-           <br>
-           <span class='ADULTO'>{% trans %}part_tree.adult{% endtrans %}</span>
-           <br>
-          </h3>
-          <h3 class="w3-center">
-          {% if categories %}
-            {% for category in categories %}
-              {% if category.adultPrice > 0 %}
-                <span class="{{ colors[loop.index] }}  PT font-22"><b>{{ category.adultPrice|number_format(2, '.', ',') }}€</b></span>
-                <span class="{{ colors[loop.index] }}  EN w3-hide font-22"><b>{{ category.adultPrice|number_format(2, '.', ',') }}€</b></span>
-                <br>
-                <br>
-              {% else %}
-                <span class="{{ colors[loop.index] }} PT font-22"><b>-/-</b></span>
-                <span class="{{ colors[loop.index] }} EN w3-hide font-22"><b>-/-</b></span>
-                <br>
-                <br>
-              {% endif %}            
-            {% endfor %}
-          {% endif %}
-          </h3>
-        </div>
-      </div>
-    </div>
-    <div class="w3-col l3 m6 s6 w3-center w3-container w3-padding-8">
-     <div class="w3-container">
-       <div class="info-txt">
-         <h3 class="w3-center">
-          <i class="fa-ta ta-6 fa-ta-children"></i>
-          <br>
-          <span class='CRIANCA'>{% trans %}part_tree.children{% endtrans %}</span>
-          <br>
-         </h3>
-         <h3 class="w3-center">
-          {% if categories %}
-            {% for category in categories %}
               {% if category.childrenPrice > 0 %}
-                <span class="{{ colors[loop.index] }} PT font-22"><b>{{ category.childrenPrice|number_format(2, '.', ',') }}€</b></span>
-                <span class="{{ colors[loop.index] }} EN w3-hide font-22"><b>{{ category.childrenPrice|number_format(2, '.', ',') }}€</b></span>
-                <br>
+                <span class='CRIANCA'>{% trans %}part_tree.children{% endtrans %}</span>&nbsp;
+                <span class="PT">{{ category.childrenPrice|number_format(2, '.', ',') }}€</span>
+                <span class="EN w3-hide">{{ category.childrenPrice|number_format(2, '.', ',') }}€</span>
                 <br>
               {% else %}
-                <span class="{{ colors[loop.index] }} PT font-22"><b>-/-</b></span>
-                <span class="{{ colors[loop.index] }} EN w3-hide font-22"><b>-/-</b></span>
-                <br>
+                <span class='CRIANCA'>{% trans %}part_tree.children{% endtrans %}</span>&nbsp;
+                <span class="PT">-/-</span>
+                <span class="EN w3-hide">-/-</span>
                 <br>
               {% endif %}
-            {% endfor %}
-          {% endif %}
-        </h3>
-       </div>
+              </p>
+            </div>
+          </div>
+        {% endfor %}
+        </div>
+      {% endif %}
       </div>
-     </div>
-     <div class="w3-col s12 w3-center w3-container w3-padding-4">
-      <div class="w3-container">
-       <h3 class="w3-center font-20">
-          {% if categories %}
-            {% for category in categories %}
-            <span class="{{ colors[loop.index] }} PT font-22"><b>{{ category.namePt }}</b> - {{ category.descriptionPt }}</span>
-            <span class="{{ colors[loop.index] }} EN w3-hide font-22"><b>{{ category.nameEn }}</b> - {{ category.descriptionEn }}</span>
-            <br>
-            <br>
-            {% endfor %}
-          {% endif %}
-        </h3>
-      </div>
-     </div>
+    </div>
 
--->
-
-
-
-
- </div>
-</div>
-<div class="w3-row">
- <div class="rope-2 l1 s12"></div>
-</div>
+  <div class="w3-row">
+    <div class="rope-2 l1 s12"></div>
+  </div>
 </section>

@@ -4,8 +4,11 @@ parameters:
     categories_images_directory: '%kernel.project_dir%/public/upload/category'
     categories_images_width: '640'
     categories_images_height: '480'
+    #gallery_images_directory: '%kernel.project_dir%/public/upload/gallery'
+    #gallery_images_width: '640'
+    #gallery_images_height: '480'
     locale: 'pt'
-        
+
 services:
 
     App\Service\FileUploader: '@file_uploader.categories'
@@ -16,6 +19,15 @@ services:
             $path: '%categories_images_directory%'
             $width: '%categories_images_width%'
             $height: '%categories_images_height%'
+
+    #App\Service\FileUploader: '@file_uploader.gallery'
+
+    #image_resizer.gallery:
+    #    class: App\Service\ImageResizer
+    #    arguments:
+    #        $path: '%gallery_images_directory%'
+    #        $width: '%gallery_images_width%'
+    #        $height: '%gallery_images_height%'
     
 
     # default configuration for services in *this* file
@@ -52,10 +64,26 @@ services:
     App\Controller\CategoryController:
         bind:
             App\Service\FileUploader: '@file_uploader.categories'
-            App\Service\ImageResizer: '@image_resizer.categories' 
+            App\Service\ImageResizer: '@image_resizer.categories'
         
         arguments:
             - '%categories_images_directory%'
+
+    #file_uploader.gallery:
+        #class: App\Service\FileUploader
+        #arguments:
+        #    $targetDir: '%gallery_images_directory%'
+
+
+    #App\Service\ImageResizer: '@image_resizer.gallery'
+
+    #App\Controller\CategoryController:
+        #bind:
+            #App\Service\FileUploader: '@file_uploader.gallery'
+            #App\Service\ImageResizer: '@image_resizer.gallery'
+        
+        #arguments:
+            #- '%gallery_images_directory%'
 
 security:
     encoders:

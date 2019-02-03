@@ -153,6 +153,27 @@ admin_warning_edit:
     path: /admin-warning-edit/
     controller: App\Controller\WarningController::adminWarningEdit
 
+
+##
+# GALLERY
+##
+
+admin_gallery:
+    path: /admin-gallery/
+    controller: App\Controller\WarningController::adminGallery
+
+admin_gallery_list:
+    path: /admin-gallery-list/
+    controller: App\Controller\WarningController::adminGalleryList
+
+admin_gallery_new:
+    path: /admin-gallery-new/
+    controller: App\Controller\WarningController::adminGalleryNew
+
+admin_gallery_delete:
+    path: /admin-gallery-delete/
+    controller: App\Controller\WarningController::adminGalleryDelete
+
 ##
 # USERS
 ##

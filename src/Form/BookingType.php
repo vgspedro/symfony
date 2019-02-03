@@ -37,7 +37,6 @@ class BookingType extends AbstractType
         );
     }
 
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -110,12 +109,6 @@ class BookingType extends AbstractType
                 'label'=>false,
                 'required' => false,
                 'attr' => ['class' => 'w3-input w3-padding-16 BABY','placeholder'=>'part_seven.baby', 'min' => '0']
-            ))
-        ->add('message', TextareaType::class,
-            array(
-                'label'=>false,
-                'required' => false,
-                'attr' => ['class' => 'w3-input w3-padding-16 MESSAGE','placeholder'=>'part_seven.message']
             ))
         ->add('notes', TextareaType::class,
             array(

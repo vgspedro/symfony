@@ -218,7 +218,7 @@ a.ball-link{ border-radius: 50%; border: 2px solid;color:#05788d; margin-top: 10
 
 .mySlides{padding-top: 61px;}
 
-.w3-navbar{border-top:1px solid #05788d;background: rgba(255,255,255,1);border-bottom:1px solid #05788d;}
+.w3-navbar{border-top:1px solid #05788d;border-bottom:1px solid #05788d;}
 
 .w3-wide {letter-spacing: 10px;}
 
@@ -329,7 +329,7 @@ input[type=number] {
 
 .marquee:hover {animation-play-state: paused}
 
-.nav-container{padding:2px 0px; background:#FFF;}
+.nav-container{padding:2px 0px; background:#FFF; opacity:0.75}
 
 .info-txt{padding:10px 0px;}
 

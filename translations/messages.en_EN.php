@@ -116,7 +116,8 @@ return array(
 'info' => array(
     'choose_date_hour'=> 'Choose Date & Hour',
     'choose_date_calendar'=> 'Choose a Date from the Calendar',
-    'choose_hour'=> 'Choose Hour'
+    'choose_hour'=> 'Choose Hour',
+    'buy_now' => 'Buy Now'
 ),
 
 'arbitrary' => array(

@@ -198,6 +198,7 @@ function languages(vl,tp){
       $(".BOOK_AFTER").text(data.part_seven.book_after)
       $(".EMAIL_INVALID").text(data.part_seven.email_invalid)
 
+      $(".BUY_NOW").text(data.info.buy_now)
       $(".DATE_HOUR").text(data.info.choose_date_hour)
       $(".CHOOSE_DATE_CALENDAR").attr("placeholder",data.info.choose_date_calendar)
       $(".CHOOSE_HOUR").text(data.info.choose_hour)
@@ -232,7 +233,7 @@ function languages(vl,tp){
           $('.EN').addClass('w3-hide')
           $('.PT').removeClass('w3-hide')
           $(".en").removeClass("active-lang")
-          for(e=0;e<arrTour.length;e++)
+          for(var e in arrTour)
             $('#booking_tourtype option[value="'+arrTour[e].val+'"]').text(arrTour[e].pt)
         break
         case 2:
@@ -240,7 +241,7 @@ function languages(vl,tp){
           $(".pt").removeClass("active-lang")
           $('.PT').addClass('w3-hide')
           $('.EN').removeClass('w3-hide')
-          for(e=0;e<arrTour.length;e++)
+          for(var e in arrTour)
             $('#booking_tourtype option[value="'+arrTour[e].val+'"]').text(arrTour[e].en)
         break
       }

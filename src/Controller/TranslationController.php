@@ -133,7 +133,8 @@ private function translationPt(){
 'info' => array(
     'choose_date_hour'=> 'Escolha Data & Hora',
     'choose_date_calendar'=> 'Escolha Data do Calendário *',
-    'choose_hour'=> 'Escolha Hora *'
+    'choose_hour'=> 'Escolha Hora *',
+    'buy_now' => 'Comprar',
 ),
 
 
@@ -287,7 +288,8 @@ array(
 'info' => array(
     'choose_date_hour'=> 'Choose Date & Hour',
     'choose_date_calendar'=> 'Choose a Date from Calendar *',
-    'choose_hour'=> 'Choose Hour *'
+    'choose_hour'=> 'Choose Hour *',
+    'buy_now' => 'Buy Now',
 ),
 
 'arbitrary' => array(
