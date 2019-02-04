@@ -59,31 +59,56 @@ class Category
 
     /** @ORM\Column(type="boolean", name="is_active", options={"default":0}) */
     private $isActive;
-
     /**
      * @ORM\Column(type="string", name="image")
      * @Assert\File(mimeTypes={"image/gif", "image/png", "image/jpeg"})
      */
     private $image;
 
+    /** @ORM\Column(type="integer", name="availability")*/
+    private $availability;
+
+    /** @ORM\Column(type="boolean", name="highlight", options={"default":0}) */
+    private $highlight;
+    
+
+    public function __construct()
+    {   
+        $this->event = new ArrayCollection();
+        $this->blockdate = new ArrayCollection();      
+    }
+
+    public function getAvailability()
+    {
+        return $this->availability;
+    }
+
+    public function setAvailability($availability)
+    {
+        $this->availability = $availability;
+    }
+
+
+    public function getHighlight()
+    {
+        return $this->highlight;
+    }
+
+    public function setHighlight($highlight)
+    {
+        $this->highlight = $highlight;
+    }
 
     public function getImage()
     {
         return $this->image;
     }
 
-    public function setimage($image)
+    public function setImage($image)
     {
         $this->image = $image;
 
         return $this;
-    }
-
-
-    public function __construct()
-    {   
-        $this->event = new ArrayCollection();
-        $this->blockdate = new ArrayCollection();      
     }
 
     public function getIsActive() {

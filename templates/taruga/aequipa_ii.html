@@ -1,34 +1,33 @@
+<style>
+.nanogallery_gallerytheme_dark_ngy2p .nGY2GThumbnail {
+  background: transparent;
+  border-color: transparent;
+  border-top-width: 0px;
+  border-right-width: 0px;
+  border-bottom-width: 0px;
+  border-left-width: 0px;}
+.nGY2GThumbnailImage .nGY2TnImg, .nGY2TnImg{box-shadow: 0 2px 4px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12)!important}
+.nanogallery_gallerytheme_dark_ngy2p .nGY2TnImgBack{background: transparent!important}
+.nGY2 .nGY2GThumbnailImage{background: none}
+</style>
+
 <section>
   <div class="w3-row">
     <div class="rope-1 l1 s12"></div>
   </div>
   <div class="bgimg-2">
-    <div class="w3-row"> 
-      <div class="w3-third">
-        <img class='team-images' onclick="onClick(this)" alt="Taruga Benagil Tours, caves, Benagil, Algarve, sup"
-  src="{{ asset('images/gal1.jpg') }}">
-      </div>
-      <div class="w3-twothird">
-        <div class="w3-twothird w696">
-          <img class='team-images' onclick="onClick(this)" alt="Taruga Benagil Tours, caves, Benagil, Algarve, sup"
-  src="{{ asset('images/gal2.jpg') }}">
-        </div>
-        <div class="w3-third w304">
-          <img class='team-images' onclick="onClick(this)" alt="Taruga Benagil Tours, caves, Benagil, Algarve, sup"
-  src="{{ asset('images/gal4.jpg') }}">
-        </div>
-        <div class="w3-third w370">
-          <img class='team-images' onclick="onClick(this)" alt="Taruga Benagil Tours, caves, Benagil, Algarve, sup"
-  src="{{ asset('images/gal3.jpg') }}">
-        </div>
-        <div class="w3-twothird w630">
-          <img class='team-images' onclick="onClick(this)" alt="Taruga Benagil Tours, caves, Benagil, Algarve, sup"
-  src="{{ asset('images/gal5.jpg') }}">
-        </div>
-      </div>
+    <div ID="ngy2p" data-nanogallery2='{
+      "thumbnailHeight": 250,
+      "thumbnailWidth":  "auto",
+      "thumbnailLabel":{ "display" : false }
+      }' class="w3-row-padding w3-padding-16">
+      <a href="{{ asset('images/gal1.jpg') }}" class="team-images w3-card-2" data-ngthumb="{{ asset('images/gal1.jpg') }}" data-ngdesc="">Berlin 1</a>
+      <a href="{{ asset('images/gal2.jpg') }}" class="team-images w3-card-2" data-ngthumb="{{ asset('images/gal2.jpg') }}" data-ngdesc="">Berlin 2</a>
+      <a href="{{ asset('images/gal3.jpg') }}" class="team-images w3-card-2" data-ngthumb="{{ asset('images/gal3.jpg') }}" data-ngdesc="">Berlin 3</a>
+      <a href="{{ asset('images/gal4.jpg') }}" class="team-images w3-card-2" data-ngthumb="{{ asset('images/gal4.jpg') }}" data-ngdesc="">Berlin 1</a>
+      <a href="{{ asset('images/gal5.jpg') }}" class="team-images w3-card-2" data-ngthumb="{{ asset('images/gal5.jpg') }}" data-ngdesc="">Berlin 2</a>
     </div>
   </div>
-
   <div class="w3-row">
     <div class="rope-2 l1 s12"></div>
   </div>

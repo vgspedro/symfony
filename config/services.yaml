@@ -1,35 +1,18 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
+    locale: 'pt'
+
     categories_images_directory: '%kernel.project_dir%/public/upload/category'
     categories_images_width: '640'
     categories_images_height: '480'
-    #gallery_images_directory: '%kernel.project_dir%/public/upload/gallery'
-    #gallery_images_width: '640'
-    #gallery_images_height: '480'
-    locale: 'pt'
+
+    gallery_images_directory: '%kernel.project_dir%/public/upload/gallery'
+    gallery_images_width: '640'
+    gallery_images_height: '480'
+
 
 services:
-
-    App\Service\FileUploader: '@file_uploader.categories'
-
-    image_resizer.categories:
-        class: App\Service\ImageResizer
-        arguments:
-            $path: '%categories_images_directory%'
-            $width: '%categories_images_width%'
-            $height: '%categories_images_height%'
-
-    #App\Service\FileUploader: '@file_uploader.gallery'
-
-    #image_resizer.gallery:
-    #    class: App\Service\ImageResizer
-    #    arguments:
-    #        $path: '%gallery_images_directory%'
-    #        $width: '%gallery_images_width%'
-    #        $height: '%gallery_images_height%'
-    
-
     # default configuration for services in *this* file
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.
@@ -50,14 +33,35 @@ services:
         resource: '../src/Controller'
         tags: ['controller.service_arguments']
 
-    # add more service definitions when explicit configuration is needed
-    # please note that last definitions always *replace* previous ones
-
     file_uploader.categories:
         class: App\Service\FileUploader
         arguments:
             $targetDir: '%categories_images_directory%'
 
+    file_uploader.gallery:
+        class: App\Service\FileUploader
+        arguments:
+            $targetDir: '%gallery_images_directory%'
+
+    App\Service\FileUploader: '@file_uploader.categories'
+
+    image_resizer.categories:
+        class: App\Service\ImageResizer
+        arguments:
+            $path: '%categories_images_directory%'
+            $width: '%categories_images_width%'
+            $height: '%categories_images_height%'
+
+    #App\Service\FileUploader: '@file_uploader.gallery'
+
+    image_resizer.gallery:
+        class: App\Service\ImageResizer
+        arguments:
+            $path: '%gallery_images_directory%'
+            $width: '%gallery_images_width%'
+            $height: '%gallery_images_height%'
+    # add more service definitions when explicit configuration is needed
+    # please note that last definitions always *replace* previous ones
 
     App\Service\ImageResizer: '@image_resizer.categories'
 
@@ -65,25 +69,15 @@ services:
         bind:
             App\Service\FileUploader: '@file_uploader.categories'
             App\Service\ImageResizer: '@image_resizer.categories'
-        
         arguments:
             - '%categories_images_directory%'
 
-    #file_uploader.gallery:
-        #class: App\Service\FileUploader
-        #arguments:
-        #    $targetDir: '%gallery_images_directory%'
-
-
-    #App\Service\ImageResizer: '@image_resizer.gallery'
-
-    #App\Controller\CategoryController:
-        #bind:
-            #App\Service\FileUploader: '@file_uploader.gallery'
-            #App\Service\ImageResizer: '@image_resizer.gallery'
-        
-        #arguments:
-            #- '%gallery_images_directory%'
+    App\Controller\GalleryController:
+        bind:
+            App\Service\FileUploader: '@file_uploader.gallery'
+            App\Service\ImageResizer: '@image_resizer.gallery'
+        arguments:
+            - '%gallery_images_directory%'
 
 security:
     encoders:

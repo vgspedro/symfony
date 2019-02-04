@@ -6,10 +6,8 @@
   <i class="fa fa-2x fa-times"></i>
  <span>
  </div>
-
- <span class="w3-center w3-padding-8 weather-mob">&nbsp;</span>
  
- <a href="javascript:void(0)" onclick="navigation('#ondeestamos')" class='w3-padding-8 w3-border-top nav-text-m'>
+ <a href="javascript:void(0)" onclick="navigation('#ondeestamos')" class='w3-padding-8 nav-text-m'>
   <i class="fa-ta ta-2 fa-ta-marker"></i> - 
   <span class='ONDEESTAMOS'>{% trans %}link.where_we_are{% endtrans %}</span>
  </a>
@@ -44,10 +42,10 @@
   <span class='RESERVAS'>{% trans %}link.booking{% endtrans %}</span>
  </a>
 
-<div class="w3-border-top">
- <li class='w3-center w3-padding-16 lang-mob'>
-   <a class="lang-action pt active-lang w3-border" href="javascript:void(0)" title="pt_PT" onclick="languages(this.title,1)">PT</a>
-   <a class="w3-border lang-action en" href="javascript:void(0)" title="en_EN" onclick="languages(this.title,2)">EN</a>
+<div class="w3-border-top w3-border-bottom">
+ <li class='w3-center w3-padding' style="display: inline-flex;margin-left:34px">
+ <img style="cursor:pointer;height:36px;width:36px;margin:0px 8px" class="lang-action pt active-lang w3-border" src='/images/icon-pt.jpg' title="pt_PT" onclick="languages(this.title,1)">
+ <img style="cursor:pointer;height:36px;width:36px;margin:0px 8px" class="lang-action en active-lang w3-border" src='/images/icon-en.jpg' title="en_EN" onclick="languages(this.title,2)">
  </li>
 
 </div>

@@ -33,6 +33,12 @@ class CategoryType extends AbstractType
                 'label' => 'Nome (PT)*',
                 'attr' => ['class' => 'w3-input w3-border w3-white','placeholder'=>'Nome (PT)*',]
             ))
+            ->add('availability', IntegerType::class,
+            array(
+                'required' => true,
+                'label' => 'Lotação *',
+                'attr' => ['class' => 'w3-input w3-border w3-white','placeholder'=>'Lotação *',]
+            ))
             ->add('name_en', TextType::class, array(
                 'required' => false,
                 'label' => 'Nome (EN)*',
@@ -77,6 +83,11 @@ class CategoryType extends AbstractType
             ))
             ->add('is_active', CheckboxType::class, array(
                 'label'    => 'Ativa?',
+                'required' => false,
+                'attr' => ['class' => 'w3-check']
+            ))
+            ->add('highlight', CheckboxType::class, array(
+                'label'    => 'Destaque',
                 'required' => false,
                 'attr' => ['class' => 'w3-check']
             ))

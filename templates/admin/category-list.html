@@ -25,26 +25,28 @@ div.dataTables_length select {height: 50px}
   <div class="w3-col s12">
   <table id="dataTable" class="w3-border table table-striped centered hover table-bordered" style="width:100%">
     <thead class="w3-sand">
-      <tr >
-      <th style="text-align: center">#</th>    
-      <th style="text-align: center">Nome PT</th>    
-      <th style="text-align: center">Nome EN</th>    
-      <th style="text-align: center">Preço Adulto</th>    
-      <th style="text-align: center">Preço Criança</th>    
-      <th style="text-align: center;min-width: 300px">Descriçao PT</th>    
-      <th style="text-align: center;min-width: 300px">Descriçao EN</th>    
-      <th style="text-align: center">Horas</th>    
-      <th style="text-align: center">Activo</th>
+      <tr>
+      <th class="w3-center">#</th>    
+      <th class="w3-center">Nome PT</th>    
+      <th class="w3-center">Nome EN</th>    
+      <th class="w3-center">Preço Adulto</th>    
+      <th class="w3-center">Preço Criança</th>    
+      <th class="w3-center">Descriçao PT</th>    
+      <th class="w3-center">Descriçao EN</th>    
+      <th class="w3-center">Horas</th>    
+      <th class="w3-center">Activo</th>
+      <th class="w3-center">Destaque</th>
+      <th class="w3-center">Lotação</th>
       </tr>
     </thead>
     <tbody>
       {% for category in categories%}
        <tr>
         <td>
-           <button class="w3-btn w3-border w3-blue w3-margin-bottom" onclick="editCategory({{ category.category.id}})">
+           <button class="w3-btn w3-border w3-blue" onclick="editCategory({{ category.category.id}})">
             <i class="far fa-edit fa-fw"></i>
           </button>
-          <button class="w3-btn w3-border w3-red w3-margin-bottom" style="width: 19px" onclick="deleteCategoryConfirm({{ category.category.id}},'{{ category.category.namePt }}')">
+          <button class="w3-btn w3-border w3-red" style="width: 19px" onclick="deleteCategoryConfirm({{ category.category.id}},'{{ category.category.namePt }}')">
             <i class="fas fa-trash-alt"></i>
           </button>
         </td>
@@ -55,18 +57,28 @@ div.dataTables_length select {height: 50px}
         <td>{{ category.category.DescriptionPt }}</td>
         <td>{{ category.category.DescriptionEn }}</td>
         <td>{{ category.event }}</td>
-        <td>
+        <td class="w3-center">
           {% if category.category.IsActive == 1 %}
-            Sim
+            <i class="w3-text-green w3-xlarge fas fa-check-circle"></i>
           {% else %}
-            Não
+            <i class="w3-text-red w3-xlarge fas fa-times-circle"></i>
           {% endif %}
         </td>
+         <td class="w3-center">
+          {% if category.category.highlight == 1 %}
+            <i class="w3-text-green w3-xlarge fas fa-check-circle"></i>
+          {% else %}
+            <i class="w3-text-red w3-xlarge fas fa-times-circle"></i>
+          {% endif %}
+        </td>
+        <td class="w3-right-align">{{ category.category.availability }}</td>
       </tr>
     {% endfor %}
     </tbody>
     <tfoot class="w3-sand">
       <tr>
+        <td></td>
+        <td></td>
         <td></td>
         <td></td>
         <td></td>
@@ -83,8 +95,8 @@ div.dataTables_length select {height: 50px}
 </div>
 
 <script>
- 
-tablecategory = [2,6]
+ /*
+tablecategory = [2,4,5]
 
 if(!localStorage.getItem("tablecategory") ){
   localStorage.setItem("tablecategory", JSON.stringify(tablecategory))
@@ -92,6 +104,11 @@ if(!localStorage.getItem("tablecategory") ){
 }
 else
   stored = JSON.parse(localStorage.getItem("tablecategory"))
+*/
+
+
+stored = tablecategory = [2,5,6]
+
 
 function editCategory(id){
   $('.w3-overlay').show()
@@ -159,7 +176,7 @@ table = $('#dataTable').DataTable({
         text:      '<i class="far fa-file-excel"></i>',
         titleAttr: 'Excel',
         exportOptions: {
-          columns: [ 0, 1, 2, 3, 4, 5]
+          columns: [ 0, 1, 2, 3, 4, 5, 6]
           }
         },
 
@@ -168,7 +185,7 @@ table = $('#dataTable').DataTable({
         text:      '<i class="far fa-file-pdf"></i>',
         titleAttr: 'PDF',
         exportOptions: {
-          columns: [ 0, 1, 2, 3, 4,5]
+          columns: [ 0, 1, 2, 3, 4,5,6]
           },
           customize: function (doc) {
             //doc.content[1].table.widths = Array(doc.content[1].table.body[0].length + 1).join('*').split('')

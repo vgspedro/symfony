@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: 02-Fev-2019 às 14:39
+-- Generation Time: 04-Fev-2019 às 22:02
 -- Versão do servidor: 10.1.22-MariaDB
 -- PHP Version: 7.0.18
 
@@ -86,7 +86,7 @@ CREATE TABLE `booking` (
 --
 
 INSERT INTO `booking` (`id`, `adult`, `children`, `baby`, `date`, `hour`, `tourtype`, `message`, `posted_at`, `notes`, `status`) VALUES
-(20, 7, 3, 4, '2018-06-17', '12:45', '15', '5', '2018-06-03 14:48:55', NULL, 'CONFIRMED'),
+(20, 7, 3, 4, '2018-06-17', '12:45', '15', '5', '2018-06-03 14:48:55', '<p>Well be waiting', 'CONFIRMED'),
 (21, 4, 4, 4, '2018-06-20', '12:45', '15', '4', '2018-06-03 15:26:09', NULL, 'PENDING'),
 (22, 3, 3, 3, '2018-06-20', '09:25', '16', 'mensagem', '2018-06-05 20:47:25', NULL, 'PENDING'),
 (23, 5, 2, 1, '2018-06-17', '10:30', '17', 'ff', '2018-06-08 22:43:47', NULL, 'PENDING'),
@@ -112,18 +112,20 @@ CREATE TABLE `category` (
   `children_price` decimal(10,2) NOT NULL,
   `adult_price` decimal(10,2) NOT NULL,
   `is_active` tinyint(1) NOT NULL DEFAULT '0',
-  `image` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL
+  `image` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `availability` int(11) NOT NULL,
+  `highlight` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Extraindo dados da tabela `category`
 --
 
-INSERT INTO `category` (`id`, `name_pt`, `name_en`, `description_pt`, `description_en`, `children_price`, `adult_price`, `is_active`, `image`) VALUES
-(15, 'Visita Tradicional - 1 Hora 15 Min.', 'Traditional Visit - 1 Hour 15 Min.', 'Visite entre 15/20 grutas, algares e praias desertas. Inclui uma paragem de 10 min para mergulho, quando as condições do mar permitirem. O mergulho pode ser dado numa gruta ou numa praia deserta.\r\n(Bébés grátis até 23 meses.)', 'Visit about 15/20 caves. If we have good sea conditions, a 10 minute refreshing dive along the shore.\r\n(Free Babies till 23 months.)', '15.00', '25.00', 1, 'c1de35fcca54082b1874dbd824550143.jpeg'),
-(16, 'Aluguer Kayak - 45 Min.', 'Kayak Rental - 45 Min.', 'Aluguer livre não acompanhado por guia e não autorizado a crianças menores de 5 anos.', 'Rental, no guide, only for children more than 5 years old.', '0.00', '15.00', 1, '58ec7e3faedc9095005c1769f5294676.jpeg'),
-(17, 'Visita a partir de Portimão +- 1 Hora 30 Min.', 'Boarding in marina of Portimão +- 1 Hour 30 Min.', 'O passeio começa a partir da Marina de Portimão e também visitamos as grutas de Benagil, Carvoeiro, Carvalho e Marinha. É semelhante à nossa visita tradicional. Também é possível parar 10 minutos para um mergulho refrescante - com a mesma equipa da praia (Taruga). (Bébés grátis até 23 meses.)', 'The tour starts from Marina of Portimão and we also visit the Benagil sea caves, Carvoeiro, Carvalho and Marinha beach. It´s similar from our tour number 2. Also possible to stop 10 minutes for a refreshing dive - with the same team of the beach (Taruga). (Free Babies till 23 months.)', '15.00', '25.00', 1, '577ec312a2cbcd3d317a05cbd1e24fec.jpeg'),
-(18, 'Visita Express - 30 Min.', 'Express Visit - 30 Min.', 'Visite cerca de 8 grutas incluindo: Algar de Benagil, Praia da Marinha. (Bébés grátis até 23 meses.)', 'Express Visit - 30 Min. - Visit about 8 caves, included: Algar de Benagil, Marinha beach. (Free Babies till 23 months.)', '10.00', '15.00', 1, '74d8433950d0c9dd324a5e2806aa2d6c.jpeg');
+INSERT INTO `category` (`id`, `name_pt`, `name_en`, `description_pt`, `description_en`, `children_price`, `adult_price`, `is_active`, `image`, `availability`, `highlight`) VALUES
+(15, 'Visita Tradicional - 1 Hora 15 Min.', 'Traditional Visit - 1 Hour 15 Min.', 'Visite entre 15/20 grutas, algares e praias desertas. Inclui uma paragem de 10 min para mergulho, quando as condições do mar permitirem. O mergulho pode ser dado numa gruta ou numa praia deserta.\r\n(Bébés grátis até 23 meses.)', 'Visit about 15/20 caves. If we have good sea conditions, a 10 minute refreshing dive along the shore.\r\n(Free Babies till 23 months.)', '15.00', '30.00', 1, 'c1de35fcca54082b1874dbd824550143.jpeg', 15, 0),
+(16, 'Aluguer Kayak - 45 Min.', 'Kayak Rental - 45 Min.', 'Aluguer livre não acompanhado por guia e não autorizado a crianças menores de 5 anos.', 'Rental, no guide, only for children more than 5 years old.', '0.00', '15.00', 1, '58ec7e3faedc9095005c1769f5294676.jpeg', 30, 0),
+(17, 'Visita de Portimão +- 1 Hora 30 Min.', 'Boarding in marina of Portimão +- 1 Hour 30 Min.', 'O passeio começa a partir da Marina de Portimão e também visitamos as grutas de Benagil, Carvoeiro, Carvalho e Marinha. É semelhante à nossa visita tradicional. Também é possível parar 10 minutos para um mergulho refrescante - com a mesma equipa da praia (Taruga). (Bébés grátis até 23 meses.)', 'The tour starts from Marina of Portimão and we also visit the Benagil sea caves, Carvoeiro, Carvalho and Marinha beach. It´s similar from our tour number 2. Also possible to stop 10 minutes for a refreshing dive - with the same team of the beach (Taruga). (Free Babies till 23 months.)', '15.00', '30.00', 1, '577ec312a2cbcd3d317a05cbd1e24fec.jpeg', 30, 1),
+(18, 'Visita Express - 30 Min.', 'Express Visit - 30 Min.', 'Visite cerca de 8 grutas incluindo: Algar de Benagil, Praia da Marinha. (Bébés grátis até 23 meses.)', 'Express Visit - 30 Min. - Visit about 8 caves, included: Algar de Benagil, Marinha beach. (Free Babies till 23 months.)', '10.00', '15.00', 1, '74d8433950d0c9dd324a5e2806aa2d6c.jpeg', 30, 0);
 
 -- --------------------------------------------------------
 
@@ -149,16 +151,16 @@ CREATE TABLE `client` (
 --
 
 INSERT INTO `client` (`id`, `booking_id`, `email`, `password`, `username`, `address`, `telephone`, `roles`, `rgpd`, `language`) VALUES
-(12, 20, 'aXRmY3JxZWJAdHpudnkucGJ6', '', 'Q3JxZWIgSXZydG5m', 'RWhuIFB2ZWhldHbDo2IgMjg=', 'OTI2NjQ3NzU2', 'a:1:{i:0;s:11:\"ROLE_CLIENT\";}', 0, ''),
-(13, 21, 'aXRmY3JxZWJAdHpudnkucGJ6', '', 'Q3JxZWIgSXZydG5mMg==', 'RWhuIFB2ZWhldHbDo2IgMjgy', 'OTI2NjQ3NzU2', 'a:1:{i:0;s:11:\"ROLE_CLIENT\";}', 0, ''),
-(14, 22, 'aXRmY3JxZWJAdHpudnkucGJ6', '', 'Q3JxZWIgSXZydG5m', 'RWhuIFB2ZWhldHbDo2IgMjg=', 'OTI2NjQ3NzU2', 'a:1:{i:0;s:11:\"ROLE_CLIENT\";}', 0, ''),
-(15, 23, 'aXRmY3JxZWJAdHpudnkucGJ6', '', 'Q3JxZWIgSXZydG5m', 'RWhuIFB2ZWhldHbDo2IgMjg=', 'OTI2NjQ3NzU2', 'a:1:{i:0;s:11:\"ROLE_CLIENT\";}', 0, ''),
-(16, 24, 'aXRmY3JxZWJAdHpudnkucGJ6', '', 'Q3JxZWIgSXZydG5m', 'RWhuIFB2ZWhldHbDo2IgMjg=', 'OTI2NjQ3NzU2', 'a:1:{i:0;s:11:\"ROLE_CLIENT\";}', 0, ''),
-(17, 25, 'aXRmY3JxZWJAdHpudnkucGJ6', '', 'Q3JxZWIgSXZydG5m', 'RWhuIFB2ZWhldHbDo2IgMjg=', 'OTI2NjQ3NzU2', 'a:1:{i:0;s:11:\"ROLE_CLIENT\";}', 0, ''),
-(18, 26, 'aXRmY3JxZWJAdHpudnkucGJ6', '', 'Q3JxZWIgSXZydG5m', 'RWhuIFB2ZWhldHbDo2IgMjg=', 'OTI2NjQ3NzU2', 'a:1:{i:0;s:11:\"ROLE_CLIENT\";}', 0, ''),
-(19, 27, 'aXRmY3JxZWIxNUBmbmNiLmNn', '', 'Y3JxZWI=', 'RWhuIDI1IE5vZXZ5LCAzNCBZbnRiZiA=', 'OTg3NjU0MzIx', 'a:1:{i:0;s:11:\"ROLE_CLIENT\";}', 0, ''),
-(20, 28, 'aXRmY3JxZWIxNUBmbmNiLmNn', '', 'Y3JxZWIgaQ==', 'T3JhbnR2eQ==', 'ODUyOTg3NjU0', 'a:1:{i:0;s:11:\"ROLE_CLIENT\";}', 0, ''),
-(21, 29, 'aXRmY3JxZWIxNUBmbmNiLmNn', '', 'Y3JxZWI=', 'T3JhbnR2eQ==', 'OTYzOTYzOTYz', 'a:1:{i:0;s:11:\"ROLE_CLIENT\";}', 0, '');
+(12, 20, 'aXRmY3JxZWJAdHpudnkucGJ6', '', 'Q3JxZWIgSXZydG5m', 'RWhuIFB2ZWhldHbDo2IgMjg=', 'OTI2NjQ3NzU2', 'a:1:{i:0;s:11:\"ROLE_CLIENT\";}', 0, 'en'),
+(13, 21, 'aXRmY3JxZWJAdHpudnkucGJ6', '', 'Q3JxZWIgSXZydG5mMg==', 'RWhuIFB2ZWhldHbDo2IgMjgy', 'OTI2NjQ3NzU2', 'a:1:{i:0;s:11:\"ROLE_CLIENT\";}', 0, 'pt'),
+(14, 22, 'aXRmY3JxZWJAdHpudnkucGJ6', '', 'Q3JxZWIgSXZydG5m', 'RWhuIFB2ZWhldHbDo2IgMjg=', 'OTI2NjQ3NzU2', 'a:1:{i:0;s:11:\"ROLE_CLIENT\";}', 0, 'en'),
+(15, 23, 'aXRmY3JxZWJAdHpudnkucGJ6', '', 'Q3JxZWIgSXZydG5m', 'RWhuIFB2ZWhldHbDo2IgMjg=', 'OTI2NjQ3NzU2', 'a:1:{i:0;s:11:\"ROLE_CLIENT\";}', 0, 'en'),
+(16, 24, 'aXRmY3JxZWJAdHpudnkucGJ6', '', 'Q3JxZWIgSXZydG5m', 'RWhuIFB2ZWhldHbDo2IgMjg=', 'OTI2NjQ3NzU2', 'a:1:{i:0;s:11:\"ROLE_CLIENT\";}', 0, 'en'),
+(17, 25, 'aXRmY3JxZWJAdHpudnkucGJ6', '', 'Q3JxZWIgSXZydG5m', 'RWhuIFB2ZWhldHbDo2IgMjg=', 'OTI2NjQ3NzU2', 'a:1:{i:0;s:11:\"ROLE_CLIENT\";}', 0, 'en'),
+(18, 26, 'aXRmY3JxZWJAdHpudnkucGJ6', '', 'Q3JxZWIgSXZydG5m', 'RWhuIFB2ZWhldHbDo2IgMjg=', 'OTI2NjQ3NzU2', 'a:1:{i:0;s:11:\"ROLE_CLIENT\";}', 0, 'pt'),
+(19, 27, 'aXRmY3JxZWIxNUBmbmNiLmNn', '', 'Y3JxZWI=', 'RWhuIDI1IE5vZXZ5LCAzNCBZbnRiZiA=', 'OTg3NjU0MzIx', 'a:1:{i:0;s:11:\"ROLE_CLIENT\";}', 0, 'pt'),
+(20, 28, 'aXRmY3JxZWIxNUBmbmNiLmNn', '', 'Y3JxZWIgaQ==', 'T3JhbnR2eQ==', 'ODUyOTg3NjU0', 'a:1:{i:0;s:11:\"ROLE_CLIENT\";}', 0, 'pt'),
+(21, 29, 'aXRmY3JxZWIxNUBmbmNiLmNn', '', 'Y3JxZWI=', 'T3JhbnR2eQ==', 'OTYzOTYzOTYz', 'a:1:{i:0;s:11:\"ROLE_CLIENT\";}', 0, 'pt');
 
 -- --------------------------------------------------------
 
@@ -172,6 +174,13 @@ CREATE TABLE `easytext` (
   `easy_text_html` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   `name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Extraindo dados da tabela `easytext`
+--
+
+INSERT INTO `easytext` (`id`, `easy_text`, `easy_text_html`, `name`) VALUES
+(1, '{\"ops\":[{\"insert\":\"Well be waiting\"},{\"attributes\":{\"link\":\"https://www.google.com/maps/dir//37.101808,-8.76528\"},\"insert\":\" Here\"},{\"insert\":\"\\n\"}]}', '<p>Well be waiting<a href=\"https://www.google.com/maps/dir//37.101808,-8.76528\" target=\"_blank\"> Here</a></p>', 'Pick info');
 
 -- --------------------------------------------------------
 
@@ -214,15 +223,18 @@ CREATE TABLE `image` (
 --
 
 CREATE TABLE `migration_versions` (
-  `version` varchar(255) COLLATE utf8_unicode_ci NOT NULL
+  `version` varchar(14) COLLATE utf8_unicode_ci NOT NULL,
+  `executed_at` datetime DEFAULT NULL COMMENT '(DC2Type:datetime_immutable)'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Extraindo dados da tabela `migration_versions`
 --
 
-INSERT INTO `migration_versions` (`version`) VALUES
-('20190201203509');
+INSERT INTO `migration_versions` (`version`, `executed_at`) VALUES
+('20190201203509', NULL),
+('20190204191325', '2019-02-04 19:14:01'),
+('20190204203153', '2019-02-04 20:32:04');
 
 -- --------------------------------------------------------
 
@@ -277,7 +289,7 @@ CREATE TABLE `warning` (
 --
 
 INSERT INTO `warning` (`id`, `info_pt`, `info_en`, `visible`) VALUES
-(10, 'Avisos em PT ... 13', 'Warning EN .....', 1);
+(10, 'Avisos em PT ... 13', 'Warning EN .....', 0);
 
 --
 -- Indexes for dumped tables
@@ -386,7 +398,7 @@ ALTER TABLE `booking`
 -- AUTO_INCREMENT for table `category`
 --
 ALTER TABLE `category`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 --
 -- AUTO_INCREMENT for table `client`
 --
@@ -396,7 +408,7 @@ ALTER TABLE `client`
 -- AUTO_INCREMENT for table `easytext`
 --
 ALTER TABLE `easytext`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `event`
 --
