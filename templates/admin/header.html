@@ -34,7 +34,20 @@
           <i class="far fa-plus-square fa-fw"></i> Nova
         </a>
         <a href="#" onclick="ajaxUpload(this.id)" id="category-list" class="w3-right-align nav w3-bar-item w3-button w3-padding">
-          <i class="far fa-edit fa-fw"></i> Editar
+          <i class="far fa-edit fa-fw"></i> Editar/Listar
+        </a>
+      </div>
+    </div>
+
+    <div class="w3-dropdown-click">
+      <button onclick="dropDownMenu('gallery')" class="w3-tooltip nav w3-hover-grey w3-bar-item w3-padding w3-sand w3-border-top w3-border-brown">
+        <i class="far fa-images"></i> Galeria</button>
+      <div id="gallery" class="w3-dropdown-content w3-bar-block" style="position:relative">
+        <a href="#" onclick="ajaxUpload(this.id)" id="gallery-new" class="w3-right-align nav w3-border-brown w3-border-bottom w3-border-top w3-bar-item w3-button w3-padding">
+          <i class="far fa-plus-square fa-fw"></i> Nova
+        </a>
+        <a href="#" onclick="ajaxUpload(this.id)" id="gallery-list" class="w3-right-align nav w3-bar-item w3-button w3-padding">
+          <i class="far fa-edit fa-fw"></i> Editar/Listar
         </a>
       </div>
     </div>
@@ -46,7 +59,7 @@
       <i class="fas fa-calendar-times fa-fw"></i> Bloquear Datas
     </a>
     <a href="#" onclick="ajaxUpload(this.id)" id="easy-text" class="nav w3-bar-item w3-button w3-padding w3-sand w3-border-top w3-border-brown">
-      <i class="fas fa-signal"></i> Texto Facil
+      <i class="fas fa-signal"></i> Texto Fácil
     </a>
     <a href="#" onclick="ajaxUpload(this.id)" id="warning" class="nav w3-bar-item w3-button w3-padding w3-sand w3-border-top w3-border-brown">
       <i class="fa fa-exclamation-triangle fa-fw"></i> Aviso
@@ -57,9 +70,7 @@
     <a href="#" onclick="ajaxUpload(this.id)" id="rgpd" class="nav w3-bar-item w3-button w3-padding w3-sand w3-border-top w3-border-brown">
       <i class="far fa-file-alt"></i> Rgpd
     </a>
-    <a href="#" onclick="ajaxUpload(this.id)" id="gallery" class="nav w3-bar-item w3-button w3-padding w3-sand w3-border-top w3-border-brown">
-      <i class="far fa-images"></i> Galeria
-    </a>
+
     <a href="{{ path('index') }}" target="_blank" class="w3-bar-item w3-button w3-padding w3-sand w3-border-top w3-border-brown">
       <i class="fas fa-external-link-alt fa-fw"></i> Ver Site
     </a>

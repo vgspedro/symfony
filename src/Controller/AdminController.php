@@ -1,6 +1,7 @@
 <?php
 namespace App\Controller;
 
+use App\Entity\Gallery;
 use App\Entity\Category;
 use App\Entity\Blockdates;
 use App\Entity\Booking;
@@ -14,6 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use App\Form\CategoryType;
+use App\Form\GalleryType;
 use App\Form\BlockdatesType;
 use App\Form\EventType;
 use App\Form\EasyTextType;

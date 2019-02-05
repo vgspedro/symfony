@@ -2,7 +2,7 @@
 
 namespace App\Form;
 
-use App\Entity\Category;
+use App\Entity\Gallery;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -17,7 +17,7 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 
-class CategoryType extends AbstractType
+class GalleryType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -32,12 +32,6 @@ class CategoryType extends AbstractType
                 'required' => false,
                 'label' => 'Nome (PT)*',
                 'attr' => ['class' => 'w3-input w3-border w3-white','placeholder'=>'Nome (PT)*',]
-            ))
-            ->add('availability', IntegerType::class,
-            array(
-                'required' => true,
-                'label' => 'Lotação *',
-                'attr' => ['class' => 'w3-input w3-border w3-white','placeholder'=>'Lotação *',]
             ))
             ->add('name_en', TextType::class, array(
                 'required' => false,
@@ -55,57 +49,10 @@ class CategoryType extends AbstractType
                 'label' => 'Descrição (EN)*',
                 'attr' => ['class' => 'w3-input w3-border w3-white','placeholder'=>'Descrição (EN)*', 'rows' => 5 ]
             ))
-            ->add('children_price', IntegerType::class, array(
-                'label' => 'Preço Criança (€)*',
-                'required'  => false,
-                'attr' => ['class' => 'w3-input w3-border w3-white','placeholder'=>'Preço Criança (€)*', 'min'=>'0', 'step'=>'any', 'type'=>'number']
-            ))
-            ->add('adult_price', IntegerType::class, array(
-                'label' =>'Preço Adulto (€)*',
-                'required' => false,
-                'attr' => ['class' => 'w3-input w3-border w3-white', 'placeholder'=>'Preço Adulto (€)*', 'min'=>'0','step'=>'any', 'type'=>'number']
-            ))
-            ->add('event', CollectionType::class, array(
-                'entry_type' => EventType::class,
-                'entry_options' => array('label' => false),
-                'allow_add' => true,
-                'allow_delete' => true,                 
-                'by_reference' => false,
-                'label' => false   
-            ))
-            ->add('blockdate', CollectionType::class, array(
-                    'entry_type' => BlockdatesType::class,
-                    'entry_options' => array('label' => false),
-                    'allow_add' => true,
-                    'allow_delete' => true,                 
-                    'by_reference' => false,
-                    'label' => false   
-            ))
             ->add('is_active', CheckboxType::class, array(
                 'label'    => 'Ativa?',
                 'required' => false,
                 'attr' => ['class' => 'w3-check']
-            ))
-            ->add('highlight', CheckboxType::class, array(
-                'label'    => 'Destaque',
-                'required' => false,
-                'attr' => ['class' => 'w3-check']
-            ))
-            ->add('warranty_payment', CheckboxType::class, array(
-                'label'    => 'Garantia Pagamento',
-                'required' => false,
-                'attr' => ['class' => 'w3-check']
-            ))
-            ->add('warranty_payment_pt', TextareaType::class,
-            array(
-                'required' => false,
-                'label' => 'Garantia Pagamento (PT)',
-                'attr' => ['class' => 'w3-input w3-border w3-white','placeholder'=>'Garantia Pagamento (PT)', 'rows' => 5 ]
-            ))
-            ->add('warranty_payment_en', TextareaType::class, array(
-                'required' => false,
-                'label' => 'Garantia Pagamento (EN)',
-                'attr' => ['class' => 'w3-input w3-border w3-white','placeholder'=>'Garantia Pagamento (EN)', 'rows' => 5 ]
             ))
             ->add('submit', SubmitType::class,
             array(

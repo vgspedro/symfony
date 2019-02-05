@@ -23,28 +23,28 @@ class GalleryController extends AbstractController
 
     private $gallery_images_directory;
     
-    //public function __construct($gallery_images_directory)
-    //{
-        //$this->gallery_images_directory = $gallery_images_directory;
-    //}
+    public function __construct($gallery_images_directory)
+    {
+        $this->gallery_images_directory = $gallery_images_directory;
+    }
     
 
 
     public function galleryNew(Request $request)
     {
         $gallery = new Gallery();
-        $form = $this->createForm(GaleryType::class, $galery);
+        $form = $this->createForm(GalleryType::class, $gallery);
         $form->handleRequest($request);
         return $this->render('admin/gallery-new.html',array(
             'form' => $form->createView()));
     }
-/*
 
-    public function categoryAdd(Request $request, ValidatorInterface $validator, FileUploader $fileUploader,ImageResizer $imageResizer)
+
+    public function galleryAdd(Request $request, ValidatorInterface $validator, FileUploader $fileUploader,ImageResizer $imageResizer)
     {
-        $category = new Category();
+        $gallery = new Gallery();
 
-        $form = $this->createForm(CategoryType::class, $category);
+        $form = $this->createForm(GalleryType::class, $gallery);
 
         $form->handleRequest($request);
 
@@ -62,28 +62,21 @@ class GalleryController extends AbstractController
                         $category->setImage($fileName);
                     }
                     else{
-                        $category->setImage($this->categories_images_directory.'/no-image.png');
+                        $gallery->setImage($this->gallery_images_directory.'/no-image.png');
                     }
 
                 try {
 
-                    $em->persist($category);
+                    $em->persist($gallery);
                     $em->flush();
 
                     $response = array(
                         'result' => 1,
                         'message' => 'success',
-                        'data' => $category->getId());
+                        'data' => $galleryry->getId());
                     } 
                     catch(DBALException $e){
 
-                        if (preg_match("/'event'/i", $e))
-                            $a = array( "Insira pelo menos 1 hora.");
-
-                        else if (preg_match("/'children_price'/i", $e))
-                            $a = array("Preço Criança (€)* não pode ser vazio, insira 0 ou maior.");
-
-                        else
                             $a = array("Contate administrador sistema sobre: ".$e->getMessage());
 
                         $response = array(
@@ -111,15 +104,15 @@ class GalleryController extends AbstractController
 
 
 
-    public function categoryList(Request $request)
+    public function galleryList(Request $request)
     {
 
         $em = $this->getDoctrine()->getManager();
 
-        $events = $em->getRepository(Event::class)->findAll();
+        $gallery = $em->getRepository(Gallery::class)->findAll();
 
-        return $this->render('admin/category-list.html',array(
-            'categories' =>  $events));
+        return $this->render('admin/gallery-list.html',array(
+            'gallery' =>  $gallery));
     }
 
 
@@ -157,33 +150,33 @@ class GalleryController extends AbstractController
 
 
 
-    public function categoryEdit(Request $request, ValidatorInterface $validator, FileUploader $fileUploader, ImageResizer $imageResizer)
+    public function galleryEdit(Request $request, ValidatorInterface $validator, FileUploader $fileUploader, ImageResizer $imageResizer)
     {
 
-        $categoryId = $request->request->get('id');
+        $galleryId = $request->request->get('id');
         
         $em = $this->getDoctrine()->getManager();
 
-        $category = $em->getRepository(Category::class)->find($categoryId);
+        $gallery = $em->getRepository(Galler::class)->find($galleryId);
 
-        $img = $category->getImage();
+        $img = $gallery->getImage();
 
-        if ($category->getImage()) {
+        if ($gallery->getImage()) {
             
-            $path = file_exists($this->categories_images_directory.'/'.$category->getImage()) ?
+            $path = file_exists($this->gallery_images_directory.'/'.$gallery->getImage()) ?
 
-            $this->categories_images_directory.'/'.$category->getImage()
+            $this->gallery_images_directory.'/'.$gallery->getImage()
             :
-            $this->categories_images_directory.'/no-image.png';
+            $this->gallery_images_directory.'/no-image.png';
 
-            $category->setImage(new File($path));
+            $gallery->setImage(new File($path));
         }
 
         else
 
-            $category->setImage(new File($this->categories_images_directory.'/no-image.png'));
+            $gallery->setImage(new File($this->gallery_images_directory.'/no-image.png'));
 
-        $form = $this->createForm(CategoryType::class, $category);
+        $form = $this->createForm(GalleryType::class, $gallery);
 
         $form->handleRequest($request);
             
@@ -192,13 +185,13 @@ class GalleryController extends AbstractController
             if($form->isValid()){ 
                 
                 $deleted = 1;
-                $category = $form->getData();
-                $file = $category->getImage();
+                $gallery = $form->getData();
+                $file = $gallery->getImage();
 
                 if (is_object($file)) {
                     $fileName = $fileUploader->upload($file);               
                     $imageResizer->resize($fileName);
-                    $category->setImage($fileName);
+                    $gallery->setImage($fileName);
                     
                     //remove from folder older image
 
@@ -206,7 +199,7 @@ class GalleryController extends AbstractController
 
                     if ($img && $img != 'no-image.png') {
                         try {
-                            $fileSystem->remove($this->categories_images_directory.'/'.$img);
+                            $fileSystem->remove($this->gallery_images_directory.'/'.$img);
                         } 
                         catch (IOExceptionInterface $exception) {
                             $deleted = '0 '.$exception->getPath();
@@ -214,27 +207,20 @@ class GalleryController extends AbstractController
                     }
                 }
                 else
-                    $category->setImage($img);
+                    $gallery->setImage($img);
 
                 try {
-                    $em->persist($category);
+                    $em->persist($gallery);
                     $em->flush();
 
                     $response = array(
                         'result' => 1,
                         'message' => 'success',
                         'image' => $deleted,
-                        'data' => $category->getId());
+                        'data' => $gallery->getId());
                 } 
                 catch(DBALException $e){
 
-                    if (preg_match("/'event'/i", $e))
-                        $a = array( "Insira pelo menos 1 hora.");
-
-                    else if (preg_match("/'children_price'/i", $e))
-                        $a = array("Preço Criança (€)* não pode ser vazio, insira 0 ou maior.");
-
-                    else
                         $a = array("Contate administrador sistema sobre: ".$e->getMessage());
 
                     $response = array(
@@ -331,7 +317,7 @@ class GalleryController extends AbstractController
 
         return $err;
     }
-*/
+
 }
 
 ?>

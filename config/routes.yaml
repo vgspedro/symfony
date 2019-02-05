@@ -160,19 +160,25 @@ admin_warning_edit:
 
 admin_gallery:
     path: /admin-gallery/
-    controller: App\Controller\WarningController::adminGallery
+    controller: App\Controller\GalleryController::gallery
 
 admin_gallery_list:
     path: /admin-gallery-list/
-    controller: App\Controller\WarningController::adminGalleryList
+    controller: App\Controller\GalleryController::galleryList
 
 admin_gallery_new:
     path: /admin-gallery-new/
-    controller: App\Controller\WarningController::adminGalleryNew
+    controller: App\Controller\GalleryController::galleryNew
 
 admin_gallery_delete:
     path: /admin-gallery-delete/
-    controller: App\Controller\WarningController::adminGalleryDelete
+    controller: App\Controller\GalleryController::galleryDelete
+
+admin_gallery_add:
+    path: /admin-gallery-add/
+    controller: App\Controller\GalleryController::galleryAdd
+    #condition: 'request.isXmlHttpRequest()'
+
 
 ##
 # USERS

@@ -41,6 +41,14 @@ class Category
     private $descriptionEn;
 
     /**
+     * @ORM\Column(type="string", length=350, name="warranty_payment_pt")
+     */
+    private $warrantyPaymentPt;
+    /**
+     * @ORM\Column(type="string", length=350, name="warranty_payment_en")
+     */
+    private $warrantyPaymentEn;
+    /**
     * @Assert\NotBlank(message="CHILDREN_PRICE")
      * @ORM\Column(type="decimal", scale=2)
      */
@@ -71,11 +79,44 @@ class Category
     /** @ORM\Column(type="boolean", name="highlight", options={"default":0}) */
     private $highlight;
     
+    /** @ORM\Column(type="boolean", name="warranty_payment", options={"default":0}) */
+    private $warrantyPayment;
 
     public function __construct()
     {   
         $this->event = new ArrayCollection();
         $this->blockdate = new ArrayCollection();      
+    }
+
+
+    public function getWarrantyPayment()
+    {
+        return $this->warrantyPayment;
+    }
+
+    public function setWarrantyPayment($warrantyPayment)
+    {
+        $this->warrantyPayment = $warrantyPayment;
+    }
+
+    public function getWarrantyPaymentPt()
+    {
+        return $this->warrantyPaymentPt;
+    }
+
+    public function setWarrantyPaymentPt($warrantyPaymentPt)
+    {
+        $this->warrantyPaymentPt = $warrantyPaymentPt;
+    }
+
+    public function getWarrantyPaymentEn()
+    {
+        return $this->warrantyPaymentEn;
+    }
+
+    public function setWarrantyPaymentEn($warrantyPaymentEn)
+    {
+        $this->warrantyPaymentEn = $warrantyPaymentEn;
     }
 
     public function getAvailability()
