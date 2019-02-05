@@ -11,24 +11,28 @@
 .nGY2 .nGY2GThumbnailImage{background: none}
 </style>
 
+
 <section>
-  <div class="w3-row">
-    <div class="rope-1 l1 s12"></div>
-  </div>
+  {% if galleries %}
   <div class="bgimg-2">
     <div ID="ngy2p" data-nanogallery2='{
       "thumbnailHeight": 250,
       "thumbnailWidth":  "auto",
-      "thumbnailLabel":{ "display" : false }
+      "thumbnailLabel":{ "display" : false },
+      "thumbnailBorderVertical": 8,
+      "thumbnailBorderHorizontal": 8,
+      "thumbnailAlignment": "center",
+      "gallerySorting": "random"
       }' class="w3-row-padding w3-padding-16">
-      <a href="{{ asset('images/gal1.jpg') }}" class="team-images w3-card-2" data-ngthumb="{{ asset('images/gal1.jpg') }}" data-ngdesc="">Berlin 1</a>
-      <a href="{{ asset('images/gal2.jpg') }}" class="team-images w3-card-2" data-ngthumb="{{ asset('images/gal2.jpg') }}" data-ngdesc="">Berlin 2</a>
-      <a href="{{ asset('images/gal3.jpg') }}" class="team-images w3-card-2" data-ngthumb="{{ asset('images/gal3.jpg') }}" data-ngdesc="">Berlin 3</a>
-      <a href="{{ asset('images/gal4.jpg') }}" class="team-images w3-card-2" data-ngthumb="{{ asset('images/gal4.jpg') }}" data-ngdesc="">Berlin 1</a>
-      <a href="{{ asset('images/gal5.jpg') }}" class="team-images w3-card-2" data-ngthumb="{{ asset('images/gal5.jpg') }}" data-ngdesc="">Berlin 2</a>
+
+      {% for gallery in galleries %}
+        <a href="/upload/gallery/{{gallery.image}}" class="team-images w3-card-2" data-ngthumb="/upload/gallery/{{gallery.image}}" data-ngdesc="{{gallery.descriptionPt}}">{{gallery.namePt}}</a>
+      {% endfor %}   
+
     </div>
   </div>
   <div class="w3-row">
     <div class="rope-2 l1 s12"></div>
   </div>
+  {% endif %}
 <section>

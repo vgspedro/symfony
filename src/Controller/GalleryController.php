@@ -27,8 +27,6 @@ class GalleryController extends AbstractController
     {
         $this->gallery_images_directory = $gallery_images_directory;
     }
-    
-
 
     public function galleryNew(Request $request)
     {
@@ -54,12 +52,12 @@ class GalleryController extends AbstractController
 
                     $em = $this->getDoctrine()->getManager();
 
-                    $file = $category->getImage();
+                    $file = $gallery->getImage();
 
                     if ($file) {
                         $fileName = $fileUploader->upload($file);               
                         $imageResizer->resize($fileName);
-                        $category->setImage($fileName);
+                        $gallery->setImage($fileName);
                     }
                     else{
                         $gallery->setImage($this->gallery_images_directory.'/no-image.png');
@@ -73,7 +71,7 @@ class GalleryController extends AbstractController
                     $response = array(
                         'result' => 1,
                         'message' => 'success',
-                        'data' => $galleryry->getId());
+                        'data' => $gallery->getId());
                     } 
                     catch(DBALException $e){
 
@@ -112,38 +110,38 @@ class GalleryController extends AbstractController
         $gallery = $em->getRepository(Gallery::class)->findAll();
 
         return $this->render('admin/gallery-list.html',array(
-            'gallery' =>  $gallery));
+            'galleries' =>  $gallery));
     }
 
 
 
-    public function categoryShowEdit(Request $request, ValidatorInterface $validator, FileUploader $fileUploader, ImageResizer $imageResizer)
+    public function galleryShowEdit(Request $request, ValidatorInterface $validator, FileUploader $fileUploader, ImageResizer $imageResizer)
     {
 
-        $categoryId = $request->request->get('id');
+        $galleryId = $request->request->get('id');
         
         $em = $this->getDoctrine()->getManager();
 
-        $category = $em->getRepository(Category::class)->find($categoryId);
+        $gallery = $em->getRepository(Gallery::class)->find($galleryId);
 
-        if ($category->getImage()) {
+        if ($gallery->getImage()) {
 
-            $path = file_exists($this->categories_images_directory.'/'.$category->getImage()) ?
-                $this->categories_images_directory.'/'.$category->getImage()
+            $path = file_exists($this->gallery_images_directory.'/'.$gallery->getImage()) ?
+                $this->gallery_images_directory.'/'.$gallery->getImage()
                 :
-                $this->categories_images_directory.'/no-image.png';
+                $this->gallery_images_directory.'/no-image.png';
 
-            $category->setImage(new File($path));
+            $gallery->setImage(new File($path));
         }
 
         else
-            $category->setImage(new File($this->categories_images_directory.'/no-image.png'));
+            $gallery->setImage(new File($this->gallery_images_directory.'/no-image.png'));
 
-        $form = $this->createForm(CategoryType::class, $category);
+        $form = $this->createForm(GalleryType::class, $gallery);
 
-        return $this->render('admin/category-edit.html',array(
+        return $this->render('admin/gallery-edit.html',array(
             'form' => $form->createView(),
-            'category' => $category
+            'gallery' => $gallery
         ));
     }
 
@@ -157,7 +155,7 @@ class GalleryController extends AbstractController
         
         $em = $this->getDoctrine()->getManager();
 
-        $gallery = $em->getRepository(Galler::class)->find($galleryId);
+        $gallery = $em->getRepository(Gallery::class)->find($galleryId);
 
         $img = $gallery->getImage();
 
@@ -238,10 +236,11 @@ class GalleryController extends AbstractController
                 );
             }
         }
+        
         return new JsonResponse($response);
     }
 
-    public function categoryDelete(Request $request)
+    public function galleryDelete(Request $request)
     {
         $deleted = 1;
         $response = array();

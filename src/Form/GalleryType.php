@@ -23,6 +23,7 @@ class GalleryType extends AbstractType
     {
         $builder
             ->add('image', FileType::class, array(
+                'data_class' => null,
                 'label' => false,
                 'required' => false,
                 'attr' => ['class' => 'w3-hide set-image','onchange' => 'loadFile(event)']
@@ -65,7 +66,7 @@ class GalleryType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => Category::class,
+            'data_class' => Gallery::class,
         ));
     }*/
 }

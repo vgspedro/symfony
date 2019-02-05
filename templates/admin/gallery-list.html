@@ -5,7 +5,6 @@
  display: inline-block; padding: 8px 16px; vertical-align: middle;overflow: hidden;text-decoration: none; color: inherit;
     background-color: inherit;text-align: center; cursor: pointer; white-space: nowrap;color: #000!important;background-color: #87CEEB!important;font-size:18px}
 
-
 select.input-sm, input .form-control .input-sm {height: 36px}
 table.dataTable.dtr-inline.collapsed > tbody > tr > td:first-child:before, table.dataTable.dtr-inline.collapsed > tbody > tr > th:first-child:before {
     height: 24px;width: 24px;border-radius: 16px; text-align: center;line-height: 23px;font-size: 24px;border-radius: 0px;border: 1px solid #ddd;box-shadow: 0 0 0 #000}
@@ -19,83 +18,50 @@ div.dataTables_length select {height: 50px}
 </style>
 
 <header class="w3-container" style="padding-top:22px">
-   <h5><b><i class="far fa-edit fa-fw"></i> Categorias</b></h5>
+   <h5><b><i class="far fa-images"></i> Galeria</b></h5>
 </header>
 <div class="w3-row-padding">
   <div class="w3-col s12">
   <table id="dataTable" class="w3-border table table-striped centered hover table-bordered" style="width:100%">
     <thead class="w3-sand">
       <tr>
-      <th class="w3-center">#</th>    
+      <th class="w3-center">Acções</th>
+      <th class="w3-center">Imagem</th>    
       <th class="w3-center">Nome PT</th>    
-      <th class="w3-center">Nome EN</th>    
-      <th class="w3-center">Preço Adulto</th>    
-      <th class="w3-center">Preço Criança</th>    
+      <th class="w3-center">Nome EN</th>      
       <th class="w3-center">Descriçao PT</th>    
-      <th class="w3-center">Descriçao EN</th>    
-      <th class="w3-center">Horas</th>    
+      <th class="w3-center">Descriçao EN</th>     
       <th class="w3-center">Activo</th>
-      <th class="w3-center">Destaque</th>
-      <th class="w3-center">Lotação</th>
-      <th class="w3-center">Gart.Pag.</th>
-      <th class="w3-center">Gart.Pag.PT</th>
-      <th class="w3-center">Gart.Pag.EN</th>
       </tr>
     </thead>
     <tbody>
-      {% for category in categories%}
+      {% for gallery in galleries%}
        <tr>
         <td>
-           <button class="w3-btn w3-border w3-blue" onclick="editCategory({{ category.category.id}})">
+           <button class="w3-btn w3-border w3-blue" onclick="editGallery({{ gallery.id}})">
             <i class="far fa-edit fa-fw"></i>
           </button>
-          <button class="w3-btn w3-border w3-red" style="width: 19px" onclick="deleteCategoryConfirm({{ category.category.id}},'{{ category.category.namePt }}')">
+          <button class="w3-btn w3-border w3-red" style="width: 19px" onclick="deleteGalleryConfirm({{ gallery.id}},'{{ gallery.namePt }}')">
             <i class="fas fa-trash-alt"></i>
           </button>
         </td>
-        <td>{{ category.category.namePt }}</td>
-        <td>{{ category.category.nameEn }}</td>
-        <td>{{ category.category.AdultPrice }}</td>
-        <td>{{ category.category.ChildrenPrice }}</td>
-        <td>{{ category.category.DescriptionPt }}</td>
-        <td>{{ category.category.DescriptionEn }}</td>
-        <td>{{ category.event }}</td>
+        <td class="w3-center"><img src="/upload/gallery/{{ gallery.image }}" class="w3-card" style="width:50px"></td>
+        <td>{{ gallery.namePt }}</td>
+        <td>{{ gallery.nameEn }}</td>
+        <td>{{ gallery.DescriptionPt }}</td>
+        <td>{{ gallery.DescriptionEn }}</td>
         <td class="w3-center">
-          {% if category.category.IsActive == 1 %}
+          {% if gallery.IsActive == 1 %}
             <i class="w3-text-green w3-xlarge fas fa-check-circle"></i>
           {% else %}
             <i class="w3-text-red w3-xlarge fas fa-times-circle"></i>
           {% endif %}
         </td>
-         <td class="w3-center">
-          {% if category.category.highlight == 1 %}
-            <i class="w3-text-green w3-xlarge fas fa-check-circle"></i>
-          {% else %}
-            <i class="w3-text-red w3-xlarge fas fa-times-circle"></i>
-          {% endif %}
-        </td>
-        <td class="w3-right-align">{{ category.category.availability }}</td>
-        <td class="w3-center">
-          {% if category.category.warrantyPayment == 1 %}
-            <i class="w3-text-green w3-xlarge fas fa-check-circle"></i>
-          {% else %}
-            <i class="w3-text-red w3-xlarge fas fa-times-circle"></i>
-          {% endif %}
-        </td>
-        <td>{{ category.category.warrantyPaymentPt }}</td>
-        <td>{{ category.category.warrantyPaymentEn }}</td>
       </tr>
     {% endfor %}
     </tbody>
     <tfoot class="w3-sand">
       <tr>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
         <td></td>
         <td></td>
         <td></td>
@@ -121,22 +87,20 @@ else
   stored = JSON.parse(localStorage.getItem("tablecategory"))
 */
 
+stored = tablecategory = []
 
-stored = tablecategory = [2,5,6,12,13]
-
-
-function editCategory(id){
+function editGallery(id){
   $('.w3-overlay').show()
   setTimeout(function(){
   $.ajax({  
-    url:'{{ path('admin_category_show_edit') }}',
+    url:'{{ path('admin_gallery_show_edit') }}',
     type: "POST",
     data:'id='+id,
     success: function(data){
       $('.w3-overlay').hide()
       $('#set-id').text(id)
-      $('#set-category').html(data)
-      $('#modal-edit-category').show()
+      $('#set-gallery').html(data)
+      $('#modal-edit-gallery').show()
       if (data.message == 'success'){
         $('#info-client').show()                
         $('#info-client-head').removeClass('w3-red').addClass('w3-green').html('<span onclick="$(\'#info-client\').hide()" class="w3-button w3-display-topright w3-large"><i class="fa fa-times"></i></span><h1><i class="fa fa-check"></i> Sucesso</h1>')
@@ -151,25 +115,25 @@ function editCategory(id){
   }, 500)
 }
 
-function deleteCategoryConfirm(id,n){
-  $('#delete-category').html('<p class="w3-center w3-large">Tem a certeza que pretende apagar a categoria, <b>'+n+'</b> ?</p>')
+function deleteGalleryConfirm(id,n){
+  $('#delete-gallery').html('<p class="w3-center w3-large">Tem a certeza que pretende apagar a Imagem, <b>'+n+'</b> ?</p>')
   $('#delete-id').val(id)
-  $('#modal-delete-category').show()
+  $('#modal-delete-gallery').show()
 }
 
-function deleteCategory(id){
+function deleteGallery(id){
   $('.w3-overlay').show()
   setTimeout(function(){
   $.ajax({  
-    url:'{{ path('admin_category_delete') }}',
+    url:'{{ path('admin_gallery_delete') }}',
     type: "POST",
     data:'id='+id,
     success: function(data){
       $('.w3-overlay').hide()
       //console.log(data)
       if (data.message == 'success'){
-        ajaxUpload('category-list')
-        $('#modal-delete-category').hide()
+        ajaxUpload('gallery-list')
+        $('#modal-delete-gallery').hide()
       }
     },
     error:function(data){

@@ -179,6 +179,15 @@ admin_gallery_add:
     controller: App\Controller\GalleryController::galleryAdd
     #condition: 'request.isXmlHttpRequest()'
 
+admin_gallery_show_edit:
+    path: /admin-gallery-show-edit/
+    controller: App\Controller\GalleryController::galleryShowEdit
+    #condition: 'request.isXmlHttpRequest()'
+
+admin_gallery_edit:
+    path: /admin-gallery-edit/
+    controller: App\Controller\GalleryController::galleryEdit
+    #condition: 'request.isXmlHttpRequest()'
 
 ##
 # USERS

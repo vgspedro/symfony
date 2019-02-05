@@ -181,6 +181,28 @@
 </div>
 
 
+<div id="modal-edit-gallery" class="w3-modal" style="z-index:9999999;padding-top: 12px;padding-bottom:32px">
+  <div class="w3-modal-content w3-animate-zoom" style="min-width:95%">
+      <div class="w3-container w3-blue w3-padding">
+          <span onclick="$('#modal-edit-gallery').hide()" class="w3-padding w3-button w3-display-topright">
+            <i class="w3-xlarge fa fa-times"></i>
+          </span>
+          <h2>
+            <i class="far fa-edit fa-fw"></i>
+            <span>Galeria <span id="set-id"></span>
+          </h2>
+      </div>
+      <div class="w3-container w3-padding" id="set-gallery">
+      </div>
+      <div class="w3-row-padding w3-xlarge w3-padding-large w3-border-top">
+        <span class="w3-col s6 w3-block w3-btn w3-right" onclick="$('#modal-edit-gallery').hide()">
+            <i class="fa fa-times"></i>
+        </span>
+    </div>
+  </div>
+</div>
+
+
 <div id="modal-error" class="w3-modal" style="z-index: 9999999;padding-top:100px; padding-bottom: 32px">
   <div class="w3-modal-content w3-animate-zoom" style="max-width:400px">
     <div class="w3-container w3-red w3-padding">

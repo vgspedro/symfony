@@ -15,6 +15,7 @@ use App\Entity\Category;
 use App\Entity\Warning;
 use App\Entity\Blockdates;
 use App\Entity\Client;
+use App\Entity\Gallery;
 use App\Form\BookingType;
 use App\Entity\User;
 /*https://github.com/nojacko/email-validator*/
@@ -194,6 +195,8 @@ class HomeController extends AbstractController
             $b3[] = array('img'=>'images/b33.jpg');
             $b3[] = array('img'=>'images/b34.jpg');
 
+            $getGallery = $this->getDoctrine()->getRepository(Gallery::class);
+
             $getWarning = $this->getDoctrine()->getRepository(Warning::class);
             
             $warning = $getWarning->find(10);
@@ -201,6 +204,10 @@ class HomeController extends AbstractController
             $getCategory = $this->getDoctrine()->getRepository(Category::class);
 
             $category = $getCategory->findBy(['isActive' => 1],['namePt' => 'ASC']);
+
+            $categoryHighlight = $getCategory->findOneBy(['highlight' => 1],['namePt' => 'ASC']);
+
+            $gallery = $getGallery->findBy(['isActive' => 1],['namePt' => 'ASC']);
             
             return $this->render('base.html.twig', array(
                 'form' => $form->createView(),
@@ -211,7 +218,9 @@ class HomeController extends AbstractController
                 'colors'=> $this->color(),
                 'warning' => $warning,
                 'categories' => $category,
-                'browser'=>$ua
+                'browser'=>$ua,
+                'categoryHighlight' => $categoryHighlight,
+                'galleries' => $gallery
             ));
         }
     }
