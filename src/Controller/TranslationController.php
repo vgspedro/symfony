@@ -40,7 +40,7 @@ private function translationPt(){
 'link' => array(
     'where_we_are'=>'Onde Estamos',
     'the_team'=>'A Equipa',
-    'price'=>'Preços',
+    'price'=>'Passeios',
     'kayak'=>'Aluguer Kayak',
     'schedule'=>'Horário',
     'contact'=>'Contatos',
@@ -190,7 +190,7 @@ array(
 'link' => array(
     'where_we_are'=>'Where we Are',
     'the_team'=>'The Team',
-    'price'=>'Prices',
+    'price'=>'Tours',
     'kayak'=>'Kayak Rental',
     'schedule'=>'Schedule',
     'contact'=>'Contacts',

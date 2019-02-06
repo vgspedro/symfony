@@ -7,9 +7,11 @@
 
 
 
-var video = document.getElementById("video")
+languages('{{locale}}', 2)
+
+//var video = document.getElementById("video")
 var video_full = document.getElementById("video_full")
-var btn = document.getElementById("video_btn")
+//var btn = document.getElementById("video_btn")
 
 var xhr = new XMLHttpRequest()
 xhr.open('GET', '{{ asset('videos/bg.mp4') }}', true)
@@ -20,7 +22,7 @@ xhr.onload = function(e) {
     var vid = (window.webkitURL || window.URL).createObjectURL(myBlob)
     //var banner = document.getElementById("banner")
     video_full.src = vid
-    video.src = vid
+    //video.src = vid
     videoLoaded()
    }
   }
@@ -31,7 +33,7 @@ function videoLoaded(){
   setTimeout(function(){
     //banner.classList.add('w3-hide')
     video_full.classList.remove('w3-hide')
-    btn.classList.remove('w3-hide')
+    //btn.classList.remove('w3-hide')
   },1500)
 }
 
@@ -319,11 +321,8 @@ if (id)
   $('#booking_tourtype').val(id).trigger('change')
 }
 
-function weather(){
-      html = '<p class="lang-only"></p><li style="margin-left:20px"><a class="lang-action pt active-lang" href="javascript:void(0)" title="pt_PT" onclick = "languages(this.title,1)">PT</a></li><li><a class="lang-action en"  href="javascript:void(0)"  title="en_EN" onclick = "languages(this.title,2)">EN</a></li>'
-      $(".weather").html(html)
-}
 
+/*
 function myMap() {
     
   var myCenter = new google.maps.LatLng(37.0872609,-8.4263386)
@@ -357,6 +356,8 @@ google.maps.event.addListener(marker,"click",function() {
   })
   infowindow.open(map,marker)
 }
+
+*/
 
 setLang = 'pt-pt'
 
@@ -527,7 +528,6 @@ function showRgpd(){
   }, 500)
 }
 
-weather()
 
 </script>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAcWwuJpAyu4XwgbPwJxexBO0fsZ2SxDk8&callback=myMap"></script>
+<!--script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAcWwuJpAyu4XwgbPwJxexBO0fsZ2SxDk8&callback=myMap"></script-->

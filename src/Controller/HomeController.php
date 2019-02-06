@@ -40,6 +40,8 @@ class HomeController extends AbstractController
             $session->set('expired', $time->getTimestamp());
         }
 
+        $locale = $ua['lang'] == 'pt_PT' ? 'pt_PT' : 'en_EN';
+
         $form = $this->createForm(BookingType::class, $validate);        
         
         //clients dont need this so we remove it 
@@ -218,9 +220,10 @@ class HomeController extends AbstractController
                 'colors'=> $this->color(),
                 'warning' => $warning,
                 'categories' => $category,
-                'browser'=>$ua,
+                'browser' => $ua,
                 'categoryHighlight' => $categoryHighlight,
-                'galleries' => $gallery
+                'galleries' => $gallery,
+                'locale' => $locale
             ));
         }
     }

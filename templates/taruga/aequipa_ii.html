@@ -15,14 +15,13 @@
 <section>
   {% if galleries %}
   <div class="bgimg-2">
-    <div ID="ngy2p" data-nanogallery2='{
-      "thumbnailHeight": 250,
+    <div style="margin-left:14px" class="w3-padding-32" id="ngy2p" data-nanogallery2='{
+      "thumbnailHeight": 320,
       "thumbnailWidth":  "auto",
       "thumbnailLabel":{ "display" : false },
-      "thumbnailBorderVertical": 8,
-      "thumbnailBorderHorizontal": 8,
-      "thumbnailAlignment": "center",
-      "gallerySorting": "random"
+      "thumbnailBorderVertical": 6,
+      "thumbnailBorderHorizontal": 6,
+      "thumbnailAlignment": "center"
       }' class="w3-row-padding w3-padding-16">
 
       {% for gallery in galleries %}
