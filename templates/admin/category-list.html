@@ -46,44 +46,44 @@ div.dataTables_length select {height: 50px}
       {% for category in categories%}
        <tr>
         <td>
-           <button class="w3-btn w3-border w3-blue" onclick="editCategory({{ category.category.id}})">
+           <button class="w3-btn w3-border w3-blue" onclick="editCategory({{category.id}})">
             <i class="far fa-edit fa-fw"></i>
           </button>
-          <button class="w3-btn w3-border w3-red" style="width: 19px" onclick="deleteCategoryConfirm({{ category.category.id}},'{{ category.category.namePt }}')">
+          <button class="w3-btn w3-border w3-red" style="width: 19px" onclick="deleteCategoryConfirm({{category.id}},'{{ category.namePt }}')">
             <i class="fas fa-trash-alt"></i>
           </button>
         </td>
-        <td>{{ category.category.namePt }}</td>
-        <td>{{ category.category.nameEn }}</td>
-        <td>{{ category.category.AdultPrice }}</td>
-        <td>{{ category.category.ChildrenPrice }}</td>
-        <td>{{ category.category.DescriptionPt }}</td>
-        <td>{{ category.category.DescriptionEn }}</td>
+        <td>{{ category.namePt }}</td>
+        <td>{{ category.nameEn }}</td>
+        <td class="w3-center">{{ category.adultAmount}}</td>
+        <td class="w3-center">{{ category.childrenAmount}}</td>
+        <td>{{ category.descriptionPt }}</td>
+        <td>{{ category.descriptionEn }}</td>
         <td>{{ category.event }}</td>
         <td class="w3-center">
-          {% if category.category.IsActive == 1 %}
+          {% if category.isActive == 1 %}
             <i class="w3-text-green w3-xlarge fas fa-check-circle"></i>
           {% else %}
             <i class="w3-text-red w3-xlarge fas fa-times-circle"></i>
           {% endif %}
         </td>
          <td class="w3-center">
-          {% if category.category.highlight == 1 %}
+          {% if category.highLight == 1 %}
             <i class="w3-text-green w3-xlarge fas fa-check-circle"></i>
           {% else %}
             <i class="w3-text-red w3-xlarge fas fa-times-circle"></i>
           {% endif %}
         </td>
-        <td class="w3-right-align">{{ category.category.availability }}</td>
+        <td class="w3-right-align">{{ category.availability }}</td>
         <td class="w3-center">
-          {% if category.category.warrantyPayment == 1 %}
+          {% if category.warrantyPayment == 1 %}
             <i class="w3-text-green w3-xlarge fas fa-check-circle"></i>
           {% else %}
             <i class="w3-text-red w3-xlarge fas fa-times-circle"></i>
           {% endif %}
         </td>
-        <td>{{ category.category.warrantyPaymentPt }}</td>
-        <td>{{ category.category.warrantyPaymentEn }}</td>
+        <td>{{ category.warrantyPaymentPt }}</td>
+        <td>{{ category.warrantyPaymentEn }}</td>
       </tr>
     {% endfor %}
     </tbody>

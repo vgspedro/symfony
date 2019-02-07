@@ -21,3 +21,5 @@ table.dataTable.dtr-inline.collapsed > tbody > tr > td:first-child, table.dataTa
 .table-condensed>tbody>tr>td, .table-condensed>tbody>tr>th, .table-condensed>tfoot>tr>td, .table-condensed>tfoot>tr>th, .table-condensed>thead>tr>td, .table-condensed>thead>tr>th {padding: 2px 8px!important;text-align: center}
 .datepicker table tr td.disabled, .datepicker table tr td.disabled:hover {cursor: not-allowed}
 .datepicker-inline {width: 100%}
+.w3-select {padding: 22px 4px}
+.datepicker { margin-top:4px!important}

@@ -4,7 +4,7 @@
 {% endif %}
 
 <style type="text/css">
-	.btn-yt{padding: 1px 18px 1px 24px;border-radius: 20%}
+/*	.btn-yt{padding: 1px 18px 1px 24px;border-radius: 20%}*/
 .content{bottom: 0;background: rgba(0, 0, 0, 0.5);width: 100%;position:sticky}
 </style>
 
@@ -15,48 +15,42 @@
 	 	 <i class="fa fa-play"></i>
 	 </button>
 	</div-->
-    
 
-{% if categoryHighlight %}
+{% if category %}
   <div class="content w3-left-align w3-padding">
       <h2>
-  		  <span class="TOUR_TXT0 PT">{{ categoryHighlight.namePt }}</span>
-        <span class="TOUR_TXT0 EN w3-hide">{{ categoryHighlight.nameEn }}</span>
+  		  <span class="PT">{{ category.namePt }}</span>
+        <span class="EN w3-hide">{{ category.nameEn }}</span>
       </h2>
       <div class="w3-row">
         <div class="w3-col l8">
           <p class="w3-left-align w3-hide-small">
- 		         {% if categoryHighlight.adultPrice > 0 %}
+ 		         {% if category.adultAmount> 0 %}
                 <span class='ADULTO'>{% trans %}part_tree.adult{% endtrans %}</span>&nbsp;
-                <span class="PT">{{ categoryHighlight.adultPrice|number_format(2, '.', ',') }}€</span>
-                <span class="EN w3-hide">{{ categoryHighlight.adultPrice|number_format(2, '.', ',') }}€</span>
+                <span>{{ category.adultAmount}}€</span>
                 <br>
               {% else %}
                 <span class='ADULTO'>{% trans %}part_tree.adult{% endtrans %}</span>&nbsp;
-                <span class="PT">-/-</span>
-                <span class="EN w3-hide">-/-</span>
+                <span>-/-</span>
                 <br>
               {% endif %}
-              {% if categoryHighlight.childrenPrice > 0 %}
+              {% if category.childrenAmount > 0 %}
                 <span class='CRIANCA'>{% trans %}part_tree.children{% endtrans %}</span>&nbsp;
-                <span class="PT">{{ categoryHighlight.childrenPrice|number_format(2, '.', ',') }}€</span>
-                <span class="EN w3-hide">{{ categoryHighlight.childrenPrice|number_format(2, '.', ',') }}€</span>
+                <span>{{ category.childrenAmount }}€</span>
                 <br>
               {% else %}
                 <span class='CRIANCA'>{% trans %}part_tree.children{% endtrans %}</span>&nbsp;
-                <span class="PT">-/-</span>
-                <span class="EN w3-hide">-/-</span>
+                <span>-/-</span>
                 <br>
               {% endif %}
           </p>
         </div>
       <div class="w3-col l4 w3-center w3-padding-small">
-        <button class="w3-btn w3-blue w3-large BUY_NOW" onclick="navigation('#reservas',{{ categoryHighlight.id }})">Comprar</button>
+        <button class="w3-btn w3-blue w3-large BUY_NOW" onclick="navigation('#reservas',{{ category.id }})">Comprar</button>
       </div>
     </div>
   </div>
 {% endif %}
-
  	<!--img id="banner" class="banner-img" alt="Taruga Benagil Tours, caves, Benagil, Algarve, Portugal, sup"
 src="{{ asset('images/banner.jpg') }}"-->
 </div>

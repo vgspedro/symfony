@@ -55,15 +55,15 @@ class CategoryType extends AbstractType
                 'label' => 'Descrição (EN)*',
                 'attr' => ['class' => 'w3-input w3-border w3-white','placeholder'=>'Descrição (EN)*', 'rows' => 5 ]
             ))
-            ->add('children_price', IntegerType::class, array(
+            ->add('children_price', MoneyPhpType::class, array(
                 'label' => 'Preço Criança (€)*',
                 'required'  => false,
-                'attr' => ['class' => 'w3-input w3-border w3-white','placeholder'=>'Preço Criança (€)*', 'min'=>'0', 'step'=>'any', 'type'=>'number']
+                'attr' => ['placeholder'=>'Preço Criança (€)*', 'min'=>'0', 'step'=>'any', 'type'=>'number']
             ))
-            ->add('adult_price', IntegerType::class, array(
+            ->add('adult_price', MoneyPhpType::class, array(
                 'label' =>'Preço Adulto (€)*',
                 'required' => false,
-                'attr' => ['class' => 'w3-input w3-border w3-white', 'placeholder'=>'Preço Adulto (€)*', 'min'=>'0','step'=>'any', 'type'=>'number']
+                'attr' => ['placeholder'=>'Preço Adulto (€)*', 'min'=>'0','step'=>'any', 'type'=>'number']
             ))
             ->add('event', CollectionType::class, array(
                 'entry_type' => EventType::class,

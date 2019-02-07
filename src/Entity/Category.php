@@ -4,6 +4,8 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
+use Money\Money;
+
 
 /**
  * @ORM\Table(name="category")
@@ -17,7 +19,9 @@ class Category
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private $id;
+    private $id;   
+    /** @ORM\OneToMany(targetEntity="Booking", mappedBy="category") */
+    private $booking;
     /**
      * @ORM\Column(type="string", length=50)
      * @Assert\NotBlank(message="NAME_PT")
@@ -41,22 +45,22 @@ class Category
     private $descriptionEn;
 
     /**
-     * @ORM\Column(type="string", length=350, name="warranty_payment_pt")
+     * @ORM\Column(type="string", length=350, name="warranty_payment_pt", nullable=true)
      */
     private $warrantyPaymentPt;
     /**
-     * @ORM\Column(type="string", length=350, name="warranty_payment_en")
+     * @ORM\Column(type="string", length=350, name="warranty_payment_en", nullable=true)
      */
     private $warrantyPaymentEn;
     /**
     * @Assert\NotBlank(message="CHILDREN_PRICE")
-     * @ORM\Column(type="decimal", scale=2)
-     */
+    * @ORM\Column(type="money", options={"unsigned"=true}) 
+    */
     private $childrenPrice;
     /**
     * @Assert\NotBlank(message="ADULT_PRICE")
-     * @ORM\Column(type="decimal", scale=2)
-     */
+    * @ORM\Column(type="money", options={"unsigned"=true})
+    */
     private $adultPrice;
     
     /** @ORM\OneToMany(targetEntity="Blockdates", mappedBy="category", cascade={"persist"}) */
@@ -77,17 +81,16 @@ class Category
     private $availability;
 
     /** @ORM\Column(type="boolean", name="highlight", options={"default":0}) */
-    private $highlight;
+    private $highlight = false;
     
     /** @ORM\Column(type="boolean", name="warranty_payment", options={"default":0}) */
-    private $warrantyPayment;
+    private $warrantyPayment = false;
 
     public function __construct()
     {   
         $this->event = new ArrayCollection();
         $this->blockdate = new ArrayCollection();      
     }
-
 
     public function getWarrantyPayment()
     {
@@ -226,22 +229,28 @@ class Category
         $this->event->removeElement($event);
     }
 
+    /** 
+     * @return \Money\Money
+     */
     public function getAdultPrice()
     {
         return $this->adultPrice;
     }
 
-    public function setAdultPrice($adultPrice)
+    public function setAdultPrice(Money $adultPrice)
     {
         $this->adultPrice = $adultPrice;
     }
 
+    /** 
+     * @return \Money\Money
+    */
     public function getChildrenPrice()
     {
         return $this->childrenPrice;
     }
 
-    public function setChildrenPrice($childrenPrice)
+    public function setChildrenPrice(Money $childrenPrice)
     {
         $this->childrenPrice = $childrenPrice;
     }

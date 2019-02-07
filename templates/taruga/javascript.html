@@ -6,8 +6,10 @@
 <script>
 
 
+t = '{{locale}}' == 'pt-PT' ? 1 : 2
+l = '{{locale}}' == 'pt-PT' ? 'pt_PT' : 'en_EN' 
 
-languages('{{locale}}', 2)
+languages(l,t)
 
 //var video = document.getElementById("video")
 var video_full = document.getElementById("video_full")
@@ -44,8 +46,6 @@ function mobilePlayVideo() {
     btn.innerHTML = '<i class="fa fa-pause"></i>'
   } else {
     video_full.pause()
-    
-
     btn.innerHTML = '<i class="fa fa-play"></i>'
   }
 }

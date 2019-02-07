@@ -31,3 +31,7 @@ framework:
         #app: cache.adapter.apcu
     translator:
       enabled: true
+      
+sensio_framework_extra:
+ router:
+     annotations: false

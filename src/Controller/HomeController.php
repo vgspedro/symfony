@@ -20,6 +20,7 @@ use App\Form\BookingType;
 use App\Entity\User;
 /*https://github.com/nojacko/email-validator*/
 use EmailValidator\EmailValidator;
+use App\Service\MoneyFormatter;
 
 class HomeController extends AbstractController
 {
@@ -27,7 +28,7 @@ class HomeController extends AbstractController
     /*set expiration on home page 15 minutes*/
     private $expiration = 900;
 
-    public function html(Request $request, ValidatorInterface $validator, \Swift_Mailer $mailer, SessionInterface $session)
+    public function html(Request $request, ValidatorInterface $validator, \Swift_Mailer $mailer, SessionInterface $session, MoneyFormatter $moneyFormatter)
     {
         $ua = $this->getBrowser();
 
@@ -40,7 +41,7 @@ class HomeController extends AbstractController
             $session->set('expired', $time->getTimestamp());
         }
 
-        $locale = $ua['lang'] == 'pt_PT' ? 'pt_PT' : 'en_EN';
+        $locale = $ua['lang'];
 
         $form = $this->createForm(BookingType::class, $validate);        
         
@@ -48,6 +49,8 @@ class HomeController extends AbstractController
         $form->remove('notes'); 
         
         $sessionEnd = ($time->getTimestamp() - $session->get('expired')) < $this->getExpirationTime() ? true : false; 
+
+        $em = $this->getDoctrine()->getManager();
 
         if ($request->isXmlHttpRequest()) {
           
@@ -83,8 +86,6 @@ class HomeController extends AbstractController
                     
                     $language = $request->request->get('language');
 
-                    $em = $this->getDoctrine()->getManager();
-
                     $date = date_create_from_format("d/m/Y", $newBook['date']);
                     $hour = date_create_from_format("H:i", $newBook['hour']);
 
@@ -110,9 +111,10 @@ class HomeController extends AbstractController
                     $client->setLanguage($language);
                     $em->persist($client);
                     $em->persist($booking);
+
                     $em->flush();
                     
-                    $category = $this->getDoctrine()->getRepository(Category::class)->find($booking->getTourType());
+                    $category = $em->getRepository(Category::class)->find($booking->getTourType());
 
                     $tour = $language =='en' ? $category->getNameEn() : $category->getNamePt();
 
@@ -183,45 +185,44 @@ class HomeController extends AbstractController
                 return new JsonResponse($response);
         }
         else{
-            $ts[] = array('img'=>'images/ticket1.jpg');
-            $ts[] = array('img'=>'images/ticket2.jpg');
-            $b1[] = array('img'=>'images/b11.jpg');
-            $b1[] = array('img'=>'images/b12.jpg');
-            $b1[] = array('img'=>'images/b13.jpg');
-            $b1[] = array('img'=>'images/b14.jpg');
-            $b2[] = array('img'=>'images/b21.jpg');
-            $b2[] = array('img'=>'images/b22.jpg');
-            $b2[] = array('img'=>'images/b23.jpg');
-            $b3[] = array('img'=>'images/b31.jpg');
-            $b3[] = array('img'=>'images/b32.jpg');
-            $b3[] = array('img'=>'images/b33.jpg');
-            $b3[] = array('img'=>'images/b34.jpg');
 
-            $getGallery = $this->getDoctrine()->getRepository(Gallery::class);
-
-            $getWarning = $this->getDoctrine()->getRepository(Warning::class);
+            $cS = array();
             
-            $warning = $getWarning->find(10);
+            $warning = $em->getRepository(Warning::class)->find(10);
+            $category = $em->getRepository(Category::class)->findBy(['isActive' => 1],['namePt' => 'ASC']);
+            $categoryHl = $em->getRepository(Category::class)->findOneBy(['highlight' => 1],['namePt' => 'ASC']);
+            $gallery = $em->getRepository(Gallery::class)->findBy(['isActive' => 1],['namePt' => 'ASC']);
 
-            $getCategory = $this->getDoctrine()->getRepository(Category::class);
+            $cH = array(
+                'adultAmount' => $moneyFormatter->format($categoryHl->getAdultPrice()),
+                'childrenAmount'  => $moneyFormatter->format($categoryHl->getChildrenPrice()),
+                'namePt' => $categoryHl->getNamePt(),
+                'nameEn' => $categoryHl->getNameEn(),
+                'id' => $categoryHl->getId()
+            );
+            foreach ($category as $categories)
+                $cS[]= array(
+                    'adultAmount' => $moneyFormatter->format($categories->getAdultPrice()),
+                    'childrenAmount'  => $moneyFormatter->format($categories->getChildrenPrice()),
+                    'namePt' => $categories->getNamePt(),
+                    'nameEn' => $categories->getNameEn(),
+                    'descriptionPt' => $categories->getDescriptionPt(),
+                    'descriptionEn' => $categories->getDescriptionEn(),
+                    'image' => $categories->getImage(),
+                    'id' => $categories->getId(),
+                    'warrantyPayment' => $categories->getwarrantyPayment(),
+                    'warrantyPaymentPt' => $categories->getwarrantyPaymentPt(),
+                    'warrantyPaymentEn' => $categories->getwarrantyPaymentEn()
+                    );
+          
 
-            $category = $getCategory->findBy(['isActive' => 1],['namePt' => 'ASC']);
-
-            $categoryHighlight = $getCategory->findOneBy(['highlight' => 1],['namePt' => 'ASC']);
-
-            $gallery = $getGallery->findBy(['isActive' => 1],['namePt' => 'ASC']);
-            
             return $this->render('base.html.twig', array(
                 'form' => $form->createView(),
-                'ts' =>$ts,
-                'b1' => $b1,
-                'b2' => $b2,
-                'b3' => $b3,
                 'colors'=> $this->color(),
                 'warning' => $warning,
-                'categories' => $category,
+                'categories' => $cS,
                 'browser' => $ua,
-                'categoryHighlight' => $categoryHighlight,
+                'category' => $cH,
                 'galleries' => $gallery,
                 'locale' => $locale
             ));

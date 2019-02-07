@@ -26,33 +26,34 @@
             <span class="TOUR_TXT1 EN w3-hide bold">{{ category.nameEn }}</span>
           </p>
           <img class="w3-card-4" src="/upload/category/{{ category.image }}" onerror="this.src='/upload/category/no-image.png'" style="width:100%">
-          <p class="w3-center">
+          <p class="">
             <span class="PT">{{ category.descriptionPt }}</span>
             <span class="EN w3-hide">{{ category.descriptionEn }}</span>
+            {% if category.warrantyPayment%}
+              <br>
+              <span class="PT w3-text-deep-orange w3-center">{{ category.warrantyPaymentPt }}</span>
+              <span class="EN w3-hide bold w3-text-deep-orange w3-center">{{ category.warrantyPaymentEn }}</span>
+            {% endif %}
           </p>
           <div class="w3-padding-8 w3-border-top">
             <button class="w3-btn w3-blue w3-right w3-large BUY_NOW" onclick="navigation('#reservas', {{ category.id }})">Comprar</button>
             <p class="">
-            {% if category.adultPrice > 0 %}
+            {% if category.adultAmount > 0 %}
                 <span class='ADULTO'>{% trans %}part_tree.adult{% endtrans %}</span>&nbsp;
-                <span class="PT">{{ category.adultPrice|number_format(2, '.', ',') }}€</span>
-                <span class="EN w3-hide">{{ category.adultPrice|number_format(2, '.', ',') }}€</span>
+                <span>{{ category.adultAmount }}€</span>
                 <br>
               {% else %}
                 <span class='ADULTO'>{% trans %}part_tree.adult{% endtrans %}</span>&nbsp;
-                <span class="PT">-/-</span>
-                <span class="EN w3-hide">-/-</span>
+                <span>-/-</span>
                 <br>
               {% endif %}
-              {% if category.childrenPrice > 0 %}
+              {% if category.childrenAmount > 0 %}
                 <span class='CRIANCA'>{% trans %}part_tree.children{% endtrans %}</span>&nbsp;
-                <span class="PT">{{ category.childrenPrice|number_format(2, '.', ',') }}€</span>
-                <span class="EN w3-hide">{{ category.childrenPrice|number_format(2, '.', ',') }}€</span>
+                <span>{{ category.childrenAmount}}€</span>
                 <br>
               {% else %}
                 <span class='CRIANCA'>{% trans %}part_tree.children{% endtrans %}</span>&nbsp;
-                <span class="PT">-/-</span>
-                <span class="EN w3-hide">-/-</span>
+                <span>-/-</span>
                 <br>
               {% endif %}
               </p>

@@ -21,138 +21,15 @@ use App\Form\EventType;
 use App\Form\EasyTextType;
 use App\Service\MoneyFormatter;
 
-class AdminController extends AbstractController
+class AvailableController extends AbstractController
 {
 
-    public function html()
+    public function adminAvailable(Request $request)
     {
-        $booking =array();// $this->getDoctrine()->getManager()->getRepository(Booking::class)->dashboardValues();
-        $ua = $this->getBrowser();
-
-        return $this->render('admin/base.html.twig', array('browser'=>$ua,'booking' => $booking));
+        return $this->render('admin/available.html');
     }
 
-	public function adminDashboard()
-	{
-        
-        $booking = array();//$this->getDoctrine()->getManager()->getRepository(Booking::class)->dashboardValues();
-    	return $this->render('admin/dashboard.html', array('booking' => $booking));
-    }
-
-    public function adminBookingSetStatus(Request $request){
-
-        $bookingId = $request->request->get('id');
-        
-        $em = $this->getDoctrine()->getManager();
-                
-        $booking = $em->getRepository(Booking::class)->find($bookingId);
-        $easyText = $em->getRepository(EasyText::class)->findAll();
-        $date = date_create_from_format("Y-m-d", $booking->getDate());
-
-        $seeBooking =
-                array(
-                'booking' => $booking->getId(),
-                'adult' => $booking->getAdult(),
-                'children' => $booking->getChildren(),
-                'baby' => $booking->getBaby(),
-                'status' => $booking->getStatus(),
-                'date' => $date->format('d/m/Y'),
-                'hour' => $booking->getHour(),
-                'tour' => $booking->getTourType()->getNamePt(),
-                'notes' => $booking->getNotes(),
-                'user_id' => $booking->getClient()->getId(),   
-                'username' => $booking->getClient()->getUsername(),
-                'address' => $booking->getClient()->getAddress(),
-                'email' => $booking->getClient()->getEmail(),          
-                'telephone' => $booking->getClient()->getTelephone(),
-                'language' => $booking->getClient()->getLanguage(),
-                'easyText' => $easyText
-            );          
-
-        return $this->render('admin/booking-set-status.html', array('seeBooking' => $seeBooking));
-    }
-
-
-    public function adminBookingSendStatus(Request $request, \Swift_Mailer $mailer){
-
-        $em = $this->getDoctrine()->getManager();
-                
-        $bookingId = $request->request->get('bookingstatusId');
-        $status = $request->request->get('status');
-        $email = $request->request->get('email');
-        $notes = $request->request->get('notes');
-                
-        $booking = $em->getRepository(Booking::class)->find($bookingId);
-        $booking->setStatus($status);
-        $booking->setNotes($notes);
-
-        $em->flush();
-
-        $category = $em->getRepository(Category::class)->find($booking->getTourType());
-        
-        $client = $booking->getClient();
-        $client->setEmail($email);
-        $em->flush();
-
-        $date = date_create_from_format("Y-m-d", $booking->getDate());
-
-        $tour = $client->getLanguage() =='en' ? $category->getNameEn() : $category->getNamePt();
-
-        $seeBooking =
-                array(
-                'id' => $booking->getId(),
-                'adult' => $booking->getAdult(),
-                'children' => $booking->getChildren(),
-                'baby' => $booking->getBaby(),
-                'status' => $this->translateStatus($booking->getStatus(), $client->getLanguage()),
-                'date' => $date->format('d/m/Y'),
-                'hour' => $booking->getHour(),
-                'tour' => $tour,
-                'notes' => $booking->getNotes(),
-                'user_id' => $client->getId(),   
-                'username' => $client->getUsername(),
-                'logo' => 'https://tarugatoursbenagilcaves.pt/images/logo.png'
-            );          
-
-        $transport = (new \Swift_SmtpTransport('smtp.sapo.com', 465, 'ssl'))
-            ->setUsername('vgspedro15@sapo.pt')
-            ->setPassword('');
-
-        $mailer = new \Swift_Mailer($transport);
-
-        $subject ='Reserva / Order #'.$booking->getId().' ('.$this->translateStatus($booking->getStatus(), $client->getLanguage()).')';
-
-        $message = (new \Swift_Message($subject))
-            ->setFrom(['vgspedro15@sapo.pt' => 'Pedro Viegas'])
-            ->setTo([ $client->getEmail() => $client->getUsername(), 
-                'vgspedro15@sapo.pt' => 'Pedro Viegas'])
-            ->addPart($subject, 'text/plain')
-            ->setBody($this->renderView(
-                'emails/booking-status-'.$client->getLanguage().'.html.twig',$seeBooking
-                ),
-                'text/html'
-            );
-                        
-            $send = $mailer->send($message);
-
-            $response = array(
-                'result' => 1,
-                'message' => 'success',
-                'data' => $booking->getId(),
-                'mail' => $send
-             );
-        
-        return new JsonResponse($response);
-    }
-
-
-    public function adminBooking(Request $request)
-    {
-        return $this->render('admin/booking.html');
-    }
-
-
-    public function adminBookingSearch(Request $request, MoneyFormatter $moneyFormatter)
+    public function adminAvailableSearch(Request $request, MoneyFormatter $moneyFormatter)
     {
         $em = $this->getDoctrine()->getManager();
 

@@ -97,6 +97,16 @@ admin_booking_send_status:
     controller: App\Controller\AdminController::adminBookingSendStatus
     #condition: 'request.isXmlHttpRequest()'
 
+
+##
+# AVAILABLE
+##
+
+admin_available:
+    path: /admin-available/
+    controller: App\Controller\AvailableController::adminAvailable
+
+
 ##
 # EASY TEXT
 ##

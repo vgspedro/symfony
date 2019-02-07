@@ -15,50 +15,8 @@ div.dataTables_length select {height: 50px}
 </div>
 
 <header class="w3-container" style="padding-top:22px">
-   <h5><b><i class="far fa-calendar-alt"></i> Reservas</b></h5>
+   <h5><b><i class="far fa-calendar-check"></i> Disponibilidades</b></h5>
 </header>
-  <div class="w3-row-padding">
-    <div class="w3-col l3 m6 s6 w3-margin-bottom">
-      <div class="w3-container w3-card w3-red w3-padding" onclick="setStatusTable('PENDING')">
-        <div class="w3-left"><i class="far fa-hand-point-up w3-xxxlarge"></i></div>
-        <div class="w3-right">
-          <h3 class="set-pending"></h3>
-        </div>
-        <div class="w3-clear"></div>
-        <h5>Pendentes</h5>
-      </div>
-    </div>
-    <div class="w3-col l3 m6 s6 w3-margin-bottom">
-      <div class="w3-container w3-blue w3-card w3-padding" onclick="setStatusTable('CANCELED')">
-        <div class="w3-left"><i class="far fa-hand-paper w3-xxxlarge"></i></div>
-        <div class="w3-right">
-          <h3 class="set-canceled"></h3>
-        </div>
-        <div class="w3-clear"></div>
-        <h5>Canceladas</h5>
-      </div>
-    </div>
-    <div class="w3-col l3 m6 s6 w3-margin-bottom">
-      <div class="w3-container w3-green w3-card w3-padding" onclick="setStatusTable('CONFIRMED')">
-        <div class="w3-left"><i class="far fa-thumbs-up w3-xxxlarge"></i></div>
-        <div class="w3-right">
-          <h3 class="set-confirmed"></h3>
-        </div>
-        <div class="w3-clear"></div>
-        <h5>Confirmadas</h5>
-      </div>
-    </div>
-    <div class="w3-col l3 m6 s6 w3-margin-bottom">
-      <div class="w3-container w3-card w3-black w3-text-white w3-padding" onclick="setStatusTable()">
-        <div class="w3-left"><i class="far fa-hand-peace w3-xxxlarge"></i></div>
-        <div class="w3-right">
-          <h3 class="set-total"></h3>
-        </div>
-        <div class="w3-clear"></div>
-        <h5>Total</h5>
-      </div>
-    </div>
-  </div>
 
 <div class="w3-row-padding w3-sand w3-padding-32 w3-border-top w3-border-bottom w3-large">
   <div class="w3-col l1 w3-hide-medium w3-hide-small">&nbsp;</div>
@@ -81,34 +39,18 @@ div.dataTables_length select {height: 50px}
   <div class="w3-col s12">
   <table id="dataTables" class="w3-border table table-striped centered hover table-bordered" style="width:100%">
     <thead class="w3-sand">
-      <tr>
-      <th>Reserva</th>    
-      <th>Estado</th>    
+      <tr>   
       <th>Tour</th>    
       <th>Data</th>    
-      <th>Hora</th>    
-      <th>Adulto</th>    
-      <th>Criança</th>    
-      <th>Bébé</th>  
-      <th>Notas</th>    
-      <th>Cliente</th>    
-      <th>Email</th>    
-      <th>Morada</th>    
-      <th>Telefone</th>    
+      <th>Hora</th>
+      <th>Total</th>       
+      <th>Stock</th>    
       </tr>
     </thead>
     <tbody>
     </tbody>
     <tfoot class="w3-sand">
       <tr>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
         <td></td>
         <td></td>
         <td></td>
@@ -147,7 +89,7 @@ div.dataTables_length select {height: 50px}
       jQuery('#startDate').datepicker("setEndDate", e.date)
     })
 
-  tablebooking = [0, 9 , 11, 12]
+  tablebooking = []
 
   if(!localStorage.getItem("tablebooking") ){
     localStorage.setItem("tablebooking", JSON.stringify(tablebooking))
@@ -216,14 +158,8 @@ div.dataTables_length select {height: 50px}
       { data: "tour"},
       { data: "date"},
       { data: "hour"},
-      { data: "adult"},
-      { data: "children"},
-      { data: "baby"},
-      { data: "notes"},
-      { data: "username"},
-      { data: "email"},
-      { data: "address"},
-      { data: "telephone"}
+      { data: "lotation"},
+      { data: "available"},
     ],
      "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
     buttons: [
@@ -232,7 +168,7 @@ div.dataTables_length select {height: 50px}
         text:      '<i class="far fa-file-excel"></i>',
         titleAttr: 'Excel',
         exportOptions: {
-          columns: [2, 3, 4, 5, 6, 7]
+          columns: [2, 3, 4]
           }
         },
         {
@@ -240,7 +176,7 @@ div.dataTables_length select {height: 50px}
         text:      '<i class="far fa-file-pdf"></i>',
         titleAttr: 'PDF',
         exportOptions: {
-          columns: [ 2, 3, 4, 5, 6, 7]
+          columns: [ 2, 3, 4]
           },
           customize: function (doc) {
             //doc.content[1].table.widths = Array(doc.content[1].table.body[0].length + 1).join('*').split('')
@@ -263,7 +199,7 @@ div.dataTables_length select {height: 50px}
         text:      '<i class="far fa-eye-slash"></i>',
         titleAttr: 'Colunas',
         exportOptions: {
-          columns: [ 0, 1, 2, 3, 4,5]
+          columns: [ 0, 1, 2]
         }
       }
     ],
@@ -298,7 +234,7 @@ div.dataTables_length select {height: 50px}
           }
           // Total over all pages
         
-        for (k = 5; k<8;k++){
+        for (k = 2; k<3;k++){
           total = api
             .column( k )
             .data()

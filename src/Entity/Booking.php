@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Money\Money;
 
 /**
  * @ORM\Table(name="booking")
@@ -12,6 +13,10 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class Booking
 {
+    const STATUS_PENDING = 'pending';
+    const STATUS_CANCELED = 'canceled';
+    const STATUS_CONFIRMED = 'confirmed';
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -20,22 +25,6 @@ class Booking
     private $id;
     /** @ORM\OneToOne(targetEntity="Client", mappedBy="booking", cascade={"persist"}) */
     private $client;
-    /**
-    * @Assert\NotBlank(message="TELEPHONE")
-    */
-    private $telephone;
-    /**
-     * @Assert\NotBlank(message="NAME")
-     */
-    private $name;
-    /**
-    * @Assert\NotBlank(message="EMAIL")
-     */
-    private $email;
-    /**
-    * @Assert\NotBlank(message="ADDRESS")
-    */
-    private $address;
     /**
     * @ORM\Column(type="integer", length=3, nullable=true)
     * @Assert\NotBlank(message="ADULT")
@@ -51,48 +40,45 @@ class Booking
     * @Assert\NotBlank(message="BABY")
     */
     private $baby;
-
-    /**
-    * @ORM\Column(type="string", length=10)
-    * @Assert\NotBlank(message="DATE")
-    */
-    private $date;
-    /**
-    * @ORM\Column(type="string", length=6)
-    * @Assert\NotBlank(message="HOUR_TXT")
+    /** 
+     * @Assert\NotBlank()
+     * @Assert\Type("Available")
+     * @ORM\ManyToOne(targetEntity="Available", inversedBy="booking") 
      */
-    private $hour;
-    /**
-    * @ORM\OneToMany(targetEntity="Category", mappedBy="booking")
-    * @ORM\Column(name="tourtype",type="string", length=50)
-    * @Assert\NotBlank(message="TOUR_TXT")
-    */
-    private $tourtype;
-
-     /**
-     * @ORM\Column(type="string", length=250)
-     */
-    private $message;
+    private $available;
 
      /** @ORM\Column(name="posted_at", type="datetime") */
     private $postedAt;
 
     /** @ORM\Column(type="text", name="notes", nullable=true ) */
     private $notes;
-
-    /** @ORM\Column(type="string", name="status", nullable=true) */
-    private $status = 'PENDING';
-    
     /**
-    * @Assert\NotBlank(message="RGPD")
-    */
-    private $rgpd;
+     * @Assert\Choice({"pending", "canceled", "confirmed"})
+     * @ORM\Column(type="string", name="status", columnDefinition="ENUM('pending', 'canceled', 'confirmed')" )
+     */
+    private $status = self::STATUS_PENDING;
 
-    private $language;
+    /** @ORM\Column(type="money", name="amount", options={"unsigned"=true}) */
+    private $amount;
+
+    public function setAmount(Money $amount) {
+        $this->amount = $amount;
+    }
+    /** 
+     * @return \Money\Money
+     */
+    public function getAmount() {
+        return $this->amount;
+    }
 
  	public function getId()
     {
         return $this->id;
+    }
+
+    public function setClient(Client $client)
+    {
+        $this->client = $client;
     }
 
     public function getClient()
@@ -100,56 +86,14 @@ class Booking
         return $this->client;
     }
 
-    public function getLanguage()
+    public function setAvailable(Available $available)
     {
-        return $this->language;
+        $this->available = $available;
     }
 
-
-    public function setLanguage($language)
+    public function getAvailable()
     {
-        $this->language = $language;
-    }
-
-
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    public function setName($name)
-    {
-        $this->name = $name;
-    }
-
-    public function getEmail()
-    {
-        return $this->email;
-    }
-
-    public function setEmail($email)
-    {
-        $this->email = $email;
-    }
-
-    public function getAddress()
-    {
-        return $this->address;
-    }
-
-    public function setAddress($address)
-    {
-        $this->address = $address;
-    }
-    
-    public function getTelephone()
-    {
-        return $this->telephone;
-    }
-
-    public function setTelephone($telephone)
-    {
-        $this->telephone = $telephone;
+        return $this->available;
     }
 
     public function getNotes()
@@ -202,44 +146,17 @@ class Booking
         $this->baby = $baby;
     }
 
-    public function getDate()
+    /** 
+     * @return \Money\Money
+     */
+    public function getTotalBookingAmount()
     {
-        return $this->date;
-    }
-
-    public function setDate($date)
-    {
-        $this->date = $date;
-    }
-
-    public function getHour()
-    {
-        return $this->hour;
-    }
-
-    public function setHour($hour)
-    {
-        $this->hour = $hour;
-    }
-
-    public function getTourType()
-    {
-        return $this->tourtype;
-    }
-
-    public function setTourType($tourtype)
-    {
-        $this->tourtype = $tourtype;
-    }
-
-    public function getMessage()
-    {
-        return $this->message;
-    }
-
-    public function setMessage($message)
-    {
-        $this->message = $message;
+        $amount = Money::EUR(0);
+        if( $this->getAdult() > 0)
+           $amount = $amount->add($this->getTourType()->getAdultPrice())->multiply($this->getAdult());
+       if( $this->getChildren() > 0)
+           $amount = $amount->add($this->getTourType()->getChildrenPrice())->multiply($this->getChildren());
+        return $amount;
     }
 
  	public function getPostedAt()
@@ -251,15 +168,4 @@ class Booking
     {
         $this->postedAt = $postedAt;
     }
-
-    public function getRgpd()
-    {
-        return $this->rgpd;
-    }
-
-    public function setRgpd($rgpd)
-    {
-        $this->rgpd = $rgpd;
-    }
-
 }

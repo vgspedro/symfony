@@ -18,7 +18,7 @@ use App\Service\ImageResizer;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 use Doctrine\DBAL\DBALException;
-
+use App\Service\MoneyFormatter;
 
 
 class CategoryController extends AbstractController
@@ -31,8 +31,6 @@ class CategoryController extends AbstractController
         $this->categories_images_directory = $categories_images_directory;
     }
     
-
-
     public function categoryNew(Request $request)
     {
         $category = new Category();
@@ -85,7 +83,6 @@ class CategoryController extends AbstractController
 
                         else if (preg_match("/'children_price'/i", $e))
                             $a = array("Preço Criança (€)* não pode ser vazio, insira 0 ou maior.");
-
                         else
                             $a = array("Contate administrador sistema sobre: ".$e->getMessage());
 
@@ -108,21 +105,37 @@ class CategoryController extends AbstractController
                     'result' => 2,
                     'message' => 'fail not submitted',
                     'data' => '');
-
         return new JsonResponse($response);
     }
 
 
-
-    public function categoryList(Request $request)
+    public function categoryList(Request $request, MoneyFormatter $moneyFormatter)
     {
-
         $em = $this->getDoctrine()->getManager();
-
+     
         $events = $em->getRepository(Event::class)->findAll();
 
-        return $this->render('admin/category-list.html',array(
-            'categories' =>  $events));
+        $cA = array();
+
+        foreach ($events as $c)
+            $cA[]=array(
+                'id' => $c->getCategory()->getId(),
+                'namePt' => $c->getCategory()->getNamePt(),
+                'nameEn' => $c->getCategory()->getNameEn(),
+                'descriptionPt' => $c->getCategory()->getDescriptionPt(),
+                'descriptionEn' => $c->getCategory()->getDescriptionEn(),
+                'adultAmount' =>$moneyFormatter->format($c->getCategory()->getAdultPrice()).'€',
+                'childrenAmount' =>$moneyFormatter->format($c->getCategory()->getChildrenPrice()).'€',
+                'warrantyPayment' => $c->getCategory()->getWarrantyPayment(),
+                'warrantyPaymentPt' => $c->getCategory()->getWarrantyPaymentPt(),
+                'warrantyPaymentEn' => $c->getCategory()->getWarrantyPaymentEn(),
+                'highLight' => $c->getCategory()->getHighlight(),
+                'isActive' => $c->getCategory()->getIsActive(),
+                'availability' => $c->getCategory()->getAvailability(),
+                'event' => $c->getEvent()
+             );
+        return $this->render('admin/category-list.html', array(
+            'categories' =>  $cA));
     }
 
 

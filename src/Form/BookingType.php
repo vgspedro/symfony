@@ -40,58 +40,6 @@ class BookingType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-        ->add('name', TextType::class, 
-            array(
-                'label'=>false, 
-                'required' => false,
-                'attr' => ['class' => 'w3-input w3-padding-16 NAME','placeholder'=>'part_seven.name']
-            ))
-        ->add('email', EmailType::class,
-            array(
-                'label'=>false,
-                'required' => false,
-                'attr' => ['class' => 'w3-input w3-padding-16 EMAIL','placeholder'=>'part_seven.email']
-            ))
-        ->add('telephone', IntegerType::class,
-            array(
-                'label'=>false,
-                'required' => false,
-                'attr' => ['class' => 'w3-input w3-padding-16 TELEPHONE','placeholder'=>'part_seven.telephone']
-            ))
-        ->add('address', TextType::class,
-            array(
-                'label'=>false,
-                'required' => false,
-                'attr' => ['class' => 'w3-input w3-padding-16 ADDRESS','placeholder'=>'part_seven.address']
-            ))
-        ->add('tourtype', EntityType::class, array(
-            'class' => Category::class,
-            'query_builder' => function (EntityRepository $er) {
-                return $er->createQueryBuilder('b')
-                ->andWhere('b.isActive = :active')
-                ->setParameter('active', 1)
-                ->orderBy('b.namePt', 'ASC');
-            },
-            'required' => false,
-            'choice_label' => 'namePt',
-            'placeholder' => 'part_seven.tour',
-            'choice_attr' => function($val, $key, $index) {
-                return ['class' =>$val->getNameEn().'/'.$val->getNamePt()];
-                },
-                'attr' => ['class' => 'w3-input w3-select w3-padding-16', 'onchange'=>'getAvailability(this.value)']
-            ))
-        ->add('date', TextType::class,
-            array(
-                'label'=>false,
-                'required' => false,
-                'attr' => ['class' => 'w3-input w3-padding-16 DATE','placeholder'=>'part_seven.date','readonly'=>true]
-            ))
-         ->add('hour', TextType::class, 
-            array(
-                'label'=>false, 
-                'required' => false,
-                'attr' => ['class' => 'w3-input w3-padding-16 HOUR','placeholder'=>'part_seven.hour','readonly'=>true]
-            ))
         ->add('adult', IntegerType::class,
             array(
                 'label'=>false,
@@ -115,12 +63,6 @@ class BookingType extends AbstractType
                 'label'=>false,
                 'required' => false,
                 'attr' => ['class' => 'w3-input w3-padding-16 NOTES','placeholder'=>'Notas']
-            ))
-        ->add('rgpd',CheckboxType::class, 
-            array(
-                'label'=>false, 
-                'required' => false,
-                'attr' => ['class' => 'w3-check']
             ))
         ->add('submit', SubmitType::class,
             array(

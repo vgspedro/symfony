@@ -1,7 +1,7 @@
 <script>
 
 $(function(){
-    ajaxUpload('dashboard')
+   // ajaxUpload('dashboard')
 })
 
 function ajaxUpload(block){
@@ -25,6 +25,9 @@ function ajaxUpload(block){
         break
         case 'booking': 
             url = '{{ path("admin_booking") }}' 
+        break
+        case 'available': 
+            url = '{{ path("admin_available") }}' 
         break
         case 'block-date-edit': 
             url = '{{ path("admin_block_date_edit") }}' 
