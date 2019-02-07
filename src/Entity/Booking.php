@@ -23,6 +23,7 @@ class Booking
      * @ORM\Column(type="integer")
      */
     private $id;
+
     /** @ORM\OneToOne(targetEntity="Client", mappedBy="booking", cascade={"persist"}) */
     private $client;
     /**

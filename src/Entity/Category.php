@@ -20,8 +20,6 @@ class Category
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;   
-    /** @ORM\OneToMany(targetEntity="Booking", mappedBy="category") */
-    private $booking;
     /**
      * @ORM\Column(type="string", length=50)
      * @Assert\NotBlank(message="NAME_PT")

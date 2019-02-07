@@ -19,14 +19,9 @@ class Client implements UserInterface , \Serializable
      */
     private $id;
     /**
-    *@ORM\OneToOne(targetEntity="Booking", inversedBy="client") 
-    */
-    private $booking;
-    /**
      * @ORM\Column(type="string", length=100)
      */
     private $email;
-
     /**
      * The below length depends on the "algorithm" you use for encoding
      * the password, but this works well with bcrypt.
