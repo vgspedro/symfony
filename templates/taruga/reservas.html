@@ -6,51 +6,61 @@
     <i class="fa-ta ta-4 fa-ta-booking">&nbsp;</i>
     <span class="RESERVAS">{% trans %}link.booking{% endtrans %}</span>
   </h2>
-
-  {{ form_start(form, {'attr': {'id': 'booking-form'}})  }}
-
+  {% if categories %}
+  <form>
+    <h3 class="w3-center">Preencha todos os seguintes campos</h3>   
     <div class="w3-content w3-center w3-padding-16 w3-row-padding w3-xlarge">
-      <div class="w3-col m6 s12">
-        {{ form_widget(form.name) }}
+      <div class="w3-col l6 m12 s12">
+
+        <select class="w3-select w3-input" name="category">
+           <option value class="TOUR">{% trans %}part_seven.tour{% endtrans %}</option>
+          {% for category in categories %}
+          <option class="PT" value="{{category.id}}">{{category.namePt}}</option>
+          <option class="EN w3-hide" value="{{category.id}}">{{category.nameEn}}</option>
+          {% endfor %}
+        </select>
       </div>
-      <div class="w3-col m6 s12">
-        {{ form_widget(form.email) }}
+      
+      <div class="w3-col l2 m4 s12">
+        <input type="number" name="adult" class="w3-input ADULT" step="1" min="0" placeholder="{% trans %}part_seven.adult{% endtrans %}">
       </div>
-      <div class="w3-col m5 s12">
-        {{ form_widget(form.telephone) }}
+      <div class="w3-col l2 m4 s12">
+        <input type="number" name="children" class="w3-input CHILDREN" step="1" min="0" placeholder="{% trans %}part_seven.children{% endtrans %}">
       </div>
-      <div class="w3-col m7 s12">
-        {{ form_widget(form.address) }}
+      <div class="w3-col l2 m4 s12">
+        <input type="number" name="baby" class="w3-input BABY" step="1" min="0" placeholder="{% trans %}part_seven.baby{% endtrans %}">
       </div>
-      <div class="w3-col s12">
-        {{ form_widget(form.tourtype) }}
+
+
+
+      <div class="w3-col m6 s12 w3-hide at-last">
+
       </div>
       <div class="w3-col m6 s12 w3-hide at-last">
-        {{ form_widget(form.date) }}
-      </div>
-      <div class="w3-col m6 s12 w3-hide at-last">
-        {{ form_widget(form.hour) }}
+
       </div>
       <div class="w3-col l4 m6 s12 w3-hide at-last">
-        {{ form_widget(form.adult) }}
+
       </div>
       <div class="w3-col l4 m6 s12 w3-hide at-last">
-        {{ form_widget(form.children) }}
+
       </div>
       <div class="w3-col l4 m6 s12 w3-hide at-last">
-        {{ form_widget(form.baby) }}
       </div>
+
+      <span class="w3-btn w3-blue" onclick="getAvailable()">get availability</span>
+
       <div class="w3-col s12 w3-hide at-last w3-left-align" style="line-height: 22px">
         <div class="w3-padding-16 RGPD">{% trans %}part_seven.rgpd{% endtrans %}</div>
-        {{ form_widget(form.rgpd) }}
+
         <span id="setit" class="RGPD_TXT w3-medium">{% trans %}part_seven.rgpd_txt{% endtrans %}</span>
         <span class="w3-text-blue" onclick='showRgpd()'>ver +</span>
       </div>
       <div class="w3-col s12 w3-hide at-last">
-        {{ form_widget(form.submit, {'attr': {'onclick': '$(".user-info").addClass("w3-hide"); $(".user-info-txt").empty()'}}) }}
+        <button onclick='$(".user-info").addClass("w3-hide"); $(".user-info-txt").empty()'></button>
       </div>
     </div>
-  {{ form_end(form) }}
+    </form>
    <h4 class="w3-center w3-content">
     <p class='SPAM_TXT blink'>{% trans %}part_seven.spam_txt{% endtrans %}</p>
     <p class='BOOKING bold'>{% trans %}part_seven.booking{% endtrans %}</p>
@@ -60,5 +70,24 @@
    <h4 class="w3-center w3-content">
     <span class='BOOK_AFTER'>{% trans %}part_seven.book_after{% endtrans %}</span>
    </h4>
- </div>
+
+{% else %}
+
+<h2 class="w3-center">Nothing available!</h2>
+
+  {% endif %}
+
+  
+  </div>
 </section>
+
+<script>
+
+  function getAvailable(){
+    if( $('select[name=category]').val() && $('input[name=adult]').val() &&  $('input[name=children]').val() && $('input[name=baby]').val())
+      alert('get from db')
+    else 
+      alert('all fields must be filled')
+  }
+
+</script>

@@ -2,8 +2,8 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
@@ -50,11 +50,12 @@ class Client implements UserInterface , \Serializable
     * @ORM\Column(name="rgpd", type="boolean", length=1)
     */
     private $rgpd;
+    /** 
+     * @Assert\NotBlank()
+     * @Assert\Type("Locales")
+     *@ORM\ManyToOne(targetEntity="Locales", inversedBy="client") */
+    private $locale;
 
-    /**
-    * @ORM\Column(type="string", length=10)
-    */
-    private $language = 'en';
 
     public function __construct($email = '', $password = '', $salt = '') {
         $this->roles = array('ROLE_CLIENT');
@@ -77,6 +78,16 @@ class Client implements UserInterface , \Serializable
         $this->booking = $booking;
     }
 
+    public function getLocale()
+    {
+        return $this->locale;
+    }
+
+    public function setLocale(Locale $locale)
+    {
+        $this->locale = $locale;
+    }
+
     public function getEmail()
     {
         return str_rot13(base64_decode($this->email));
@@ -88,30 +99,15 @@ class Client implements UserInterface , \Serializable
         $this->email = base64_encode(str_rot13($email));
     }
 
-    public function getLanguage()
-    {
-        return $this->language;
-    }
-
-
-    public function setLanguage($language)
-    {
-        $this->language = $language;
-    }
-
-
     public function getUsername()
     {
         return str_rot13(base64_decode($this->username));
-
     }
-
 
     public function setUsername($username)
     {
         $this->username = base64_encode(str_rot13($username));
     }
-
 
     public function getAddress()
     {
@@ -141,17 +137,6 @@ class Client implements UserInterface , \Serializable
     public function setRgpd($rgpd)
     {
         $this->rgpd = $rgpd;
-    }
-
-
-    public function getClient()
-    {
-        return $this->client;
-    }
-
-    public function setClient(Client $client)
-    {
-        $this->client = $client;
     }
 
     public function getPassword()

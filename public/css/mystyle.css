@@ -329,7 +329,7 @@ input[type=number] {
 
 .marquee:hover {animation-play-state: paused}
 
-.nav-container{padding:2px 0px; background:#FFF; opacity:0.75}
+.nav-container{padding:2px 0px}
 
 .info-txt{padding:10px 0px;}
 

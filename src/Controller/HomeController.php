@@ -18,39 +18,94 @@ use App\Entity\Client;
 use App\Entity\Gallery;
 use App\Form\BookingType;
 use App\Entity\User;
+use App\Entity\Locales;
 /*https://github.com/nojacko/email-validator*/
 use EmailValidator\EmailValidator;
 use App\Service\MoneyFormatter;
 
+
+
 class HomeController extends AbstractController
 {
 
+
     /*set expiration on home page 15 minutes*/
     private $expiration = 900;
-
-    public function html(Request $request, ValidatorInterface $validator, \Swift_Mailer $mailer, SessionInterface $session, MoneyFormatter $moneyFormatter)
+    private $session;
+    
+    public function __construct(SessionInterface $session)
     {
-        $ua = $this->getBrowser();
+        $this->session = $session; 
+    }
 
-        $validate = new Booking();
+
+    public function html(Request $request, MoneyFormatter $moneyFormatter)
+    {   
+        $booking = new Booking();
         
         $time = new \DateTime('now');
 
         if (!$request->isXmlHttpRequest()) {
-            $session->clear();
-            $session->set('expired', $time->getTimestamp());
+            $this->session->clear();
+            $this->session->set('expired', $time->getTimestamp());
         }
 
+        $em = $this->getDoctrine()->getManager();
+
+        $ua = $this->getBrowser();
         $locale = $ua['lang'];
 
-        $form = $this->createForm(BookingType::class, $validate);        
+        $form = $this->createForm(BookingType::class, $booking);        
         
         //clients dont need this so we remove it 
         $form->remove('notes'); 
-        
-        $sessionEnd = ($time->getTimestamp() - $session->get('expired')) < $this->getExpirationTime() ? true : false; 
+    
+        $cS = array();
+        $locales = $em->getRepository(Locales::class)->findAll();
+        $warning = $em->getRepository(Warning::class)->find(10);
+        $category = $em->getRepository(Category::class)->findBy(['isActive' => 1],['namePt' => 'ASC']);
+        $categoryHl = $em->getRepository(Category::class)->findOneBy(['highlight' => 1],['namePt' => 'ASC']);
+        $gallery = $em->getRepository(Gallery::class)->findBy(['isActive' => 1],['namePt' => 'ASC']);
 
-        $em = $this->getDoctrine()->getManager();
+        $cH = array(
+            'adultAmount' => $moneyFormatter->format($categoryHl->getAdultPrice()),
+            'childrenAmount'  => $moneyFormatter->format($categoryHl->getChildrenPrice()),
+            'namePt' => $categoryHl->getNamePt(),
+            'nameEn' => $categoryHl->getNameEn(),
+            'id' => $categoryHl->getId()
+        );
+        
+        foreach ($category as $categories)
+            $cS[]= array(
+                'adultAmount' => $moneyFormatter->format($categories->getAdultPrice()),
+                'childrenAmount'  => $moneyFormatter->format($categories->getChildrenPrice()),
+                'namePt' => $categories->getNamePt(),
+                'nameEn' => $categories->getNameEn(),
+                'descriptionPt' => $categories->getDescriptionPt(),
+                'descriptionEn' => $categories->getDescriptionEn(),
+                'image' => $categories->getImage(),
+                'id' => $categories->getId(),
+                'warrantyPayment' => $categories->getwarrantyPayment(),
+                'warrantyPaymentPt' => $categories->getwarrantyPaymentPt(),
+                'warrantyPaymentEn' => $categories->getwarrantyPaymentEn()
+                );
+          
+        return $this->render('base.html.twig', 
+            array(
+                'form' => $form->createView(),
+                'colors'=> $this->color(),
+                'warning' => $warning,
+                'categories' => $cS,
+                'browser' => $ua,
+                'category' => $cH,
+                'galleries' => $gallery,
+                'locale' => $locale,
+                'locales' => $locales)
+            );
+    }
+
+
+    public function newBooking(Request $request, ValidatorInterface $validator, \Swift_Mailer $mailer, MoneyFormatter $moneyFormatter){
 
         if ($request->isXmlHttpRequest()) {
           
@@ -59,19 +114,14 @@ class HomeController extends AbstractController
             if($form->isSubmitted() && $sessionEnd == true){
                 
                 if($form->isValid()){ 
+                    
                     $err = array();
-                    $newBook = $request->request->get($form->getName());
-                    //set email language
 
-                    //CHECK IF EMAIL IF VALID
-                    if($newBook['email']){
-                        $validator = new \EmailValidator\Validator();
-                        $validator->isEmail($newBook['email']) ? false : $err[] = 'EMAIL_INVALID';
-                        $validator->isSendable($newBook['email']) ? false : $err[] = 'EMAIL_INVALID';
-                        $validator->hasMx($newBook['email']) ? false : $err[] = 'EMAIL_INVALID';
-                        $validator->hasMx($newBook['email']) != null ? false : $err[] = 'EMAIL_INVALID';
-                        $validator->isValid($newBook['email']) ? false : $err[] = 'EMAIL_INVALID';
-                    }
+                    $newBook = $request->request->get($form->getName());
+
+                    $newBook['email'] ? $email = $newBook['email'] : $err[] = 'email';
+
+                    $this->noFakeEmails($email) == 1 ? $err[] = 'email' : false;
 
                     if($err){
                         $response = array(
@@ -184,50 +234,31 @@ class HomeController extends AbstractController
                 );
                 return new JsonResponse($response);
         }
-        else{
-
-            $cS = array();
-            
-            $warning = $em->getRepository(Warning::class)->find(10);
-            $category = $em->getRepository(Category::class)->findBy(['isActive' => 1],['namePt' => 'ASC']);
-            $categoryHl = $em->getRepository(Category::class)->findOneBy(['highlight' => 1],['namePt' => 'ASC']);
-            $gallery = $em->getRepository(Gallery::class)->findBy(['isActive' => 1],['namePt' => 'ASC']);
-
-            $cH = array(
-                'adultAmount' => $moneyFormatter->format($categoryHl->getAdultPrice()),
-                'childrenAmount'  => $moneyFormatter->format($categoryHl->getChildrenPrice()),
-                'namePt' => $categoryHl->getNamePt(),
-                'nameEn' => $categoryHl->getNameEn(),
-                'id' => $categoryHl->getId()
-            );
-            foreach ($category as $categories)
-                $cS[]= array(
-                    'adultAmount' => $moneyFormatter->format($categories->getAdultPrice()),
-                    'childrenAmount'  => $moneyFormatter->format($categories->getChildrenPrice()),
-                    'namePt' => $categories->getNamePt(),
-                    'nameEn' => $categories->getNameEn(),
-                    'descriptionPt' => $categories->getDescriptionPt(),
-                    'descriptionEn' => $categories->getDescriptionEn(),
-                    'image' => $categories->getImage(),
-                    'id' => $categories->getId(),
-                    'warrantyPayment' => $categories->getwarrantyPayment(),
-                    'warrantyPaymentPt' => $categories->getwarrantyPaymentPt(),
-                    'warrantyPaymentEn' => $categories->getwarrantyPaymentEn()
-                    );
-          
-
-            return $this->render('base.html.twig', array(
-                'form' => $form->createView(),
-                'colors'=> $this->color(),
-                'warning' => $warning,
-                'categories' => $cS,
-                'browser' => $ua,
-                'category' => $cH,
-                'galleries' => $gallery,
-                'locale' => $locale
-            ));
-        }
     }
+
+
+    private function noFakeEmails($email) {
+        $invalid = 0;
+        
+        if($email){
+
+            $validator = new \EmailValidator\Validator();
+            $validator->isEmail($email) ? false : $invalid = 1;
+            $validator->isSendable($email) ? false : $invalid = 1;
+            $validator->hasMx($email) ? false : $invalid = 1;
+            $validator->hasMx($email) != null ? false : $invalid = 1;
+            $validator->isValid($email) ? false : $invalid = 1;
+        
+        }
+    
+        return $invalid;
+    }
+
+
+
+
+
+
 
     private function getExpirationTime() {
         return $this->expiration;
@@ -247,6 +278,11 @@ class HomeController extends AbstractController
         }
         return $errors;
     }
+
+
+
+
+
 
 
     private function translateStatus($status, $language){
@@ -420,15 +456,6 @@ class HomeController extends AbstractController
 
         return $response;
     } 
-
-
-
-
-
-
-
-
-
 }
 
 ?>
