@@ -89,7 +89,7 @@ $('#booking-form').on('submit',function(e){
     $.ajax({ 
       url:'{{ path('index') }}',
       type: "POST",
-      data:$('#booking-form').serialize()+'&language='+setLang,
+      data:$('#booking-form').serialize(),
       success: function(data){  
         $("#myOverlay, #loader-cont").hide()
         console.log(data)
@@ -200,6 +200,10 @@ function languages(vl,tp){
       $(".BOOK_PHONE").text(data.part_seven.book_phone)
       $(".BOOK_AFTER").text(data.part_seven.book_after)
       $(".EMAIL_INVALID").text(data.part_seven.email_invalid)
+      $(".ZERO").text(data.part_seven.zero)
+      $(".OTHER_BUY_IT").text(data.part_seven.other_buy_it)
+      $(".GET_AVAILABLE").text(data.part_seven.get_available)
+
 
       $(".BUY_NOW").text(data.info.buy_now)
       $(".DATE_HOUR").text(data.info.choose_date_hour)
@@ -316,10 +320,10 @@ function navigation(pos,id){
   $(".nav-space").val() ? vl = vl + parseInt($(".nav-space").val()) : vl
   $("html, body").animate({
     scrollTop: $(pos).offset().top -vl
-  }, 1000)
-if (id)
-  $('#booking_tourtype').val(id).trigger('change')
-}
+  }, 750)
+  if (id)
+    $('select[name=category]').val(id)
+  }
 
 
 /*
@@ -359,12 +363,11 @@ google.maps.event.addListener(marker,"click",function() {
 
 */
 
-setLang = 'pt-pt'
 
-function getAvailability(v){
+function getAvailable(){
 
- setLang = $('.lang-action.active-lang').attr('title') == 'pt_PT' ? 'pt-pt' : 'en'
-
+  var html = '';
+  
   hours = ''
   $('.at-last, .required').addClass('w3-hide')
   $('.get-dates, #booking_date, .set-hours, #booking_hour').val('')
@@ -372,26 +375,34 @@ function getAvailability(v){
 
   $('.removal').remove()
 
-  if(!v) return
-
   $('.w3-overlay, #loader-cont').show()
 
-  dataValue='id='+v
+  dataValue = $('#get-available').serialize()
+
   setTimeout(function(){
     $.ajax({  
-      url:'{{ path('index_get_blocked_dates') }}',
+      url:'{{ path('index_available') }}',
       type: "POST",
       data:dataValue,
       cache:false,
       success: function(data){
         console.log(data)
+          $('.w3-overlay, #loader-cont').hide()
 
+          if (data.status == 0){
+            for( k = 0; k<data.message.length;k++)
+              $('.'+data.message[k]).removeClass('w3-hide')
+          
+          $('#modal-info').show()
+          
+          }
 
-        $('.order_available').data("DateTimePicker").date(null)
+      else if (data.status == 1){
+      
+        if($('.order_available').data("DateTimePicker")) $('.order_available').data("DateTimePicker").date(null) 
         $('.get-dates').val('') 
         $('#modal-available-dates').show()
         $('.no-hours').addClass('w3-hide')
-        $('.HOUR_TXT_'+v).removeClass('w3-hide')
         $('.w3-overlay').hide()
         $('.order_available').data('DateTimePicker').destroy() 
                 
@@ -422,7 +433,7 @@ function getAvailability(v){
               keepOpen: true,
               //debug:true,
               enabledDates: data.blocked,
-              locale:setLang,
+              locale: data.locale,
               minDate: data.minDate
             })
             
@@ -444,7 +455,7 @@ function getAvailability(v){
             keepOpen: true,
             //debug:true,
             disabledDates: data.blocked,
-            locale:setLang,
+            locale: data.locale,
             minDate: data.minDate
           })
         }
@@ -455,8 +466,9 @@ function getAvailability(v){
 
 
       $('td.disabled').click(function(){
-        alert('1')
+        //alert('1')
       })
+    }
     },
     error:function(data){
       $('.w3-overlay').hide()
@@ -468,11 +480,15 @@ function getAvailability(v){
 }, 500)
 }
 
+
+
+
+
 function closeModalEvents(){
   $('#modal-available-dates').hide()
   $('#booking_tourtype').val('')
   $('.at-last').addClass('w3-hide')
-  $('.order_available').data('DateTimePicker').destroy()
+  if($('.order_available').data("DateTimePicker")) $('.order_available').data('DateTimePicker').destroy()
   $('.get-dates, .set-hours').val('').removeClass('w3-pale-red')
 }
 

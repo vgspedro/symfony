@@ -236,13 +236,13 @@ a.ball-link{ border-radius: 50%; border: 2px solid;color:#05788d; margin-top: 10
 
 .w3-quarter{padding-top:20px;}
 
-::-webkit-input-placeholder { color: #05788d!important;opacity: 1}
+::-webkit-input-placeholder { color: #05788d!important;opacity: 0.5}
 
-::-moz-placeholder {color: #05788d!important;opacity: 1}
+::-moz-placeholder {color: #05788d!important;opacity: 0.5}
 
-:-ms-input-placeholder { color: #05788d!important;opacity: 1}
+:-ms-input-placeholder { color: #05788d!important;opacity: 0.5}
 
-:-moz-placeholder {color: #05788d!important; opacity: 1}
+:-moz-placeholder {color: #05788d!important; opacity: 0.5}
 
 .my-btn{background-color: transparent;color :#05788d;border: 2px solid #05788d;}
 

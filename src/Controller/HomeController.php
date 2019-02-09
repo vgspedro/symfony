@@ -23,11 +23,8 @@ use App\Entity\Locales;
 use EmailValidator\EmailValidator;
 use App\Service\MoneyFormatter;
 
-
-
 class HomeController extends AbstractController
 {
-
 
     /*set expiration on home page 15 minutes*/
     private $expiration = 900;
@@ -105,7 +102,7 @@ class HomeController extends AbstractController
     }
 
 
-    public function newBooking(Request $request, ValidatorInterface $validator, \Swift_Mailer $mailer, MoneyFormatter $moneyFormatter){
+    public function newBooking(Request $request, ValidatorInterface $validator, MoneyFormatter $moneyFormatter){
 
         if ($request->isXmlHttpRequest()) {
           
@@ -161,58 +158,8 @@ class HomeController extends AbstractController
                     $client->setLanguage($language);
                     $em->persist($client);
                     $em->persist($booking);
-
                     $em->flush();
-                    
-                    $category = $em->getRepository(Category::class)->find($booking->getTourType());
 
-                    $tour = $language =='en' ? $category->getNameEn() : $category->getNamePt();
-
-                    $date = date_create_from_format("Y-m-d", $booking->getDate());
-
-                    $transport = (new \Swift_SmtpTransport('smtp.sapo.pt', 465, 'ssl'))
-                        ->setUsername('vgspedro15@sapo.pt')
-                        ->setPassword('ledcpu');
-
-                    $mailer = new \Swift_Mailer($transport);
-                    
-                    $subject ='Reserva / Order #'.$booking->getId().' ('.$this->translateStatus('PENDING', $language).')';
-                    
-                    $message = (new \Swift_Message($subject))
-                        ->setFrom(['vgspedro@gmail.com' => 'Pedro Viegas'])
-                        ->setTo([$client->getEmail() => $client->getUsername(),
-                            'vgspedro15@sapo.pt' => 'Pedro Viegas'])
-                        ->addPart($subject, 'text/plain')
-                        ->setBody(
-                            $this->renderView(
-                                'emails/booking-'.$language.'.html.twig',
-                                array(
-                                    'id' => $booking->getId(),
-                                    'username' => $client->getUsername(),
-                                    'email' => $client->getEmail(),
-                                    'status' => $this->translateStatus('PENDING', $language),
-                                    'tour' => $tour,
-                                    'date' => $date->format('d/m/Y'),
-                                    'hour' => $booking->getHour(),
-                                    'adult' => $booking->getAdult(),
-                                    'children' => $booking->getChildren(),
-                                    'baby' => $booking->getBaby(),
-                                    'message' => $booking->getMessage(),
-                                    'logo' => 'https://tarugatoursbenagilcaves.pt/images/logo.png'
-                                )
-                            ),
-                        'text/html'
-                    );
-
-                    $send = $mailer->send($message);
-
-                    $response = array(
-                        'result' => 1,
-                        'message' => 'success',
-                        'data' => $booking->getId(),
-                        'mail' => $send,
-                        'session' => 1
-                    );
                 }
                 else{   
                     $response = array(
@@ -237,9 +184,61 @@ class HomeController extends AbstractController
     }
 
 
+    private function sendEmail(\Swift_Mailer $mailer ){
+
+        $category = $em->getRepository(Category::class)->find($booking->getTourType());
+
+        $tour = $language =='en' ? $category->getNameEn() : $category->getNamePt();
+
+        $date = date_create_from_format("Y-m-d", $booking->getDate());
+
+        $transport = (new \Swift_SmtpTransport('smtp.sapo.pt', 465, 'ssl'))
+            ->setUsername('vgspedro15@sapo.pt')
+            ->setPassword('ledcpu');
+
+        $mailer = new \Swift_Mailer($transport);
+                    
+        $subject ='Reserva / Order #'.$booking->getId().' ('.$this->translateStatus('PENDING', $language).')';
+                    
+        $message = (new \Swift_Message($subject))
+            ->setFrom(['vgspedro@gmail.com' => 'Pedro Viegas'])
+            ->setTo([$client->getEmail() => $client->getUsername(), 'vgspedro15@sapo.pt' => 'Pedro Viegas'])
+            ->addPart($subject, 'text/plain')
+            ->setBody(
+                $this->renderView(
+                    'emails/booking-'.$language.'.html.twig',
+                    array(
+                        'id' => $booking->getId(),
+                        'username' => $client->getUsername(),
+                        'email' => $client->getEmail(),
+                        'status' => $this->translateStatus('PENDING', $language),
+                        'tour' => $tour,
+                        'date' => $date->format('d/m/Y'),
+                        'hour' => $booking->getHour(),
+                        'adult' => $booking->getAdult(),
+                        'children' => $booking->getChildren(),
+                        'baby' => $booking->getBaby(),
+                        'message' => $booking->getMessage(),
+                        'logo' => 'https://tarugatoursbenagilcaves.pt/images/logo.png'
+                    )
+                ),
+                'text/html'
+            );
+            $send = $mailer->send($message);
+
+                    $response = array(
+                        'result' => 1,
+                        'message' => 'success',
+                        'data' => $booking->getId(),
+                        'mail' => $send,
+                        'session' => 1
+                    );
+
+    }
+
+
     private function noFakeEmails($email) {
-        $invalid = 0;
-        
+        $invalid = 0;        
         if($email){
 
             $validator = new \EmailValidator\Validator();
@@ -248,16 +247,9 @@ class HomeController extends AbstractController
             $validator->hasMx($email) ? false : $invalid = 1;
             $validator->hasMx($email) != null ? false : $invalid = 1;
             $validator->isValid($email) ? false : $invalid = 1;
-        
         }
-    
         return $invalid;
     }
-
-
-
-
-
 
 
     private function getExpirationTime() {
@@ -278,11 +270,6 @@ class HomeController extends AbstractController
         }
         return $errors;
     }
-
-
-
-
-
 
 
     private function translateStatus($status, $language){

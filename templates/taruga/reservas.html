@@ -6,14 +6,16 @@
     <i class="fa-ta ta-4 fa-ta-booking">&nbsp;</i>
     <span class="RESERVAS">{% trans %}link.booking{% endtrans %}</span>
   </h2>
-  {% if categories %}
-  <form>
-    <h3 class="w3-center">Preencha todos os seguintes campos</h3>   
-    <div class="w3-content w3-center w3-padding-16 w3-row-padding w3-xlarge">
-      <div class="w3-col l6 m12 s12">
 
+  {% if categories %}
+
+  <form id="get-available">
+    <h3 class="w3-center">Preencha todos os seguintes campos</h3>   
+    <div class="w3-content w3-padding-16 w3-row-padding w3-xlarge">
+      <div class="w3-col l6 m12 s12">
+        <label class="TOUR w3-small w3-text-red">{% trans %}part_seven.tour{% endtrans %}</label>
         <select class="w3-select w3-input" name="category">
-           <option value class="TOUR">{% trans %}part_seven.tour{% endtrans %}</option>
+           <option class="TOUR w3-opacity" value="">{% trans %}part_seven.tour{% endtrans %}</option>
           {% for category in categories %}
           <option class="PT" value="{{category.id}}">{{category.namePt}}</option>
           <option class="EN w3-hide" value="{{category.id}}">{{category.nameEn}}</option>
@@ -22,34 +24,22 @@
       </div>
       
       <div class="w3-col l2 m4 s12">
+        <label class="ADULT w3-small w3-text-red">{% trans %}part_seven.adult{% endtrans %}</label>
         <input type="number" name="adult" class="w3-input ADULT" step="1" min="0" placeholder="{% trans %}part_seven.adult{% endtrans %}">
       </div>
       <div class="w3-col l2 m4 s12">
+        <label class="CHILDREN w3-small w3-text-red">{% trans %}part_seven.children{% endtrans %}</label>
         <input type="number" name="children" class="w3-input CHILDREN" step="1" min="0" placeholder="{% trans %}part_seven.children{% endtrans %}">
       </div>
       <div class="w3-col l2 m4 s12">
+        <label class="BABY w3-small w3-text-red">{% trans %}part_seven.baby{% endtrans %}</label>
         <input type="number" name="baby" class="w3-input BABY" step="1" min="0" placeholder="{% trans %}part_seven.baby{% endtrans %}">
       </div>
 
+    
 
 
-      <div class="w3-col m6 s12 w3-hide at-last">
-
-      </div>
-      <div class="w3-col m6 s12 w3-hide at-last">
-
-      </div>
-      <div class="w3-col l4 m6 s12 w3-hide at-last">
-
-      </div>
-      <div class="w3-col l4 m6 s12 w3-hide at-last">
-
-      </div>
-      <div class="w3-col l4 m6 s12 w3-hide at-last">
-      </div>
-
-      <span class="w3-btn w3-blue" onclick="getAvailable()">get availability</span>
-
+  
       <div class="w3-col s12 w3-hide at-last w3-left-align" style="line-height: 22px">
         <div class="w3-padding-16 RGPD">{% trans %}part_seven.rgpd{% endtrans %}</div>
 
@@ -61,7 +51,15 @@
       </div>
     </div>
     </form>
-   <h4 class="w3-center w3-content">
+
+    <div class="w3-padding-8 w3-row">
+      <div class="w3-col l4 m3 s2">&nbsp;</div>
+      <div class="w3-col l4 m6 s8 w3-margin-top w3-btn w3-green" onclick="getAvailable()">
+        <i class="fa fa-calendar"></i>&nbsp;<span class="GET_AVAILABLE w3-margin-left"> {% trans %}part_seven.get_available{% endtrans %}</span>
+      </div>
+    </div>
+
+   <h4 class="w3-center w3-content w3-margin-top">
     <p class='SPAM_TXT blink'>{% trans %}part_seven.spam_txt{% endtrans %}</p>
     <p class='BOOKING bold'>{% trans %}part_seven.booking{% endtrans %}</p>
     <p class='BOOK_EMAIL w3-text-red'>{% trans %}part_seven.book_email{% endtrans %}</p>
@@ -71,23 +69,12 @@
     <span class='BOOK_AFTER'>{% trans %}part_seven.book_after{% endtrans %}</span>
    </h4>
 
-{% else %}
+  {% else %}
 
-<h2 class="w3-center">Nothing available!</h2>
+    <h2 class="w3-center">Nothing available!</h2>
 
   {% endif %}
 
   
   </div>
 </section>
-
-<script>
-
-  function getAvailable(){
-    if( $('select[name=category]').val() && $('input[name=adult]').val() &&  $('input[name=children]').val() && $('input[name=baby]').val())
-      alert('get from db')
-    else 
-      alert('all fields must be filled')
-  }
-
-</script>

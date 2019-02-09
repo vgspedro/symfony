@@ -122,31 +122,32 @@
 
 <!--REQUIRED FIELDS  MODAL -->
 
-<div id="modal-fields" class="w3-modal" style="z-index: 9999999;padding-top:60px; padding-bottom: 32px">
+
+<div id="modal-info" class="w3-modal" style="z-index: 9999999;padding-top:60px; padding-bottom: 32px">
   <div class="w3-modal-content w3-animate-zoom" style="max-width:400px">
     <div class="w3-col s12">
       <div class="w3-row">
         <div class="w3-panel w3-leftbar w3-col s12 w3-pale-yellow w3-border-amber w3-left-align w3-large">
-          <span class="w3-closebtn w3-padding-small" onclick="$('#modal-fields').hide()">
+          <span class="w3-closebtn w3-padding-small" onclick="$('#modal-info').hide()">
             <i class="fa fa-times"></i>
           </span>
           <h2>
             <i class="fa fa-warning"></i>
-            <span class="ATENCAO">{% trans %}part_two.attention{% endtrans %}</span>
+            <span class="CHECK">{% trans %}part_two.check{% endtrans %}</span>
           </h2>
           <p class="REQUIRED w3-center w3-xlarge w3-padding-small">{% trans %}required{% endtrans %}</p>
-          <div class="NAME w3-hide required">{% trans %}part_seven.name{% endtrans %}</div>
-          <div class="EMAIL w3-hide required">{% trans %}part_seven.email{% endtrans %}</div>
-          <div class="TELEPHONE w3-hide required">{% trans %}part_seven.telephone{% endtrans %}</div>
-          <div class="ADDRESS w3-hide required">{% trans %}part_seven.address{% endtrans %}</div>
-          <div class="TOUR_TXT w3-hide required">{% trans %}part_seven.tour{% endtrans %}</div>
-          <div class="DATE w3-hide required">{% trans %}part_seven.date{% endtrans %}</div>
-          <div class="HOUR_TXT w3-hide required">{% trans %}part_seven.hour{% endtrans %}</div>
+          <div class="TOUR w3-hide required">{% trans %}part_seven.tour{% endtrans %}</div>
           <div class="ADULT w3-hide required">{% trans %}part_seven.adult{% endtrans %}</div>
           <div class="CHILDREN w3-hide required">{% trans %}part_seven.children{% endtrans %}</div>
-          <div class="EMAIL_INVALID w3-hide required">{% trans %}part_seven.email_invalid{% endtrans %}</div>
           <div class="BABY w3-hide required">{% trans %}part_seven.baby{% endtrans %}</div>
+          <div class="NAME w3-hide required">{% trans %}part_seven.name{% endtrans %}</div>
+          <div class="EMAIL w3-hide required">{% trans %}part_seven.email{% endtrans %}</div>
+          <div class="EMAIL_INVALID w3-hide required">{% trans %}part_seven.email_invalid{% endtrans %}</div>
+          <div class="ZERO w3-hide required">{% trans %}part_seven.zero{% endtrans %}</div>
+          <div class="TELEPHONE w3-hide required">{% trans %}part_seven.telephone{% endtrans %}</div>
+          <div class="ADDRESS w3-hide required">{% trans %}part_seven.address{% endtrans %}</div>
           <div class="RGPD w3-hide required">{% trans %}part_seven.rgpd{% endtrans %}</div>
+          <div class="OTHER_BUY_IT w3-hide required">{% trans %}part_seven.other_buy_it{% endtrans %}</div>
           <div class="w3-margin-bottom"></div>
         </div>
       </div>

@@ -73,4 +73,17 @@ class Available
     {
         $this->tourtype = $tourtype;
     }
+
+
+    public function getStock()
+    {
+        return $this->stock;
+    }
+
+    public function setStock($stock)
+    {
+
+        $this->stock = $stock;
+    }
+
 }

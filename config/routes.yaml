@@ -23,9 +23,9 @@ index_translate:
 ###
 # GET CATEGORY BLOCKED DATES
 ###
-index_get_blocked_dates:
-    path: /index/get-blocked-dates/
-    controller: App\Controller\BookingController::getBlockedDatesCategory
+index_available:
+    path: /index-available/
+    controller: App\Controller\BookingController::getAvailable
     #condition: 'request.isXmlHttpRequest()'
 
 
