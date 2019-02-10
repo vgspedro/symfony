@@ -106,7 +106,13 @@ admin_available:
     path: /admin-available/
     controller: App\Controller\AvailableController::adminAvailable
 
+admin_available_new:
+    path: /admin-available-new/
+    controller: App\Controller\AvailableController::adminAvailableNew
 
+admin_available_create:
+    path: /admin-available-create/
+    controller: App\Controller\AvailableController::adminAvailableCreate
 ##
 # EASY TEXT
 ##

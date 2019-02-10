@@ -396,10 +396,10 @@ function getAvailable(){
 
           //user required fields messages 
           if (data.status == 0){
-            for( k = 0; k<data.message.length;k++)
+            for(var k in data.available)
               $('.'+data.message[k]).removeClass('w3-hide')
     
-          $('#modal-info').show()
+            $('#modal-info').show()
           }
 
           //no stock available 
@@ -472,12 +472,6 @@ $('.order_available').on('dp.change', function(e){
     }
     $('.set-hours').html(options)
 })
-
-
-
-
-
-
 
 
 

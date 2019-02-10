@@ -1,0 +1,147 @@
+<link href="{{ asset('css/bootstrap-datepicker.min.css') }}" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"/>
+<link href="{{ asset('css/admin-booking.css') }}" rel="stylesheet">
+
+<style>
+ li { list-style-type:none}
+ ul{padding: 0px}
+ .timepicker{background:#FFF;border:1px solid #DDD;padding: 8px 0px}
+.bootstrap-datetimepicker-widget table td span {border-radius: 0px}
+.bootstrap-datetimepicker-widget table td span:hover {background: #DDD}
+#category_event_0_event{display:none}
+.table-condensed>tbody>tr>td, .table-condensed>tbody>tr>th, .table-condensed>tfoot>tr>td, .table-condensed>tfoot>tr>th, .table-condensed>thead>tr>td, .table-condensed>thead>tr>th {border: 3px solid transparent!important} 
+ .w3-input {border-bottom: 0px solid #05788d}
+.w3-select{padding: 13px 5px}
+</style>
+<header class="w3-container" style="padding-top:22px">
+    <h5>
+      <b>
+        <i class="far fa-calendar-check"></i></i> Criar Disponibilidades
+    </b>
+  </h5>
+</header>
+
+<div class="">
+  <form id="available-form">
+    <div class="w3-padding-16 w3-row-padding w3-large w3-border w3-sand">
+      <div class="w3-col l12 m12 l12">
+        <h5 class="w3-center"> Para criar disponibilidades, escolha as "Horas", e escolha o periodo temporal, Inicio e Fim nos calendarios</h5> 
+      </div>
+      <div class="w3-col l4 m6 s12">
+        <label>Categoria</label>
+        <select name="category" readonly class="w3-select w3-input w3-border">
+          <option selected value="{{ category.id }}"> {{ category.namePt }}</option>
+        </select>
+      </div>
+      <div class="w3-col l4 m3 s6" name="lotation">
+        <label>Lotação</label>
+        <input class="w3-input w3-border" readonly value="{{ category.availability }}">
+      </div>
+      <div class="w3-col l4 m3 s6">
+        <label>Horas</label>
+        <select name="event" class="w3-select w3-input w3-border w3-white">
+        {% if event %}
+        
+          {% for events in event %}
+            <option value="{{ events }}"> {{ events }}</option>
+          {% endfor %}
+
+        {% endif %}
+        </select>
+      </div>
+
+    <div class="w3-row-padding"> 
+      
+      <div class="w3-col l3 m0 w3-hide-medium w3-hide-small">&nbsp;</div>
+      
+      <div class="w3-col l3 m6 s12">
+        <label>Data Inicio</label>
+        <input class="w3-input w3-border w3-white" id='startDate' name="startDate" readonly type="text" placeholder="&#xF274; Inicio" style="font-family:Raleway, FontAwesome;cursor:pointer">
+      </div>
+      <div class="w3-col l3 m6 s12">
+        <label>Data Fim</label>
+        <input class="w3-input w3-border w3-white" id='endDate' readonly name="endDate" type="text" placeholder="&#xF273; Fim" style="font-family:Raleway, FontAwesome;cursor:pointer">
+      </div>
+    
+    </div>
+
+      <div class="w3-col s12 w3-margin-top w3-margin-bottom w3-border-top">
+        <span class="w3-btn w3-border w3-green w3-right w3-margin-top" onclick="$('#available-form').trigger('submit')">
+          <i class="fa fa-check"></i> Guardar
+        </span>
+      </div>
+    </div>
+  </form>
+</div>
+  
+<script src="{{ asset('js/bootstrap-datepicker.min.js') }}"></script>
+<script src="{{ asset('js/ui.datepicker-pt-BR.js') }}"></script>
+
+<script>
+
+
+
+  function clearBookSearch(){
+    $('#startDate, #endDate').datepicker('clearDates')
+  }
+    jQuery('#startDate').datepicker({
+      language:'pt-BR',
+      format: 'dd/mm/yyyy',
+      weekStart: 1,
+      todayHighlight: true,
+      autoclose: true,
+    }).on("changeDate",function (e) {
+      jQuery('#endDate').datepicker("setStartDate", e.date)
+    })
+
+    jQuery('#endDate').datepicker({
+      language:'pt-BR',
+      format: 'dd/mm/yyyy',
+      todayHighlight: true,
+      weekStart: 1,
+      autoclose: true
+    }).on("changeDate",function (e) {
+      jQuery('#startDate').datepicker("setEndDate", e.date)
+    })
+
+
+$('#available-form').on('submit',function(e){
+  e.preventDefault()
+console.log($('#available-form').serialize())
+  obj=''
+  $('.w3-overlay').show()
+  $('.required').addClass('w3-hide')
+  setTimeout(function(){
+    $.ajax({
+      url: '{{ path('admin_available_create') }}',
+      type: "POST",
+      data: $('#available-form').serialize(),
+      cache: false,
+      success: function(data){  
+        console.log(data)
+        $('.w3-overlay').hide()
+        if (data.message == 'success'){
+          ajaxUpload('category-list')
+          $('#modal-edit-category').hide()
+          $('#category-form').trigger('reset')
+          $('#category_isactive').val('')
+        }
+        else if (data.message=='fail'){
+          for(i=0;i<data.data.length;i++)
+            obj += data.data[i]+'<br>'
+          $('#set-fields').html(obj)
+
+
+          $('#modal-fields').show()
+        }
+      },
+      error:function(data){
+        $('.w3-overlay').hide()
+        $('#modal-error').show()
+      }
+    })
+  }, 500)
+})
+
+</script>
+

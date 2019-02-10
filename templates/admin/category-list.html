@@ -43,15 +43,29 @@ div.dataTables_length select {height: 50px}
       </tr>
     </thead>
     <tbody>
+
+
       {% for category in categories%}
        <tr>
         <td>
-           <button class="w3-btn w3-border w3-blue" onclick="editCategory({{category.id}})">
-            <i class="far fa-edit fa-fw"></i>
-          </button>
-          <button class="w3-btn w3-border w3-red" style="width: 19px" onclick="deleteCategoryConfirm({{category.id}},'{{ category.namePt }}')">
+          <span class="w3-tooltip">
+            <span style="position:absolute;left:0;bottom:32px" class="w3-round w3-text w3-tag">Editar a categoria</span>
+            <button class="w3-btn w3-border w3-blue w3-tooltip" style="width: 13px" onclick="editCategory({{category.id}})"> 
+              <i class="far fa-edit fa-fw"></i>
+            </button>
+          </span>
+          <span class="w3-tooltip">
+            <span style="position:absolute;left:0;bottom:32px" class="w3-round w3-text w3-tag">Apagar a categoria</span>
+          <button class="w3-btn w3-border w3-red" style="width: 13px" onclick="deleteCategoryConfirm({{category.id}},'{{ category.namePt }}')">
             <i class="fas fa-trash-alt"></i>
           </button>
+        </span>
+        <span class="w3-tooltip">
+            <span style="position:absolute;left:0;bottom:32px" class="w3-round w3-text w3-tag">Adicionar disponibilidade</span>
+            <button class="w3-btn w3-border w3-indigo" onclick="addAvailable({{category.id}})">
+              <i class="far fa-calendar-check"></i>
+            </button>
+          </span>
         </td>
         <td>{{ category.namePt }}</td>
         <td>{{ category.nameEn }}</td>
@@ -122,6 +136,35 @@ else
 */
 
 
+function addAvailable(id){
+  $('.w3-overlay').show()
+  setTimeout(function(){
+  $.ajax({  
+    url:'{{ path("admin_available_new") }}',
+    type: "POST",
+    data:'id='+id,
+    success: function(data){
+      $('.w3-overlay').hide()
+      $('#set-id').text(id)
+      $('#set-category').html(data)
+      $('#modal-edit-category').show()
+      if (data.message == 'success'){
+        $('#info-client').show()                
+        $('#info-client-head').removeClass('w3-red').addClass('w3-green').html('<span onclick="$(\'#info-client\').hide()" class="w3-button w3-display-topright w3-large"><i class="fa fa-times"></i></span><h1><i class="fa fa-check"></i> Sucesso</h1>')
+        $('#client-txt').html('')
+      }
+    },
+    error:function(data){
+      $('.w3-overlay').hide()
+      $('#modal-error').show()
+    }
+  })
+  }, 500)
+}
+
+
+
+
 stored = tablecategory = [2,5,6,12,13]
 
 
@@ -150,6 +193,14 @@ function editCategory(id){
   })
   }, 500)
 }
+
+
+
+
+
+
+
+
 
 function deleteCategoryConfirm(id,n){
   $('#delete-category').html('<p class="w3-center w3-large">Tem a certeza que pretende apagar a categoria, <b>'+n+'</b> ?</p>')
