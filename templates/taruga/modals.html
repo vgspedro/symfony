@@ -42,10 +42,13 @@
         <span class="DATE_HOUR"> {% trans %}info.choose_date_hour{% endtrans %}</span>
       </h2>
     </div>
+    
+    <form id="get-available-datetime">
+    
     <div class="w3-container w3-padding">
       <div class="w3-row w3-padding-4">
         <div class="w3-col s12 w3-xlarge w3-margin-bottom">
-          <input class="w3-input w3-padding-16 CHOOSE_DATE_CALENDAR get-dates" readonly placeholder="{% trans %}info.choose_date_calendar{% endtrans %} *" type="text">
+          <input class="w3-input w3-padding-16 CHOOSE_DATE_CALENDAR get-dates" name="date" readonly placeholder="{% trans %}info.choose_date_calendar{% endtrans %} *" type="text">
           <span class="w3-large w3-hide REQUIRED date required w3-text-red w3-animate-zoom">{% trans %}required{% endtrans %} </span>
         </div>
         <div class="w3-col s12 w3-large">
@@ -54,13 +57,14 @@
           </div>
         </div>
         <div class="w3-col s12 w3-xlarge">
-          <select class="w3-input w3-padding-16 HOURS set-hours" onchange="changeEventGetHour(this.value)">
-            <option selected value='' class="CHOOSE_HOUR">{% trans %}info.choose_hour{% endtrans %} *</option>
+          <select class="w3-input w3-padding-16 HOURS set-hours" name="time" onchange="changeEventGetHour(this.value)">
           </select>
           <span class="w3-large w3-hide REQUIRED hour required w3-text-red w3-animate-zoom">{% trans %}required{% endtrans %} </span>
         </div>
       </div>
     </div>
+
+    </form>
     <div class="w3-row-padding w3-xlarge w3-padding-large">
       <span class="w3-col s6 w3-block w3-btn w3-white w3-left" onclick="closeModalEvents()">
         <i class="fa fa-times"></i>
@@ -148,6 +152,29 @@
           <div class="ADDRESS w3-hide required">{% trans %}part_seven.address{% endtrans %}</div>
           <div class="RGPD w3-hide required">{% trans %}part_seven.rgpd{% endtrans %}</div>
           <div class="OTHER_BUY_IT w3-hide required">{% trans %}part_seven.other_buy_it{% endtrans %}</div>
+          <div class="w3-margin-bottom"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<div id="modal-no-stock" class="w3-modal" style="z-index: 9999999;padding-top:60px; padding-bottom: 32px">
+  <div class="w3-modal-content w3-animate-zoom" style="max-width:400px">
+    <div class="w3-col s12">
+      <div class="w3-row">
+        <div class="w3-panel w3-leftbar w3-col s12 w3-pale-yellow w3-border-amber w3-left-align w3-large">
+          <span class="w3-closebtn w3-padding-small" onclick="$('#modal-no-stock').hide()">
+            <i class="fa fa-times"></i>
+          </span>
+          <h2>
+            <i class="fa fa-warning"></i>
+            <span class="SORRY">{% trans %}part_seven.sorry{% endtrans %}</span>
+          </h2>
+          <div class="NO_STOCK w3-hide required">{% trans %}part_seven.no_stock{% endtrans %}</div>
+          <div class="MAX w3-center"></div>
           <div class="w3-margin-bottom"></div>
         </div>
       </div>

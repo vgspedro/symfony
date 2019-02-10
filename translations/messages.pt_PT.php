@@ -84,9 +84,9 @@ return array(
 'part_seven'=> array(
     'address'=>'Morada *',
     'name'=>'Nome *',
-    'adult'=>'Adulto *',
-    'children'=>'Criança *',
-    'baby'=>'Bébé *',
+    'adult'=>'Nº Adultos *',
+    'children'=>'Nº Crianças *',
+    'baby'=>'Nº Bébés *',
     'message'=>'Mensagem',
     'date'=>'Data *',
     'hour'=>'Hora *',
@@ -103,6 +103,11 @@ return array(
     'book_email' => 'EMAIL - É válida após receber a confirmação da equipa Taruga Tours',
     'book_phone' => 'TELEFONE - Tem que ser confirmada 30 min. antes na nossa ticket shop Taruga Tours na Praia de Benagil.',
     'book_after' => 'O desrespeito dessas condições anulam a reserva. Ao clicar em submeter irá receber no seu email, a confirmação da reserva.',
+    'zero' => 'Minimo é 1 Adulto, adicionou 0',
+    'other_buy_it' => 'Outro cliente finalizou a compra 1º, tente outra data.',
+    'get_available' => 'Obter Datas',
+    'no_stock' => 'De momento, este passeio, não tem disponibilidade.',
+    'sorry' => 'Lamentamos mas...',
 ),
 
 

@@ -1,6 +1,5 @@
 <?php
 namespace App\Entity;
-
 use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Table(name="event")
@@ -9,18 +8,13 @@ use Doctrine\ORM\Mapping as ORM;
 
 class Event
 {
-
-    //public function __toString() {
-    //$this->category;        // return $this->event;
-    //return (string) $this->category->getId();
-    //}
     /**
      * @ORM\Column(type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
-    /** @ORM\ManyToOne(targetEntity="App\Entity\Category", inversedBy="event") */
+    /** @ORM\ManyToOne(targetEntity="Category", inversedBy="event") */
     private $category;
     /**
     * @ORM\Column(type="string", name="event", length=150)

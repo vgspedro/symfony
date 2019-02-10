@@ -91,9 +91,9 @@ return array(
 'part_seven' => array(
     'address'=>'Address *',
     'name'=>'Name *',
-    'adult'=>'Adult *',
-    'children'=>'Children *',
-    'baby'=>'Baby *',
+    'adult'=>'Nr. Adults *',
+    'children'=>'Nr. Childrens *',
+    'baby'=>'Nr. Babies *',
     'message'=>'Message',
     'date'=>'Date *',
     'hour'=>'Hour *',
@@ -110,6 +110,11 @@ return array(
     'book_email' => 'EMAIL - Only valid after the confirmation from the Taruga Tours Team',
     'book_phone' => 'PHONE - Must by confirmed 30 min. before at our Ticket shop Taruga Tours in Benagil´s beach.',
     'book_after' => 'After submitting the booking order, we will send you a confirmation email.',
+    'zero' => 'Minimum is 1 Adult, you added 0',
+    'other_buy_it' => 'Other person just bought it, try another date.',
+    'get_available' => 'Obtain Dates',
+    'no_stock' => 'At this moment, this tour is unavailable.',
+    'sorry' => 'Sorry but...',
 ),
 
 

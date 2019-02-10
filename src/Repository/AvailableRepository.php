@@ -15,15 +15,14 @@ class AvailableRepository extends ServiceEntityRepository
     }
 
     public function findByCategoryDateTomorrow(Category $category, $startdt, $totalPax){
-        return $this->createQueryBuilder('a')
-            ->where('a.stock >= :stock')
-            ->setParameter('stock', $totalPax)
-            ->andWhere('a.datetime >= :datetime')
-            ->setParameter('datetime', $startdt)
-            ->andWhere('a.category = :category')
+        $entityManager = $this->getEntityManager();
+        $query = $entityManager->createQuery(
+            'SELECT a
+            FROM App\Entity\Available a
+            WHERE a.category = :category AND a.stock >= :stock 
+            ORDER BY a.datetime ASC')
             ->setParameter('category', $category)
-
-            ->getQuery()
-            ->getResult();
+            ->setParameter('stock', $totalPax);
+        return $query->execute();
     }
 }

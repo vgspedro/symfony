@@ -83,9 +83,14 @@ class Category
     
     /** @ORM\Column(type="boolean", name="warranty_payment", options={"default":0}) */
     private $warrantyPayment = false;
+    
+    /** @ORM\OneToMany(targetEntity="Available", mappedBy="category") */
+    private $available; 
 
     public function __construct()
     {   
+        
+        $this->available = new ArrayCollection();
         $this->event = new ArrayCollection();
         $this->blockdate = new ArrayCollection();      
     }
@@ -226,6 +231,30 @@ class Category
     {
         $this->event->removeElement($event);
     }
+
+    public function getAvailable()
+    {
+        return $this->available;
+    }
+
+    public function setAvailable(Available $available)
+    {
+        $this->available = $available;
+    }
+    
+    public function addAvailable(Available $available)
+    {
+        $available->setCategory($this);
+        $this->available->add($available);
+    }
+    
+    public function removeAvailable(Available $available)
+    {
+        $this->available->removeElement($available);
+    }
+
+
+
 
     /** 
      * @return \Money\Money

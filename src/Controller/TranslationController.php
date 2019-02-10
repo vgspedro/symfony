@@ -124,9 +124,9 @@ class TranslationController extends AbstractController
     'part_seven'=> array(
         'address'=>'Morada *',
         'name'=>'Nome *',
-        'adult'=>'Nº Adulto *',
-        'children'=>'Nº Criança *',
-        'baby'=>'Nº Bébé *',
+        'adult'=>'Nº Adultos *',
+        'children'=>'Nº Crianças *',
+        'baby'=>'Nº Bébés *',
         'date'=>'Data *',
         'email_invalid'=>'Email Inválido',
         'hour'=>'Hora *',
@@ -144,7 +144,9 @@ class TranslationController extends AbstractController
         'book_after' => 'O desrespeito dessas condições anulam a reserva.</br>Ao clicar em submeter irá receber no seu email, a confirmação da reserva.',
         'zero' => 'Minimo é 1 Adulto, adicionou 0',
         'other_buy_it' => 'Outro cliente finalizou a compra 1º, tente outra data.',
-        'get_available' => 'Obter Datas'
+        'get_available' => 'Obter Datas',
+        'no_stock' => 'De momento, este passeio, não tem disponibilidade.',
+        'sorry' => 'Lamentamos mas...',
 
     ),
 
@@ -282,9 +284,9 @@ array(
 'part_seven'=> array(
     'address'=>'Address *',
     'name'=>'Name *',
-    'adult'=>'Nr. Adult *',
-    'children'=>'Nr. Children *',
-    'baby'=>'Nr. Baby *',
+    'adult'=>'Nr. Adults *',
+    'children'=>'Nr. Childrens *',
+    'baby'=>'Nr. Babies *',
     'date'=>'Date *',
     'hour'=>'Hour *',
     'email_invalid'=>'Invalid Email',
@@ -302,7 +304,9 @@ array(
     'book_after' => 'After submitting the booking order, we will send you a confirmation email.',
     'zero' => 'Minimum is 1 Adult, you added 0',
     'other_buy_it' => 'Other person just bought it, try another date.',
-    'get_available' => 'Obtain Dates'
+    'get_available' => 'Obtain Dates',
+    'no_stock' => 'At this moment, this tour is unavailable.',
+    'sorry' => 'Sorry but...',
 ),
 
 'info' => array(

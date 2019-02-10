@@ -2,7 +2,6 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -26,32 +25,34 @@ class Available
     /** 
      * @Assert\NotBlank()
      * @Assert\Type("Category")
-     * @ORM\ManyToOne(targetEntity="Category", inversedBy="booking") 
+     * @ORM\ManyToOne(targetEntity="Category", inversedBy="available") 
      */
     private $category;
     /**
     * @ORM\Column(type="integer", name="stock", nullable=true)
     */
     private $stock;
-
+    /**
+    * @ORM\Column(type="integer", name="lotation", nullable=true)
+    */
+    private $lotation;
 
     public function getId()
     {
         return $this->id;
     }
 
-    public function getDate()
+    public function getDatetime()
     {
-        return $this->date;
+        return $this->datetime;
     }
 
     /*
     must receive the date and hour of the booking
     */
-    public function setDate($date)
+    public function setDatetime($datetime)
     {
-
-        $this->date = $date;
+        $this->datetime = $datetime;
     }
 
     public function getHour()
@@ -64,14 +65,14 @@ class Available
         $this->hour = $hour;
     }
 
-    public function getTourType()
+    public function getCategory()
     {
-        return $this->tourtype;
+        return $this->category;
     }
 
-    public function setTourType($tourtype)
+    public function setCategory(Category $category)
     {
-        $this->tourtype = $tourtype;
+        $this->category = $category;
     }
 
 
@@ -84,6 +85,17 @@ class Available
     {
 
         $this->stock = $stock;
+    }
+
+    public function getLotation()
+    {
+        return $this->lotation;
+    }
+
+    public function setLotation($lotation)
+    {
+
+        $this->lotation = $lotation;
     }
 
 }
