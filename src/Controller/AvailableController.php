@@ -13,6 +13,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class AvailableController extends AbstractController
 {
 
+
     public function adminAvailable(Request $request)
     {
         return $this->render('admin/available.html');

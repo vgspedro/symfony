@@ -1,306 +1,221 @@
-<link href="{{ asset('css/bootstrap-datepicker.min.css') }}" rel="stylesheet">
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"/>
-<link href="{{ asset('css/admin-booking.css') }}" rel="stylesheet">
+<link href="{{ asset('fullcalendar/packages/core/main.css') }}" rel='stylesheet' />
+<link href="{{ asset('fullcalendar/packages/daygrid/main.css') }}" rel='stylesheet' />
+<link href="{{ asset('fullcalendar/packages/timegrid/main.css') }}" rel='stylesheet' />
+<script src="{{ asset('fullcalendar/packages/core/main.js') }}"></script>
+<script src="{{ asset('fullcalendar/packages/interaction/main.js') }}"></script>
+<script src="{{ asset('fullcalendar/packages/daygrid/main.js') }}"></script>
+<script src="{{ asset('fullcalendar/packages/timegrid/main.js') }}"></script>
+<script src="{{ asset('fullcalendar/packages/resource-common/main.js') }}"></script>
+<script src="{{ asset('fullcalendar/packages/resource-daygrid/main.js') }}"></script>
+<script src="{{ asset('fullcalendar/packages/resource-timegrid/main.js') }}"></script>
+
 
 <style>
 .w3-input {border-bottom: 0px solid #05788d}
 input, select, textarea {color: #000!important}
-.form-control{ border: 1px solid #ccc!important;height: 50px;padding: 0px 0px 0px 4px;padding-bottom: 0px}
-div.dataTables_length select {height: 50px}
-
+.fc-left, .fc-right, .fc-center{padding: 4px 6px}
+.fc-event{border-radius: 0px;}
+.alert-info, .alert-info>th, .alert-info>td {background-color:rgba(0,100,90,0.2)!important}
+.fc-button{padding: 8px 16px!important;vertical-align: middle;overflow: hidden;
+    text-decoration: none;color: inherit;background-color: #FFF!important;text-align: center;
+    height: auto!important;cursor: pointer;white-space: nowrap;border-radius:0px!important}
 </style>
 
-<div id="results" class="w3-hide" style="top:66px;right:16px;position: fixed;z-index: 9999999">
-  <span class="w3-center w3-padding w3-light-blue w3-large w3-animate-right" id="results_txt"></span>
-</div>
+<script>
+
+function start() {
+
+ var calendarEl = document.getElementById('calendar');
+
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+      plugins: [ 'interaction', 'resourceDayGrid', 'resourceTimeGrid' ],
+      defaultView: 'resourceTimeGridDay',
+      //defaultDate: '2019-02-07',
+      editable: true,
+      titleFormat: {
+        month: '2-digit',
+        year: 'numeric',
+        day: '2-digit',
+      },
+      selectable: true,
+      allDaySlot: false,
+      nowIndicator: true,
+      now: '2019-02-11T22:51:00',
+      hour12: false,
+      nowIndicator: true,
+      locale: 'pt',
+      schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
+      eventLimit: true, // allow "more" link when too many events
+      header: {
+        left: 'prev,next today',
+        center: 'title',
+        right: 'resourceTimeGridDay,resourceTimeGridTwoDay,timeGridWeek',
+      },
+      views: {
+        resourceTimeGridTwoDay: {
+          type: 'resourceTimeGrid',
+          duration: { days: 2 },
+          buttonText: '2 Dias',
+        }
+      },
+      //// uncomment this line to hide the all-day slot
+      allDaySlot: false,
+
+
+  eventSources: 
+          [
+            {         
+              events: function(start, end, timezone, callback) {
+                $.ajax({
+                  url: "/fullcalendar/demos/json/events.json",
+                  dataType: 'json',
+                  data: {
+                   // start: start.unix(),
+                   // end: end.unix()
+                  },
+                  success: function(msg) {
+                    console.log(msg)
+                    var events = msg.events
+                    //callback(events)
+                  }
+                });
+              }
+            }
+          ],
+
+
+      resources: [
+        { id: 'a', title: 'Visita 1' },
+        { id: 'b', title: 'Visita 2', eventColor: 'green' },
+        { id: 'c', title: 'Visita 3', eventColor: 'orange' },
+        { id: 'd', title: 'Visita 4', eventColor: 'red' }
+      ],/*
+      events: [
+        { id: '2', resourceId: 'a', start: '2019-02-11T09:00:00', end: '2019-02-11T09:30:00', title: 'Falta 9' },
+        { id: '2', resourceId: 'a', start: '2019-02-11T10:00:00', end: '2019-02-11T10:30:00', title: 'Falta 19' },
+        { id: '4', resourceId: 'a', start: '2019-02-11T11:00:00', end: '2019-02-11T11:30:00', title: 'Falta 4' },
+        { id: '5', resourceId: 'a', start: '2019-02-11T12:00:00', end: '2019-02-11T12:30:00', title: 'Falta 5' },
+        { id: '6', resourceId: 'b', start: '2019-02-11T09:00:00', end: '2019-02-11T09:30:00', title: 'Falta 11' },
+        { id: '8', resourceId: 'b', start: '2019-02-11T11:00:00', end: '2019-02-11T11:30:00', title: 'Falta 4' },
+        { id: '9', resourceId: 'b', start: '2019-02-11T12:00:00', end: '2019-02-11T12:30:00', title: 'Falta 14' },
+        { id: '11', resourceId: 'd', start: '2019-02-11T10:00:00', end: '2019-02-11T12:30:00', title: 'Falta 12' },
+      ],*/
+        eventClick: function(info) {
+           var eventObj = info.event
+          alert('Clicked ' + eventObj.title);
+      },
+
+    });
+    calendar.render();
+
+  /*  var calendarEl = document.getElementById('calendar');
+    var calendar;
+
+    initThemeChooser({
+
+      init: function(themeSystem) {
+        calendar = new FullCalendar.Calendar(calendarEl, {
+          plugins: [ 'bootstrap', 'interaction', 'dayGrid', 'timeGrid', 'list', 'resourceTimeline'],
+          themeSystem: themeSystem,
+          eventSources: 
+          [
+            {         
+              events: function(start, end, timezone, callback) {
+                $.ajax({
+                  url: "<?php echo $view['router']->path('operator_get_events', array('productId' => $productId)) ?>",
+                  dataType: 'json',
+                  data: {
+                    start: start.unix(),
+                    end: end.unix()
+                  },
+                  success: function(msg) {
+                    var events = msg.events
+                    callback(events)
+                  }
+                });
+              }
+            }
+          ],
+          height: 'auto',
+          resourceAreaWidth: 230,
+          titleFormat: {
+            month: '2-digit',
+            year: 'numeric',
+            day: '2-digit',
+          },
+          views: {
+            resourceTimelineDay: {
+            buttonText: ':15 colunas',
+            slotDuration: '00:15'
+          },
+          timelineTenDay: {
+            type: 'timeline',
+            duration: { days: 1 }
+            },
+          timeGridWeek: {
+            duration: { days: 3 },
+            slotDuration: '00:20'
+          }
+          },
+          defaultView: 'timeGridWeek',
+          allDaySlot: false,
+          nowIndicator: true,
+          now: '2019-02-07T19:25:00',
+          hour12: false,
+          nowIndicator: true,
+          locale: 'pt',
+          editable: false, // enable draggable events
+          aspectRatio: 1.8,
+          scrollTime: '00:00', // undo default 6am scrollTime
+          header: {
+            left: 'today,prev,next',
+            center: 'title',
+            right: 'timeline,timeGridWeek',
+          },
+          resourceLabelText: 'Passeios',
+          resources: [
+            { id: 'a', title: 'Auditorium A' },
+            { id: 'b', title: 'Auditorium B', eventColor: 'green' },
+            { id: 'c', title: 'Auditorium C', eventColor: 'orange' },
+            { id: 'd', title: 'Auditorium F', eventColor: 'red' },
+          ],
+          events: [
+            { id: '1', resourceId: 'a', start: '2019-02-07T09:30:00', end: '2019-02-07T10:00:00', title: 'event 1' },
+            { id: '2', resourceId: 'a', start: '2019-02-07T10:00:00', end: '2019-02-07T10:30:00', title: 'event 2' },
+            { id: '4', resourceId: 'a', start: '2019-02-07T11:00:00', end: '2019-02-07T11:30:00', title: 'event 4' },
+            { id: '5', resourceId: 'b', start: '2019-02-07T10:30:00', end: '2019-02-07T11:5:00', title: 'event 5' }
+          ],
+
+        eventClick: function(info) {
+        var eventObj = info.event;
+
+        if (eventObj.url) {
+          alert(
+            'Clicked ' + eventObj.title + '.\n' +
+            'Will open ' + eventObj.url + ' in a new tab'
+          );
+
+          window.open(eventObj.url);
+
+          return false; // prevents browser from following link in current tab.
+        } else {
+          alert('Clicked ' + eventObj.title);
+        }
+      },
+      });
+        calendar.render();
+   },
+
+    });
+*/
+  }
+
+
+  start()
+</script>
 
 <header class="w3-container" style="padding-top:22px">
    <h5><b><i class="far fa-calendar-check"></i> Disponibilidades</b></h5>
 </header>
 
-<div class="w3-row-padding w3-sand w3-padding-32 w3-border-top w3-border-bottom w3-large">
-  <div class="w3-col l1 w3-hide-medium w3-hide-small">&nbsp;</div>
-  <div class="w3-col l3 m6 s12 w3-margin-bottom">
-      <input class="w3-input w3-border w3-white" id='startDate' readonly type="text" placeholder="&#xF274; Inicio" style="font-family:Raleway, FontAwesome;cursor:pointer">
-  </div>
-    <div class="w3-col l3 m6 s12 w3-margin-bottom">
-      <input class="w3-input w3-border w3-white" id='endDate' readonly type="text" placeholder="&#xF273; Fim" style="font-family:Raleway, FontAwesome;cursor:pointer">
-  </div>
-  <div class="w3-col l2 m6 s6">
-    <button class="w3-white w3-border w3-btn w3-block" onclick="clearBookSearch()"><i class="fas fa-eraser"></i> <span class="w3-hide-small">Limpar</span></button>
-  </div>
-  <div class="w3-col l2 m6 s6">
-    <button class="w3-light-green w3-border w3-btn w3-block" onclick="searchValue()"><i class="fab fa-searchengin"></i> <span class="w3-hide-small">Procurar</span></button>
-  </div>
-
-</div>
-
-<div class="w3-row-padding w3-margin-top">
-  <div class="w3-col s12">
-  <table id="dataTables" class="w3-border table table-striped centered hover table-bordered" style="width:100%">
-    <thead class="w3-sand">
-      <tr>   
-      <th>Tour</th>    
-      <th>Data</th>    
-      <th>Hora</th>
-      <th>Total</th>       
-      <th>Stock</th>    
-      </tr>
-    </thead>
-    <tbody>
-    </tbody>
-    <tfoot class="w3-sand">
-      <tr>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-      </tr>
-    </tfoot>
-  </table>
-</div>
-</div>
-<script src="{{ asset('js/bootstrap-datepicker.min.js') }}"></script>
-<script src="{{ asset('js/ui.datepicker-pt-BR.js') }}"></script>
-<script>
-  function clearBookSearch(){
-    $('#startDate, #endDate').datepicker('clearDates')
-  }
-
-  $(function(){
-    jQuery('#startDate').datepicker({
-      language:'pt-BR',
-      format: 'dd/mm/yyyy',
-      weekStart: 1,
-      todayHighlight: true,
-      autoclose: true,
-    }).on("changeDate",function (e) {
-      jQuery('#endDate').datepicker("setStartDate", e.date)
-    })
-
-    jQuery('#endDate').datepicker({
-      language:'pt-BR',
-      format: 'dd/mm/yyyy',
-      todayHighlight: true,
-      weekStart: 1,
-      autoclose: true
-    }).on("changeDate",function (e) {
-      jQuery('#startDate').datepicker("setEndDate", e.date)
-    })
-
-  tablebooking = []
-
-  if(!localStorage.getItem("tablebooking") ){
-    localStorage.setItem("tablebooking", JSON.stringify(tablebooking))
-    bookingstored = JSON.parse(localStorage.getItem("tablebooking"))
-  }
-  else
-    bookingstored = JSON.parse(localStorage.getItem("tablebooking"))
-  })
-
-  function searchValue(){
-  my_total = 0
-  id_table = []
-  $('.show-results, #results').addClass('w3-hide')
-  $('.w3-overlay').show()
-  data ='startDate='+$('#startDate').val()+'&endDate='+$('#endDate').val() 
-    //console.log(data)
-    setTimeout(function(){
-      table = $('#dataTables').DataTable({
-      dom: 'lBfrtip',
-      rowId: "id",
-      "paging": true,
-      "serverside":true,
-      "drawCallback": function( settings ) {},
-      "ajax": 
-        {
-        "url" :'{{ path('admin_booking_search') }}?'+data,
-        "dataSrc": function (j) {  
-        //console.log(j.data)
-        $('.w3-overlay, .table-overlay').hide()
-        if( j.options > 1500){
-          $('#results_txt').html('+ de 1500 resultados, restrinja a pesquisa e tente novamente.')
-          $('#results').removeClass('w3-hide')
-          j.data = []
-          $('.set-total, .set-canceled, .set-confirmed, .set-pending').text('-/-')
-          return j.data
-        }
-        else if (j.options == 0)
-        {
-          $('#results_txt').html('0 resultados')
-          $('#results').removeClass('w3-hide')
-          j.data = []
-          $('.set-total, .set-canceled, .set-confirmed, .set-pending').text('0')
-          return j.data
-        } 
-        else
-        {
-          $('.set-total').text(j.options)
-          $('.set-canceled').text(j.canceled)
-          $('.set-confirmed').text(j.confirmed)
-          $('.set-pending').text(j.pending)
-
-          return j.data
-        }
-      }
-      },
-      order:[],
-      columns: [
-      { data: "booking"},
-      { data: "status", render: function(data, type,row){
-        if (data == 'pending') color = 'w3-red'
-        else if (data == 'canceled') color = 'w3-blue'
-        else if (data == 'confirmed') color = 'w3-green'
-        
-        return '<button id="'+row.booking+'" class="'+color+' w3-btn w3-border" onclick="modalBookingSetStatus('+row.booking+')">'+row.booking+'#'+data+'</button>'
-      }},
-      { data: "tour"},
-      { data: "date"},
-      { data: "hour"},
-      { data: "lotation"},
-      { data: "available"},
-    ],
-     "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
-    buttons: [
-        {
-        extend:    'excelHtml5',
-        text:      '<i class="far fa-file-excel"></i>',
-        titleAttr: 'Excel',
-        exportOptions: {
-          columns: [2, 3, 4]
-          }
-        },
-        {
-        extend:    'pdfHtml5',
-        text:      '<i class="far fa-file-pdf"></i>',
-        titleAttr: 'PDF',
-        exportOptions: {
-          columns: [ 2, 3, 4]
-          },
-          customize: function (doc) {
-            //doc.content[1].table.widths = Array(doc.content[1].table.body[0].length + 1).join('*').split('')
-              doc['footer']=(function(page, pages) {
-                return {
-                  columns: [
-                    {
-                      alignment: 'right',
-                      text: ['']
-                    },
-                  ],
-                  margin: 20
-                }
-              })
-            }
-        },
-        {
-        extend: 'colvis',
-        columns: ':gt(0)',
-        text:      '<i class="far fa-eye-slash"></i>',
-        titleAttr: 'Colunas',
-        exportOptions: {
-          columns: [ 0, 1, 2]
-        }
-      }
-    ],
-    "columnDefs": [
-      //{ className:"my_class", "targets": [4] },
-    //  { "orderData":[ 1 ],   "targets": [ 2 ] },
-        {
-          "targets": tablebooking,
-          "visible": false
-          //"searchable": false
-        }
-    ],
-    language: {
-        "lengthMenu": "Mostrar _MENU_ por pagina",
-        "zeroRecords": "0 Resultados",
-        "info": "Mostrar _PAGE_ de _PAGES_",
-        "infoEmpty": "Sem resultados",
-        "search": "Pesquisar",
-        "paginate": {
-        "previous": "Anterior",
-        "next": "Seguinte",
-        }
-    },
-    "footerCallback": function ( row, data, start, end, display ) {
-          var api = this.api(), data
-          // Remove the formatting to get integer data for summation
-          var intVal = function ( i ) {
-            return typeof i === 'string' ?
-              i.replace(/[\€,]/g, '')*1 :
-              typeof i === 'number' ?
-              i : 0;
-          }
-          // Total over all pages
-        
-        for (k = 2; k<3;k++){
-          total = api
-            .column( k )
-            .data()
-            .reduce( function (a, b) {
-              return intVal(a) + intVal(b)
-            }, 0 )
-            // Total over this page
-            pageTotal = api
-              .column( k, { page: 'current'} )
-              .data()
-              .reduce( function (a, b) {
-                  return intVal(a) + intVal(b);
-              }, 0 )
-            // Update footer
-            $( api.column( k ).footer() ).html(pageTotal+' ('+total+')'
-          )
-        }
-
-        },
-    "destroy": true,
-    responsive: true
-  })
-  .on( 'error.dt', function ( e, settings, techNote, message ) {
-    $('.w3-overlay').hide()
-    $('#modal-error').show()
-    return true
-  })
-    //table.ajax.reload()
-    // table.colReorder.order(orderby)
-    //table.draw()
-    /*DATATABLE NO ALERT*/
-    $.fn.dataTable.ext.errMode = 'none'
-  $('#dataTables_length, .dt-buttons').addClass('w3-center w3-col s12 m6 l4 w3-section')
-  $('#dataTables_filter').addClass('w3-col s8 m12 l4 w3-center w3-section')
-  }, 750)
-}
-
-function setStatusTable(v){
-  $('input.form-control.input-sm').val(v).trigger("keyup")
-}
-
-function modalBookingSetStatus(bookingId){
-  $('.w3-overlay').show()
-  setTimeout(function(){
-    $.ajax({  
-      url:'{{ path('admin_booking_set_status') }}',
-      type: "POST",
-      data:'id='+bookingId,
-      success: function(data){
-        //console.log(data)
-        $('.w3-overlay').hide()
-        $('#set-booking').html(data)
-        $('#booking-id').text(bookingId)
-        $('#modal-booking-set-status').show()
-        $('#bookingstatus_id').val(bookingId)
-        if(data.data == 'success'){
-        
-        }
-      },
-      error:function(data){
-        $('.w3-overlay').hide()
-        $('#modal-error').show()
-      }
-    })
-  }, 500)
-}
-
-
-</script>
+<div id='calendar' class="w3-margin-bottom"></div>
