@@ -1,7 +1,8 @@
 
 <!-- Top container -->
-<div class="w3-card-2 w3-bar w3-top w3-large w3-white" style="z-index:9999999">
-  <span style="cursor:pointer" class="w3-bar-item" onclick="w3_open()">
+<div class="w3-card-2 w3-bar w3-large w3-white" style="z-index:99;height:51px;position: absolute;
+    top: 0px;">
+  <span style="cursor:pointer;position:fixed" class="w3-bar-item" onclick="w3_open()">
     <i class="fa-2x fa fa-bars"></i>
   </span>
   <span class="w3-bar-item w3-right" style="color: #05788D;line-height: 40px">Taruga Tours</span>
@@ -9,10 +10,10 @@
 
 <!-- Sidebar/menu -->
 
-<nav class="w3-sidebar w3-hide w3-collapse w3-white w3-animate-left w3-border-right" style="z-index:999999;margin-top: 48px">
+<nav class="w3-sidebar w3-hide w3-collapse w3-white w3-animate-left w3-border-right" style="z-index:9;top:0px">
   <br>
   <div class="w3-container w3-row">
-    <div class="w3-col s12 w3-center">
+    <div class="w3-col s12 w3-center" style="margin-top:40px">
       <i style="cursor:pointer" onclick="w3_open()" class="w3-right fa-2x fas fa-times fa-fw"></i>
       <img src="{{ asset('images/logo.png') }}" style=" z-index: -1;position: absolute;left: 0;margin-top: -60px;width: 196px;opacity: 0.15">
     </div>
@@ -87,8 +88,6 @@
     <br><br>
   </div>
 </nav>
-
-<i class="fas fa-user-circle"></i>
 
 <div class="w3-overlay w3-animate-opacity" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay">
     <div class="w3-display-container" style="height:100vh">

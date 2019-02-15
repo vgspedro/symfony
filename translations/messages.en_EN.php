@@ -115,6 +115,11 @@ return array(
     'get_available' => 'Obtain Dates',
     'no_stock' => 'At this moment, this tour is unavailable.',
     'sorry' => 'Sorry but...',
+    'cvv_invalid' => 'CVV (3 digits)',
+    'no_match_names' => 'Name and Owner Credit Card must be the same',
+    'card_nr_invalid' => 'Credit Card Nº (16 digits)',
+    'telephone_invalid' => 'Telephone (Min: 9 digits)',
+    'name_invalid' => 'Name (Only Letters)'
 ),
 
 
@@ -122,7 +127,14 @@ return array(
     'choose_date_hour'=> 'Choose Date & Hour',
     'choose_date_calendar'=> 'Choose a Date from the Calendar',
     'choose_hour'=> 'Choose Hour',
-    'buy_now' => 'Buy Now'
+    'buy_now' => 'Buy Now',
+    'no_webstorage' => 'Sorry! No Web Storage support on your browser, please open on another browser',
+    'credit_card_nr' => 'Credit Card Nº *',
+    'name_credit_card' => 'Owner Credit Card *',
+    'date_credit_card' => 'Credit Card Expire Date *',
+    'tour_data' => 'Tour Info',
+    'personal_data' => 'Personal Info',
+    'credit_card_data' => 'Credit Card Info'
 ),
 
 'arbitrary' => array(

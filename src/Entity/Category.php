@@ -85,7 +85,10 @@ class Category
     private $warrantyPayment = false;
     
     /** @ORM\OneToMany(targetEntity="Available", mappedBy="category") */
-    private $available; 
+    private $available;
+
+     /** @ORM\Column(type="string", length=5, name="duration", options={"default":"00:00"})*/
+    private $duration; 
 
     public function __construct()
     {   
@@ -135,6 +138,15 @@ class Category
         $this->availability = $availability;
     }
 
+    public function getDuration()
+    {
+        return $this->duration;
+    }
+
+    public function setDuration($duration)
+    {
+        $this->duration = $duration;
+    }
 
     public function getHighlight()
     {

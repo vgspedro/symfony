@@ -18,7 +18,11 @@ index_translate:
     path: /translate
     controller: App\Controller\TranslationController::translate
 
-
+set_booking:
+    path: /booking
+    controller: App\Controller\HomeController::setBooking
+    condition: 'request.isXmlHttpRequest()'
+    methods: [POST]
 
 ###
 # GET CATEGORY BLOCKED DATES
@@ -27,11 +31,10 @@ index_available:
     path: /index-available/
     controller: App\Controller\BookingController::getAvailable
     #condition: 'request.isXmlHttpRequest()'
-
-
 index_admin:
     path: /admin/
     controller: App\Controller\AdminController::html
+
 
 ####
 # template ajax load with twig
@@ -44,7 +47,6 @@ admin_dashboard:
 ##
 # CATEGORIES
 ##
-
 
 admin_category_new:
     path: /admin-category-new/
@@ -113,6 +115,19 @@ admin_available_new:
 admin_available_create:
     path: /admin-available-create/
     controller: App\Controller\AvailableController::adminAvailableCreate
+
+admin_available_list:
+    path: /admin-available-list/
+    controller: App\Controller\AvailableController::adminListAvailable
+
+admin_available_edit:
+    path: /admin-available-edit/
+    controller: App\Controller\AvailableController::adminAvailableEdit
+
+admin_available_delete:
+    path: /admin-available-delete/
+    controller: App\Controller\AvailableController::adminAvailableDelete
+
 ##
 # EASY TEXT
 ##

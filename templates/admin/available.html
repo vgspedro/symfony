@@ -8,7 +8,8 @@
 <script src="{{ asset('fullcalendar/packages/resource-common/main.js') }}"></script>
 <script src="{{ asset('fullcalendar/packages/resource-daygrid/main.js') }}"></script>
 <script src="{{ asset('fullcalendar/packages/resource-timegrid/main.js') }}"></script>
-
+<script src="{{ asset('fullcalendar/packages/popper.min.js') }}"></script>
+<script src="{{ asset('fullcalendar/packages/tooltip.min.js') }}"></script>
 
 <style>
 .w3-input {border-bottom: 0px solid #05788d}
@@ -19,203 +20,170 @@ input, select, textarea {color: #000!important}
 .fc-button{padding: 8px 16px!important;vertical-align: middle;overflow: hidden;
     text-decoration: none;color: inherit;background-color: #FFF!important;text-align: center;
     height: auto!important;cursor: pointer;white-space: nowrap;border-radius:0px!important}
+.fc-time-grid .fc-bgevent, .fc-time-grid .fc-event { margin:1px}
+.fc-list-item{border-bottom: 1px solid #DDD}
+.fc-resource-cell{font-size:16px}
+.fc-state-hover{background: #eee!important; box-shadow:0 8px 16px 0 rgba(0,0,0,.2),0 6px 20px 0 rgba(0,0,0,.19)}
+.fc-center h2{font-size: 23px}
+.fc-time-grid-event{cursor: pointer}
+.fc-license-message{display: none!important}
 </style>
 
 <script>
 
-function start() {
+function getResources() {
+  $.ajax({
+    url: '{{ path("admin_available_list") }}',
+    dataType: 'json',
+    success: function(data) {
+      startCalendar(data)
+    }
+  })
+}
 
- var calendarEl = document.getElementById('calendar');
+function startCalendar(data){
 
-    var calendar = new FullCalendar.Calendar(calendarEl, {
-      plugins: [ 'interaction', 'resourceDayGrid', 'resourceTimeGrid' ],
-      defaultView: 'resourceTimeGridDay',
-      //defaultDate: '2019-02-07',
-      editable: true,
-      titleFormat: {
-        month: '2-digit',
-        year: 'numeric',
-        day: '2-digit',
+  var calendar = new FullCalendar.Calendar(document.getElementById('calendar'), {
+    plugins: [ 'interaction', 'resourceDayGrid', 'resourceTimeGrid' ],
+    defaultView: 'resourceTimeGridTwoDay',
+    defaultDate: '{{ "now"|date("Y-m-d H:i:s") }}',
+    editable: false,
+    businessHours: {
+      daysOfWeek: [ 0, 1, 2, 3, 4, 5, 6 ], // Monday - Thursday
+      startTime: '8:00', // a start time (10am in this example)
+      endTime: '20:00', // an end time (6pm in this example)
+    },
+    minTime : '8:00:00',
+    maxTime : '21:00:00',
+    slotLabelFormat: [
+    { hour: '2-digit',
+      minute: '2-digit'
+    }
+    ],
+    height:'parent',
+    selectable: false,
+    locale: 'pt',
+    hour12: false,
+    nowIndicator: true,
+    titleFormat: {
+      month: '2-digit',
+      year: 'numeric',
+      day: '2-digit',
+    },
+    eventLimit: true, // allow "more" link when too many events
+    header: {
+      left: 'prev,next',
+      center: 'title',
+      right: 'resourceTimeGridTwoDay,resourceTimeGridTreeDay,dayGridMonth'
+    },
+    views: {
+      resourceTimeGridTwoDay: {
+        type: 'resourceTimeGrid',
+        duration: { days: 2 },
+        buttonText: '2 Dias'
       },
-      selectable: true,
-      allDaySlot: false,
-      nowIndicator: true,
-      now: '2019-02-11T22:51:00',
-      hour12: false,
-      nowIndicator: true,
-      locale: 'pt',
-      schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
-      eventLimit: true, // allow "more" link when too many events
-      header: {
-        left: 'prev,next today',
-        center: 'title',
-        right: 'resourceTimeGridDay,resourceTimeGridTwoDay,timeGridWeek',
+      resourceTimeGridTreeDay: {
+        type: 'resourceTimeGrid',
+        duration: { days: 3 },
+        buttonText: '3 Dias'
       },
-      views: {
-        resourceTimeGridTwoDay: {
-          type: 'resourceTimeGrid',
-          duration: { days: 2 },
-          buttonText: '2 Dias',
-        }
-      },
-      //// uncomment this line to hide the all-day slot
-      allDaySlot: false,
-
-
-  eventSources: 
-          [
-            {         
-              events: function(start, end, timezone, callback) {
-                $.ajax({
-                  url: "/fullcalendar/demos/json/events.json",
-                  dataType: 'json',
-                  data: {
-                   // start: start.unix(),
-                   // end: end.unix()
-                  },
-                  success: function(msg) {
-                    console.log(msg)
-                    var events = msg.events
-                    //callback(events)
-                  }
-                });
-              }
-            }
-          ],
-
-
-      resources: [
-        { id: 'a', title: 'Visita 1' },
-        { id: 'b', title: 'Visita 2', eventColor: 'green' },
-        { id: 'c', title: 'Visita 3', eventColor: 'orange' },
-        { id: 'd', title: 'Visita 4', eventColor: 'red' }
-      ],/*
-      events: [
-        { id: '2', resourceId: 'a', start: '2019-02-11T09:00:00', end: '2019-02-11T09:30:00', title: 'Falta 9' },
-        { id: '2', resourceId: 'a', start: '2019-02-11T10:00:00', end: '2019-02-11T10:30:00', title: 'Falta 19' },
-        { id: '4', resourceId: 'a', start: '2019-02-11T11:00:00', end: '2019-02-11T11:30:00', title: 'Falta 4' },
-        { id: '5', resourceId: 'a', start: '2019-02-11T12:00:00', end: '2019-02-11T12:30:00', title: 'Falta 5' },
-        { id: '6', resourceId: 'b', start: '2019-02-11T09:00:00', end: '2019-02-11T09:30:00', title: 'Falta 11' },
-        { id: '8', resourceId: 'b', start: '2019-02-11T11:00:00', end: '2019-02-11T11:30:00', title: 'Falta 4' },
-        { id: '9', resourceId: 'b', start: '2019-02-11T12:00:00', end: '2019-02-11T12:30:00', title: 'Falta 14' },
-        { id: '11', resourceId: 'd', start: '2019-02-11T10:00:00', end: '2019-02-11T12:30:00', title: 'Falta 12' },
-      ],*/
-        eventClick: function(info) {
-           var eventObj = info.event
-          alert('Clicked ' + eventObj.title);
-      },
-
-    });
-    calendar.render();
-
-  /*  var calendarEl = document.getElementById('calendar');
-    var calendar;
-
-    initThemeChooser({
-
-      init: function(themeSystem) {
-        calendar = new FullCalendar.Calendar(calendarEl, {
-          plugins: [ 'bootstrap', 'interaction', 'dayGrid', 'timeGrid', 'list', 'resourceTimeline'],
-          themeSystem: themeSystem,
-          eventSources: 
-          [
-            {         
-              events: function(start, end, timezone, callback) {
-                $.ajax({
-                  url: "<?php echo $view['router']->path('operator_get_events', array('productId' => $productId)) ?>",
-                  dataType: 'json',
-                  data: {
-                    start: start.unix(),
-                    end: end.unix()
-                  },
-                  success: function(msg) {
-                    var events = msg.events
-                    callback(events)
-                  }
-                });
-              }
-            }
-          ],
-          height: 'auto',
-          resourceAreaWidth: 230,
-          titleFormat: {
-            month: '2-digit',
-            year: 'numeric',
-            day: '2-digit',
-          },
-          views: {
-            resourceTimelineDay: {
-            buttonText: ':15 colunas',
-            slotDuration: '00:15'
-          },
-          timelineTenDay: {
-            type: 'timeline',
-            duration: { days: 1 }
-            },
-          timeGridWeek: {
-            duration: { days: 3 },
-            slotDuration: '00:20'
-          }
-          },
-          defaultView: 'timeGridWeek',
-          allDaySlot: false,
-          nowIndicator: true,
-          now: '2019-02-07T19:25:00',
-          hour12: false,
-          nowIndicator: true,
-          locale: 'pt',
-          editable: false, // enable draggable events
-          aspectRatio: 1.8,
-          scrollTime: '00:00', // undo default 6am scrollTime
-          header: {
-            left: 'today,prev,next',
-            center: 'title',
-            right: 'timeline,timeGridWeek',
-          },
-          resourceLabelText: 'Passeios',
-          resources: [
-            { id: 'a', title: 'Auditorium A' },
-            { id: 'b', title: 'Auditorium B', eventColor: 'green' },
-            { id: 'c', title: 'Auditorium C', eventColor: 'orange' },
-            { id: 'd', title: 'Auditorium F', eventColor: 'red' },
-          ],
-          events: [
-            { id: '1', resourceId: 'a', start: '2019-02-07T09:30:00', end: '2019-02-07T10:00:00', title: 'event 1' },
-            { id: '2', resourceId: 'a', start: '2019-02-07T10:00:00', end: '2019-02-07T10:30:00', title: 'event 2' },
-            { id: '4', resourceId: 'a', start: '2019-02-07T11:00:00', end: '2019-02-07T11:30:00', title: 'event 4' },
-            { id: '5', resourceId: 'b', start: '2019-02-07T10:30:00', end: '2019-02-07T11:5:00', title: 'event 5' }
-          ],
-
-        eventClick: function(info) {
-        var eventObj = info.event;
-
-        if (eventObj.url) {
-          alert(
-            'Clicked ' + eventObj.title + '.\n' +
-            'Will open ' + eventObj.url + ' in a new tab'
-          );
-
-          window.open(eventObj.url);
-
-          return false; // prevents browser from following link in current tab.
-        } else {
-          alert('Clicked ' + eventObj.title);
-        }
-      },
+      dayGridMonth: {
+        buttonText: 'Mês'
+      }
+    },
+    eventRender: function(info) {
+      var tooltip = new Tooltip(info.el, {
+        title: info.event.extendedProps.description,
+        placement: 'top',
+        trigger: 'hover',
+        container: 'body'
       });
-        calendar.render();
-   },
+    },
+    allDaySlot: false,
+    resources: data.resources,
+    // events: data.events,
+    events: function(info, successCallback, failureCallback) {
+      $.ajax({
+        url: '{{ path("admin_available_list") }}',
+        dataType: 'json',
+        success: function(info) {
+          ev = info.events
+          successCallback(ev)
+        }
+      })
+    },
+    dateClick: function(arg) {
+      console.log(
+        'dateClick',
+        arg.date,
+        arg.resource ? arg.resource.id : '(no resource)'
+      );
+    },
+    eventClick: function(info) {
+      $("#modal-edit-stock").show()
+      var evt = info.event.textColor.split("**");
+      $('#set-stock-id').val(info.event.id)
+      $('#set-stock-lotation').val(evt[1])
+      $('#set-stock-available').val(evt[0])
+      $('#set-stock-info').html(evt[2])
+      info.el.style.borderColor = 'red';
+    }
+  });
+  calendar.render()
+}
 
-    });
-*/
-  }
+
+getResources()
+$('#add').next().remove()
 
 
-  start()
+function editAvailable(){
+$('.w3-overlay').show()
+  setTimeout(function(){
+    $.ajax({  
+      url:'{{ path('admin_available_edit') }}',
+      type: "POST",
+      data: $('#set-stock').serialize(),
+      dataType:'json',
+      success: function(data){
+        if(data.status == 1){
+          $('.fc-next-button').trigger('click')
+          $('.fc-prev-button').trigger('click')
+          setTimeout(function(){
+            $('.w3-overlay').hide()
+          }, 500)
+        }
+        else {
+          $('.w3-overlay').hide()
+          alert('err')
+        }
+      },
+      error:function(data){
+        $('.w3-overlay').hide()
+        $('#modal-error').show()
+      }
+    })
+  }, 500)
+
+
+
+
+
+
+
+$('#modal-edit-stock').hide()
+}
+
+
+
+
+
+
+
 </script>
 
 <header class="w3-container" style="padding-top:22px">
    <h5><b><i class="far fa-calendar-check"></i> Disponibilidades</b></h5>
 </header>
 
-<div id='calendar' class="w3-margin-bottom"></div>
+<div id='calendar'></div>

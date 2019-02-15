@@ -37,6 +37,7 @@ div.dataTables_length select {height: 50px}
       <th class="w3-center">Activo</th>
       <th class="w3-center">Destaque</th>
       <th class="w3-center">Lotação</th>
+      <th class="w3-center">Duração</th>
       <th class="w3-center">Gart.Pag.</th>
       <th class="w3-center">Gart.Pag.PT</th>
       <th class="w3-center">Gart.Pag.EN</th>
@@ -89,6 +90,7 @@ div.dataTables_length select {height: 50px}
           {% endif %}
         </td>
         <td class="w3-right-align">{{ category.availability }}</td>
+        <td class="w3-right-align">{{ category.duration }}</td>
         <td class="w3-center">
           {% if category.warrantyPayment == 1 %}
             <i class="w3-text-green w3-xlarge fas fa-check-circle"></i>
@@ -103,6 +105,7 @@ div.dataTables_length select {height: 50px}
     </tbody>
     <tfoot class="w3-sand">
       <tr>
+        <td></td>
         <td></td>
         <td></td>
         <td></td>
@@ -144,6 +147,7 @@ function addAvailable(id){
     type: "POST",
     data:'id='+id,
     success: function(data){
+      console.log(data)
       $('.w3-overlay').hide()
       $('#set-id').text(id)
       $('#set-category').html(data)
@@ -165,7 +169,7 @@ function addAvailable(id){
 
 
 
-stored = tablecategory = [2,5,6,12,13]
+stored = tablecategory = [2,5,6,12,13,14]
 
 
 function editCategory(id){

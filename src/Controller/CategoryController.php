@@ -132,6 +132,7 @@ class CategoryController extends AbstractController
                 'highLight' => $c->getCategory()->getHighlight(),
                 'isActive' => $c->getCategory()->getIsActive(),
                 'availability' => $c->getCategory()->getAvailability(),
+                'duration' => $c->getCategory()->getDuration(),
                 'event' => $c->getEvent()
              );
         return $this->render('admin/category-list.html', array(

@@ -20,7 +20,7 @@ class AvailableRepository extends ServiceEntityRepository
             'SELECT a
             FROM App\Entity\Available a
             WHERE a.category = :category AND a.stock >= :stock 
-            ORDER BY a.datetime ASC')
+            ORDER BY a.datetimestart ASC')
             ->setParameter('category', $category)
             ->setParameter('stock', $totalPax);
         return $query->execute();

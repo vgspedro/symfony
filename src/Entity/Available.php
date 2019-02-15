@@ -21,7 +21,7 @@ class Available
     private $id;
     /**
     * @ORM\Column(type="datetime") */
-    private $datetime;
+    private $datetimestart;
     /** 
      * @Assert\NotBlank()
      * @Assert\Type("Category")
@@ -36,33 +36,46 @@ class Available
     * @ORM\Column(type="integer", name="lotation", nullable=true)
     */
     private $lotation;
+    /**
+    * @ORM\Column(type="datetime") */
+    private $datetimeend;
 
     public function getId()
     {
         return $this->id;
     }
 
-    public function getDatetime()
+    public function getDuration()
     {
-        return $this->datetime;
+        return $this->duration;
+    }
+
+    public function setDuration($duration)
+    {
+        $this->duration = $duration;
     }
 
     /*
     must receive the date and hour of the booking
     */
-    public function setDatetime($datetime)
+    public function setDatetimeStart($datetimestart)
     {
-        $this->datetime = $datetime;
+        $this->datetimestart = $datetimestart;
     }
 
-    public function getHour()
+    public function getDatetimeStart()
     {
-        return $this->hour;
+        return $this->datetimestart;
     }
 
-    public function setHour($hour)
+    public function setDatetimeEnd($datetimeend)
     {
-        $this->hour = $hour;
+        $this->datetimeend = $datetimeend;
+    }
+
+    public function getDatetimeEnd()
+    {
+        return $this->datetimeend;
     }
 
     public function getCategory()
@@ -74,8 +87,6 @@ class Available
     {
         $this->category = $category;
     }
-
-
     public function getStock()
     {
         return $this->stock;

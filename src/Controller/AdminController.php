@@ -29,14 +29,13 @@ class AdminController extends AbstractController
         $booking =array();// $this->getDoctrine()->getManager()->getRepository(Booking::class)->dashboardValues();
         $ua = $this->getBrowser();
 
-        return $this->render('admin/base.html.twig', array('browser'=>$ua,'booking' => $booking));
+        return $this->render('admin/base.html.twig', array('browser'=>$ua,'bookings' => $booking));
     }
 
 	public function adminDashboard()
 	{
-        
         $booking = array();//$this->getDoctrine()->getManager()->getRepository(Booking::class)->dashboardValues();
-    	return $this->render('admin/dashboard.html', array('booking' => $booking));
+    	return $this->render('admin/dashboard.html', array('bookings' => $booking));
     }
 
     public function adminBookingSetStatus(Request $request){

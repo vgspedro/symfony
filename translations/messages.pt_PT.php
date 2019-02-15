@@ -108,6 +108,11 @@ return array(
     'get_available' => 'Obter Datas',
     'no_stock' => 'De momento, este passeio, não tem disponibilidade.',
     'sorry' => 'Lamentamos mas...',
+    'cvv_invalid' => 'CVV (3 digitos)',
+    'no_match_names' => 'Nome e Nome Cartão tem que ser iguais',
+    'card_nr_invalid' => 'Nº Cartão Crédito (16 digitos)',
+    'telephone_invalid' => 'Telefone (Min: 9 digitos)',
+    'name_invalid' => 'Name (Apenas Letras)'
 ),
 
 
@@ -115,7 +120,14 @@ return array(
     'choose_date_hour'=> 'Escolha Data & Hora',
     'choose_date_calendar'=> 'Escolha Data do Calendário',
     'choose_hour'=> 'Escolha Hora',
-    'buy_now' => 'Comprar'
+    'buy_now' => 'Comprar',
+    'no_webstorage' => 'Lamentamos! Mas o seu navegador não suporta Web Storage, escolha outro navegador.',
+    'credit_card_nr' => 'Nº Cartão Crédito *',
+    'name_credit_card' => 'Nome Cartão Crédito *',
+    'date_credit_card' => 'Data Expiração *',
+    'tour_data' => 'Info. Passeio',
+    'personal_data' => 'Info. Pessoal',
+    'credit_card_data' => 'Info. Cartão Crédito'
 ),
 
 'arbitrary' => array(

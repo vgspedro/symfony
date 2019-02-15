@@ -39,6 +39,12 @@ class CategoryType extends AbstractType
                 'label' => 'Lotação *',
                 'attr' => ['class' => 'w3-input w3-border w3-white','placeholder'=>'Lotação *',]
             ))
+            ->add('duration', TextType::class,
+            array(
+                'required' => true,
+                'label' => 'Duração *',
+                'attr' => ['class' => 'w3-input w3-border w3-white','placeholder'=>'Duração *', 'readonly' => true]
+            ))
             ->add('name_en', TextType::class, array(
                 'required' => false,
                 'label' => 'Nome (EN)*',

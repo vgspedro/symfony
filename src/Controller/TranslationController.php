@@ -147,7 +147,11 @@ class TranslationController extends AbstractController
         'get_available' => 'Obter Datas',
         'no_stock' => 'De momento, este passeio, não tem disponibilidade.',
         'sorry' => 'Lamentamos mas...',
-
+        'cvv_invalid' => 'CVV (3 digitos)',
+        'no_match_names' => 'Nome e Nome Cartão tem que ser iguais',
+        'card_nr_invalid' => 'Nº Cartão Crédito (16 digitos)',
+        'telephone_invalid' => 'Telefone (Min: 9 digitos)',
+        'name_invalid' => 'Name (Apenas Letras)'
     ),
 
     'info' => array(
@@ -155,6 +159,13 @@ class TranslationController extends AbstractController
         'choose_date_calendar'=> 'Escolha Data do Calendário *',
         'choose_hour'=> 'Escolha Hora *',
         'buy_now' => 'Comprar',
+        'no_webstorage' => 'Lamentamos! Mas o seu navegador não suporta Web Storage, escolha outro navegador.',
+        'credit_card_nr' => 'Nº Cartão Crédito *',
+        'name_credit_card' => 'Nome Cartão Crédito *',
+        'date_credit_card' => 'Data Expiração *',
+        'tour_data' => 'Info. Passeio',
+        'personal_data' => 'Info. Pessoal',
+        'credit_card_data' => 'Info. Cartão Crédito'
     ),
 
 
@@ -307,6 +318,11 @@ array(
     'get_available' => 'Obtain Dates',
     'no_stock' => 'At this moment, this tour is unavailable.',
     'sorry' => 'Sorry but...',
+    'cvv_invalid' => 'CVV (3 digits)',
+    'no_match_names' => 'Name and Owner Credit Card must be the same',
+    'card_nr_invalid' => 'Credit Card Nº (16 digits)',
+    'telephone_invalid' => 'Telephone (Min: 9 digits)',
+    'name_invalid' => 'Name (Only Letters)'
 ),
 
 'info' => array(
@@ -314,6 +330,14 @@ array(
     'choose_date_calendar'=> 'Choose a Date from Calendar *',
     'choose_hour'=> 'Choose Hour *',
     'buy_now' => 'Buy Now',
+    'no_webstorage' => 'Sorry! No Web Storage support on your browser, please open on another browser',
+    'credit_card_nr' => 'Credit Card Nº *',
+    'name_credit_card' => 'Owner Credit Card *',
+    'date_credit_card' => 'Credit Card Expire Date *',
+    'tour_data' => 'Tour Info',
+    'personal_data' => 'Personal Info',
+    'credit_card_data' => 'Credit Card Info'
+
 ),
 
 'arbitrary' => array(

@@ -38,24 +38,10 @@ class HomeController extends AbstractController
 
     public function html(Request $request, MoneyFormatter $moneyFormatter)
     {   
-        $booking = new Booking();
-        
-        $time = new \DateTime('now');
-
-        if (!$request->isXmlHttpRequest()) {
-            $this->session->clear();
-            $this->session->set('expired', $time->getTimestamp());
-        }
-
         $em = $this->getDoctrine()->getManager();
 
         $ua = $this->getBrowser();
         $locale = $ua['lang'];
-
-        $form = $this->createForm(BookingType::class, $booking);        
-        
-        //clients dont need this so we remove it 
-        $form->remove('notes'); 
     
         $cS = array();
         $locales = $em->getRepository(Locales::class)->findAll();
@@ -72,7 +58,11 @@ class HomeController extends AbstractController
             'id' => $categoryHl->getId()
         );
         
-        foreach ($category as $categories)
+        foreach ($category as $categories){
+            
+            $s = explode(":",$categories->getDuration());
+            $minutes = (int)$s[0]*60 + (int)$s[1];
+            
             $cS[]= array(
                 'adultAmount' => $moneyFormatter->format($categories->getAdultPrice()),
                 'childrenAmount'  => $moneyFormatter->format($categories->getChildrenPrice()),
@@ -84,12 +74,12 @@ class HomeController extends AbstractController
                 'id' => $categories->getId(),
                 'warrantyPayment' => $categories->getwarrantyPayment(),
                 'warrantyPaymentPt' => $categories->getwarrantyPaymentPt(),
-                'warrantyPaymentEn' => $categories->getwarrantyPaymentEn()
-                );
-          
+                'warrantyPaymentEn' => $categories->getwarrantyPaymentEn(),
+                'duration' => $minutes
+            );
+        }
         return $this->render('base.html.twig', 
             array(
-                'form' => $form->createView(),
                 'colors'=> $this->color(),
                 'warning' => $warning,
                 'categories' => $cS,
@@ -102,39 +92,72 @@ class HomeController extends AbstractController
     }
 
 
-    public function newBooking(Request $request, ValidatorInterface $validator, MoneyFormatter $moneyFormatter){
-
-        if ($request->isXmlHttpRequest()) {
-          
-            $form->submit($request->request->get($form->getName()));
-            
-            if($form->isSubmitted() && $sessionEnd == true){
-                
-                if($form->isValid()){ 
+ public function setBooking(Request $request, MoneyFormatter $moneyFormatter){
                     
-                    $err = array();
+        $err = array();
+        $this->session->get('_locale')->getName();
+        
+        //IF FIELDS IS NULL PUT IN ARRAY AND SEND BACK TO USER
+        $request->request->get('name') ? $name = $request->request->get('name') : $err[] = 'NAME';
+        $request->request->get('email') ? $email = $request->request->get('email') : $err[] = 'EMAIL';
+        $request->request->get('address') ? $address = $request->request->get('address') : $err[] = 'ADDRESS';
+        $request->request->get('telephone') ? $telephone = $request->request->get('telephone') : $err[] = 'TELEPHONE';
+        $request->request->get('check_rgpd') && $request->request->get('check_rgpd') !== null  ? $rgpd = $request->request->get('rgpd') : $err[] = 'RGPD';
+        $request->request->get('evt') ? $userEvent = json_decode($request->request->get('evt')) : $err[] = 'event';
+        $wp = $request->request->get('wp') == 'true' ? $request->request->get('wp') : false;
+        
+        if($wp){
+            $request->request->get('name_card') ? $name_card = $request->request->get('name_card') : $err[] = 'NAME_CARD';
+            $request->request->get('cvv') ? $cvv = $request->request->get('cvv') : $err[] = 'CVV';
+            $request->request->get('date_card') ? $date_card = $request->request->get('date_card') : $err[] = 'DATE_CARD';
+            $request->request->get('card_nr') ? $card_nr = $request->request->get('card_nr') : $err[] = 'CARD_NR';
+    
+        }
 
-                    $newBook = $request->request->get($form->getName());
+/*
+event id
+        $userEvent->event
+        $userEvent->adult
+        $userEvent->children
+        $userEvent->baby
+*/        
 
-                    $newBook['email'] ? $email = $newBook['email'] : $err[] = 'email';
+        if($err){
+            $response = array(
+                'status' => 0,
+                'message' => 'fields empty',
+                'data' => $err,
+                'mail' => null,
+                'locale' => $this->session->get('_locale')->getName()
+            );
+            return new JsonResponse($response);
+        }
 
-                    $this->noFakeEmails($email) == 1 ? $err[] = 'email' : false;
+        if($wp){
+            $name != $name_card ? $err[] = 'NO_MATCH_NAMES' : false;
+            $this->noFakeCvv($cvv) ? $err[] = 'CVV_INVALID' : false;
+            $this->noFakeCcard($card_nr) ? $err[] = 'CARD_NR_INVALID' : false;
+        }
 
-                    if($err){
-                        $response = array(
-                        'result' => 0,
-                        'message' => 'mail_invalid',
-                        'data' => $err,
-                        'mail' =>'',
-                        'session' => 1
-                        );
-                        return new JsonResponse($response);
-                    }
-                    
-                    $language = $request->request->get('language');
+        //NO FAKE DATA
+        $this->noFakeEmails($email) == 1 ? $err[] = 'EMAIL_INVALID' : false;
+        $this->noFakeTelephone($telephone) == 1 ? $err[] = 'TELEPHONE_INVALID' : false;
+        $this->noFakeName($name) == 1 ? $err[] = 'NAME_INVALID' : false;
 
-                    $date = date_create_from_format("d/m/Y", $newBook['date']);
-                    $hour = date_create_from_format("H:i", $newBook['hour']);
+        if($err){
+            $response = array(
+                'status' => 2,
+                'message' => 'invalid fields',
+                'data' => $err,
+                'mail' => null,
+                'locale' => $this->session->get('_locale')->getName()
+            );
+            return new JsonResponse($response);
+        }
+         
+/*
+
+        $language = $request->request->get('language');
 
                     $booking = new Booking();
 
@@ -159,32 +182,22 @@ class HomeController extends AbstractController
                     $em->persist($client);
                     $em->persist($booking);
                     $em->flush();
-
-                }
-                else{   
+*/
                     $response = array(
-                        'result' => 0,
-                        'message' => 'fail',
-                        'data' => $this->getErrorMessages($form),
-                        'mail' =>'',
-                        'session' => 1
+                        'status' => 1,
+                        'message' => 'all valid',
+                        'data' =>  'no err',
+                        'mail' => null,
+                        'locale' => $this->session->get('_locale')->getName()
                     );
-                }
-            }
-            else
-                $response = array(
-                    'result' => 2,
-                    'message' => 'expired',
-                    'data' => '',
-                    'mail' =>'',
-                    'session' => $sessionEnd
-                );
+        
                 return new JsonResponse($response);
-        }
     }
 
 
-    private function sendEmail(\Swift_Mailer $mailer ){
+
+
+    private function sendEmail(\Swift_Mailer $mailer, Booking $booking){
 
         $category = $em->getRepository(Category::class)->find($booking->getTourType());
 
@@ -251,25 +264,43 @@ class HomeController extends AbstractController
         return $invalid;
     }
 
+    private function noFakeName($a){
+        $invalid = 0;        
+        if($a)
+            $invalid = preg_replace("/[^!@#\$%\^&\*\(\)\[\]:;]/", "", $a);
+        return $invalid;
+    }
+
+
+    private function noFakeCvv($a){
+        $invalid = 0;        
+        if($a)
+            $invalid = preg_replace("/[0-9]{3}/", "", $a);
+        return $invalid;
+    }
+
+    private function noFakeCcard($a){
+        $invalid = 0;        
+        if($a)
+            $invalid = preg_replace("/[0-9]{16}/", "", $a);
+        return $invalid;
+    }
+
+    private function noFakeTelephone($a) {
+        $invalid = 0;        
+        if($a)
+            $invalid = preg_replace("/[0-9|\+?]{0,2}[0-9]{5,12}/", "", $a);
+        return $invalid;
+    }
+
+
 
     private function getExpirationTime() {
         return $this->expiration;
     }
 
-    protected function getErrorMessages(\Symfony\Component\Form\Form $form) 
-    {
-        $errors = array();
-        foreach ($form->getErrors() as $key => $error) {
-            $errors[] = $error->getMessage();
-        }
 
-        foreach ($form->all() as $child) {
-            if (!$child->isValid()) {
-                $errors [] = $this->getErrorMessages($child);
-            }
-        }
-        return $errors;
-    }
+
 
 
     private function translateStatus($status, $language){

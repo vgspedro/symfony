@@ -21,6 +21,8 @@
   </h5>
 </header>
 
+
+
 <div class="">
   <form id="available-form">
     <div class="w3-padding-16 w3-row-padding w3-large w3-border w3-sand">
@@ -29,7 +31,7 @@
       </div>
       <div class="w3-col l4 m6 s12">
         <label>Categoria</label>
-        <select name="category" readonly class="w3-select w3-input w3-border">
+        <select name="category" class="w3-select w3-input w3-border">
           <option selected value="{{ category.id }}"> {{ category.namePt }}</option>
         </select>
       </div>
@@ -118,7 +120,9 @@ console.log($('#available-form').serialize())
       data: $('#available-form').serialize(),
       cache: false,
       success: function(data){  
+        
         console.log(data)
+
         $('.w3-overlay').hide()
         if (data.message == 'success'){
           ajaxUpload('category-list')

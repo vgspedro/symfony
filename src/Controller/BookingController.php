@@ -38,7 +38,6 @@ class BookingController extends AbstractController
             $response = array(
                 'status' => 0,
                 'message' => $err,
-                'blocktype'=> null,
                 'minDate' => null,
                 'available' => null,
                 'locale' => $this->session->get('_locale')->getName()
@@ -57,6 +56,7 @@ class BookingController extends AbstractController
         if(!$category){
             $response = array(
                 'status' => 2,
+                'wp' => null,
                 'message' => 'NO_STOCK',
                 'max' => null,
                 'minDate' => null,
@@ -74,6 +74,7 @@ class BookingController extends AbstractController
         if ($totalPax > $category->getAvailability()){
             $response = array(
             'status' => 2,
+            'wp' => null,
             'message' => 'NO_STOCK',
             'max' => '(Máx: '.$category->getAvailability().' Pax)',
             'minDate' => null,
@@ -90,9 +91,9 @@ class BookingController extends AbstractController
             foreach ($available as $stock)
                 $stockAvailable[] = array(
                     'id' => $stock->getId(),
-                    'datetime' => $stock->getDatetime()->format('Y-m-d H:i'),
-                    'date' =>$stock->getDatetime()->format('Y-m-d'),
-                    'time' => $stock->getDatetime()->format('H:i'),
+                    'datetime' => $stock->getDatetimeStart()->format('Y-m-d H:i'),
+                    'date' =>$stock->getDatetimeStart()->format('Y-m-d'),
+                    'time' => $stock->getDatetimeStart()->format('H:i'),
                     'stock'=> $stock->getStock(),
                     'lotation' => $stock->getLotation(),
                     'onlyLeft' => $stock->getLotation() * 0.25 > $stock->getStock() ? $stock->getStock() : null 
@@ -100,6 +101,7 @@ class BookingController extends AbstractController
             
             $response = array(
             'status' => 1,
+            'wp' => $category->getWarrantyPayment(),
             'message' => count($available),
             'max'=> null,
             'minDate' => $startDt->format('Y-m-d H:i:s'),
@@ -112,8 +114,8 @@ class BookingController extends AbstractController
         else
             $response = array(
             'status' => 2,
+            'wp' => null,
             'message' => 'NO_STOCK',
-            'blocktype'=> 0,
             'minDate' => null,
             'available' => null,
             'locale' => $this->session->get('_locale')->getName()

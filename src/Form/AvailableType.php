@@ -11,7 +11,6 @@ use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -21,8 +20,8 @@ class AvailableType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-        ->add('datetime', DateTimeType::class, [
-            'date_label' => 'Starts On'])
+        ->add('datetime', TextType::class, [
+            'label' => 'Inicio'])
 
             ->add('category', EntityType::class, array(
                     'class' => Category::class,

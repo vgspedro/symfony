@@ -9,9 +9,11 @@
 
   {% if categories %}
 
-  <form id="get-available">
+  <form id="get-available" class="w3-sand w3-padding-8 w3-border reservas-cont">
     <h3 class="w3-center">Preencha todos os seguintes campos</h3>   
-    <div class="w3-content w3-padding-16 w3-row-padding w3-xlarge">
+    <div class="w3-row-padding w3-xlarge">
+    <div class="w3-col s12 w3-center TOUR_DATA">{% trans %}info.tour_data{% endtrans %}
+    </div>
       <div class="w3-col l6 m12 s12">
         <label class="TOUR w3-small w3-text-red">{% trans %}part_seven.tour{% endtrans %}</label>
         <select class="w3-select w3-input" name="category">
@@ -27,93 +29,122 @@
         <label class="ADULT w3-small w3-text-red">{% trans %}part_seven.adult{% endtrans %}</label>
         <input type="number" name="adult" class="w3-input ADULT" step="1" min="0" placeholder="{% trans %}part_seven.adult{% endtrans %}">
       </div>
+
       <div class="w3-col l2 m4 s12">
         <label class="CHILDREN w3-small w3-text-red">{% trans %}part_seven.children{% endtrans %}</label>
         <input type="number" name="children" class="w3-input CHILDREN" step="1" min="0" placeholder="{% trans %}part_seven.children{% endtrans %}">
       </div>
+      
       <div class="w3-col l2 m4 s12">
         <label class="BABY w3-small w3-text-red">{% trans %}part_seven.baby{% endtrans %}</label>
         <input type="number" name="baby" class="w3-input BABY" step="1" min="0" placeholder="{% trans %}part_seven.baby{% endtrans %}">
       </div>
+    </div>
 
-      <div class="w3-padding-8 w3-row w3-medium">
-        <div class="w3-col l4 m3 s2">&nbsp;</div>
-        <div class="w3-col l4 m6 s8 w3-margin-top w3-btn w3-green" onclick="getAvailable()">
-          <i class="fa fa-calendar"></i>&nbsp;<span class="GET_AVAILABLE w3-margin-left"> {% trans %}part_seven.get_available{% endtrans %}</span>
-        </div>
+
+    <div class="w3-row w3-medium" id="is-available">
+      <div class="w3-col l4 m3 s2">&nbsp;</div>
+      <div class="w3-col l4 m6 s8 w3-margin-top w3-center">
+        <span class="w3-btn w3-blue w3-center" onclick="getAvailable()">
+          <i class="fa fa-calendar"></i>&nbsp;
+        <span class="GET_AVAILABLE w3-margin-left"> {% trans %}part_seven.get_available{% endtrans %}</span>
+        </span>
       </div>
-    
-<!-- part 2 -->
+    </div>
 
-      <div class="w3-col l2 m4 s12">
+    <div class="w3-row-padding w3-xlarge set-visible w3-hide">
+      <div class="w3-col l3 m1 w3-hide-small">&nbsp;
+        <input name='wp' type="hidden">
+        <input name='ev' type="hidden">
+      </div>
+      <div class="w3-col l3 m5 s12">
+        <label class="DATE w3-small w3-text-red">{% trans %}part_seven.date{% endtrans %}</label>
+        <p class="w3-input client-tour-day"></p>
+      </div>
+      
+      <div class="w3-col l3 m5 s12">
+        <label class="HOUR w3-small w3-text-red">{% trans %}part_seven.hour{% endtrans %}</label>
+        <p class="w3-input client-tour-time"></p>
+      </div>
+    </div>
+  
+    <div class="w3-row-padding w3-xlarge set-visible w3-hide">  
+<!-- part 3 -->
+    <div class="w3-col s12 w3-center PERSONAL_DATA">{% trans %}info.personal_data{% endtrans %}</div>
+
+      <div class="w3-col l3 m6 s12">
         <label class="NAME w3-small w3-text-red">{% trans %}part_seven.name{% endtrans %}</label>
-        <input type="text" name="name" class="w3-input NAME" step="1" min="0" placeholder="{% trans %}part_seven.name{% endtrans %}">
+        <input type="text" name="name" class="w3-input NAME" placeholder="{% trans %}part_seven.name{% endtrans %}">
       </div>
 
-
-      <div class="w3-col l2 m4 s12">
+      <div class="w3-col l3 m6 s12">
         <label class="EMAIL w3-small w3-text-red">{% trans %}part_seven.email{% endtrans %}</label>
-        <input type="text" name="email" class="w3-input EMAIL" step="1" min="0" placeholder="{% trans %}part_seven.email{% endtrans %}">
+        <input type="email" name="email" class="w3-input EMAIL" placeholder="{% trans %}part_seven.email{% endtrans %}">
       </div>
 
-      <div class="w3-col l2 m4 s12">
+      <div class="w3-col l3 m6 s12">
         <label class="TELEPHONE w3-small w3-text-red">{% trans %}part_seven.telephone{% endtrans %}</label>
         <input type="number" name="telephone" class="w3-input TELEPHONE" placeholder="{% trans %}part_seven.telephone{% endtrans %}">
       </div>
 
-      <div class="w3-col l2 m4 s12">
+      <div class="w3-col l3 m6 s12">
         <label class="ADDRESS w3-small w3-text-red">{% trans %}part_seven.address{% endtrans %}</label>
-        <input type="number" name="address" class="w3-input ADDRESS" placeholder="{% trans %}part_seven.address{% endtrans %}">
-      </div>
-
-<!-- part 2-->
-
-<!-- part 3 -->
-
-      <div class="w3-col l2 m4 s12">
-        <label class="NAME w3-small w3-text-red">{% trans %}part_seven.name{% endtrans %}</label>
-        <input type="text" name="name" class="w3-input NAME" step="1" min="0" placeholder="{% trans %}part_seven.name{% endtrans %}">
-      </div>
-
-
-      <div class="w3-col l2 m4 s12">
-        <label class="CVV w3-small w3-text-red">{% trans %}part_seven.email{% endtrans %}</label>
-        <input type="text" name="email" class="w3-input EMAIL" step="1" min="0" placeholder="{% trans %}part_seven.email{% endtrans %}">
-      </div>
-
-      <div class="w3-col l2 m4 s12">
-        <label class="DATE_CARD w3-small w3-text-red">{% trans %}part_seven.telephone{% endtrans %}</label>
-        <input type="number" name="telephone" class="w3-input TELEPHONE" placeholder="{% trans %}part_seven.telephone{% endtrans %}">
-      </div>
-
-      <div class="w3-col l2 m4 s12">
-        <label class="CARD_NR w3-small w3-text-red">{% trans %}part_seven.address{% endtrans %}</label>
-        <input type="number" name="address" class="w3-input ADDRESS" placeholder="{% trans %}part_seven.address{% endtrans %}">
-      </div>
-
-
-<!-- part 3 -->
-
-
-
-
-
-
-
-      <div class="w3-col s12 w3-hide at-last w3-left-align" style="line-height: 22px">
-        <div class="w3-padding-16 RGPD">{% trans %}part_seven.rgpd{% endtrans %}</div>
-
-        <span id="setit" class="RGPD_TXT w3-medium">{% trans %}part_seven.rgpd_txt{% endtrans %}</span>
-        <span class="w3-text-blue" onclick='showRgpd()'>ver +</span>
-      </div>
-      <div class="w3-col s12 w3-hide at-last">
-        <button onclick='$(".user-info").addClass("w3-hide"); $(".user-info-txt").empty()'></button>
+        <input type="text" name="address" class="w3-input ADDRESS" placeholder="{% trans %}part_seven.address{% endtrans %}">
       </div>
     </div>
-    </form>
 
+<!-- part 3 -->
 
-   <h4 class="w3-center w3-content w3-margin-top">
+<!-- part 4 -->
+
+    <div class="w3-row-padding w3-xlarge wp-active w3-hide"> 
+    <div class="w3-col s12 w3-center CREDIT_CARD_DATA">{% trans %}info.credit_card_data{% endtrans %}
+    </div>
+
+      <div class="w3-col l3 m6 s12">
+        <label class="CREDIT_CARD_NAME w3-small w3-text-red">{% trans %}info.name_credit_card{% endtrans %}</label>
+        <input type="text" name="name_card" class="w3-input CREDIT_CARD_NAME" placeholder="{% trans %}info.name_credit_card{% endtrans %}">
+      </div>
+
+      <div class="w3-col l3 m6 s12">
+        <label class="w3-small w3-text-red">CVV *</label>
+        <input type="number" name="cvv" class="w3-input" placeholder="CVV *">
+      </div>
+
+      <div class="w3-col l3 m6 s12">
+        <label class="CREDIT_CARD_DATE w3-small w3-text-red">{% trans %}info.date_credit_card{% endtrans %}</label>
+        <input type="text" name="date_card" class="w3-input CREDIT_CARD_DATE" placeholder="{% trans %}info.date_credit_card{% endtrans %}">
+      </div>
+
+      <div class="w3-col l3 m6 s12">
+        <label class="CREDIT_CARD_NR w3-small w3-text-red">{% trans %}info.credit_card_nr{% endtrans %}</label>
+        <input type="number" name="card_nr" class="w3-input CREDIT_CARD_NR" placeholder="{% trans %}info.credit_card_nr{% endtrans %}">
+      </div>
+    </div>
+
+<!-- part 4 -->
+    
+    <div class="w3-row-padding w3-xlarge w3-hide set-visible">  
+      <div class="w3-col s12 w3-left-align" style="line-height:28px">
+        <label class="RGPD w3-small w3-text-red w3-margin-top">{% trans %}part_seven.rgpd{% endtrans %}</label>
+        <span style="cursor:pointer" onclick='showRgpd()'>
+          <i class="fa fa-plus w3-text-blue"></i>
+        </span>
+        <br>
+        <input type="checkbox" name="check_rgpd" class="w3-check">
+        <span class="RGPD_TXT w3-small" style="line-height:10px">{% trans %}part_seven.rgpd_txt{% endtrans %}</span>
+      </div>
+
+      <div class="w3-col l4 m3 s2">&nbsp;</div>
+        <div class="w3-col l4 m6 s8 w3-margin-top w3-center w3-medium">
+       <span class="w3-btn w3-green" onclick="checkOut()"><i class="fa fa-check"></i> Confirmar</span>
+      </div>
+    </div> 
+    <input type="hidden" name="_csrf_token" value="{{csrf_token('authenticate') }}">
+  </form>
+
+<section class="w3-padding-64">
+   <h4 class="w3-center w3-content">
     <p class='SPAM_TXT blink'>{% trans %}part_seven.spam_txt{% endtrans %}</p>
     <p class='BOOKING bold'>{% trans %}part_seven.booking{% endtrans %}</p>
     <p class='BOOK_EMAIL w3-text-red'>{% trans %}part_seven.book_email{% endtrans %}</p>
@@ -122,7 +153,7 @@
    <h4 class="w3-center w3-content">
     <span class='BOOK_AFTER'>{% trans %}part_seven.book_after{% endtrans %}</span>
    </h4>
-
+</section>
   {% else %}
 
     <h2 class="w3-center">Nothing available!</h2>
@@ -130,5 +161,5 @@
   {% endif %}
 
   
-  </div>
+</div>
 </section>

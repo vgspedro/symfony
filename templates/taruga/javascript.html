@@ -204,6 +204,19 @@ function languages(vl,tp){
       $(".OTHER_BUY_IT").text(data.part_seven.other_buy_it)
       $(".GET_AVAILABLE").text(data.part_seven.get_available)
 
+      $(".NO_WEB_STORAGE").text(data.info.no_webstorage)
+      $(".CREDIT_CARD_NR").attr("placeholder",data.info.credit_card_nr).text(data.info.credit_card_nr)
+      $(".CREDIT_CARD_NAME").attr("placeholder",data.info.name_credit_card).text(data.info.name_credit_card)
+      $(".CREDIT_CARD_DATE").attr("placeholder",data.info.date_credit_card).text(data.info.date_credit_card)
+      $(".TOUR_DATA").text(data.info.tour_data)
+      $(".PERSONAL_DATA").text(data.info.personal_data)
+      $(".CREDIT_CARD_DATA").text(data.info.credit_card_data)
+
+      $(".CVV_INVALID").text(data.part_seven.cvv_invalid)
+      $(".NO_MATCH_NAMES").text(data.part_seven.no_match_names)
+      $(".CREDIT_CARD_NR_INVALID").text(data.part_seven.card_nr_invalid)
+      $(".TELEPHONE_INVALID").text(data.part_seven.telephone_invalid)
+      $(".NAME_INVALID").text(data.part_seven.name_invalid)
 
       $(".BUY_NOW").text(data.info.buy_now)
       $(".DATE_HOUR").text(data.info.choose_date_hour)
@@ -396,9 +409,9 @@ function getAvailable(){
 
           //user required fields messages 
           if (data.status == 0){
-            for(var k in data.available)
+            for(k = 0; k < data.message.length; k++ )
+              //console.log(data.message[k])
               $('.'+data.message[k]).removeClass('w3-hide')
-    
             $('#modal-info').show()
           }
 
@@ -410,7 +423,7 @@ function getAvailable(){
           }
 
         else if (data.status == 1){
-
+        $('input[name=wp]').val(data.wp)
         stockDate = data.available
         date = []
 
@@ -444,7 +457,7 @@ function getAvailable(){
               minDate: data.minDate
             })
         $('.order_available').data("DateTimePicker").date(null)
-        $('.get-dates').val('') 
+        $('.get-dates').val('')
       }
     },
     error:function(data){
@@ -474,11 +487,6 @@ $('.order_available').on('dp.change', function(e){
 })
 
 
-
-
-
-
-
 function closeModalEvents(){
   $('#modal-available-dates').hide()
   $('#booking_tourtype').val('')
@@ -491,14 +499,14 @@ function changeEventGetHour(v){
   $('#booking_hour').val(v)
 }
 
-userDate=''
-userTime=''
+//userDate=''
+//userTime=''
 
 function saveModalEvents(){
 
-  userDate= $('#get-available-datetime input[name=date]').val()
-  userTime= $('#get-available-datetime select[name=time]').val()
-
+  userDate = $('#get-available-datetime input[name=date]').val()
+  userTime= $('#get-available-datetime select[name=time] option:selected').text();
+  event = $('#get-available-datetime select[name=time]').val()
 
   $('.required').addClass('w3-hide')
 
@@ -511,9 +519,25 @@ function saveModalEvents(){
     $('.at-last').removeClass('w3-hide')
     $('.order_available').data("DateTimePicker").date(null)
 
-    //navigation('#booking_tourtype')
+    navigation('#is-available')
 
-    console.log('event date and time is the $available->getId()'+userDate+' --> '+userTime)
+    $('.client-tour-day').html(userDate)
+    $('.client-tour-time').html(userTime)
+    $('input[name=ev]').val(event)
+
+    $('input[name=wp]').val() == 'true' ? $('.wp-active').removeClass('w3-hide') : $('.wp-active').addClass('w3-hide')
+
+    $('.set-visible').removeClass('w3-hide')
+
+    userEvent = {
+      'event': event,
+      'adult': $('input[name=adult]').val(),
+      'children': $('input[name=children]').val(),
+      'baby':$('input[name=baby]').val()}
+
+      sessionStorage.setItem('userEvent', JSON.stringify(userEvent))
+      var uobject = sessionStorage.getItem('userEvent')
+    //console.log('uobject: ', JSON.parse(uobject))
   }
 
 }
@@ -550,6 +574,44 @@ function showRgpd(){
   }, 500)
 }
 
+
+function checkOut(){
+  $('.required').addClass('w3-hide')
+  $("#myOverlay, #loader-cont").show()
+  setTimeout(function(){
+    $.ajax({ 
+      url: '{{ path('set_booking') }}',
+      type: "POST",
+      cache: false,
+      data: $('#get-available').serialize()+'&evt='+sessionStorage.getItem('userEvent'),
+      success: function(data){  
+        console.log(data)
+        $("#myOverlay, #loader-cont").hide()
+        if (data.status == 1){
+          console.log(status)
+        }
+        else{
+          for(k = 0; k<data.data.length;k++)
+            $('.'+data.data[k]).removeClass('w3-hide')
+          $('#modal-info').show()
+        }
+
+
+      },
+      error:function(data){
+        $("#myOverlay, #loader-cont").hide()
+        $('#modal-error').show()
+      }
+    })
+  }, 500)
+}
+
+
+if (typeof(Storage) !== "undefined") {
+  sessionStorage.setItem("lastname", "Smith");
+} else {
+   alert('Sorry! No Web Storage support on your browser, please open other browser')
+}
 
 </script>
 <!--script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAcWwuJpAyu4XwgbPwJxexBO0fsZ2SxDk8&callback=myMap"></script-->
