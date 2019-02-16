@@ -127,7 +127,9 @@ return array(
     'date_credit_card' => 'Data Expiração *',
     'tour_data' => 'Info. Passeio',
     'personal_data' => 'Info. Pessoal',
-    'credit_card_data' => 'Info. Cartão Crédito'
+    'credit_card_data' => 'Info. Cartão Crédito',
+    'confirm' => 'Confirmar',
+    'fill_all' => 'Preencha todos os seguintes campos',
 ),
 
 'arbitrary' => array(

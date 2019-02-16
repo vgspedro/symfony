@@ -212,9 +212,13 @@ function languages(vl,tp){
       $(".PERSONAL_DATA").text(data.info.personal_data)
       $(".CREDIT_CARD_DATA").text(data.info.credit_card_data)
 
+      $(".CONFIRM").text(data.info.confirm)
+
+      $(".FILL_ALL").text(data.info.fill_all)
+
       $(".CVV_INVALID").text(data.part_seven.cvv_invalid)
       $(".NO_MATCH_NAMES").text(data.part_seven.no_match_names)
-      $(".CREDIT_CARD_NR_INVALID").text(data.part_seven.card_nr_invalid)
+      $(".CARD_NR_INVALID").text(data.part_seven.card_nr_invalid)
       $(".TELEPHONE_INVALID").text(data.part_seven.telephone_invalid)
       $(".NAME_INVALID").text(data.part_seven.name_invalid)
 
@@ -245,30 +249,33 @@ function languages(vl,tp){
 
       $(".cc-dismiss").text(data.cookies.btn)
       $(".cc-message").html(data.cookies.txt+'<br><a class="cc-link" target="_blank" href="https://cookiesandyou.com/">'+data.cookies.link+'</a>')
-      $(".DATES_RED").val(data.DATES_RED)
-      $(".DATES_RED_TXT").text(data.DATES_RED)
+      //$(".DATES_RED").val(data.DATES_RED)
+      //$(".DATES_RED_TXT").text(data.DATES_RED)
+
+      $('select[name=category]').val('').trigger('change')
 
 
       switch (tp){
         case 1:
-          $(".pt").addClass("active-lang")
+          //$(".pt").addClass("active-lang")
           $('.EN').addClass('w3-hide')
           $('.PT').removeClass('w3-hide')
-          $(".en").removeClass("active-lang")
-          for(var e in arrTour)
-            $('#booking_tourtype option[value="'+arrTour[e].val+'"]').text(arrTour[e].pt)
+          //$(".en").removeClass("active-lang")
+          //for(var e in arrTour)
+          //  $('#booking_tourtype option[value="'+arrTour[e].val+'"]').text(arrTour[e].pt)
         break
         case 2:
-          $(".en").addClass("active-lang")
-          $(".pt").removeClass("active-lang")
+          //$(".en").addClass("active-lang")
+          //$(".pt").removeClass("active-lang")
           $('.PT').addClass('w3-hide')
           $('.EN').removeClass('w3-hide')
-          for(var e in arrTour)
-            $('#booking_tourtype option[value="'+arrTour[e].val+'"]').text(arrTour[e].en)
+          //for(var e in arrTour)
+          //  $('#booking_tourtype option[value="'+arrTour[e].val+'"]').text(arrTour[e].en)
         break
       }
 
-      $("#lang-opt").val(tp)
+      //$("#lang-opt").val(tp)
+
       setTimeout(function(){
         w3_close()
         $("#myOverlay, #loader-cont").hide()
@@ -276,7 +283,7 @@ function languages(vl,tp){
     },
 
     error:function(data){
-      console.log(data)
+      //console.log(data)
       //alert(data.link.where_we_are)
       setTimeout(function(){
         w3_close()
@@ -378,7 +385,9 @@ google.maps.event.addListener(marker,"click",function() {
 
 */
 
-
+function updateTourData(){
+  $('.set-visible, .wp-active').addClass('w3-hide')
+}
 
 stockDate=[]
 

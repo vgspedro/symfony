@@ -107,10 +107,10 @@ class HomeController extends AbstractController
         $wp = $request->request->get('wp') == 'true' ? $request->request->get('wp') : false;
         
         if($wp){
-            $request->request->get('name_card') ? $name_card = $request->request->get('name_card') : $err[] = 'NAME_CARD';
+            $request->request->get('name_card') ? $name_card = $request->request->get('name_card') : $err[] = 'CREDIT_CARD_NAME';
             $request->request->get('cvv') ? $cvv = $request->request->get('cvv') : $err[] = 'CVV';
-            $request->request->get('date_card') ? $date_card = $request->request->get('date_card') : $err[] = 'DATE_CARD';
-            $request->request->get('card_nr') ? $card_nr = $request->request->get('card_nr') : $err[] = 'CARD_NR';
+            $request->request->get('date_card') ? $date_card = $request->request->get('date_card') : $err[] = 'CREDIT_CARD_DATE';
+            $request->request->get('card_nr') ? $card_nr = $request->request->get('card_nr') : $err[] = 'CREDIT_CARD_NR';
     
         }
 

@@ -134,7 +134,9 @@ return array(
     'date_credit_card' => 'Credit Card Expire Date *',
     'tour_data' => 'Tour Info',
     'personal_data' => 'Personal Info',
-    'credit_card_data' => 'Credit Card Info'
+    'credit_card_data' => 'Credit Card Info',
+    'confirm' => 'Confirm',
+    'fill_all' => 'Fill all the following fields',
 ),
 
 'arbitrary' => array(

@@ -4,19 +4,19 @@
  <div class="w3-padding-16">
   <h2 class="w3-center">
     <i class="fa-ta ta-4 fa-ta-booking">&nbsp;</i>
-    <span class="RESERVAS">{% trans %}link.booking{% endtrans %}</span>
+    <span class="RESERVAS">{% trans %}link.booking{% endtrans %}</span><br>
+    <span class="FILL_ALL w3-xlarge">{% trans %}info.fill_all{% endtrans %}</span>
   </h2>
 
   {% if categories %}
 
   <form id="get-available" class="w3-sand w3-padding-8 w3-border reservas-cont">
-    <h3 class="w3-center">Preencha todos os seguintes campos</h3>   
     <div class="w3-row-padding w3-xlarge">
     <div class="w3-col s12 w3-center TOUR_DATA">{% trans %}info.tour_data{% endtrans %}
     </div>
       <div class="w3-col l6 m12 s12">
         <label class="TOUR w3-small w3-text-red">{% trans %}part_seven.tour{% endtrans %}</label>
-        <select class="w3-select w3-input" name="category">
+        <select class="w3-select w3-input" name="category" onchange="updateTourData()">
            <option class="TOUR w3-opacity" value="">{% trans %}part_seven.tour{% endtrans %}</option>
           {% for category in categories %}
           <option class="PT" value="{{category.id}}">{{category.namePt}}</option>
@@ -40,7 +40,6 @@
         <input type="number" name="baby" class="w3-input BABY" step="1" min="0" placeholder="{% trans %}part_seven.baby{% endtrans %}">
       </div>
     </div>
-
 
     <div class="w3-row w3-medium" id="is-available">
       <div class="w3-col l4 m3 s2">&nbsp;</div>
@@ -137,7 +136,10 @@
 
       <div class="w3-col l4 m3 s2">&nbsp;</div>
         <div class="w3-col l4 m6 s8 w3-margin-top w3-center w3-medium">
-       <span class="w3-btn w3-green" onclick="checkOut()"><i class="fa fa-check"></i> Confirmar</span>
+       <span class="w3-btn w3-green" onclick="checkOut()">
+        <i class="fa fa-check"></i>
+        <span class="CONFIRM"> {% trans %}info.confirm{% endtrans %}</span>
+      </span>
       </div>
     </div> 
     <input type="hidden" name="_csrf_token" value="{{csrf_token('authenticate') }}">
