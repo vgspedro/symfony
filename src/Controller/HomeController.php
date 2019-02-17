@@ -1,33 +1,32 @@
 <?php
 namespace App\Controller;
-
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Translation\TranslatorInterface;
-use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\DBAL\LockMode;
+use Doctrine\ORM\PessimisticLockException;
+//LockMode::PESSIMISTIC_WRITE
 use App\Entity\Booking;
 use App\Entity\Category;
 use App\Entity\Warning;
-use App\Entity\Blockdates;
 use App\Entity\Client;
 use App\Entity\Gallery;
-use App\Form\BookingType;
 use App\Entity\User;
 use App\Entity\Locales;
+use App\Entity\Available;
 /*https://github.com/nojacko/email-validator*/
 use EmailValidator\EmailValidator;
 use App\Service\MoneyFormatter;
+use Money\Money;
 
 class HomeController extends AbstractController
 {
 
     /*set expiration on home page 15 minutes*/
-    private $expiration = 900;
+    private $expiration = 9000;
     private $session;
     
     public function __construct(SessionInterface $session)
@@ -92,17 +91,19 @@ class HomeController extends AbstractController
     }
 
 
- public function setBooking(Request $request, MoneyFormatter $moneyFormatter){
+ public function setBooking(Request $request, MoneyFormatter $moneyFormatter, \Swift_Mailer $mailer){
                     
         $err = array();
         $this->session->get('_locale')->getName();
+
+        $em = $this->getDoctrine()->getManager();
         
         //IF FIELDS IS NULL PUT IN ARRAY AND SEND BACK TO USER
         $request->request->get('name') ? $name = $request->request->get('name') : $err[] = 'NAME';
         $request->request->get('email') ? $email = $request->request->get('email') : $err[] = 'EMAIL';
         $request->request->get('address') ? $address = $request->request->get('address') : $err[] = 'ADDRESS';
         $request->request->get('telephone') ? $telephone = $request->request->get('telephone') : $err[] = 'TELEPHONE';
-        $request->request->get('check_rgpd') && $request->request->get('check_rgpd') !== null  ? $rgpd = $request->request->get('rgpd') : $err[] = 'RGPD';
+        $request->request->get('check_rgpd') && $request->request->get('check_rgpd') !== null  ? $rgpd = true : $err[] = 'RGPD';
         $request->request->get('evt') ? $userEvent = json_decode($request->request->get('evt')) : $err[] = 'event';
         $wp = $request->request->get('wp') == 'true' ? $request->request->get('wp') : false;
         
@@ -111,23 +112,14 @@ class HomeController extends AbstractController
             $request->request->get('cvv') ? $cvv = $request->request->get('cvv') : $err[] = 'CVV';
             $request->request->get('date_card') ? $date_card = $request->request->get('date_card') : $err[] = 'CREDIT_CARD_DATE';
             $request->request->get('card_nr') ? $card_nr = $request->request->get('card_nr') : $err[] = 'CREDIT_CARD_NR';
-    
         }
-
-/*
-event id
-        $userEvent->event
-        $userEvent->adult
-        $userEvent->children
-        $userEvent->baby
-*/        
 
         if($err){
             $response = array(
                 'status' => 0,
                 'message' => 'fields empty',
                 'data' => $err,
-                'mail' => null,
+                'mail' => $date_card,
                 'locale' => $this->session->get('_locale')->getName()
             );
             return new JsonResponse($response);
@@ -137,6 +129,7 @@ event id
             $name != $name_card ? $err[] = 'NO_MATCH_NAMES' : false;
             $this->noFakeCvv($cvv) ? $err[] = 'CVV_INVALID' : false;
             $this->noFakeCcard($card_nr) ? $err[] = 'CARD_NR_INVALID' : false;
+            $this->noFakeCardDate($date_card) ? $err[] = 'DATE_CARD_INVALID' : false;
         }
 
         //NO FAKE DATA
@@ -149,106 +142,188 @@ event id
                 'status' => 2,
                 'message' => 'invalid fields',
                 'data' => $err,
-                'mail' => null,
+                'mail' => $cvv,
                 'locale' => $this->session->get('_locale')->getName()
             );
             return new JsonResponse($response);
         }
-         
-/*
 
-        $language = $request->request->get('language');
-
-                    $booking = new Booking();
-
-                    $booking->setAdult($newBook['adult']);
-                    $booking->setChildren($newBook['children']);
-                    $booking->setBaby($newBook['baby']);
-                    $booking->setDate($date->format('Y-m-d'));
-                    $booking->setHour($hour->format('H:i'));
-                    $booking->setMessage($newBook['message']);
-                    $booking->setTourType($newBook['tourtype']);
-                    $booking->setPostedAt(new \DateTime());
-
-                    $client = new Client();
-
-                    $client->setBooking($booking);
-                    $client->setEmail($newBook['email']);
-                    $client->setUsername($newBook['name']);
-                    $client->setAddress($newBook['address']);
-                    $client->setTelephone($newBook['telephone']);
-                    $client->setRgpd($newBook['rgpd']);
-                    $client->setLanguage($language);
-                    $em->persist($client);
-                    $em->persist($booking);
-                    $em->flush();
-*/
-                    $response = array(
-                        'status' => 1,
-                        'message' => 'all valid',
-                        'data' =>  'no err',
-                        'mail' => null,
-                        'locale' => $this->session->get('_locale')->getName()
-                    );
+        else{
         
+        $locale = $this->session->get('_locale')->getName() ? $this->session->get('_locale')->getName() : 'pt_PT';
+
+        $locales = $em->getRepository(Locales::class)->findOneBy(['name' => $locale]);
+        
+        if(!$locales)
+            throw new Exception("Error Processing Request Locales", 1);
+
+        $em->getConnection()->beginTransaction();
+
+        $available = $em->getRepository(Available::class)->find($userEvent->event);
+          if(!$available)
+            throw new Exception("Error Processing Request Available", 1);
+        
+     try {           
+            $em->lock($available, LockMode::PESSIMISTIC_WRITE);
+    
+             //Get the total number of Pax.
+            $paxCount = $userEvent->adult + $userEvent->children + $userEvent->baby; 
+
+
+        //total amount of booking
+        $amountA = Money::EUR(0);
+        $amountC = Money::EUR(0);
+        $total = Money::EUR(0);
+
+
+        $amountA = $available->getCategory()->getAdultPrice();
+        $amountA = $amountA->multiply($userEvent->adult);
+        $amountC = $available->getCategory()->getChildrenPrice();
+        $amountC = $amountC->multiply($userEvent->children);
+        $total = $amountA->add($amountC);   
+
+            // When there is no availability for the number of Pax...
+            if ($available->getStock() < $paxCount) {
+                // Abort and inform user.
+                $err[] = 'OTHER_BUY_IT';
+                $response = array(
+                    'status' => 0,
+                    'message' => 'no_vacancy_1',
+                    'data' => $err,
+                    'mail' => null,
+                    'locale' => $this->session->get('_locale')->getName()
+                );
                 return new JsonResponse($response);
+            }
+           
+            // Create Client
+            $client = new Client();
+            $client->setEmail($email);
+            $client->setUsername($name);
+            $client->setAddress($address);
+            $client->setTelephone($telephone);
+            $client->setRgpd($rgpd);
+            $client->setLocale($locales);
+
+            //wp is set check if data from client isset
+            if($available->getCategory()->getWarrantyPayment() && $wp){
+                $client->setCardName($name_card);
+                $client->setCvv($cvv);
+                $client->setCardDate($date_card);
+                $client->setCardNr($card_nr);
+            }
+
+            else if($available->getCategory()->getWarrantyPayment() && !$wp){
+
+                $err[] = 'WP_SET_NO_CC_DATA';
+                $response = array(
+                    'status' => 0,
+                    'message' => 'warranty payment set but no data to db',
+                    'data' => $err,
+                    'mail' => null,
+                    'locale' => $this->session->get('_locale')->getName()
+                );
+                return new JsonResponse($response);
+            }
+            
+            // Create Booking.
+            $booking = new Booking();
+            $booking->setAvailable($available);
+            $booking->setAdult($userEvent->adult);
+            $booking->setChildren($userEvent->children);
+            $booking->setBaby($userEvent->baby);
+            $booking->setPostedAt(new \DateTime());
+            $booking->setAmount($total);
+            $booking->setClient($client);
+            $booking->setDateEvent($available->getDatetimeStart());
+            $booking->setTimeEvent($available->getDatetimeStart());
+
+            $available->setStock($available->getStock() - $paxCount);
+
+            $em->persist($available);
+            $em->persist($client);
+            $em->persist($booking);
+            
+            $em->flush();
+
+            $em->getConnection()->commit();
+            
+        } catch (\Exception $e) {
+            //echo $e->getMessage();
+
+            $em->getConnection()->rollBack();
+            
+            throw $e;
+              $err[] = 'OTHER_BUY_IT';
+                $response = array(
+                    'status' => 0,
+                    'message' => 'no_vacancy_2',
+                    'data' => $err,
+                    'mail' => null,
+                    'locale' => $this->session->get('_locale')->getName()
+                );
+                return new JsonResponse($response);
+        }
+
+        $send = $this->sendEmail($mailer, $booking);
+        
+        $response = array(
+            'status' => 1,
+            'message' => 'all valid',
+            'data' =>  $booking->getId(),
+            'mail' => $send,
+            'locale' => $locales->getName());
+        
+        return new JsonResponse($response);
+        }
     }
-
-
-
 
     private function sendEmail(\Swift_Mailer $mailer, Booking $booking){
 
-        $category = $em->getRepository(Category::class)->find($booking->getTourType());
+        $em = $this->getDoctrine()->getManager();
 
-        $tour = $language =='en' ? $category->getNameEn() : $category->getNamePt();
+        $category = $booking->getAvailable()->getCategory();
 
-        $date = date_create_from_format("Y-m-d", $booking->getDate());
+        $client = $booking->getClient();
+
+        $locale = $client->getLocale();
 
         $transport = (new \Swift_SmtpTransport('smtp.sapo.pt', 465, 'ssl'))
             ->setUsername('vgspedro15@sapo.pt')
             ->setPassword('ledcpu');
 
+        $locale->getName() == 'pt_PT' ? $category->getNamePt() : $category->getNameEn();
+
         $mailer = new \Swift_Mailer($transport);
                     
-        $subject ='Reserva / Order #'.$booking->getId().' ('.$this->translateStatus('PENDING', $language).')';
+        $subject ='Reserva / Order #'.$booking->getId().' ('.$this->translateStatus('PENDING', $locale->getName()).')';
                     
         $message = (new \Swift_Message($subject))
-            ->setFrom(['vgspedro@gmail.com' => 'Pedro Viegas'])
+            ->setFrom(['vgspedro15@sapo.pt' => 'Pedro Viegas'])
             ->setTo([$client->getEmail() => $client->getUsername(), 'vgspedro15@sapo.pt' => 'Pedro Viegas'])
             ->addPart($subject, 'text/plain')
             ->setBody(
                 $this->renderView(
-                    'emails/booking-'.$language.'.html.twig',
+                    'emails/booking-'.$locale ->getName().'.html.twig',
                     array(
                         'id' => $booking->getId(),
                         'username' => $client->getUsername(),
                         'email' => $client->getEmail(),
-                        'status' => $this->translateStatus('PENDING', $language),
-                        'tour' => $tour,
-                        'date' => $date->format('d/m/Y'),
-                        'hour' => $booking->getHour(),
+                        'status' => $this->translateStatus('PENDING', $locale ->getName()),
+                        'tour' => $locale->getName() == 'pt_PT' ? $category->getNamePt() : $category->getNameEn(),
+                        'date' => $booking->getAvailable()->getDatetimeStart()->format('d/m/Y'),
+                        'hour' =>  $booking->getAvailable()->getDatetimeStart()->format('H:i'),
                         'adult' => $booking->getAdult(),
                         'children' => $booking->getChildren(),
                         'baby' => $booking->getBaby(),
-                        'message' => $booking->getMessage(),
+                        'wp' => $category->getWarrantyPayment(),
                         'logo' => 'https://tarugatoursbenagilcaves.pt/images/logo.png'
                     )
                 ),
                 'text/html'
             );
             $send = $mailer->send($message);
-
-                    $response = array(
-                        'result' => 1,
-                        'message' => 'success',
-                        'data' => $booking->getId(),
-                        'mail' => $send,
-                        'session' => 1
-                    );
-
     }
-
 
     private function noFakeEmails($email) {
         $invalid = 0;        
@@ -268,6 +343,17 @@ event id
         $invalid = 0;        
         if($a)
             $invalid = preg_replace("/[^!@#\$%\^&\*\(\)\[\]:;]/", "", $a);
+        return $invalid;
+    }
+
+    private function noFakeCardDate($a){
+        $invalid = 0;   
+        if($a){
+            $now = new \DateTime('now');
+            $date = explode('/',$a);
+
+            $invalid = $date[0] <= $now->format('m') || $date[1] < $now->format('Y') ? 1 : 0;
+        }
         return $invalid;
     }
 
@@ -293,18 +379,12 @@ event id
         return $invalid;
     }
 
-
-
     private function getExpirationTime() {
         return $this->expiration;
     }
 
-
-
-
-
     private function translateStatus($status, $language){
-        if ($language == 'pt-pt'){
+        if ($language == 'pt_PT'){
             switch ($status) {
                 case 'PENDING': 
                     $status = 'PENDENTE';

@@ -63,63 +63,6 @@ function mobilePlayVideo() {
         })
     })
 
-$('#booking_tourtype option:first-child').addClass('TOUR')
-
-arrTour=[]
-
-$("#booking_tourtype option").each(function(){ 
-  if($(this).val()) { 
-    lang = $(this).attr('class').split('/')
-    tours = {val:$(this).val(), en:lang[0], pt:lang[1]}
-    arrTour.push(tours)}
-})
-
-$('#booking-form').on('submit',function(e){
-  e.preventDefault()
-  $('#booking_submit').attr('disabled',true)
-
-  setTimeout(function(){
-    $('#booking_submit').attr('disabled',false)
-  }, 2500)  
- 
-  $("#myOverlay, #loader-cont").show()
-  $('.required').addClass('w3-hide')
-
-  setTimeout(function(){
-    $.ajax({ 
-      url:'{{ path('index') }}',
-      type: "POST",
-      data:$('#booking-form').serialize(),
-      success: function(data){  
-        $("#myOverlay, #loader-cont").hide()
-        console.log(data)
-        if (data.result == 1 ){
-          $('.set-order-id').html(data.data)
-          $('#modal-success').show()
-          $('.at-last').addClass('w3-hide')
-          $('#booking-form').trigger('reset')
-          $('#booking_tourtype, #booking_hour').val('')
-        }        
-        else if (data.result == 0){
-          obj=''
-          for(i=0;i<data.data.length;i++)
-            $('.'+data.data[i]).removeClass('w3-hide')
-          $('#modal-fields').show()
-        }
-        else if (data.result == 2){
-          console.log(data.session)
-          $('#modal-check').show()
-        }
-      },
-      error:function(data){
-        $("#myOverlay, #loader-cont").hide()
-        $('#modal-error').show()
-      }
-    })
-  }, 500)
-})
-
-
 function languages(vl,tp){
 
   $("#myOverlay, #loader-cont").show()
@@ -211,6 +154,8 @@ function languages(vl,tp){
       $(".TOUR_DATA").text(data.info.tour_data)
       $(".PERSONAL_DATA").text(data.info.personal_data)
       $(".CREDIT_CARD_DATA").text(data.info.credit_card_data)
+      $(".WP_SET_NO_CC_DATA").text(data.info.wp_set_no_cc_data)
+      
 
       $(".CONFIRM").text(data.info.confirm)
 
@@ -221,6 +166,7 @@ function languages(vl,tp){
       $(".CARD_NR_INVALID").text(data.part_seven.card_nr_invalid)
       $(".TELEPHONE_INVALID").text(data.part_seven.telephone_invalid)
       $(".NAME_INVALID").text(data.part_seven.name_invalid)
+      $(".DATE_CARD_INVALID").text(data.info.date_card_invalid)
 
       $(".BUY_NOW").text(data.info.buy_now)
       $(".DATE_HOUR").text(data.info.choose_date_hour)
@@ -249,33 +195,22 @@ function languages(vl,tp){
 
       $(".cc-dismiss").text(data.cookies.btn)
       $(".cc-message").html(data.cookies.txt+'<br><a class="cc-link" target="_blank" href="https://cookiesandyou.com/">'+data.cookies.link+'</a>')
-      //$(".DATES_RED").val(data.DATES_RED)
-      //$(".DATES_RED_TXT").text(data.DATES_RED)
-
-      $('select[name=category]').val('').trigger('change')
-
-
       switch (tp){
         case 1:
-          //$(".pt").addClass("active-lang")
           $('.EN').addClass('w3-hide')
           $('.PT').removeClass('w3-hide')
-          //$(".en").removeClass("active-lang")
+           $('select[name=category]').val('').trigger('change')
           //for(var e in arrTour)
           //  $('#booking_tourtype option[value="'+arrTour[e].val+'"]').text(arrTour[e].pt)
         break
         case 2:
-          //$(".en").addClass("active-lang")
-          //$(".pt").removeClass("active-lang")
           $('.PT').addClass('w3-hide')
           $('.EN').removeClass('w3-hide')
+           $('select[name=category]').val('').trigger('change')
           //for(var e in arrTour)
           //  $('#booking_tourtype option[value="'+arrTour[e].val+'"]').text(arrTour[e].en)
         break
       }
-
-      //$("#lang-opt").val(tp)
-
       setTimeout(function(){
         w3_close()
         $("#myOverlay, #loader-cont").hide()
@@ -283,8 +218,6 @@ function languages(vl,tp){
     },
 
     error:function(data){
-      //console.log(data)
-      //alert(data.link.where_we_are)
       setTimeout(function(){
         w3_close()
         $("#myOverlay, #loader-cont").hide()
@@ -413,13 +346,12 @@ function getAvailable(){
       data:dataValue,
       cache:false,
       success: function(data){
-        console.log(data)
+        //console.log(data)
           $('.w3-overlay, #loader-cont').hide()
 
           //user required fields messages 
           if (data.status == 0){
             for(k = 0; k < data.message.length; k++ )
-              //console.log(data.message[k])
               $('.'+data.message[k]).removeClass('w3-hide')
             $('#modal-info').show()
           }
@@ -583,7 +515,6 @@ function showRgpd(){
   }, 500)
 }
 
-
 function checkOut(){
   $('.required').addClass('w3-hide')
   $("#myOverlay, #loader-cont").show()
@@ -593,19 +524,24 @@ function checkOut(){
       type: "POST",
       cache: false,
       data: $('#get-available').serialize()+'&evt='+sessionStorage.getItem('userEvent'),
-      success: function(data){  
+      success: function(data){
+        
         console.log(data)
+
         $("#myOverlay, #loader-cont").hide()
         if (data.status == 1){
-          console.log(status)
+          navigation('#reservas')
+          $('#modal-success').show()
+          $('.set-order-id').html(data.data)
+          $('#get-available').trigger('reset')
+          $('.set-visible, .wp-active').addClass('w3-hide')
+          sessionStorage.clear()
         }
         else{
           for(k = 0; k<data.data.length;k++)
             $('.'+data.data[k]).removeClass('w3-hide')
           $('#modal-info').show()
         }
-
-
       },
       error:function(data){
         $("#myOverlay, #loader-cont").hide()
@@ -615,12 +551,25 @@ function checkOut(){
   }, 500)
 }
 
+$('input[name=date_card]').datetimepicker({
+  format : 'MM/YYYY',
+  ignoreReadonly: true,
+  icons: {
+    time: "fa-3x fa fa-clock-o",
+    date: "fa-3x fa fa-calendar",
+    up: "fa-3x fa fa-arrow-up",
+    down: "fa-3x fa fa-arrow-down",
+    left: "fa-3x fa fa-arrow-left",
+    right: "fa-3x fa fa-arrow-right"
+  },
+  minDate: {{ "now"|date("Y/m/d") }}
+})
 
-if (typeof(Storage) !== "undefined") {
-  sessionStorage.setItem("lastname", "Smith");
-} else {
-   alert('Sorry! No Web Storage support on your browser, please open other browser')
-}
+typeof(Storage) !== "undefined" ? false : setTimeout(function(){$('#modal-no-storage').show();},1500)
+
+
+
+
 
 </script>
 <!--script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAcWwuJpAyu4XwgbPwJxexBO0fsZ2SxDk8&callback=myMap"></script-->

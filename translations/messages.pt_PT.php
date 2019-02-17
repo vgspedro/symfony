@@ -130,6 +130,8 @@ return array(
     'credit_card_data' => 'Info. Cartão Crédito',
     'confirm' => 'Confirmar',
     'fill_all' => 'Preencha todos os seguintes campos',
+    'wp_set_no_cc_data' => 'Garantia pagamento obrigatório, mas os dados do Cartão estão em falta',
+    'date_card_invalid' => 'Data Expiração Inválida'
 ),
 
 'arbitrary' => array(

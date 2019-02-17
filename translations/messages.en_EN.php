@@ -137,6 +137,8 @@ return array(
     'credit_card_data' => 'Credit Card Info',
     'confirm' => 'Confirm',
     'fill_all' => 'Fill all the following fields',
+    'wp_set_no_cc_data' => 'Warranty Payment required, but Credit Card data is missing.',
+    'date_card_invalid' => 'Credit Card Expire Date Invalid'
 ),
 
 'arbitrary' => array(

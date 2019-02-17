@@ -1,4 +1,4 @@
-<link href="{{ asset('css/bootstrap-datepicker.min.css') }}" rel="stylesheet">
+  <link href="{{ asset('css/bootstrap-datepicker.min.css') }}" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"/>
 <link href="{{ asset('css/admin-booking.css') }}" rel="stylesheet">
 
@@ -89,12 +89,14 @@ div.dataTables_length select {height: 50px}
       <th>Hora</th>    
       <th>Adulto</th>    
       <th>Criança</th>    
-      <th>Bébé</th>  
+      <th>Bébé</th>
+      <th>Total</th>   
       <th>Notas</th>    
       <th>Cliente</th>    
       <th>Email</th>    
       <th>Morada</th>    
-      <th>Telefone</th>    
+      <th>Telefone</th>
+      <th>W.P.</th>    
       </tr>
     </thead>
     <tbody>
@@ -114,14 +116,148 @@ div.dataTables_length select {height: 50px}
         <td></td>
         <td></td>
         <td></td>
+        <td></td>
+        <td></td>
       </tr>
     </tfoot>
   </table>
 </div>
 </div>
+
+
+
+<div id="modal-data-validate" class="w3-modal" style="z-index: 99999">
+  <div class="w3-modal-content w3-animate-zoom" style="max-width:450px">
+    <div class="w3-container w3-blue w3-padding">
+      <span onclick="$('#modal-data-validate').hide(); $('.show-user-info').empty()" class="w3-button w3-display-topright w3-large"><i class="fa fa-times"></i></span>
+      <h1><i class="fa fa-exclamation-triangle"></i> Confirme</h1>
+    </div>
+
+    <div class="w3-border-bottom w3-container w3-padding">
+      <p>Insira o email e a password, para aceder aos dados do cliente></p>
+      <form id="get-card-data">
+        <input type="hidden" name="booking">
+        <div class="w3-row">
+          <div class="w3-col s12">
+            <label>Email <div class="required w3-text-red w3-hide email w3-small"></div></label>
+            <input type="text" name="email" class="w3-input w3-border" placeholder="Email">
+          </div>
+
+          <label>Password <div class="required w3-text-red w3-small w3-hide pass"></div></label>
+          <div class="w3-row">
+            <div class="w3-col w3-right" style="width:54px"><span class="see-pass w3-indigo w3-button w3-border"><i class="fa fa-eye"></i></span></div>
+            <div class="w3-rest">
+              <input type="password" name="pass" onkeyup="$(this).next().val($(this).val())" class="w3-input w3-border" placeholder="Password">
+              <input type="text" readonly class="w3-input w3-border w3-hide">
+            </div>
+          </div> 
+          <div class="show-user-info w3-text-red w3-center w3-medium w3-margin-top"></div>
+        </div>
+      </form>
+    </div>
+    <div class="w3-padding w3-margin-top">
+      <span class="w3-button w3-border" onclick="$('#modal-data-validate').hide(); $('.show-user-info').empty()">
+            <i class="w3-text-black fa fa-times"></i>
+      </span>
+      <span class="w3-green w3-button w3-right w3-border" onclick="getCardData()">
+        <i class="fa fa-check"></i>
+      </span>
+    </div>
+  </div>
+</div>
+
+
 <script src="{{ asset('js/bootstrap-datepicker.min.js') }}"></script>
 <script src="{{ asset('js/ui.datepicker-pt-BR.js') }}"></script>
 <script>
+
+
+
+
+
+$( ".see-pass" ).hover(
+  function() {
+    $('input[name="pass"]').addClass('w3-hide').next().removeClass('w3-hide')
+  },
+  function() {
+    $('input[name="pass"]').removeClass('w3-hide').next().addClass('w3-hide')
+  }
+)
+
+
+/*MODAL TO USER GET CREDIT CARD INFO */
+function modalToCardData(id){
+  $('.required').addClass('w3-hide')
+  $("#get-card-data").trigger('reset')
+  $('#modal-data-validate').show()
+  $('input[name="booking"]').val(id)
+}
+
+function getCardData(){
+  $('.show-user-info').empty()
+  $('.required').addClass('w3-hide')
+  $('.w3-overlay').show()
+
+  setTimeout(function(){
+
+    if (!$('input[name="email"]').val()){
+      $('.w3-overlay').hide()
+      $('.email').removeClass('w3-hide')
+    }
+    else if (!$('input[name="pass"]').val()){
+      $('.w3-overlay').hide()
+      $('.pass').removeClass('w3-hide')
+   }
+
+  else{
+
+    $.ajax({  
+      url: '{{ path('admin_booking_validate_user') }}',
+      type: "POST",
+      data: $("#get-card-data").serialize(),
+      cache: false,
+      success: function(data){
+        //console.log(data)
+        $('.w3-overlay').hide()
+        if (data.status == 1){
+          $('#modal-data-validate').hide()
+          $("#get-card-data").trigger('reset')
+          $('#modal-data-client').show()
+          templ=''
+
+          for (k in data.data)
+            templ+='<div>'+data.data[k]+'</div>'
+          
+          $('.client-info').html(templ)
+        }
+
+        else{
+          $('.show-user-info').addClass('w3-animate-zoom').html(data.message)
+        }
+      },
+      error:function(data){
+        $('.w3-overlay').hide()
+        $('#info-client').show()        
+        $('#info-client-head').removeClass('w3-green w3-amber w3-blue').addClass('w3-red').html('<span onclick="$(\'#info-client\').hide()" class="w3-button w3-display-topright w3-large"><i class="fa fa-times"></i></span><h1><i class="fa fa-exclamation-triangle"></i> '+error+'</h1>')
+        $('#client-txt').html(wifi_connection)
+      }
+    })
+}
+
+  }, 500)
+}
+
+
+$(function(){$("#get-card-data").trigger('reset')})
+
+
+
+
+
+
+
+
+
   function clearBookSearch(){
     $('#startDate, #endDate').datepicker('clearDates')
   }
@@ -147,7 +283,7 @@ div.dataTables_length select {height: 50px}
       jQuery('#startDate').datepicker("setEndDate", e.date)
     })
 
-  tablebooking = [0, 9 , 11, 12]
+  tablebooking = [0, 9 , 11, 12, 14]
 
   if(!localStorage.getItem("tablebooking") ){
     localStorage.setItem("tablebooking", JSON.stringify(tablebooking))
@@ -175,7 +311,7 @@ div.dataTables_length select {height: 50px}
         {
         "url" :'{{ path('admin_booking_search') }}?'+data,
         "dataSrc": function (j) {  
-        //console.log(j.data)
+        console.log(j.data)
         $('.w3-overlay, .table-overlay').hide()
         if( j.options > 1500){
           $('#results_txt').html('+ de 1500 resultados, restrinja a pesquisa e tente novamente.')
@@ -211,7 +347,10 @@ div.dataTables_length select {height: 50px}
         else if (data == 'canceled') color = 'w3-blue'
         else if (data == 'confirmed') color = 'w3-green'
         
-        return '<button id="'+row.booking+'" class="'+color+' w3-btn w3-border" onclick="modalBookingSetStatus('+row.booking+')">'+row.booking+'#'+data+'</button>'
+        wp = row.wp ? '<button class="w3-btn w3-border w3-indigo" style="margin-left:4px" modalToCardData('+row.booking+')><i class="far fa-credit-card"></i></button>'
+      : '<button disabled class="w3-btn w3-border w3-indigo" style="margin-left:4px"><i class="far fa-credit-card"></i></button>'
+
+        return '<button id="'+row.booking+'" class="'+color+' w3-btn w3-border" onclick="modalBookingSetStatus('+row.booking+')">#'+row.booking+' '+data+'</button>'+wp
       }},
       { data: "tour"},
       { data: "date"},
@@ -219,11 +358,13 @@ div.dataTables_length select {height: 50px}
       { data: "adult"},
       { data: "children"},
       { data: "baby"},
+      { data: "total"},
       { data: "notes"},
       { data: "username"},
       { data: "email"},
       { data: "address"},
-      { data: "telephone"}
+      { data: "telephone"},
+      { data: "wp"}
     ],
      "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
     buttons: [
@@ -298,7 +439,7 @@ div.dataTables_length select {height: 50px}
           }
           // Total over all pages
         
-        for (k = 5; k<8;k++){
+        for (k = 5; k<9;k++){
           total = api
             .column( k )
             .data()
@@ -313,10 +454,11 @@ div.dataTables_length select {height: 50px}
                   return intVal(a) + intVal(b);
               }, 0 )
             // Update footer
-            $( api.column( k ).footer() ).html(pageTotal+' ('+total+')'
-          )
-        }
-
+            k == 8 ? 
+            $( api.column( k ).footer() ).html(parseFloat(total).toFixed(2)+'€ ('+parseFloat(total).toFixed(2)+'€)')
+            : 
+            $( api.column( k ).footer() ).html(pageTotal+' ('+total+')')
+          }
         },
     "destroy": true,
     responsive: true

@@ -97,27 +97,29 @@
 <!-- part 4 -->
 
     <div class="w3-row-padding w3-xlarge wp-active w3-hide"> 
-    <div class="w3-col s12 w3-center CREDIT_CARD_DATA">{% trans %}info.credit_card_data{% endtrans %}
+    <div class="w3-col s12 w3-center CREDIT_CARD_DATA w3-padding-8">{% trans %}info.credit_card_data{% endtrans %}
     </div>
 
-      <div class="w3-col l3 m6 s12">
+      <div class="w3-col l4 m7 s12">
         <label class="CREDIT_CARD_NAME w3-small w3-text-red">{% trans %}info.name_credit_card{% endtrans %}</label>
         <input type="text" name="name_card" class="w3-input CREDIT_CARD_NAME" placeholder="{% trans %}info.name_credit_card{% endtrans %}">
       </div>
 
-      <div class="w3-col l3 m6 s12">
-        <label class="w3-small w3-text-red">CVV *</label>
-        <input type="number" name="cvv" class="w3-input" placeholder="CVV *">
-      </div>
-
-      <div class="w3-col l3 m6 s12">
+      <div class="w3-col l2 m5 s12">
         <label class="CREDIT_CARD_DATE w3-small w3-text-red">{% trans %}info.date_credit_card{% endtrans %}</label>
-        <input type="text" name="date_card" class="w3-input CREDIT_CARD_DATE" placeholder="{% trans %}info.date_credit_card{% endtrans %}">
+        <div style="position:relative">
+          <input type="text" name="date_card" readonly class="w3-input CREDIT_CARD_DATE" placeholder="{% trans %}info.date_credit_card{% endtrans %}">
+        </div>
       </div>
 
-      <div class="w3-col l3 m6 s12">
+      <div class="w3-col l4 m7 s12">
         <label class="CREDIT_CARD_NR w3-small w3-text-red">{% trans %}info.credit_card_nr{% endtrans %}</label>
         <input type="number" name="card_nr" class="w3-input CREDIT_CARD_NR" placeholder="{% trans %}info.credit_card_nr{% endtrans %}">
+      </div>
+
+      <div class="w3-col l2 m5 s12">
+        <label class="w3-small w3-text-red">CVV *</label>
+        <input type="number" name="cvv" class="w3-input" placeholder="CVV *">
       </div>
     </div>
 

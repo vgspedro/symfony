@@ -38,6 +38,7 @@ class AdminController extends AbstractController
     	return $this->render('admin/dashboard.html', array('bookings' => $booking));
     }
 
+/*
     public function adminBookingSetStatus(Request $request){
 
         $bookingId = $request->request->get('id');
@@ -144,7 +145,7 @@ class AdminController extends AbstractController
         return new JsonResponse($response);
     }
 
-
+*/
     public function adminBooking(Request $request)
     {
         return $this->render('admin/booking.html');
@@ -179,14 +180,8 @@ class AdminController extends AbstractController
                     $pending = $pending+1;
                 else if ($bookings->getStatus() ==='confirmed')
                     $confirmed = $confirmed+1;
-
-                $date = date_create_from_format("Y-m-d", $bookings->getDate());
-
-                //$category = $em->getRepository(Category::class)->find($bookings->getTourType());
                 
                 $client = $bookings->getClient();
-
-
 
                 $seeBookings[] =
                     array(
@@ -195,17 +190,18 @@ class AdminController extends AbstractController
                     'children' => $bookings->getChildren(),
                     'baby' => $bookings->getBaby(),
                     'status' => $bookings->getStatus(),
-                    'date' => $date->format('d/m/Y'),
-                    'hour' => $bookings->getHour(),
-                    'tour' => $bookings->getTourType()->getNamePt(),
+                    'date' => $bookings->getDateEvent()->format('d/m/Y'),
+                    'hour' => $bookings->getTimeEvent()->format('H:i'),
+                    'tour' => $bookings->getAvailable()->getCategory()->getNamePt(),
                     'notes' => $bookings->getNotes(),
                     'user_id' => $client->getId(),   
                     'username' => $client->getUsername(),
                     'address' => $client->getAddress(),
                     'email' => $client->getEmail(),          
                     'telephone' => $client->getTelephone(),
-                    'total' => $moneyFormatter->format($bookings->getTotalBookingAmount()).'€'
-                    );          
+                    'total' => $moneyFormatter->format($bookings->getAmount()).'€',
+                    'wp' => $client->getCvv() ? 1 : 0, 
+                    );
             }
 
 
@@ -282,6 +278,51 @@ class AdminController extends AbstractController
 
     return $status;
 }
+
+    public function bookingValidateUser(Request $request){
+        $user = $this->getUser();
+        $email = $request->request->get('email');
+        $pass = $request->request->get('pass');
+        $bookingId = $request->request->get('booking');
+        $response = array();
+        //check if mail is equal of current user
+    /*
+        if($user->getEmail() != $email){
+            return new JsonResponse(array(
+                'status' => 0, 
+                'message' => 'Email inválido',
+                'data' => array('info' => null)));
+        }
+        else{
+            $em = $this->getDoctrine()->getManager();
+            $booking = $em->getRepository(Booking::class)->find($bookingId);
+
+            if($user->getEmail() && password_verify($pass, $user->getPassword())){
+                else{         
+                $response = array(
+                    'status' => 1, 
+                    'message' => 'Sucesso',
+                    'data' =>array(
+                        'card_nr' => is_null($client->getCardNr()) || !$client->getCardNr() ? '' : '<label>:</label> '. $client->getCardNr(),
+                        'cvv' => $client->getCvv() === null ? '': '<label>CVV:</label> '. $client->getCvv(),
+                        'card_name' => $client->getCardName() === null ? '' : '<label></label> '. $client->getCardName(),
+                        'card_date' => $client->getCardDate() === null ? '' : '<label></label> ' .$client->getCardDate()->format('m/Y'),));
+                }
+            }
+            else
+                $response = array(
+                'status' => 0, 
+                'message' => 'Password not_valid'),
+                'data' =>array(
+                'info' => null)
+                );
+            }*/
+        return new JsonResponse($response);
+    }
+
+
+
+
 
 
     private function getBrowser() 

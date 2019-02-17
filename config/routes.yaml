@@ -21,8 +21,8 @@ index_translate:
 set_booking:
     path: /booking
     controller: App\Controller\HomeController::setBooking
-    condition: 'request.isXmlHttpRequest()'
-    methods: [POST]
+    #condition: 'request.isXmlHttpRequest()'
+    #methods: [POST]
 
 ###
 # GET CATEGORY BLOCKED DATES
@@ -99,6 +99,11 @@ admin_booking_send_status:
     controller: App\Controller\AdminController::adminBookingSendStatus
     #condition: 'request.isXmlHttpRequest()'
 
+admin_booking_validate_user:
+    path: /admin/booking/validate-user/
+    controller: App\Controller\AdminController::bookingValidateUser
+    condition: 'request.isXmlHttpRequest()'
+    methods: [POST]
 
 ##
 # AVAILABLE

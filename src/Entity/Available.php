@@ -2,7 +2,6 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -22,9 +21,7 @@ class Available
     /**
     * @ORM\Column(type="datetime") */
     private $datetimestart;
-    /** 
-     * @Assert\NotBlank()
-     * @Assert\Type("Category")
+    /**
      * @ORM\ManyToOne(targetEntity="Category", inversedBy="available") 
      */
     private $category;
@@ -105,7 +102,6 @@ class Available
 
     public function setLotation($lotation)
     {
-
         $this->lotation = $lotation;
     }
 

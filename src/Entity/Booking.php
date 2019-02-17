@@ -24,7 +24,7 @@ class Booking
      */
     private $id;
 
-    /** @ORM\OneToOne(targetEntity="Client", mappedBy="booking", cascade={"persist"}) */
+    /** @ORM\ManyToOne(targetEntity="Client", inversedBy="booking", cascade={"persist"}) */
     private $client;
     /**
     * @ORM\Column(type="integer", length=3, nullable=true)
@@ -48,7 +48,13 @@ class Booking
      */
     private $available;
 
-     /** @ORM\Column(name="posted_at", type="datetime") */
+    /** @ORM\Column(name="date_event", type="date") */
+    private $dateEvent;
+
+    /** @ORM\Column(name="time_event", type="time") */
+    private $timeEvent;
+
+     /** @ORM\Column(name="posted_at", type="date") */
     private $postedAt;
 
     /** @ORM\Column(type="text", name="notes", nullable=true ) */
@@ -75,6 +81,27 @@ class Booking
  	public function getId()
     {
         return $this->id;
+    }
+
+
+  public function setDateEvent($dateEvent)
+    {
+        $this->dateEvent = $dateEvent;
+    }
+
+    public function getDateEvent()
+    {
+        return $this->dateEvent;
+    }
+
+  public function setTimeEvent($timeEvent)
+    {
+        $this->timeEvent = $timeEvent;
+    }
+
+    public function getTimeEvent()
+    {
+        return $this->timeEvent;
     }
 
     public function setClient(Client $client)
@@ -145,19 +172,6 @@ class Booking
     public function setBaby($baby)
     {
         $this->baby = $baby;
-    }
-
-    /** 
-     * @return \Money\Money
-     */
-    public function getTotalBookingAmount()
-    {
-        $amount = Money::EUR(0);
-        if( $this->getAdult() > 0)
-           $amount = $amount->add($this->getTourType()->getAdultPrice())->multiply($this->getAdult());
-       if( $this->getChildren() > 0)
-           $amount = $amount->add($this->getTourType()->getChildrenPrice())->multiply($this->getChildren());
-        return $amount;
     }
 
  	public function getPostedAt()

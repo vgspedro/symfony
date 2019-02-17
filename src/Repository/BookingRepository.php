@@ -54,33 +54,34 @@ class BookingRepository extends ServiceEntityRepository
         if ($start && $end)
 
             $booking = $this->createQueryBuilder('b')
-                ->andWhere('b.date >= :start')
-                ->andWhere('b.date <= :end')
+                ->andWhere('b.dateEvent >= :start')
+                ->andWhere('b.dateEvent <= :end')
                 ->setParameter('start', $start)
                 ->setParameter('end', $end)
-                ->orderBy('b.date, b.hour', 'ASC')
+                ->orderBy('b.dateEvent, b.timeEvent', 'ASC')
                 ->getQuery();
 
         else if($start){
     
             $booking = $this->createQueryBuilder('b')
-                ->andWhere('b.date = :start')
+                ->andWhere('b.dateEvent = :start')
                 ->setParameter('start', $start)
-                ->orderBy('b.date, b.hour', 'ASC')
+                ->orderBy('b.dateEvent, b.timeEvent', 'ASC')
                 ->getQuery();
         }
 
         else if($end){
     
             $booking = $this->createQueryBuilder('b')
-                ->andWhere('b.date = :end')
+                ->andWhere('b.dateEvent = :end')
                 ->setParameter('end', $end)
-                ->orderBy('b.date, b.hour', 'ASC')
+                ->orderBy('b.dateEvent, b.timeEvent', 'ASC')
                 ->getQuery();
         }
 
         return $booking->execute();
 
     }
+
 
 }

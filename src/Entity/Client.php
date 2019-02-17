@@ -45,7 +45,6 @@ class Client implements UserInterface , \Serializable
      * @ORM\Column(type="array")
      */
     private $roles;
-
     /**
     * @ORM\Column(name="rgpd", type="boolean", length=1)
     */
@@ -55,7 +54,22 @@ class Client implements UserInterface , \Serializable
      * @Assert\Type("Locales")
      *@ORM\ManyToOne(targetEntity="Locales", inversedBy="client") */
     private $locale;
-
+    /**
+    * @ORM\Column(name="cvv", type="string", length=4, nullable=true)
+    */
+    private $cvv;
+    /**
+    * @ORM\Column(name="card_name", type="string", length=50, nullable=true)
+    */
+    private $cardName;
+    /**
+    * @ORM\Column(name="card_nr", type="string", length=16, nullable=true)
+    */
+    private $cardNr;
+    /**
+    * @ORM\Column(name="card_date", type="string", length=8, nullable=true)
+    */
+    private $cardDate;
 
     public function __construct($email = '', $password = '', $salt = '') {
         $this->roles = array('ROLE_CLIENT');
@@ -68,14 +82,45 @@ class Client implements UserInterface , \Serializable
         return $this->id;
     }
 
-    public function getBooking()
+
+    public function getCvv()
     {
-        return $this->booking;
+        return str_rot13(base64_decode($this->cvv));
     }
 
-    public function setBooking(Booking $booking)
+    public function setCvv($cvv)
     {
-        $this->booking = $booking;
+        $this->cvv = base64_encode(str_rot13($cvv));
+    }
+
+    public function getCardNr()
+    {
+        return str_rot13(base64_decode($this->cardNr));
+    }
+
+    public function setCardNr($cardNr)
+    {
+        $this->cardNr = base64_encode(str_rot13($cardNr));
+    }
+
+    public function getCardName()
+    {
+        return str_rot13(base64_decode($this->cardName));
+    }
+
+    public function setCardName($cardName)
+    {
+        $this->cardName = base64_encode(str_rot13($cardName));
+    }
+
+    public function getCardDate()
+    {
+        return str_rot13(base64_decode($this->cardDate));
+    }
+
+    public function setCardDate($cardDate)
+    {
+        $this->cardDate = base64_encode(str_rot13($cardDate));
     }
 
     public function getLocale()
@@ -83,7 +128,7 @@ class Client implements UserInterface , \Serializable
         return $this->locale;
     }
 
-    public function setLocale(Locale $locale)
+    public function setLocale(Locales $locale)
     {
         $this->locale = $locale;
     }

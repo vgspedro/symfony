@@ -275,6 +275,9 @@
     "symfony/intl": {
         "version": "v4.0.4"
     },
+    "symfony/lock": {
+        "version": "v4.2.3"
+    },
     "symfony/lts": {
         "version": "4-dev"
     },
