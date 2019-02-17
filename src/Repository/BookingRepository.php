@@ -23,17 +23,18 @@ class BookingRepository extends ServiceEntityRepository
 
         $sql = "SELECT  b.status, COUNT(b.status) AS count, COUNT(b.id) AS total
             FROM booking b
-            WHERE b.date = :date
+            WHERE b.date_event = :date
             GROUP BY b.status";
 
         $stmt = $conn->prepare($sql);
         $stmt->bindValue('date', $today->format('d/m/Y'));
         $stmt->execute();
         $day0 = $stmt->fetchAll();
- 
+
+
         $sql = "SELECT b.status, COUNT(b.status) AS count, COUNT(b.id) AS total 
             FROM booking b
-            WHERE b.date = :date
+            WHERE b.date_event = :date
             GROUP BY b.status";
 
         $stmt = $conn->prepare($sql);
@@ -46,9 +47,11 @@ class BookingRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult()
         ;
-        return array('day0' =>$day0, 'day1' =>$day1, 'total' => $dashRowTree); 
+        return array('day0' => $day0, 'day1' => $day1, 'total' => $dashRowTree); 
     }
   
+
+
     public function bookingFilter($start, $end){
 
         if ($start && $end)

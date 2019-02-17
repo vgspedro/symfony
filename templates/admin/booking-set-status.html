@@ -79,6 +79,8 @@
       <div class="w3-col s12 w3-border-bottom">&nbsp;</div>
     </form>
 
+
+
 <script>
 
 function setEasyText(v){
@@ -87,8 +89,8 @@ function setEasyText(v){
 
 $('#bookingstatus').on('submit',function(e){
   $('.w3-overlay').show()
+  var html = ''
   e.preventDefault()
-  //console.log($('#bookingstatus').serialize())
   setTimeout(function(){
     $.ajax({  
       url:'{{ path('admin_booking_send_status') }}',
@@ -96,8 +98,22 @@ $('#bookingstatus').on('submit',function(e){
       data:$('#bookingstatus').serialize()+'&notes='+quill.root.innerHTML,
       success: function(data){
         $('.w3-overlay').hide()
-        searchValue()
-        $("#modal-booking-set-status").hide()
+        if (data.status ==  1){
+          
+          console.log(data)
+          searchValue()
+          $("#modal-booking-set-status").hide()
+          $('#modal-success').show()
+          html += data.message+'<br>'
+          data.stock_it == 1 ?
+            html += 'Reserva cancelada e o stock foi resposto nas disponibilidades.<br> Se a reserva se encontra em canceled, e mudar para outro estado, NÃO muda as disponibilidades, NÃO retira do stock.' : false
+            $('.success-message').html(html)
+        }
+        else{
+          $('#modal-success').show()
+            html += data.message+'<br>' 
+            $('.success-message').html(html)
+        }
       },
       error:function(data){
         $('.w3-overlay').hide()
@@ -131,10 +147,4 @@ var quill = new Quill('#editor', {
   theme: 'snow'  // or 'bubble',
 
 })
-
-
-
-
-
-
 </script>

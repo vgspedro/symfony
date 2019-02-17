@@ -26,19 +26,20 @@ class AdminController extends AbstractController
 
     public function html()
     {
-        $booking =array();// $this->getDoctrine()->getManager()->getRepository(Booking::class)->dashboardValues();
+        $em = $this->getDoctrine()->getManager();
+        $booking = $em->getRepository(Booking::class)->dashboardValues();
         $ua = $this->getBrowser();
-
-        return $this->render('admin/base.html.twig', array('browser'=>$ua,'bookings' => $booking));
+        return $this->render('admin/base.html.twig', array('browser'=>$ua,'booking' => $booking));
     }
 
 	public function adminDashboard()
 	{
-        $booking = array();//$this->getDoctrine()->getManager()->getRepository(Booking::class)->dashboardValues();
-    	return $this->render('admin/dashboard.html', array('bookings' => $booking));
+        $em = $this->getDoctrine()->getManager();
+        $booking = $em->getRepository(Booking::class)->dashboardValues();
+
+        return $this->render('admin/dashboard.html', array('booking' => $booking));
     }
 
-/*
     public function adminBookingSetStatus(Request $request){
 
         $bookingId = $request->request->get('id');
@@ -47,7 +48,8 @@ class AdminController extends AbstractController
                 
         $booking = $em->getRepository(Booking::class)->find($bookingId);
         $easyText = $em->getRepository(EasyText::class)->findAll();
-        $date = date_create_from_format("Y-m-d", $booking->getDate());
+
+        $client = $booking->getClient();
 
         $seeBooking =
                 array(
@@ -56,16 +58,17 @@ class AdminController extends AbstractController
                 'children' => $booking->getChildren(),
                 'baby' => $booking->getBaby(),
                 'status' => $booking->getStatus(),
-                'date' => $date->format('d/m/Y'),
-                'hour' => $booking->getHour(),
-                'tour' => $booking->getTourType()->getNamePt(),
+                'date' => $booking->getDateEvent()->format('d/m/Y'),
+                'hour' => $booking->getTimeEvent()->format('H:i'),
+                'tour' => $booking->getAvailable()->getCategory()->getNamePt(),
                 'notes' => $booking->getNotes(),
-                'user_id' => $booking->getClient()->getId(),   
-                'username' => $booking->getClient()->getUsername(),
-                'address' => $booking->getClient()->getAddress(),
-                'email' => $booking->getClient()->getEmail(),          
-                'telephone' => $booking->getClient()->getTelephone(),
-                'language' => $booking->getClient()->getLanguage(),
+                'user_id' => $client->getId(),   
+                'username' => $client->getUsername(),
+                'address' => $client->getAddress(),
+                'email' => $client->getEmail(),          
+                'telephone' => $client->getTelephone(),
+                'wp' => $client->getCvv() ? 1 : 0, 
+                'language' => $client->getLocale()->getName(),
                 'easyText' => $easyText
             );          
 
@@ -81,22 +84,42 @@ class AdminController extends AbstractController
         $status = $request->request->get('status');
         $email = $request->request->get('email');
         $notes = $request->request->get('notes');
-                
+        
         $booking = $em->getRepository(Booking::class)->find($bookingId);
+
+        //if booking not found send info back to user
+        if(!$booking){
+            $response = array(
+                'status' => 0,
+                'message' => 'Reserva não encontrada',
+                'data' => null,
+                'mail' => null
+             );
+        }
+
+        //if order canceled and previous status is not canceled lets put the stock back in the available
+        $stockIt = 0;
+        if(strtolower($status) == 'canceled' && strtolower($booking->getStatus()) != 'canceled'){
+            
+            $stockIt = 1;
+            $booking->getAvailable()->setStock((int)$booking->getAvailable()->getStock() + (int)$booking->getCountPax());
+        
+        }
+
         $booking->setStatus($status);
         $booking->setNotes($notes);
 
-        $em->flush();
-
-        $category = $em->getRepository(Category::class)->find($booking->getTourType());
-        
         $client = $booking->getClient();
-        $client->setEmail($email);
+        //only change the cleint email if is diferent form the request
+        //some mail could be wrong 
+        
+        if($booking->getClient()->getEmail() != $email)
+            $client->setEmail($email);
+        
         $em->flush();
 
-        $date = date_create_from_format("Y-m-d", $booking->getDate());
-
-        $tour = $client->getLanguage() =='en' ? $category->getNameEn() : $category->getNamePt();
+        $categoryName = $client->getLocale()->getName() =='en' ? $booking->getAvailable()->getCategory()->getNameEn() : 
+            $booking->getAvailable()->getCategory()->getNamePt();
 
         $seeBooking =
                 array(
@@ -104,31 +127,30 @@ class AdminController extends AbstractController
                 'adult' => $booking->getAdult(),
                 'children' => $booking->getChildren(),
                 'baby' => $booking->getBaby(),
-                'status' => $this->translateStatus($booking->getStatus(), $client->getLanguage()),
-                'date' => $date->format('d/m/Y'),
-                'hour' => $booking->getHour(),
-                'tour' => $tour,
+                'status' => $this->translateStatus($booking->getStatus(),  $client->getLocale()->getName()),
+                'date' => $booking->getDateEvent()->format('d/m/Y'),
+                'hour' => $booking->getTimeEvent()->format('H:i'),
+                'tour' => $categoryName,
                 'notes' => $booking->getNotes(),
                 'user_id' => $client->getId(),   
                 'username' => $client->getUsername(),
                 'logo' => 'https://tarugatoursbenagilcaves.pt/images/logo.png'
             );          
 
-        $transport = (new \Swift_SmtpTransport('smtp.sapo.com', 465, 'ssl'))
+        $transport = (new \Swift_SmtpTransport('smtp.sapo.pt', 465, 'ssl'))
             ->setUsername('vgspedro15@sapo.pt')
-            ->setPassword('');
+            ->setPassword('ledcpu');    
 
         $mailer = new \Swift_Mailer($transport);
 
-        $subject ='Reserva / Order #'.$booking->getId().' ('.$this->translateStatus($booking->getStatus(), $client->getLanguage()).')';
+        $subject ='Reserva / Order #'.$booking->getId().' ('.$this->translateStatus($booking->getStatus(), $client->getLocale()->getName()).')';
 
         $message = (new \Swift_Message($subject))
             ->setFrom(['vgspedro15@sapo.pt' => 'Pedro Viegas'])
-            ->setTo([ $client->getEmail() => $client->getUsername(), 
-                'vgspedro15@sapo.pt' => 'Pedro Viegas'])
+            ->setTo([ $client->getEmail() => $client->getUsername(),'vgspedro15@sapo.pt' => 'Pedro Viegas'])
             ->addPart($subject, 'text/plain')
             ->setBody($this->renderView(
-                'emails/booking-status-'.$client->getLanguage().'.html.twig',$seeBooking
+                'emails/booking-status-'.$client->getLocale()->getName().'.html.twig',$seeBooking
                 ),
                 'text/html'
             );
@@ -136,16 +158,18 @@ class AdminController extends AbstractController
             $send = $mailer->send($message);
 
             $response = array(
-                'result' => 1,
-                'message' => 'success',
+                'status' => 1,
+                'message' => 'Sucesso',
                 'data' => $booking->getId(),
-                'mail' => $send
+                'mail' => $send,
+                'stock_it' => $stockIt
              );
         
         return new JsonResponse($response);
     }
 
-*/
+
+
     public function adminBooking(Request $request)
     {
         return $this->render('admin/booking.html');

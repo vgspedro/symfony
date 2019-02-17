@@ -12,16 +12,11 @@
         <div class="w3-left"><i class="far fa-hand-point-up w3-xxxlarge"></i></div>
         <div class="w3-right">
           <h3>
-            {%if bookings%}
             {% for bookings in booking.day0 if bookings.status == "PENDING"  %}
               {{ bookings.count }}
               {% else %}
                 0
             {% endfor %}
-
-              {% else %}
-                0
-              {% endif%}
           </h3>
         </div>
         <div class="w3-clear"></div>
@@ -33,16 +28,11 @@
         <div class="w3-left"><i class="far fa-hand-paper w3-xxxlarge"></i></div>
         <div class="w3-right">
           <h3>
-            {%if bookings %}
             {% for bookings in booking.day0 if bookings.status == "CANCELED"  %}
               {{ bookings.count }}
               {% else %}
                 0
             {% endfor %}
-
-              {% else %}
-                0
-              {% endif%}
           </h3>
         </div>
         <div class="w3-clear"></div>
@@ -54,16 +44,11 @@
         <div class="w3-left"><i class="far fa-thumbs-up w3-xxxlarge"></i></div>
         <div class="w3-right">
           <h3>
-            {%if bookings %}
             {% for bookings in booking.day0 if bookings.status == "CONFIRMED"  %}
               {{ bookings.count }}
               {% else %}
                 0
             {% endfor %}
-
-              {% else %}
-                0
-              {% endif%}
           </h3>
         </div>
         <div class="w3-clear"></div>
@@ -75,15 +60,11 @@
         <div class="w3-left"><i class="far fa-hand-peace w3-xxxlarge"></i></div>
         <div class="w3-right">
           <h3>
-             {%if bookings %}
             {% set totalday0 = 0 %}
             {% for bookings in booking.day0 if bookings.total %}
               {% set totalday0 = totalday0 + bookings.total %}
             {% endfor %}
             {{ totalday0 }}
-              {% else %}
-                0
-              {% endif%}
           </h3>
         </div>
         <div class="w3-clear"></div>
@@ -101,16 +82,11 @@
         <div class="w3-left"><i class="far fa-hand-point-up w3-xxxlarge"></i></div>
         <div class="w3-right">
           <h3>
-             {%if bookings%}
             {% for bookings in booking.day1 if bookings.status == "PENDING"  %}
               {{ bookings.count }}
               {% else %}
                 0
             {% endfor %}
-
-              {% else %}
-                0
-              {% endif%}
           </h3>
         </div>
         <div class="w3-clear"></div>
@@ -122,16 +98,11 @@
         <div class="w3-left"><i class="far fa-hand-paper w3-xxxlarge"></i></div>
         <div class="w3-right">
           <h3>
-             {%if bookings%}
             {% for bookings in booking.day1 if bookings.status == "CANCELED"  %}
               {{ bookings.count }}
               {% else %}
                 0
             {% endfor %}
-
-              {% else %}
-                0
-              {% endif%}
           </h3>
         </div>
         <div class="w3-clear"></div>
@@ -143,16 +114,11 @@
         <div class="w3-left"><i class="far fa-thumbs-up w3-xxxlarge"></i></div>
         <div class="w3-right">
           <h3>
-             {%if bookings%}
             {% for bookings in booking.day1 if bookings.status == "CONFIRMED"  %}
               {{ bookings.count }}
               {% else %}
                 0
             {% endfor %}
-
-              {% else %}
-                0
-              {% endif%}
           </h3>
         </div>
         <div class="w3-clear"></div>
@@ -164,17 +130,12 @@
         <div class="w3-left"><i class="far fa-hand-peace w3-xxxlarge"></i></div>
         <div class="w3-right">
           <h3>
-            {%if bookings%}
             {% set totalday1 = 0 %}
 
             {% for bookings in booking.day1 if bookings.total %}
               {% set totalday1 = totalday1 + bookings.total %}
             {% endfor %}
-          
             {{ totalday1 }}
-                 {% else %}
-                0
-              {% endif%}
           </h3>
         </div>
         <div class="w3-clear"></div>
@@ -192,13 +153,11 @@
         <div class="w3-left"><i class="far fa-user w3-xxxlarge"></i></div>
         <div class="w3-right">
           <h3>
-            {%if bookings%}
             {% for bookings in booking.total %}
               {{ bookings.adults }}
-            {% endfor %}
-                             {% else %}
+               {% else %}
                 0
-              {% endif%}
+            {% endfor %}
           </h3>
         </div>
         <div class="w3-clear"></div>
@@ -210,14 +169,11 @@
         <div class="w3-left"><i class="fas fa-child w3-xxxlarge"></i></div>
         <div class="w3-right">
           <h3>
-            {%if bookings%}
             {% for bookings in booking.total %}
               {{ bookings.childrens }}
-            {% endfor %}
-
-                             {% else %}
+               {% else %}
                 0
-              {% endif%}
+            {% endfor %}
           </h3>
         </div>
         <div class="w3-clear"></div>
@@ -229,13 +185,11 @@
         <div class="w3-left"><i class="far fa-smile w3-xxxlarge"></i></div>
         <div class="w3-right">
           <h3>
-            {%if bookings%}
             {% for bookings in booking.total %}
               {{ bookings.babies }}
-            {% endfor %}
-                                         {% else %}
+               {% else %}
                 0
-              {% endif%}
+            {% endfor %}
           </h3>
         </div>
         <div class="w3-clear"></div>
@@ -247,13 +201,11 @@
         <div class="w3-left"><i class="fas fa-users w3-xxxlarge"></i></div>
         <div class="w3-right">
           <h3>
-            {%if bookings%}
             {% for bookings in booking.total %}
               {{ bookings.total }}
-            {% endfor %}
-                                                     {% else %}
+               {% else %}
                 0
-              {% endif%}
+            {% endfor %}
           </h3>
         </div>
         <div class="w3-clear"></div>

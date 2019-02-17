@@ -221,7 +221,7 @@ $('.username').removeClass('w3-hide')
       data: $("#get-card-data").serialize(),
       cache: false,
       success: function(data){
-        console.log(data)
+        //console.log(data)
         $('.w3-overlay').hide()
         if (data.status == 1){
           $("#get-card-data").trigger('reset')
@@ -246,13 +246,6 @@ $('.username').removeClass('w3-hide')
 
 
 $(function(){$("#get-card-data").trigger('reset')})
-
-
-
-
-
-
-
 
 
   function clearBookSearch(){
@@ -308,7 +301,7 @@ $(function(){$("#get-card-data").trigger('reset')})
         {
         "url" :'{{ path('admin_booking_search') }}?'+data,
         "dataSrc": function (j) {  
-        console.log(j.data)
+        //console.log(j.data)
         $('.w3-overlay, .table-overlay').hide()
         if( j.options > 1500){
           $('#results_txt').html('+ de 1500 resultados, restrinja a pesquisa e tente novamente.')
@@ -487,7 +480,7 @@ function modalBookingSetStatus(bookingId){
       type: "POST",
       data:'id='+bookingId,
       success: function(data){
-        //console.log(data)
+        console.log(data)
         $('.w3-overlay').hide()
         $('#set-booking').html(data)
         $('#booking-id').text(bookingId)

@@ -24,7 +24,7 @@ class Booking
      */
     private $id;
 
-    /** @ORM\ManyToOne(targetEntity="Client", inversedBy="booking", cascade={"persist"}) */
+    /** @ORM\ManyToOne(targetEntity="Client", cascade={"persist"}) */
     private $client;
     /**
     * @ORM\Column(type="integer", length=3, nullable=true)
@@ -44,7 +44,7 @@ class Booking
     /** 
      * @Assert\NotBlank()
      * @Assert\Type("Available")
-     * @ORM\ManyToOne(targetEntity="Available", inversedBy="booking") 
+     * @ORM\ManyToOne(targetEntity="Available") 
      */
     private $available;
 
@@ -153,6 +153,15 @@ class Booking
     {
         $this->adult = $adult;
     }
+
+    //sum the total of persons of booking
+    public function getCountPax()
+    {
+        $total = 0;
+        $total = (int)$this->getAdult() + (int)$this->getChildren() + (int)$this->getBaby();
+        return $total;
+    }
+
 
     public function getChildren()
     {
