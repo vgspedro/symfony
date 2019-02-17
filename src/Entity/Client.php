@@ -55,19 +55,19 @@ class Client implements UserInterface , \Serializable
      *@ORM\ManyToOne(targetEntity="Locales", inversedBy="client") */
     private $locale;
     /**
-    * @ORM\Column(name="cvv", type="string", length=4, nullable=true)
+    * @ORM\Column(name="cvv", type="text", nullable=true)
     */
     private $cvv;
     /**
-    * @ORM\Column(name="card_name", type="string", length=50, nullable=true)
+    * @ORM\Column(name="card_name", type="text", nullable=true)
     */
     private $cardName;
     /**
-    * @ORM\Column(name="card_nr", type="string", length=16, nullable=true)
+    * @ORM\Column(name="card_nr", type="text", nullable=true)
     */
     private $cardNr;
     /**
-    * @ORM\Column(name="card_date", type="string", length=8, nullable=true)
+    * @ORM\Column(name="card_date", type="text", nullable=true)
     */
     private $cardDate;
 

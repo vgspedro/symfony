@@ -274,49 +274,57 @@ class AdminController extends AbstractController
             
             }
         }
-    
 
-    return $status;
-}
+        return $status;
+    }
 
     public function bookingValidateUser(Request $request){
         $user = $this->getUser();
-        $email = $request->request->get('email');
+        $username = $request->request->get('username');
         $pass = $request->request->get('pass');
         $bookingId = $request->request->get('booking');
         $response = array();
         //check if mail is equal of current user
-    /*
-        if($user->getEmail() != $email){
-            return new JsonResponse(array(
-                'status' => 0, 
-                'message' => 'Email inválido',
-                'data' => array('info' => null)));
+        if($user->getUsername() != $username){
+            return new JsonResponse(
+                array(
+                    'status' => 0,
+                    'message' => 'Utilizador inválido',
+                    'data' => array('info' => null)));
         }
-        else{
+        else if($user->getUsername() && password_verify($pass, $user->getPassword())){
+            
             $em = $this->getDoctrine()->getManager();
             $booking = $em->getRepository(Booking::class)->find($bookingId);
 
-            if($user->getEmail() && password_verify($pass, $user->getPassword())){
-                else{         
-                $response = array(
-                    'status' => 1, 
-                    'message' => 'Sucesso',
-                    'data' =>array(
-                        'card_nr' => is_null($client->getCardNr()) || !$client->getCardNr() ? '' : '<label>:</label> '. $client->getCardNr(),
-                        'cvv' => $client->getCvv() === null ? '': '<label>CVV:</label> '. $client->getCvv(),
-                        'card_name' => $client->getCardName() === null ? '' : '<label></label> '. $client->getCardName(),
-                        'card_date' => $client->getCardDate() === null ? '' : '<label></label> ' .$client->getCardDate()->format('m/Y'),));
-                }
-            }
-            else
-                $response = array(
-                'status' => 0, 
-                'message' => 'Password not_valid'),
-                'data' =>array(
-                'info' => null)
+            if(!$booking)
+                return new JsonResponse(
+                    array(
+                        'status' => 0,
+                        'message' => 'Reserva não encontrada',
+                        'data' => array('info' => null)));
+
+            $client = $booking->getClient();
+
+            $response = array(
+                'status' => 1,
+                'message' => 'Sucesso',
+                'data' => array(
+                    'card_nr' => $client->getCardNr() === null ? '' : '<label>Nº Cartão Crédito: </label> '. $client->getCardNr(),
+                    'cvv' => $client->getCvv() === null ? '': '<label>CVV: </label> '. $client->getCvv(),
+                    'card_name' => $client->getCardName() === null ? '' : '<label>Titular Cartão: </label> '. $client->getCardName(),
+                    'card_date' => $client->getCardDate() === null ? '' : '<label>Data Expiração: </label> ' .$client->getCardDate()
+                    )
                 );
-            }*/
+        }
+        else
+            $response = array(
+                'status' => 0,
+                'message' => 'Password inválida',
+                'data' =>array(
+                    'info' => null)
+            );
+
         return new JsonResponse($response);
     }
 
