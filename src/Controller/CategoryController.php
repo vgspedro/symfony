@@ -279,21 +279,26 @@ class CategoryController extends AbstractController
         $categoryId = $request->request->get('id');
         $entity = $this->getDoctrine()->getManager();
         
-        $event = $entity->getRepository(Event::class)->findOneBy(['category' => $categoryId]);
-        $blocked = $entity->getRepository(Blockdates::class)->findOneBy(['category' => $categoryId]);
         $category = $entity->getRepository(Category::class)->find($categoryId);
-       
-        if (!$category || !$event|| !$blocked) {
+        
+        if (!$category) {
             $response = array('message'=>'fail', 'status' => 'Categoria #'.$categoryId . ' não existe.');
         }
+        
+        //search bookings if already bought this category, DO NOT DELETE sens info to user
+        $booking = $entity->getRepository(Booking::class)->findDeleteCategory($category);
+
+    return new JsonResponse(array('message'=>'fail', 'status' => 'Categoria #'.$categoryId . ' não pode ser apagada. Já existem Reservas associadas'));
+       
+        if ($booking > 0 ) {
+            $response = array('message'=>'fail', 'status' => 'Categoria #'.$category->getId() . ' não pode ser apagada. Já existem Reservas associadas');
+        }
+
+
         else{
 
             $img = $category->getImage();
 
-            $entity->remove($blocked);
-            $entity->flush();
-            $entity->remove($event);
-            $entity->flush();
             $entity->remove($category);
             $entity->flush();
 

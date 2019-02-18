@@ -288,9 +288,9 @@ class HomeController extends AbstractController
 
         $locale = $client->getLocale();
 
-        $transport = (new \Swift_SmtpTransport('smtp.sapo.pt', 465, 'ssl'))
-            ->setUsername('vgspedro15@sapo.pt')
-            ->setPassword('ledcpu');
+        $transport = (new \Swift_SmtpTransport($_ENV['EMAIL_SMTP'], 465, 'ssl'))
+            ->setUsername($_ENV['EMAIL'])
+            ->setPassword($_ENV['EMAIL_PASS']);       
 
         $locale->getName() == 'pt_PT' ? $category->getNamePt() : $category->getNameEn();
 

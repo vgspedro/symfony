@@ -164,6 +164,9 @@
             "ref": "aaddfdf43cdecd4cf91f992052d76c2cadc04543"
         }
     },
+    "simshaun/recurr": {
+        "version": "v3.1.1"
+    },
     "spipu/html2pdf": {
         "version": "v5.1.0"
     },

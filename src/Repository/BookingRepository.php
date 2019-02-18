@@ -86,5 +86,16 @@ class BookingRepository extends ServiceEntityRepository
 
     }
 
+    public function findDeleteCategory(Category $category){
+
+        $query = $this->getEntityManager()->createQuery(
+                'SELECT b, a, c,
+                FROM App\Entity\Booking b
+                JOIN b.available a
+                JOIN a.category c
+                WHERE a.category = :category')
+                ->setParameter('category', $category);
+        return $query->getSingleScalarResult();
+    }
 
 }

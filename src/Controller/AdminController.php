@@ -137,9 +137,9 @@ class AdminController extends AbstractController
                 'logo' => 'https://tarugatoursbenagilcaves.pt/images/logo.png'
             );          
 
-        $transport = (new \Swift_SmtpTransport('smtp.sapo.pt', 465, 'ssl'))
-            ->setUsername('vgspedro15@sapo.pt')
-            ->setPassword('ledcpu');    
+        $transport = (new \Swift_SmtpTransport($_ENV['EMAIL_SMTP'], 465, 'ssl'))
+            ->setUsername($_ENV['EMAIL'])
+            ->setPassword($_ENV['EMAIL_PASS']);    
 
         $mailer = new \Swift_Mailer($transport);
 
@@ -224,7 +224,8 @@ class AdminController extends AbstractController
                     'email' => $client->getEmail(),          
                     'telephone' => $client->getTelephone(),
                     'total' => $moneyFormatter->format($bookings->getAmount()).'€',
-                    'wp' => $client->getCvv() ? 1 : 0, 
+                    'wp' => $client->getCvv() ? 1 : 0,
+                    'posted_at' => $bookings->getPostedAt()->format('d/m/Y'),
                     );
             }
 
