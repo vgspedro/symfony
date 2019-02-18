@@ -137,7 +137,7 @@ class AdminController extends AbstractController
                 'logo' => 'https://tarugatoursbenagilcaves.pt/images/logo.png'
             );          
 
-        $transport = (new \Swift_SmtpTransport($_ENV['EMAIL_SMTP'], 465, 'ssl'))
+        $transport = (new \Swift_SmtpTransport($_ENV['EMAIL_SMTP'], $_ENV['EMAIL_PORT'], $_ENV['EMAIL_CERTIFICADE']))
             ->setUsername($_ENV['EMAIL'])
             ->setPassword($_ENV['EMAIL_PASS']);    
 
@@ -146,8 +146,8 @@ class AdminController extends AbstractController
         $subject ='Reserva / Order #'.$booking->getId().' ('.$this->translateStatus($booking->getStatus(), $client->getLocale()->getName()).')';
 
         $message = (new \Swift_Message($subject))
-            ->setFrom(['vgspedro15@sapo.pt' => 'Pedro Viegas'])
-            ->setTo([ $client->getEmail() => $client->getUsername(),'vgspedro15@sapo.pt' => 'Pedro Viegas'])
+            ->setFrom([$_ENV['EMAIL'] => $_ENV['EMAIL_USERNAME']])
+            ->setTo([ $client->getEmail() => $client->getUsername(), $_ENV['EMAIL'] => $_ENV['EMAIL_USERNAME'] ])
             ->addPart($subject, 'text/plain')
             ->setBody($this->renderView(
                 'emails/booking-status-'.$client->getLocale()->getName().'.html.twig',$seeBooking
