@@ -51,7 +51,7 @@ div.dataTables_length select {height: 50px}
         <td>
           <span class="w3-tooltip">
             <span style="position:absolute;left:0;bottom:32px" class="w3-round w3-text w3-tag">Editar a categoria</span>
-            <button class="w3-btn w3-border w3-blue w3-tooltip" style="width: 13px" onclick="editCategory({{category.id}})"> 
+            <button class="w3-btn w3-border w3-blue w3-tooltip" style="width: 13px" onclick="editCategory({{category.id}},'{{ category.namePt}}')"> 
               <i class="far fa-edit fa-fw"></i>
             </button>
           </span>
@@ -63,7 +63,7 @@ div.dataTables_length select {height: 50px}
         </span>
         <span class="w3-tooltip">
             <span style="position:absolute;left:0;bottom:32px" class="w3-round w3-text w3-tag">Adicionar disponibilidade</span>
-            <button class="w3-btn w3-border w3-indigo" onclick="addAvailable({{category.id}})">
+            <button class="w3-btn w3-border w3-indigo" onclick="addAvailable({{category.id}},'{{ category.namePt}}')">
               <i class="far fa-calendar-check"></i>
             </button>
           </span>
@@ -139,7 +139,7 @@ else
 */
 
 
-function addAvailable(id){
+function addAvailable(id,name){
   $('.w3-overlay').show()
   setTimeout(function(){
   $.ajax({  
@@ -149,13 +149,10 @@ function addAvailable(id){
     success: function(data){
       console.log(data)
       $('.w3-overlay').hide()
-      $('#set-id').text(id)
+      $('#set-id').text(name)
       $('#set-category').html(data)
       $('#modal-edit-category').show()
       if (data.message == 'success'){
-        $('#info-client').show()                
-        $('#info-client-head').removeClass('w3-red').addClass('w3-green').html('<span onclick="$(\'#info-client\').hide()" class="w3-button w3-display-topright w3-large"><i class="fa fa-times"></i></span><h1><i class="fa fa-check"></i> Sucesso</h1>')
-        $('#client-txt').html('')
       }
     },
     error:function(data){
@@ -166,13 +163,9 @@ function addAvailable(id){
   }, 500)
 }
 
-
-
-
 stored = tablecategory = [2,5,6,12,13,14]
 
-
-function editCategory(id){
+function editCategory(id, name){
   $('.w3-overlay').show()
   setTimeout(function(){
   $.ajax({  
@@ -181,7 +174,7 @@ function editCategory(id){
     data:'id='+id,
     success: function(data){
       $('.w3-overlay').hide()
-      $('#set-id').text(id)
+      $('#set-id').text(name)
       $('#set-category').html(data)
       $('#modal-edit-category').show()
       if (data.message == 'success'){

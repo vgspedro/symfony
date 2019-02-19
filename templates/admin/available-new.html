@@ -21,13 +21,12 @@
   </h5>
 </header>
 
-
-
 <div class="">
   <form id="available-form">
     <div class="w3-padding-16 w3-row-padding w3-large w3-border w3-sand">
       <div class="w3-col l12 m12 l12">
-        <h5 class="w3-center"> Para criar disponibilidades, escolha as "Horas", e escolha o periodo temporal, Inicio e Fim nos calendarios</h5> 
+        <h5 class="w3-center"> Para criar disponibilidades, escolha as "Horas", e escolha o periodo temporal, Inicio e Fim nos calendarios<h5> 
+        <h5 class="w3-text-red w3-center">(Periodo máximo é de 2 anos, 732 dias)</h5> 
       </div>
       <div class="w3-col l4 m6 s12">
         <label>Categoria</label>
@@ -53,7 +52,6 @@
       </div>
 
     <div class="w3-row-padding"> 
-      
       <div class="w3-col l3 m0 w3-hide-medium w3-hide-small">&nbsp;</div>
       
       <div class="w3-col l3 m6 s12">
@@ -64,11 +62,11 @@
         <label>Data Fim</label>
         <input class="w3-input w3-border w3-white" id='endDate' readonly name="endDate" type="text" placeholder="&#xF273; Fim" style="font-family:Raleway, FontAwesome;cursor:pointer">
       </div>
-    
+      
     </div>
-
+      <div class="w3-col s12 set-available-info w3-padding-small w3-center"></div>
       <div class="w3-col s12 w3-margin-top w3-margin-bottom w3-border-top">
-        <span class="w3-btn w3-border w3-green w3-right w3-margin-top" onclick="$('#available-form').trigger('submit')">
+        <span class="w3-btn w3-border w3-green w3-right w3-margin-top btn-available" onclick="$('#available-form').trigger('submit')">
           <i class="fa fa-check"></i> Guardar
         </span>
       </div>
@@ -107,9 +105,10 @@
     })
 
 
+
 $('#available-form').on('submit',function(e){
   e.preventDefault()
-console.log($('#available-form').serialize())
+//console.log($('#available-form').serialize())
   obj=''
   $('.w3-overlay').show()
   $('.required').addClass('w3-hide')
@@ -121,22 +120,14 @@ console.log($('#available-form').serialize())
       cache: false,
       success: function(data){  
         
-        console.log(data)
+        //console.log('aqui'+data)
 
         $('.w3-overlay').hide()
-        if (data.message == 'success'){
-          ajaxUpload('category-list')
-          $('#modal-edit-category').hide()
-          $('#category-form').trigger('reset')
-          $('#category_isactive').val('')
+        if (data.status == 1){
+          $('.set-available-info').removeClass('w3-text-red').addClass('w3-text-green').html(data.message)
         }
-        else if (data.message=='fail'){
-          for(i=0;i<data.data.length;i++)
-            obj += data.data[i]+'<br>'
-          $('#set-fields').html(obj)
-
-
-          $('#modal-fields').show()
+        else{
+        $('.set-available-info').removeClass('w3-text-green').addClass('w3-text-red').html(data.message)
         }
       },
       error:function(data){

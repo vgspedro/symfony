@@ -486,12 +486,10 @@ function saveModalEvents(){
 
 function showRgpd(){
   $("#myOverlay, #loader-cont").show()
-  id = $('.active-lang').hasClass('pt') ? 3 : 2
   setTimeout(function(){
     $.ajax({ 
       url:'{{ path('index_rgpd') }}',
       type: "POST",
-      data:'rgpdId='+id,
       success: function(data){  
         console.log(data)
         $("#myOverlay, #loader-cont").hide()

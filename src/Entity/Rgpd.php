@@ -27,6 +27,11 @@ class Rgpd
     * @Assert\NotBlank(message="Titulo *")
     */
     private $name;
+    /** 
+     * @Assert\NotBlank()
+     * @Assert\Type("Locales")
+     *@ORM\ManyToOne(targetEntity="Locales", inversedBy="rgpd") */
+    private $locales;
     
     public function getId()
     {
@@ -41,6 +46,16 @@ class Rgpd
     public function setName($name)
     {
         $this->name = $name;
+    }
+
+    public function getLocales()
+    {
+        return $this->locales;
+    }
+
+    public function setLocales(Locales $locales)
+    {
+        $this->locales = $locales;
     }
 
     public function getRgpdHtml()

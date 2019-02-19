@@ -2,21 +2,30 @@
 namespace App\Controller;
 
 use App\Entity\Rgpd;
+use App\Entity\Locales;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use App\Form\RgpdType;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class RgpdController extends AbstractController
 {
-    public function rgpd(Request $request, ValidatorInterface $validator)
-    {
-       
-        $em = $this->getDoctrine()->getManager();
 
-        //check if id is in request is so update else create new one.
+    private $session;
+    
+    public function __construct(SessionInterface $session)
+    {
+        $this->session = $session; 
+    }
+
+
+    public function rgpd(Request $request, ValidatorInterface $validator)
+
+    {
+        $em = $this->getDoctrine()->getManager();
 
         if($request->request->get('id')){
             $rgpd = $em->getRepository(Rgpd::class)->find($request->request->get('id'));
@@ -33,11 +42,18 @@ class RgpdController extends AbstractController
             $form->submit($request->request->get($form->getName()));
             
             if($form->isSubmitted()){
-                
+
+                $locales = $em->getRepository(Locales::class)->find(1);
+
+                $rgpd->setLocales($locales);
+
                 if($form->isValid()){
 
                     $em = $this->getDoctrine()->getManager();
                     $rgpds = $form->getData();
+
+                    $rgpds->setLocales($locales);
+
                     $em->persist($rgpds);
                     $em->flush();
 
@@ -50,6 +66,7 @@ class RgpdController extends AbstractController
                     $response = array(
                         'result' => 0,
                         'message' => 'fail',
+                        'is_ok' =>$form["locales"]->getData(), 
                         'data' => $this->getErrorMessages($form)
                     );
                 }
@@ -70,6 +87,19 @@ class RgpdController extends AbstractController
         return $this->render('admin/rgpd.html');
     }
 
+
+
+    public function rgpdEdit(Request $request, ValidatorInterface $validator)
+    {
+        $rgpd = $em->getRepository(Rgpd::class)->find($request->request->get('id'));
+        $form = $this->createForm(RgpdType::class, $rgpd);
+        
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+
+
+        }
+    }
 
     public function rgpdDelete(Request $request){
 
@@ -94,17 +124,17 @@ class RgpdController extends AbstractController
     public function rgpdShow(Request $request){
 
         $response = array();
-        $rgpdId = $request->request->get('rgpdId');
-        $entity = $this->getDoctrine()->getManager();
-        
-        $rgpd = $entity->getRepository(Rgpd::class)->find($rgpdId);
+
+        $em = $this->getDoctrine()->getManager(); 
+
+        $locales = $em->getRepository(Locales::class)->findOneBy(['name' => $this->session->get('_locale')->getName()]);
+
+        $rgpd = $em->getRepository(Rgpd::class)->findOneBy(['locales' => $locales]);
        
-        if (!$rgpd) {
-            $response = array('message'=>'fail', 'status' => 'Rgpd #'.$rgpdId . ' não existe.');
-        }
-        else{
-            $response = array('message'=>'success', 'name' => $rgpd->getName(), 'rgpd' => $rgpd->getRgpdHtml());
-        }
+        $response = !$rgpd ?
+            array('status' => 0, 'message' => 'Rgpd não encontrado', 'data' => null)
+            :
+            array('status' => 1, 'message' => $rgpd->getName(), 'data' => $rgpd->getRgpdHtml());
         return new JsonResponse($response);
     }
 

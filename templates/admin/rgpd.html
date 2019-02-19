@@ -11,7 +11,7 @@ textarea {color: #FFF!important}
 
 <div class="w3-row-padding">
   {% for category in rgpd%}
-  <div class="w3-col s6 m4 l3 w3-margin-bottom">
+  <div class="w3-col s12 m6 l4 w3-margin-bottom">
      <input type="hidden" id='{{category.id}}-rgpd' value="{{category.rgpdhtml}}">
     <div class="w3-card-2 w3-sand w3-border">
       <div class="w3-center w3-col s12 w3-padding-small">
@@ -60,12 +60,10 @@ textarea {color: #FFF!important}
           <i class="fa fa-check"></i> Guardar
         </button>
       </div>
-
     <input type="hidden" name="id" id="rgpd_id">
   </div>
   {{ form_end(form) }}
 </div>
-
 
 <script>
 
@@ -75,7 +73,6 @@ $('#summernote').summernote({
   height: 375,
   fontName:'Arial'
 })
-
 
 function deleteRgpdConfirm(id, n)
 {
@@ -121,7 +118,6 @@ function editRgpd(id,name){
 $('#rgpd-form').on('submit',function(e){
   e.preventDefault()
   obj=''
-  //$('.required').addClass('w3-hide')
   $('.w3-overlay').show()
   $('#rgpd_rgpdhtml').val($('#summernote').summernote('code'))
   setTimeout(function(){
