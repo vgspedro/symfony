@@ -1,0 +1,85 @@
+<style type="text/css">
+.content{bottom: 0;background: rgba(0, 0, 0, 0.5);width: 100%;position:sticky}
+.w3-black-70{background: rgba(0, 0, 0, 0.85)}
+.nanogallery_gallerytheme_dark_ngy2p .nGY2GThumbnail {
+  background: transparent;
+  border-color: transparent;
+  border-top-width: 0px;
+  border-right-width: 0px;
+  border-bottom-width: 0px;
+  border-left-width: 0px;}
+.nGY2GThumbnailImage .nGY2TnImg, .nGY2TnImg{box-shadow: 0 2px 4px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12)!important}
+.nanogallery_gallerytheme_dark_ngy2p .nGY2TnImgBack{background: transparent!important}
+.nGY2 .nGY2GThumbnailImage{background: none}
+#ngy2p .nGY2GalleryBottom{display:none}
+</style>
+<div class="w3-display-container w3-center w3-black-70" id="home" style="margin-top: 32px;padding-top:0!important">
+
+  {% if galleries %}
+  <div>
+    <div style="margin-left:14px" class="w3-padding-32" id="ngy2p" data-nanogallery2='{
+      "thumbnailHeight": 320,
+      "thumbnailWidth":  "auto",
+      "thumbnailLabel":{ "display" : false },
+      "thumbnailBorderVertical": 6,
+      "thumbnailBorderHorizontal": 6,
+      "thumbnailAlignment": "justified",
+      "galleryDisplayMode": "rows",
+      "galleryMaxRows": 2,
+      "galleryDisplayMode": "pagination",
+      "galleryLastRowFull": true,
+      "gallerySorting": "random"
+      }'>
+
+      {% for gallery in galleries %}
+        <a href="/upload/gallery/{{gallery.image}}" class="w3-card-2" data-ngthumb="/upload/gallery/{{gallery.image}}" data-ngdesc="{{gallery.namePt}}">
+        </a>
+      {% endfor %}   
+
+    </div>
+
+  {% if category %}
+  <div class="w3-left-align w3-padding w3-text-white" style="margin-top:-64px">
+      <div class="w3-row">
+        <div class="w3-col s12">
+          <h2>
+            <span class="PT">{{ category.namePt }}</span>
+            <span class="EN w3-hide">{{ category.nameEn }}</span>
+          </h2>
+          <div class="w3-col l4 m4 s0 w3-left-align w3-hide-small">
+             {% if category.adultAmount> 0 %}
+                <span class='ADULTO'>{% trans %}part_tree.adult{% endtrans %}</span>&nbsp;
+                <span>{{ category.adultAmount}}€</span>
+                <br>
+              {% else %}
+                <span class='ADULTO'>{% trans %}part_tree.adult{% endtrans %}</span>&nbsp;
+                <span>-/-</span>
+                <br>
+              {% endif %}
+              {% if category.childrenAmount > 0 %}
+                <span class='CRIANCA'>{% trans %}part_tree.children{% endtrans %}</span>&nbsp;
+                <span>{{ category.childrenAmount }}€</span>
+                <br>
+              {% else %}
+                <span class='CRIANCA'>{% trans %}part_tree.children{% endtrans %}</span>&nbsp;
+                <span>-/-</span>
+                <br>
+              {% endif %}
+          </div>
+          <div class="w3-col l4 m8 s12 w3-center w3-margin-bottom">
+
+            <span class="w3-btn w3-blue w3-center" onclick="navigation('#reservas', {{ category.id }})">
+              <i class="fa fa-calendar"></i>&nbsp;
+              <span class="GET_AVAILABLE w3-margin-left"> {% trans %}part_seven.get_available{% endtrans %}</span>
+            </span>
+          
+          </div>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+  </div>
+  {% endif %}
+ 	<!--img id="banner" class="banner-img" alt="Taruga Benagil Tours, caves, Benagil, Algarve, Portugal, sup"
+src="{{ asset('images/banner.jpg') }}"-->
+</div>

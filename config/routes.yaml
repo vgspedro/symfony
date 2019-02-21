@@ -14,6 +14,10 @@ index:
     path: /
     controller: App\Controller\HomeController::html
 
+index_info:
+    path: /info
+    controller: App\Controller\HomeController::info
+
 index_translate:
     path: /translate
     controller: App\Controller\TranslationController::translate
@@ -158,6 +162,10 @@ admin_rgpd:
 admin_rgpd_delete:
     path: /admin-easy-rgpd-delete/
     controller: App\Controller\RgpdController::rgpdDelete
+
+admin_rgpd_edit:
+    path: /admin-easy-rgpd-edit/
+    controller: App\Controller\RgpdController::rgpdEdit
 
 index_rgpd:
     path: /index-rgpd/

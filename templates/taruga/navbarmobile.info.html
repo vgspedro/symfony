@@ -1,0 +1,59 @@
+
+<nav class="w3-sidenav w3-card-2 w3-animate-left w3-hide-larg_e w3-sand" style="top:0px" id="mySidenav">
+ 
+ <div class="w3-border-top w3-border-bottom w3-right-align" style="margin-top:2px; padding: 6px 0px 10px 0px">
+ <span onclick="w3_close()" class="w3-transparent w3-margin w3-padding-4" style="cursor:pointer">
+  <i class="fa fa-2x fa-times"></i>
+ <span>
+ </div>
+
+  <a href="{{ path('index')}}#home" class='w3-padding-8 nav-text-m'>
+  <span class='RESERVAS'>{% trans %}link.Inicio{% endtrans %}</span>
+ </a>
+
+ <a href="{{ url('index') }}#precos" class='w3-margin-left w3-padding-8 nav-text-m'>
+  <span class='PRECOS'>{% trans %}link.price{% endtrans %}</span>
+ </a>
+  <a href="{{ path('index')}}#reservas" class='w3-margin-left w3-padding-8 nav-text-m'> 
+  <span class='RESERVAS'>{% trans %}link.booking{% endtrans %}</span>
+ </a>
+
+  <a href="javascript:void(0)" onclick="navigation('#home')" class="w3-padding-8 nav-text-m">
+  <span class="USEFULL_INFO">Informações Uteis</span>
+ </a>
+ <a href="javascript:void(0)" onclick="navigation('#aequipa_iii')" class='w3-margin-left w3-padding-8 nav-text-m'>
+  <span class='DOUBTS'>{% trans %}link.doubts{% endtrans %}</span>
+ </a>
+ <a href="javascript:void(0)" onclick="navigation('#aequipa_ii')" class='w3-margin-left w3-padding-8 nav-text-m'>
+  <span class='GALLERY'>{% trans %}link.gallery{% endtrans %}</span>
+ </a>
+ <a href="javascript:void(0)" onclick="navigation('#contatos')" class='w3-margin-left w3-padding-8 nav-text-m'>
+  <span class='CONTATOS'>{% trans %}link.contact{% endtrans %}</span>
+ </a>
+
+<div class="w3-border-top w3-border-bottom">
+ <li class='w3-center w3-padding' style="display: inline-flex;margin-left:34px">
+
+    {% if locales %}
+        {% for local in locales %}
+        <img style="cursor:pointer;height:36px;width:36px;margin:0px 8px" class="lang-action w3-round w3-border" src='{{local.filename}}' title="{{local.name}}" onclick="languages(this.title, {{ loop.index }})">
+        {% endfor %}
+
+    {% endif %}
+
+ </li>
+
+</div>
+
+ <li class='w3-center socials-mob'>
+  <a href="https://facebook.com/Taruga-benagil-tours-1429577477372009/" target="_blank">
+   <i class="fa fa-facebook"></i>
+  </a>
+  <a href="https://instagram.com/tarugabenagiltours/" target="_blank">
+   <i class="fa fa-instagram"></i>
+  </a>
+  <a href="https://youtube.com/channel/UCXdOWNzDhQCvrO05cekWV8A" target="_blank">
+   <i class="fa fa-youtube"></i>
+  </a>
+ </li>
+</nav>

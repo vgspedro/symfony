@@ -39,17 +39,6 @@ class GalleryType extends AbstractType
                 'label' => 'Nome (EN)*',
                 'attr' => ['class' => 'w3-input w3-border w3-white','placeholder'=>'Nome (EN)*']
             ))
-            ->add('description_pt', TextareaType::class,
-            array(
-                'required' => false,
-                'label' => 'Descrição (PT)*',
-                'attr' => ['class' => 'w3-input w3-border w3-white','placeholder'=>'Descrição (PT)*', 'rows' => 5 ]
-            ))
-            ->add('description_en', TextareaType::class, array(
-                'required' => false,
-                'label' => 'Descrição (EN)*',
-                'attr' => ['class' => 'w3-input w3-border w3-white','placeholder'=>'Descrição (EN)*', 'rows' => 5 ]
-            ))
             ->add('is_active', CheckboxType::class, array(
                 'label'    => 'Ativa?',
                 'required' => false,

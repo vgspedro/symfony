@@ -17,47 +17,24 @@ div.dataTables_length select {height: 50px}
 <header class="w3-container" style="padding-top:22px">
    <h5><b><i class="far fa-calendar-alt"></i> Reservas</b></h5>
 </header>
+
   <div class="w3-row-padding">
+
+  {% for statuses in status %}
+
     <div class="w3-col l3 m6 s6 w3-margin-bottom">
-      <div class="w3-container w3-card w3-red w3-padding" onclick="setStatusTable('PENDING')">
+      <div class="w3-container w3-card {{ statuses.color }} w3-padding w3-btn w3-block" onclick="setStatusTable('{{ statuses.action }}')">
         <div class="w3-left"><i class="far fa-hand-point-up w3-xxxlarge"></i></div>
         <div class="w3-right">
-          <h3 class="set-pending"></h3>
+          <h3 class="set-{{ statuses.name }}"></h3>
         </div>
         <div class="w3-clear"></div>
-        <h5>Pendentes</h5>
+        <h5 class="w3-left">{{ statuses.name|upper}}</h5>
       </div>
     </div>
-    <div class="w3-col l3 m6 s6 w3-margin-bottom">
-      <div class="w3-container w3-blue w3-card w3-padding" onclick="setStatusTable('CANCELED')">
-        <div class="w3-left"><i class="far fa-hand-paper w3-xxxlarge"></i></div>
-        <div class="w3-right">
-          <h3 class="set-canceled"></h3>
-        </div>
-        <div class="w3-clear"></div>
-        <h5>Canceladas</h5>
-      </div>
-    </div>
-    <div class="w3-col l3 m6 s6 w3-margin-bottom">
-      <div class="w3-container w3-green w3-card w3-padding" onclick="setStatusTable('CONFIRMED')">
-        <div class="w3-left"><i class="far fa-thumbs-up w3-xxxlarge"></i></div>
-        <div class="w3-right">
-          <h3 class="set-confirmed"></h3>
-        </div>
-        <div class="w3-clear"></div>
-        <h5>Confirmadas</h5>
-      </div>
-    </div>
-    <div class="w3-col l3 m6 s6 w3-margin-bottom">
-      <div class="w3-container w3-card w3-black w3-text-white w3-padding" onclick="setStatusTable()">
-        <div class="w3-left"><i class="far fa-hand-peace w3-xxxlarge"></i></div>
-        <div class="w3-right">
-          <h3 class="set-total"></h3>
-        </div>
-        <div class="w3-clear"></div>
-        <h5>Total</h5>
-      </div>
-    </div>
+
+  {% endfor %}
+
   </div>
 
 <div class="w3-row-padding w3-sand w3-padding-32 w3-border-top w3-border-bottom w3-large">

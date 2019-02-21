@@ -10,6 +10,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use App\Form\RgpdType;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
+use Doctrine\DBAL\DBALException;
 
 class RgpdController extends AbstractController
 {
@@ -35,15 +37,16 @@ class RgpdController extends AbstractController
         {
             $rgpd = $em->getRepository(Rgpd::class)->findAll();
             $form = $this->createForm(RgpdType::class);
+
         } 
         
+        $locales = $em->getRepository(Locales::class)->findAll();
+
         if ($request->isXmlHttpRequest() && $request->request->get($form->getName())) {
 
             $form->submit($request->request->get($form->getName()));
             
             if($form->isSubmitted()){
-
-                $locales = $em->getRepository(Locales::class)->find(1);
 
                 $rgpd->setLocales($locales);
 
@@ -81,25 +84,61 @@ class RgpdController extends AbstractController
 
         return $this->render('admin/rgpd.html',array(
             'form' => $form->createView(),
-            'rgpd' => $rgpd
+            'rgpd' => $rgpd,
+            'locales' => $locales
         ));
 
         return $this->render('admin/rgpd.html');
     }
 
 
-
     public function rgpdEdit(Request $request, ValidatorInterface $validator)
     {
-        $rgpd = $em->getRepository(Rgpd::class)->find($request->request->get('id'));
-        $form = $this->createForm(RgpdType::class, $rgpd);
+        $em = $this->getDoctrine()->getManager();
         
+        $rgpd = $em->getRepository(Rgpd::class)->find($request->request->get('id'));
+
+        $form = $this->createForm(RgpdType::class, $rgpd);
+
         $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
+            
+        if($form->isSubmitted()){
+                
+            if($form->isValid()){ 
 
+            $rgpd = $form->getData();
 
+                try {
+                    $em->persist($rgpd);
+                    $em->flush();
+
+                    $response = array(
+                        'status' => 1,
+                        'message' => 'Sucesso',
+                        'data' => 'O registo '.$rgpd->getId().' foi gravado.');
+                } 
+                catch(DBALException $e){
+
+                    $a = array("Contate administrador sistema sobre: ".$e->getMessage());
+
+                    $response = array(
+                        'status' => 0,
+                        'message' => 'fail',
+                        'data' => $a);
+                }
+            }
+            
+            else{   
+                $response = array(
+                    'result' => 0,
+                    'message' => 'fail',
+                    'data' => $this->getErrorMessages($form)
+                );
+            }
         }
+        return new JsonResponse($response);
     }
+
 
     public function rgpdDelete(Request $request){
 
@@ -115,10 +154,12 @@ class RgpdController extends AbstractController
         else{
             $entity->remove($rgpd);
             $entity->flush();
+
             $response = array('message'=>'success', 'status' => $rgpdId);
         }
         return new JsonResponse($response);
     }
+
 
 
     public function rgpdShow(Request $request){

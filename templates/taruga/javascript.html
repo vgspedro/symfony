@@ -281,7 +281,7 @@ function navigation(pos,id){
   }
 
 
-/*
+
 function myMap() {
     
   var myCenter = new google.maps.LatLng(37.0872609,-8.4263386)
@@ -316,7 +316,7 @@ google.maps.event.addListener(marker,"click",function() {
   infowindow.open(map,marker)
 }
 
-*/
+
 
 function updateTourData(){
   $('.set-visible, .wp-active').addClass('w3-hide')
@@ -491,12 +491,12 @@ function showRgpd(){
       url:'{{ path('index_rgpd') }}',
       type: "POST",
       success: function(data){  
-        console.log(data)
+        //console.log(data)
         $("#myOverlay, #loader-cont").hide()
-        if (data.message == 'success'){
+        if (data.status == 1){
           $('#modal-rgpd').show()
-          //data.name
-          //data.rgpd
+          $('.rgpd-title').html(data.message)
+          $('.rgpd-text').html(data.data)
         }        
         else {
           obj=''
@@ -565,9 +565,5 @@ $('input[name=date_card]').datetimepicker({
 
 typeof(Storage) !== "undefined" ? false : setTimeout(function(){$('#modal-no-storage').show();},1500)
 
-
-
-
-
 </script>
-<!--script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAcWwuJpAyu4XwgbPwJxexBO0fsZ2SxDk8&callback=myMap"></script-->
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAcWwuJpAyu4XwgbPwJxexBO0fsZ2SxDk8&callback=myMap"></script>

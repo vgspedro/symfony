@@ -28,9 +28,7 @@ div.dataTables_length select {height: 50px}
       <th class="w3-center">Acções</th>
       <th class="w3-center">Imagem</th>    
       <th class="w3-center">Nome PT</th>    
-      <th class="w3-center">Nome EN</th>      
-      <th class="w3-center">Descriçao PT</th>    
-      <th class="w3-center">Descriçao EN</th>     
+      <th class="w3-center">Nome EN</th>   
       <th class="w3-center">Activo</th>
       </tr>
     </thead>
@@ -48,8 +46,6 @@ div.dataTables_length select {height: 50px}
         <td class="w3-center"><img src="/upload/gallery/{{ gallery.image }}" class="w3-card" style="width:50px"></td>
         <td>{{ gallery.namePt }}</td>
         <td>{{ gallery.nameEn }}</td>
-        <td>{{ gallery.DescriptionPt }}</td>
-        <td>{{ gallery.DescriptionEn }}</td>
         <td class="w3-center">
           {% if gallery.IsActive == 1 %}
             <i class="w3-text-green w3-xlarge fas fa-check-circle"></i>
@@ -67,8 +63,6 @@ div.dataTables_length select {height: 50px}
         <td></td>
         <td></td>
         <td></td>
-        <td></td>
-        <td></td>
       </tr>
     </tfoot>
   </table>
@@ -76,18 +70,15 @@ div.dataTables_length select {height: 50px}
 </div>
 
 <script>
- /*
-tablecategory = [2,4,5]
-
-if(!localStorage.getItem("tablecategory") ){
+ 
+stored = []
+/*if(!localStorage.getItem("tablecategory") ){
   localStorage.setItem("tablecategory", JSON.stringify(tablecategory))
   stored = JSON.parse(localStorage.getItem("tablecategory"))
 }
 else
   stored = JSON.parse(localStorage.getItem("tablecategory"))
 */
-
-stored = tablecategory = []
 
 function editGallery(id){
   $('.w3-overlay').show()

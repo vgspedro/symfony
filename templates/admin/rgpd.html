@@ -19,12 +19,12 @@ textarea {color: #FFF!important}
       </div>
       <div class="w3-row">
         <div class="w3-col s6">
-          <button class="w3-btn w3-block w3-border w3-blue" onclick="editRgpd('{{category.id}}','{{category.name}}')">
+          <button class="w3-btn w3-block w3-border w3-blue btn-{{ loop.index }}" onclick="editRgpd({{category.id}},'{{category.name}}', {{category.locales.id}})">
             <i class="far fa-edit fa-fw"></i>
           </button>
         </div>
         <div class="w3-col s6">
-        <button class="w3-btn w3-block w3-border w3-red" onclick="deleteRgpdConfirm('{{ category.id}}','{{ category.name }}')">
+        <button class="w3-btn w3-block w3-border w3-red" onclick="deleteRgpdConfirm({{ category.id}},'{{ category.name }}')">
           <i class="fas fa-trash-alt"></i>
         </button>
         </div>
@@ -37,6 +37,11 @@ textarea {color: #FFF!important}
 <div class="w3-container">
   {{form_start(form, {'attr': {'id': 'rgpd-form'}})}}
   <div class="w3-row-padding w3-large w3-sand w3-border w3-padding-16">
+    <div class="w3-col s12 w3-hide">
+      {{form_label(form.locales)}}
+      {{form_widget(form.locales)}}
+    </div>
+
     <div class="w3-col s12">
       {{form_label(form.name)}}
       {{form_widget(form.name)}}
@@ -70,7 +75,7 @@ textarea {color: #FFF!important}
 $('#summernote').summernote({
   placeholder: 'Insira ....',
   tabsize: 3,
-  height: 375,
+  height: 400,
   fontName:'Arial'
 })
 
@@ -109,10 +114,11 @@ function clearRgpd(){
 } 
 
 
-function editRgpd(id,name){
+function editRgpd(id,name,locales){
 	$('#summernote').summernote('code', $('#'+id+'-rgpd').val())
   $('#rgpd_id').val(id)
   $('#rgpd_name').val(name)
+  $('#rgpd_locales').val(locales)
 }
 
 $('#rgpd-form').on('submit',function(e){
@@ -122,7 +128,8 @@ $('#rgpd-form').on('submit',function(e){
   $('#rgpd_rgpdhtml').val($('#summernote').summernote('code'))
   setTimeout(function(){
     $.ajax({  
-      url:'{{ path('admin_rgpd') }}',
+      //url:'{{ path('admin_rgpd') }}',
+      url:'{{ path('admin_rgpd_edit') }}',
       type: "POST",
       data:$('#rgpd-form').serialize(),
       success: function(data){ 
@@ -147,4 +154,6 @@ $('#rgpd-form').on('submit',function(e){
     })
   }, 500)
 })
+
+$('.btn-1').trigger('click')
 </script>

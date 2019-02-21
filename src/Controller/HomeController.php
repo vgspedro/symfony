@@ -91,7 +91,28 @@ class HomeController extends AbstractController
     }
 
 
- public function setBooking(Request $request, MoneyFormatter $moneyFormatter, \Swift_Mailer $mailer){
+    public function info(Request $request, MoneyFormatter $moneyFormatter)
+    {   
+        $em = $this->getDoctrine()->getManager();
+        $warning = $em->getRepository(Warning::class)->find(10);
+        $ua = $this->getBrowser();
+        $locale = $ua['lang'];
+        $locales = $em->getRepository(Locales::class)->findAll();
+        $gallery = $em->getRepository(Gallery::class)->findBy(['isActive' => 1],['namePt' => 'ASC']);
+        
+        return $this->render('info.html.twig', 
+            array(
+                'colors'=> $this->color(),
+                'warning' => $warning,
+                'locale' => $locale,
+                'galleries' => $gallery,
+                'locales' => $locales)
+            );
+    }
+
+
+
+    public function setBooking(Request $request, MoneyFormatter $moneyFormatter, \Swift_Mailer $mailer){
                     
         $err = array();
         $this->session->get('_locale')->getName();
@@ -119,7 +140,7 @@ class HomeController extends AbstractController
                 'status' => 0,
                 'message' => 'fields empty',
                 'data' => $err,
-                'mail' => $date_card,
+                'mail' => null,
                 'locale' => $this->session->get('_locale')->getName()
             );
             return new JsonResponse($response);
@@ -142,7 +163,7 @@ class HomeController extends AbstractController
                 'status' => 2,
                 'message' => 'invalid fields',
                 'data' => $err,
-                'mail' => $cvv,
+                'mail' => null,
                 'locale' => $this->session->get('_locale')->getName()
             );
             return new JsonResponse($response);

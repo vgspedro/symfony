@@ -1,18 +1,48 @@
 <section>
-<div class="w3-row">
- <div class="rope-1 l1 s12"></div>
-</div>
-
-<div class="w3-container bgimg-7 w3-padding-32" id="contatos">
- <div class="w3-padding-16">
-  <h2 class="w3-center">
-   <i class="fa-ta ta-4 fa-ta-contact">&nbsp;</i>
-   <span class='CONTATOS'>{% trans %}link.contact{% endtrans %}</span>
-  </h2>
+<div class="w3-container bg_img-7 w3-khaki w3-padding-16 w3-border-top" style="color: #05788d!important" id="contatos">
+ <div class="w3-padding-8">
   <div class="w3-row w3-padding-16 w3-section">
+
+
+   <h3 class="w3-center">
+    <span class='HORARIO_TXT'>{% trans %}part_five.schedule_txt{% endtrans %}</span>
+   </h3>
+
+   <div class="w3-col m6 w3-center s12 w3-container w3-padding-16">
+    <div class="w3-container">
+     <div class="info-txt">
+      <h2 class="w3-center">
+       <span class='HORARIO_TEMPO1'>{% trans %}part_five.schedule_summer{% endtrans %}</span>
+      </h2>
+      <h3 class="w3-center">
+       <span class='HORARIO_TEMPO_TXT1'>{% trans %}part_five.schedule_summer_txt{% endtrans %}</span>
+      </h3>
+     </div>
+    </div>
+   </div>
+
+   <div class="w3-col m6 w3-center s12 w3-container w3-padding-16">
+    <div class="w3-container">
+     <div class="info-txt">
+      <h2 class="w3-center">
+       <span class='HORARIO_TEMPO2'>{% trans %}part_five.schedule_winter{% endtrans %}</span>
+      </h2>
+      <h3 class="w3-center">
+       <span class='HORARIO_TEMPO_TXT2'>{% trans %}part_five.schedule_winter_txt{% endtrans %}</span>
+      </h3>
+     </div> 
+    </div>
+   </div>
+
+
+
    <h3 class="w3-center">
     <span class='CONTATOS_TXT'>{% trans %}part_six.contact_txt{% endtrans %}</span>
    </h3>
+
+
+
+
 
    <div class="w3-col m6 w3-center s12 w3-container w3-padding-8">
     <div class="w3-container">
@@ -52,9 +82,10 @@
   </div>
 
  </div>
-</div>
 
-<div class="w3-row">
- <div class="rope-2 l1 s12"></div>
+<a style="position:absolute;margin-top:-32px;z-index:1" target="_blank" href='https://www.google.pt/maps/place/Taruga+Tours/@37.0877204,-8.4284601,16.33z/data=!4m5!3m4!1s0x0:0xf0cf03939dd0825a!8m2!3d37.0873492!4d-8.4263098'>
+    <img class="qr-code FIND_US w3-btn" title="{% trans %}part_one.find_us{% endtrans %}" src="{{ asset('images/qr.jpg') }}"/>
+    </a>
+
 </div>
 </section>

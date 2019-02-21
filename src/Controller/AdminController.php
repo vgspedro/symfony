@@ -172,7 +172,13 @@ class AdminController extends AbstractController
 
     public function adminBooking(Request $request)
     {
-        return $this->render('admin/booking.html');
+        $status[] = array('color' =>'w3-red', 'name' => 'pending', 'action' => 'pending');
+        $status[] = array('color' =>'w3-blue', 'name' => 'canceled', 'action' => 'canceled');
+        $status[] = array('color' =>'w3-green', 'name' => 'confirmed', 'action' => 'confirmed');
+        $status[] = array('color' =>'w3-black', 'name' => 'total', 'action' => '');
+
+
+        return $this->render('admin/booking.html',array('status' => $status));
     }
 
 

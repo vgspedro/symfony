@@ -28,17 +28,6 @@ class Gallery
      * @ORM\Column(type="string", length=50)
      */
     private $nameEn;
-    /**
-     * @Assert\NotBlank(message="DESCRIPTION_PT")
-     * @ORM\Column(type="string", length=350)
-     */
-    private $descriptionPt;
-
-    /**
-    * @Assert\NotBlank(message="DESCRIPTION_EN")
-     * @ORM\Column(type="string", length=350)
-     */
-    private $descriptionEn;
 
     /** @ORM\Column(type="boolean", name="is_active", options={"default":0}) */
     private $isActive;
@@ -92,25 +81,4 @@ class Gallery
     {
         $this->nameEn = $nameEn;
     }
-
-    public function getDescriptionPt()
-    {
-        return $this->descriptionPt;
-    }
-
-    public function setDescriptionPt($descriptionPt)
-    {
-        $this->descriptionPt = $descriptionPt;
-    }
-
-    public function getDescriptionEn()
-    {
-        return $this->descriptionEn;
-    }
-
-    public function setDescriptionEn($descriptionEn)
-    {
-        $this->descriptionEn = $descriptionEn;
-    }
-
 }

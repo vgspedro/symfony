@@ -5,16 +5,8 @@
 </style>
 
 <section>
-  <div class="w3-row">
-    <div class="rope-1 l1 s12"></div>
-  </div>
-
   <div class="w3-container bgimg-6 w3-padding-32" id="precos">
     <div class="w3-padding-8 w3-content">
-      <h2 class="w3-center">
-        <i class="fa-ta ta-4 fa-ta-euro">&nbsp;</i>
-        <span class='PRECOS'>{% trans %}link.price{% endtrans %}</span>
-      </h2>
       {% if categories %}
 
       <div class="w3-cell-row">
@@ -26,8 +18,8 @@
           </p>
           <div class="w3-display-container">
           <img class="w3-card-4" src="/upload/category/{{ category.image }}" onerror="this.src='/upload/category/no-image.png'" style="width:100%">
-          <div class="w3-display-topright w3-center w3-card-4" style="margin:-4px">
-            <span class="w3-tag">Aprox: {{ category.duration}} Min.</span>
+          <div class="w3-display-topright w3-center w3-opacity-min w3-card-4" style="margin:-4px">
+            <span class="w3-tag w3-padding-small">Aprox: {{ category.duration}} Min.</span>
           </div>
         </div>
           <p class="">
@@ -73,8 +65,4 @@
       {% endif %}
       </div>
     </div>
-
-  <div class="w3-row">
-    <div class="rope-2 l1 s12"></div>
-  </div>
 </section>

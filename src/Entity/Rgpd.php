@@ -27,9 +27,7 @@ class Rgpd
     * @Assert\NotBlank(message="Titulo *")
     */
     private $name;
-    /** 
-     * @Assert\NotBlank()
-     * @Assert\Type("Locales")
+    /**
      *@ORM\ManyToOne(targetEntity="Locales", inversedBy="rgpd") */
     private $locales;
     

@@ -12,7 +12,7 @@
 </style>
 
 
-<section>
+<section class="w3-border-top" id="aequipa_ii">
   {% if galleries %}
   <div class="bgimg-2">
     <div style="margin-left:14px" class="w3-padding-32" id="ngy2p" data-nanogallery2='{
@@ -27,19 +27,14 @@
       "galleryDisplayMode": "pagination",
       "galleryLastRowFull": true,
       "gallerySorting": "random"
-      }' class="w3-row-padding w3-padding-16">
+      }'>
 
       {% for gallery in galleries %}
-        <a href="/upload/gallery/{{gallery.image}}" class="team-images w3-card-2" data-ngthumb="/upload/gallery/{{gallery.image}}" data-ngdesc="{{gallery.descriptionPt}}">
-          <font class="PT">{{gallery.namePt}}</font>
-          <font class="EN w3-hide">{{gallery.nameEn}}</font>
-          </a>
+        <a href="/upload/gallery/{{gallery.image}}" class="team-images w3-card-2" data-ngthumb="/upload/gallery/{{gallery.image}}" data-ngdesc="{{gallery.namePt}}">
+        </a>
       {% endfor %}   
 
     </div>
-  </div>
-  <div class="w3-row">
-    <div class="rope-2 l1 s12"></div>
   </div>
   {% endif %}
 <section>

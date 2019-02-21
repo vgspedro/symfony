@@ -10,16 +10,6 @@
  </div>
 </div>
 
-<div id="modal01" class="w3-modal w3-black" onclick="$(this).hide()" style="z-index:999999">
-   <span class="w3-closebtn w3-text-white w3-opacity w3-hover-opacity-off w3-xlarge w3-container w3-display-topright">
-    <i class="fa fa-remove"></i>
-  </span>
-  <div class="w3-modal-content w3-animate-zoom w3-center w3-transparent w3-padding-64">
-    <img id="img01" class="w3-image">
-     <p id="caption" class="w3-opacity w3-large"></p>
-  </div>
-</div>
-
 <div id="modal-resolution-center" class="w3-modal" style="padding-top:100px" onclick="$(this).hide()">
   <span class="w3-closebtn w3-text-white w3-opacity w3-hover-opacity-off w3-xlarge w3-container w3-display-topright">
     <i class="fa fa-remove"></i>
@@ -31,7 +21,7 @@
   </div>
 </div>
 
-<div id="modal-available-dates" class="w3-modal" style="z-index:999999;padding-top:12px;padding-bottom:32px">
+<div id="modal-available-dates" class="w3-modal" style="z-index:9999;padding-top:12px;padding-bottom:32px">
   <div class="w3-modal-content w3-animate-zoom" style="max-width:450px">
     <div class="w3-container w3-blue w3-padding">
       <span onclick="closeModalEvents()" class="w3-padding w3-button w3-display-topright">
@@ -78,7 +68,7 @@
 
 <!-- ERROR MODAL -->
 
-<div id="modal-error" class="w3-modal" style="z-index: 9999999;padding-top:60px; padding-bottom: 32px">
+<div id="modal-error" class="w3-modal" style="z-index:9999;padding-top:60px; padding-bottom: 32px">
   <div class="w3-modal-content w3-animate-zoom" style="max-width:400px">
     <div class="w3-col s12">
       <div class="w3-row">
@@ -101,7 +91,7 @@
 
 <!-- SUCCESS MODAL -->
 
-<div id="modal-success" class="w3-modal" style="z-index:9999999;padding-top:60px; padding-bottom: 32px">
+<div id="modal-success" class="w3-modal" style="z-index:9999;padding-top:60px; padding-bottom: 32px">
   <div class="w3-modal-content w3-animate-zoom" style="max-width:400px">
     <div class="w3-col s12">
       <div class="w3-row">
@@ -126,7 +116,7 @@
 
 <!--REQUIRED FIELDS  MODAL -->
 
-<div id="modal-info" class="w3-modal" style="z-index: 9999999;padding-top:60px; padding-bottom: 32px">
+<div id="modal-info" class="w3-modal" style="z-index:9999;padding-top:60px; padding-bottom: 32px">
   <div class="w3-modal-content w3-animate-zoom" style="max-width:400px">
     <div class="w3-col s12">
       <div class="w3-row">
@@ -169,7 +159,7 @@
 </div>
 
 
-<div id="modal-no-stock" class="w3-modal" style="z-index: 9999999;padding-top:60px; padding-bottom: 32px">
+<div id="modal-no-stock" class="w3-modal" style="z-index:9999;padding-top:60px; padding-bottom: 32px">
   <div class="w3-modal-content w3-animate-zoom" style="max-width:400px">
     <div class="w3-col s12">
       <div class="w3-row">
@@ -192,7 +182,7 @@
 
 <!--SESSION END MODAL -->
 
-<div id="modal-check" class="w3-modal" style="z-index: 9999999;padding-top:60px; padding-bottom: 32px">
+<div id="modal-check" class="w3-modal" style="z-index:9999;padding-top:60px; padding-bottom: 32px">
   <div class="w3-modal-content w3-animate-zoom" style="max-width:400px">
     <div class="w3-col s12">
       <div class="w3-row">
@@ -213,7 +203,7 @@
   </div>
 </div>
 
-<div id="modal-no-storage" class="w3-modal" style="z-index: 9999999;padding-top:60px; padding-bottom: 32px">
+<div id="modal-no-storage" class="w3-modal" style="z-index:9999;padding-top:60px; padding-bottom: 32px">
   <div class="w3-modal-content w3-animate-zoom" style="max-width:400px">
     <div class="w3-col s12">
       <div class="w3-row">
@@ -229,6 +219,17 @@
           <div class="w3-margin-bottom"></div>
         </div>
       </div>
+    </div>
+  </div>
+</div>
+
+<div id="modal-rgpd" class="w3-modal" style="padding-top:100px;z-index:9999" onclick="$(this).hide()">
+  <div class="w3-modal-content w3-animate-zoom w3-white w3-padding-32 w3-padding-small w3-margin-bottom">
+      <span class="w3-xlarge w3-container w3-btn w3-white w3-display-topright" onclick="$('#modal-rgpd').hide()">
+    <i class="fa fa-times"></i>
+  </span>
+    <h2 class="w3-center rgpd-title"></h2>
+    <div class="w3-white w3-padding-32 w3-padding-small w3-border-top rgpd-text">
     </div>
   </div>
 </div>
