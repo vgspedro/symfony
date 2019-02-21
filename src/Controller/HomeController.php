@@ -37,6 +37,8 @@ class HomeController extends AbstractController
 
     public function html(Request $request, MoneyFormatter $moneyFormatter)
     {   
+        $id = !$request->query->get('id') ? 'home': $request->query->get('id');
+
         $em = $this->getDoctrine()->getManager();
 
         $ua = $this->getBrowser();
@@ -86,13 +88,17 @@ class HomeController extends AbstractController
                 'category' => $cH,
                 'galleries' => $gallery,
                 'locale' => $locale,
-                'locales' => $locales)
+                'locales' => $locales, 
+                'id' => '#'.$id
+                )
             );
     }
 
 
-    public function info(Request $request, MoneyFormatter $moneyFormatter)
+    public function info($id = null, Request $request)
     {   
+        $id = !$request->query->get('id') ? 'home': $request->query->get('id');
+        
         $em = $this->getDoctrine()->getManager();
         $warning = $em->getRepository(Warning::class)->find(10);
         $ua = $this->getBrowser();
@@ -106,7 +112,9 @@ class HomeController extends AbstractController
                 'warning' => $warning,
                 'locale' => $locale,
                 'galleries' => $gallery,
-                'locales' => $locales)
+                'locales' => $locales,
+                'id' => '#'.$id
+                )
             );
     }
 

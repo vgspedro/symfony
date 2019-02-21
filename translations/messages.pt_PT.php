@@ -131,7 +131,11 @@ return array(
     'confirm' => 'Confirmar',
     'fill_all' => 'Preencha todos os seguintes campos',
     'wp_set_no_cc_data' => 'Garantia pagamento obrigatório, mas os dados do Cartão estão em falta',
-    'date_card_invalid' => 'Data Expiração Inválida'
+    'date_card_invalid' => 'Data Expiração Inválida',
+    'doubts' => 'Dúvidas',
+    'home' =>'Inicio',
+    'usefull_info' =>'Informações Uteis',
+    'gallery' => 'Galeria'
 ),
 
 'arbitrary' => array(

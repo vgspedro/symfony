@@ -15,7 +15,7 @@ index:
     controller: App\Controller\HomeController::html
 
 index_info:
-    path: /info
+    path: /info/
     controller: App\Controller\HomeController::info
 
 index_translate:

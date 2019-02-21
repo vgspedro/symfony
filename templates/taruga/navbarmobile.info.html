@@ -7,25 +7,30 @@
  <span>
  </div>
 
-  <a href="{{ path('index')}}#home" class='w3-padding-8 nav-text-m'>
-  <span class='RESERVAS'>{% trans %}link.Inicio{% endtrans %}</span>
- </a>
 
- <a href="{{ url('index') }}#precos" class='w3-margin-left w3-padding-8 nav-text-m'>
-  <span class='PRECOS'>{% trans %}link.price{% endtrans %}</span>
- </a>
-  <a href="{{ path('index')}}#reservas" class='w3-margin-left w3-padding-8 nav-text-m'> 
-  <span class='RESERVAS'>{% trans %}link.booking{% endtrans %}</span>
- </a>
+  <form action="{{ path('index') }}" method="get" class='w3-padding-8 w3-border-bottom' onclick="$(this).trigger('submit')">
+    <input type="hidden" name="id" value="home">
+    <span class='HOME w3-medium nav-text-m w3-margin-left' style="text-transform:uppercase">{% trans %}info.home{% endtrans %}</span>
+  </form>
 
-  <a href="javascript:void(0)" onclick="navigation('#home')" class="w3-padding-8 nav-text-m">
-  <span class="USEFULL_INFO">Informações Uteis</span>
+  <form action="{{ path('index') }}" method="get" class='w3-padding-8 w3-margin-left' onclick="$(this).trigger('submit')">
+    <input type="hidden" name="id" value="precos">
+    <span class='PRECOS nav-text-m w3-margin-left'>{% trans %}link.price{% endtrans %}</span>
+ </form>
+  
+  <form action="{{ path('index') }}" method="get" class='w3-padding-8 w3-margin-left' onclick="$(this).trigger('submit')">
+    <input type="hidden" name="id" value="reservas">
+    <span class='RESERVAS nav-text-m w3-margin-left'>{% trans %}link.booking{% endtrans %}</span>
+  </form>
+
+  <a href="javascript:void(0)" onclick="navigation('#home')" class="w3-padding-8 nav-text-m w3-khaki w3-border-top w3-border-bottom">
+  <span class="USEFULL_INFO w3-medium" style="text-transform:uppercase">{% trans %}info.usefull_info{% endtrans %}</span>
  </a>
  <a href="javascript:void(0)" onclick="navigation('#aequipa_iii')" class='w3-margin-left w3-padding-8 nav-text-m'>
-  <span class='DOUBTS'>{% trans %}link.doubts{% endtrans %}</span>
+  <span class='DOUBTS'>{% trans %}info.doubts{% endtrans %}</span>
  </a>
  <a href="javascript:void(0)" onclick="navigation('#aequipa_ii')" class='w3-margin-left w3-padding-8 nav-text-m'>
-  <span class='GALLERY'>{% trans %}link.gallery{% endtrans %}</span>
+  <span class='GALLERY'>{% trans %}info.gallery{% endtrans %}</span>
  </a>
  <a href="javascript:void(0)" onclick="navigation('#contatos')" class='w3-margin-left w3-padding-8 nav-text-m'>
   <span class='CONTATOS'>{% trans %}link.contact{% endtrans %}</span>

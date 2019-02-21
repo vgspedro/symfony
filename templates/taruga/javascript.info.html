@@ -11,6 +11,45 @@ l = '{{locale}}' == 'pt-PT' ? 'pt_PT' : 'en_EN'
 
 languages(l,t)
 
+//var video = document.getElementById("video")
+var video_full = document.getElementById("video_full")
+//var btn = document.getElementById("video_btn")
+
+var xhr = new XMLHttpRequest()
+xhr.open('GET', '{{ asset('videos/bg.mp4') }}', true)
+xhr.responseType = 'blob'
+xhr.onload = function(e) {
+  if (this.status == 200) {
+    var myBlob = this.response
+    var vid = (window.webkitURL || window.URL).createObjectURL(myBlob)
+    //var banner = document.getElementById("banner")
+    video_full.src = vid
+    //video.src = vid
+    videoLoaded()
+   }
+  }
+
+xhr.send()
+
+function videoLoaded(){
+  setTimeout(function(){
+    //banner.classList.add('w3-hide')
+    video_full.classList.remove('w3-hide')
+    //btn.classList.remove('w3-hide')
+  },1500)
+}
+
+function mobilePlayVideo() {
+  if (video_full.paused) {
+    video_full.play()
+    $('#mobile').hasClass('w3-show') ? $('#mobile').remove() : false
+    btn.innerHTML = '<i class="fa fa-pause"></i>'
+  } else {
+    video_full.pause()
+    btn.innerHTML = '<i class="fa fa-play"></i>'
+  }
+}
+
     window.addEventListener("load", function(){
         window.cookieconsent.initialise({
             "palette": {
@@ -243,6 +282,44 @@ function navigation(pos,id){
   if (id)
     $('select[name=category]').val(id)
   }
+
+
+
+function myMap() {
+    
+  var myCenter = new google.maps.LatLng(37.0872609,-8.4263386)
+  var mapCanvas = document.getElementById("map")
+  var mapOptions = {
+    center: myCenter,
+    scrollwheel: false,
+    draggable: false,    
+    zoom: 13,
+    panControl: true,
+    zoomControl: true,
+    mapTypeControl: false,
+    scaleControl: false,
+    streetViewControl: false,
+    overviewMapControl: false,
+    rotateControl: false,
+  }
+
+  var map = new google.maps.Map(mapCanvas, mapOptions)
+
+  var marker = new google.maps.Marker({position:myCenter})
+
+  marker.setMap(map)
+
+google.maps.event.addListener(marker,"click",function() {
+  map.setZoom(17)
+  map.setCenter(marker.getPosition())
+  })
+  var infowindow = new google.maps.InfoWindow({
+    content: "Taruga Tours"
+  })
+  infowindow.open(map,marker)
+}
+
+
 
 function updateTourData(){
   $('.set-visible, .wp-active').addClass('w3-hide')
@@ -492,3 +569,4 @@ $('input[name=date_card]').datetimepicker({
 typeof(Storage) !== "undefined" ? false : setTimeout(function(){$('#modal-no-storage').show();},1500)
 '{{ id }}' != '#home' ?  setTimeout(function(){navigation('{{id}}');},1000) : false
 </script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAcWwuJpAyu4XwgbPwJxexBO0fsZ2SxDk8&callback=myMap"></script>
