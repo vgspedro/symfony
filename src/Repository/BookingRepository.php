@@ -13,7 +13,24 @@ class BookingRepository extends ServiceEntityRepository
         parent::__construct($registry, Booking::class);
     }
 
-    
+    /*
+    get the clients with credit card that pass 15 days after the event
+    */
+    public function getClientCreditCardData($deadline){
+        $dql = 'SELECT c, b
+            FROM App\Entity\Booking b
+            JOIN b.client c
+            WHERE c.cardNr IS NOT NULL 
+            AND c.cardNr <> :empty
+            AND b.dateEvent <= :end';
+        
+        $query = $this->getEntityManager()->createQuery($dql)
+          ->setParameter('end', $deadline)
+          ->setParameter('empty','');
+        
+        return $query->getResult();
+    }
+
     public function dashboardValues()
     {
         $today = new \Datetime('now');
@@ -50,7 +67,6 @@ class BookingRepository extends ServiceEntityRepository
         return array('day0' => $day0, 'day1' => $day1, 'total' => $dashRowTree); 
     }
   
-
 
     public function bookingFilter($start, $end){
 
