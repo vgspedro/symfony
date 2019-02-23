@@ -159,6 +159,37 @@
 </div>
 
 
+<div id="modal-delete-gallery" class="w3-modal" style="z-index: 9999999;padding-top: 12px; padding-bottom: 32px">
+  <div class="w3-modal-content w3-animate-zoom" style="max-width:400px">
+    <div class="w3-container w3-red w3-padding">
+      <span onclick="$('#modal-delete-gallery').hide()" class="w3-padding w3-button w3-display-topright">
+        <i class="w3-xlarge fa fa-times"></i>
+      </span>
+      <h2>
+        <i class="fas fa-exclamation-circle"></i>
+        <span>Apagar ?<input type="hidden" id="delete-id"></span>
+      </h2>
+    </div>
+    <div class="w3-container w3-padding" id="delete-gallery">
+    </div>
+    <div class="w3-row-padding w3-xlarge w3-padding-large w3-border-top">
+      <div class="w3-col s6">
+        <span style="padding: 0 8px" class="w3-block w3-border w3-btn" onclick="$('#modal-delete-gallery').hide()">
+          <i class="fa fa-times"></i>
+        </span>
+      </div>
+        <div class="w3-col s6">
+        <span style="padding: 0 8px" class="w3-red w3-block w3-border w3-btn" onclick="deleteGallery($('#delete-id').val())">
+        <i class="fas fa-trash-alt"></i>
+      </span>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
 <div id="modal-edit-stock" class="w3-modal" style="z-index:9999999;padding-top: 12px;padding-bottom:32px">
   <div class="w3-modal-content w3-animate-zoom" style="max-width:450px">
       <div class="w3-container w3-blue w3-padding">

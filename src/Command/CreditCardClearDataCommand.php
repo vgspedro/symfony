@@ -7,15 +7,22 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use App\Entity\Booking;
 use App\Entity\Client;
+use Doctrine\ORM\EntityManagerInterface;
 
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-
-class CreditCardClearDataCommand extends ContainerAwareCommand
+class CreditCardClearDataCommand extends Command
 {
+
+    private $entityManager;
+
+    public function __construct(EntityManagerInterface $entityManager)
+    {
+        $this->entityManager = $entityManager;
+
+        parent::__construct();
+    }
+
     protected function configure()
     {
-    
-        $date = new \DateTime('now');
         $this->setName('app:clear-card-info')
         ->setDescription('Execute to clear credit card data from user after 15 days of the event taken place.')
         ->setHelp("Clear the Client fields");
@@ -41,20 +48,17 @@ class CreditCardClearDataCommand extends ContainerAwareCommand
 
         $deadline = \DateTime::createFromFormat('U', ($now->format('U') - $interval));
 
-        $doctrine = $this->getContainer()->get('doctrine');
-        $em = $doctrine->getEntityManager();
-        $bookings = $em->getRepository(Booking::class)->getClientCreditCardData($deadline->format('Y-m-d'));
+        $bookings = $this->entityManager->getRepository(Booking::class)->getClientCreditCardData($deadline->format('Y-m-d'));
 
         //CHECK IF THE EVENT HAS PASS 15 DAYS THAN TODAY
         //ON BOOKINGS WITH WARRANTY PAYMENT WE MUST DELETE THE CREDIT CARD NR
-
         if ($bookings){
             foreach ($bookings as $booking){
                 $booking->getClient()->setCardNr('');
 
-                $em->persist($booking);
-
-                $em->flush();
+                $this->entityManager->persist($booking);
+                
+                $this->entityManager->flush();
             }
         }
         // outputs a message followed by a "\n"

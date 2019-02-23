@@ -83,7 +83,7 @@
 
       <div class="w3-col l3 m6 s12">
         <label class="TELEPHONE w3-small w3-text-red">{% trans %}part_seven.telephone{% endtrans %}</label>
-        <input type="number" name="telephone" class="w3-input TELEPHONE" placeholder="{% trans %}part_seven.telephone{% endtrans %}">
+        <input type="tel" name="telephone" class="w3-input TELEPHONE" placeholder="{% trans %}part_seven.telephone{% endtrans %}">
       </div>
 
       <div class="w3-col l3 m6 s12">
@@ -107,19 +107,50 @@
 
       <div class="w3-col l2 m5 s12">
         <label class="CREDIT_CARD_DATE w3-small w3-text-red">{% trans %}info.date_credit_card{% endtrans %}</label>
-        <div style="position:relative">
-          <input type="text" name="date_card" readonly class="w3-input CREDIT_CARD_DATE" placeholder="{% trans %}info.date_credit_card{% endtrans %}">
-        </div>
+          <input type="text" name="date_card" class="w3-input" placeholder="MM/YYYY">
       </div>
 
-      <div class="w3-col l4 m7 s12">
+      <div class="w3-col l4 m8 s12">
+
         <label class="CREDIT_CARD_NR w3-small w3-text-red">{% trans %}info.credit_card_nr{% endtrans %}</label>
-        <input type="number" name="card_nr" class="w3-input CREDIT_CARD_NR" placeholder="{% trans %}info.credit_card_nr{% endtrans %}">
+        <input type="text" name="card_nr" class="w3-input CREDIT_CARD_NR" placeholder="{% trans %}info.credit_card_nr{% endtrans %}">
+
+        <div class="w3-right" style="margin-top:-54px">
+          <div class="w3-left icon icon-unknown w3-grayscale-min w3-opacity-min">
+            <i class="fa fa-credit-card"></i>
+          </div>
+          <div class="w3-left icon-amex icon w3-hide">
+            <i class="fa fa-cc-amex w3-text-blue"></i>
+          </div>
+          <div class="w3-left icon-visa icon w3-hide">
+            <i class="fa fa-cc-visa  w3-text-indigo"></i>
+          </div>
+          <div class="w3-left icon-diners icon w3-hide">
+            <i class="fa fa-cc-diners-club w3-text-blue"></i>
+          </div>
+          <div class="w3-left icon-mastercard icon w3-hide">
+           <i class="fa fa-cc-mastercard w3-text-orange"></i>
+          </div>
+          <div class="w3-left icon-jcb icon w3-hide">
+            <i class="fa fa-cc-jcb w3-text-dark-grey"></i>
+          </div>
+          <div class="w3-left icon-discover icon w3-hide">
+            <i class="fa fa-cc-discover w3-text-orange"></i>
+          </div>
+          <div class="w3-left icon-maestro icon w3-hide">
+            <img src="{{ asset('images/maestro.png') }}" class="cc-img"></i>
+          </div>
+          <div class="w3-left icon-uatp icon w3-hide">
+            <img src="{{ asset('images/uatp.png') }}" class="cc-img"></i>
+          </div>
+
+        </div>
+      
       </div>
 
-      <div class="w3-col l2 m5 s12">
+      <div class="w3-col l2 m4 s12">
         <label class="w3-small w3-text-red">CVV *</label>
-        <input type="number" name="cvv" class="w3-input" placeholder="CVV *">
+        <input type="number" max="999" maxlength="3" name="cvv" class="w3-input" placeholder="CVV *">
       </div>
     </div>
 
@@ -167,3 +198,10 @@
   
 </div>
 </section>
+
+<script>
+
+
+
+</script>
+

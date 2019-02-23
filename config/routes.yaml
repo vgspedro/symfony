@@ -127,7 +127,7 @@ admin_available_create:
 
 admin_available_list:
     path: /admin-available-list/
-    controller: App\Controller\AvailableController::adminListAvailable
+    controller: App\Controller\AvailableController::adminAvailableList
 
 admin_available_edit:
     path: /admin-available-edit/

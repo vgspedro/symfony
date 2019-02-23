@@ -34,7 +34,7 @@ div.dataTables_length select {height: 50px}
     </thead>
     <tbody>
       {% for gallery in galleries%}
-       <tr>
+       <tr id='g-{{ gallery.id}}'>
         <td>
            <button class="w3-btn w3-border w3-blue" onclick="editGallery({{ gallery.id}})">
             <i class="far fa-edit fa-fw"></i>
@@ -115,33 +115,34 @@ function deleteGalleryConfirm(id,n){
 function deleteGallery(id){
   $('.w3-overlay').show()
   setTimeout(function(){
-  $.ajax({  
-    url:'{{ path('admin_gallery_delete') }}',
-    type: "POST",
-    data:'id='+id,
-    success: function(data){
-      $('.w3-overlay').hide()
-      //console.log(data)
-      if (data.message == 'success'){
-        ajaxUpload('gallery-list')
-        $('#modal-delete-gallery').hide()
+    $.ajax({  
+      url:'{{ path('admin_gallery_delete') }}',
+      type: "POST",
+      data:'id='+id,
+      success: function(data){
+        $('.w3-overlay').hide()
+        if (data.status == 1){
+          $('#modal-delete-gallery').hide()
+          $('#g-'+data.message).remove()
+        }
+      },
+      error:function(data){
+        $('.w3-overlay').hide()
+        $('#modal-error').show()
       }
-    },
-    error:function(data){
-      $('.w3-overlay').hide()
-      $('#modal-error').show()
-    }
-  })
-}, 500)
+    })
+  }, 500)
 }
+
 
 $(function(){
 
-table = $('#dataTable').DataTable({
-        dom: 'lBfrtip',
-        order: [ 3, "ASC" ],
-        buttons: [
-        {
+
+  table = $('#dataTable').DataTable({
+    dom: 'lBfrtip',
+    order: [ 3, "ASC" ],
+    buttons: [
+      {
         extend:    'excelHtml5',
         text:      '<i class="far fa-file-excel"></i>',
         titleAttr: 'Excel',
@@ -191,6 +192,7 @@ table = $('#dataTable').DataTable({
           //"searchable": false
         }
     ],
+    "pageLength": 25,
     "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
       responsive: true,
       searching: true,

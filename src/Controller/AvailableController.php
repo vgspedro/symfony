@@ -8,10 +8,10 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Doctrine\DBAL\DBALException;
 
 class AvailableController extends AbstractController
 {
-
 
     public function adminAvailable(Request $request)
     {
@@ -40,8 +40,6 @@ class AvailableController extends AbstractController
         ));
     }
 
-
-
     public function adminAvailableCreate(Request $request){
 
         $em = $this->getDoctrine()->getManager();
@@ -60,6 +58,7 @@ class AvailableController extends AbstractController
         $eventStart = \DateTime::createFromFormat('d/m/Y H:i', $request->request->get('startDate').' '.$request->request->get('event'));
         
         $s = explode(":",$category->getDuration());
+
         $seconds = (int)$s[0]*3600 + (int)$s[1]*60;
         //duration of event
         $interval = \DateTime::createFromFormat('U', ($eventStart->format('U') + $seconds));
@@ -113,7 +112,7 @@ class AvailableController extends AbstractController
 
                 $response = array(
                     'status' => 0,
-                    'message' => 'No periodo temporal inserido, já existe pelo menos 1 disponbilidade criada, escolha outra hora!',
+                    'message' => 'No periodo temporal inserido, já existe pelo menos 1 disponibilidade criada, escolha outra hora!',
                     'data' => null);
                 return new JsonResponse($response);
             
@@ -164,20 +163,18 @@ class AvailableController extends AbstractController
      * @param int $productId
      * @param Request $request     
      */
-    public function adminListAvailable(Request $request)
+    public function adminAvailableList(Request $request)
     {       
         $em = $this->getDoctrine()->getManager();
         
-        $categoryId = $request->request->get('category') ? $request->request->get('category') : null;
-        $startDate = $request->request->get('start');
-        $endDate = $request->request->get('end');
-        
-        if($categoryId)
-            $category = $em->getRepository(Category::class)->find($categoryId);
+        $start = \DateTime::createFromFormat('U', $request->query->get('start'));
 
-        if(!$categoryId)
-            $availables = $em->getRepository(Available::class)->findAll();
-        
+        $end = \DateTime::createFromFormat('U', $request->query->get('end'));
+
+        $categories = $em->getRepository(Category::class)->findAll();
+
+        $availables = $em->getRepository(Available::class)->findAvailableFromInterval($start, $end);
+
         $data_events = array();
         
         $data_resources = array();
@@ -188,16 +185,16 @@ class AvailableController extends AbstractController
 
         $counter = 0;
 
-        foreach ($availables as $available) {
-            if(!$id || $id != $available->getCategory()->getId()){
-                $counter++;    
-                $id = $available->getCategory()->getId(); 
-                $data_resources[] = array(
-                'id' => $available->getCategory()->getId(),
-                'title' => $available->getCategory()->getNamePt(),
+        foreach ($categories as $category) {
+            $counter++;
+            $data_resources[] = array(
+                'id' => $category->getId(),
+                'title' => $category->getNamePt(),
                 'eventColor' => $rand_color[$counter]
-                );
-            }
+            );
+        }
+
+        foreach ($availables as $available) {
 
             $finalEnd = str_replace(' ','T',$available->getDatetimeEnd()->format('Y-m-d H:i:s'));
             $finalStart = str_replace(' ','T',$available->getDatetimeStart()->format('Y-m-d H:i:s'));
@@ -221,18 +218,33 @@ class AvailableController extends AbstractController
         
         $available = $em->getRepository(Available::class)->find($request->request->get('id'));
 
+        if(!$available)
+            $response = array(
+                'status' => 0,
+                'message' => 'Disponibilidade não encontrada!',
+                'data' => null);
+
         $available->setLotation($request->request->get('lotation'));
         $available->setStock($request->request->get('stock'));
 
-        $em->persist($available);
-        $em->flush();  
+        try {
+            $em->persist($available);
+            $em->flush();  
 
-        $response = array(
-            'status' => 1,
-            'message' => 'ok',
-            'data' => $request->request->get('category'));
+            $response = array(
+                'status' => 1,
+                'message' => 'success',
+                'data' => $available->getId());
 
-        
+        } catch (Exception $e) {
+       
+            $response = array(
+                'status' => 0,
+                'message' => 'Exception error',
+                'data' => $e->getMessage().' '.$available->getId()
+                );
+        }
+
         return new JsonResponse($response);
    }
 
@@ -243,7 +255,7 @@ class AvailableController extends AbstractController
         $available = $em->getRepository(Available::class)->find($request->request->get('id'));
 
         if ($available->getLotation() == $available->getStock()){
-            $entityManager->remove($product);
+            $entityManager->remove($available);
             $entityManager->flush();
 
             $response = array(

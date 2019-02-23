@@ -27,16 +27,32 @@ input, select, textarea {color: #000!important}
 .fc-center h2{font-size: 23px}
 .fc-time-grid-event{cursor: pointer}
 .fc-license-message{display: none!important}
+.fa, .far, .fas {font-family: Font Awesome\ 5 Free!important}
 </style>
 
 <script>
 
-function getResources() {
+
+var obj =''
+
+function getResources(t) {
+
+  var d = new Date()
+  var start = d.getTime()
+  var end = d.getTime()+86400*2
+  var template = ''
+  
   $.ajax({
     url: '{{ path("admin_available_list") }}',
+    data:'start='+start+'&end='+end,
     dataType: 'json',
     success: function(data) {
       startCalendar(data)
+
+      for (var k in data.resources)
+        template += '<span class="w3-padding-small w3-border" style="width:25%;background-color:'+data.resources[k].eventColor+';color:#FFF">'+data.resources[k].title+'</span>'
+
+      $('#legend').html(template)
     }
   })
 }
@@ -53,13 +69,20 @@ function startCalendar(data){
       startTime: '8:00', // a start time (10am in this example)
       endTime: '20:00', // an end time (6pm in this example)
     },
+    buttonIcons: {
+      prev: ' fa-chevron-left fa',
+      next: ' fa-chevron-right fa',
+    },
     minTime : '8:00:00',
-    maxTime : '21:00:00',
+    maxTime : '20:00:00',
     slotLabelFormat: [
     { hour: '2-digit',
       minute: '2-digit'
     }
     ],
+    slotMinutes: 15,
+    slotDuration: '00:15:00',
+    slotLabelInterval: 15,
     height:'parent',
     selectable: false,
     locale: 'pt',
@@ -105,6 +128,7 @@ function startCalendar(data){
     events: function(info, successCallback, failureCallback) {
       $.ajax({
         url: '{{ path("admin_available_list") }}',
+        data:'start='+info.start.valueOf()/1000+'&end='+info.end.valueOf()/1000,
         dataType: 'json',
         success: function(info) {
           ev = info.events
@@ -126,16 +150,19 @@ function startCalendar(data){
       $('#set-stock-lotation').val(evt[1])
       $('#set-stock-available').val(evt[0])
       $('#set-stock-info').html(evt[2])
-      info.el.style.borderColor = 'red';
+      info.el.style.borderColor = 'red'
+
+    },
+      eventRender: function(info) {
+        $(info.el).addClass('evt-'+info.event.id)
     }
   });
   calendar.render()
 }
 
-
 getResources()
-$('#add').next().remove()
 
+$('#add').next().remove()
 
 function editAvailable(){
 $('.w3-overlay').show()
@@ -146,16 +173,11 @@ $('.w3-overlay').show()
       data: $('#set-stock').serialize(),
       dataType:'json',
       success: function(data){
-        if(data.status == 1){
-          $('.fc-next-button').trigger('click')
-          $('.fc-prev-button').trigger('click')
-          setTimeout(function(){
-            $('.w3-overlay').hide()
-          }, 500)
-        }
+        $('.w3-overlay').hide()
+        if(data.status == 1)
+         $('.evt-'+$('#set-stock-id').val()+' .fc-title').html('Total: '+$('#set-stock-lotation').val()+' Disponivel: '+$('#set-stock-available').val()).addClass('blink')
         else {
-          $('.w3-overlay').hide()
-          alert('err')
+          alert(data.message)
         }
       },
       error:function(data){
@@ -165,25 +187,20 @@ $('.w3-overlay').show()
     })
   }, 500)
 
-
-
-
-
-
-
 $('#modal-edit-stock').hide()
 }
 
 
-
-
-
-
-
 </script>
+
+<input type="hidden" id="obj">
 
 <header class="w3-container" style="padding-top:22px">
    <h5><b><i class="far fa-calendar-check"></i> Disponibilidades</b></h5>
 </header>
 
 <div id='calendar'></div>
+
+<div class="w3-hide-small w3-row w3-center" style="position:fixed;bottom:0px;z-index:99;width:100%">
+  <div id="legend" class="w3-center"></div>
+</div>

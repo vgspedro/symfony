@@ -244,26 +244,18 @@ class GalleryController extends AbstractController
     {
         $deleted = 1;
         $response = array();
-        $categoryId = $request->request->get('id');
-        $entity = $this->getDoctrine()->getManager();
-        
-        $event = $entity->getRepository(Event::class)->findOneBy(['category' => $categoryId]);
-        $blocked = $entity->getRepository(Blockdates::class)->findOneBy(['category' => $categoryId]);
-        $category = $entity->getRepository(Category::class)->find($categoryId);
+        $galleryId = $request->request->get('id');
+        $em = $this->getDoctrine()->getManager();
+
+        $gallery = $em->getRepository(Gallery::class)->find($galleryId);
        
-        if (!$category || !$event|| !$blocked) {
-            $response = array('message'=>'fail', 'status' => 'Categoria #'.$categoryId . ' não existe.');
+        if (!$gallery) {
+            $response = array('status' => 0, 'message' => 'Galeria #'.$galleryId .' não existe.', 'data' => null);
         }
         else{
-
-            $img = $category->getImage();
-
-            $entity->remove($blocked);
-            $entity->flush();
-            $entity->remove($event);
-            $entity->flush();
-            $entity->remove($category);
-            $entity->flush();
+            $img = $gallery->getImage();
+            $em->remove($gallery);
+            $em->flush();
 
             //remove from folder image
 
@@ -271,14 +263,14 @@ class GalleryController extends AbstractController
 
             if ($img && $img != 'no-image.png') {
                 try {
-                    $fileSystem->remove($this->categories_images_directory.'/'.$img);
+                    $fileSystem->remove($this->gallery_images_directory.'/'.$img);
                 } 
                 catch (IOExceptionInterface $exception) {
                     $deleted = '0 '.$exception->getPath();
                 }
             }
             
-            $response = array('message'=>'success', 'image' => $deleted, 'status' => $categoryId);
+            $response = array('status'=> 1, 'data' => $deleted, 'message' => $galleryId);
         }
         return new JsonResponse($response);
     }

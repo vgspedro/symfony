@@ -21,6 +21,9 @@ use App\Entity\Available;
 use EmailValidator\EmailValidator;
 use App\Service\MoneyFormatter;
 use Money\Money;
+/*https://packagist.org/packages/inacho/php-credit-card-validator*/
+use Inacho\CreditCard;
+
 
 class HomeController extends AbstractController
 {
@@ -156,15 +159,18 @@ class HomeController extends AbstractController
 
         if($wp){
             $name != $name_card ? $err[] = 'NO_MATCH_NAMES' : false;
-            $this->noFakeCvv($cvv) ? $err[] = 'CVV_INVALID' : false;
-            $this->noFakeCcard($card_nr) ? $err[] = 'CARD_NR_INVALID' : false;
-            $this->noFakeCardDate($date_card) ? $err[] = 'DATE_CARD_INVALID' : false;
+            //$this->noFakeCvv($cvv) ? $err[] = 'CVV_INVALID' : false;
+            //$this->noFakeCcard($card_nr) ? $err[] = 'CARD_NR_INVALID' : false;
+            //$this->noFakeCardDate($date_card) ? $err[] = 'DATE_CARD_INVALID' : false;
+            $this->noFakeCcard($date_card,$cvv, $card_nr) ? $err[] = $this->noFakeCcard($date_card,$cvv, $card_nr) : false; 
+        
         }
 
         //NO FAKE DATA
         $this->noFakeEmails($email) == 1 ? $err[] = 'EMAIL_INVALID' : false;
         $this->noFakeTelephone($telephone) == 1 ? $err[] = 'TELEPHONE_INVALID' : false;
         $this->noFakeName($name) == 1 ? $err[] = 'NAME_INVALID' : false;
+
 
         if($err){
             $response = array(
@@ -368,6 +374,25 @@ class HomeController extends AbstractController
         return $invalid;
     }
 
+
+    private function noFakeCCard($date_card, $cvv, $card_nr) {
+        $err = [];
+
+        $card = CreditCard::validCreditCard($card_nr);
+
+        if ($card['valid'] == 1) {
+            $date = explode('/',$date_card);
+            $validCvc = CreditCard::validCvc($cvv, $card['type']) == true ? false : $err[] = 'CVV_INVALID';
+            $validDate = CreditCard::validDate($date[1], $date[0])  == true ? false : $err[] = 'DATE_CARD_INVALID';
+        }
+        
+        else
+
+            $err[] = 'CARD_NR_INVALID';
+
+        return $err;
+    }
+
     private function noFakeName($a){
         $invalid = 0;        
         if($a)
@@ -375,6 +400,7 @@ class HomeController extends AbstractController
         return $invalid;
     }
 
+/*
     private function noFakeCardDate($a){
         $invalid = 0;   
         if($a){
@@ -400,6 +426,9 @@ class HomeController extends AbstractController
             $invalid = preg_replace("/[0-9]{16}/", "", $a);
         return $invalid;
     }
+
+*/
+
 
     private function noFakeTelephone($a) {
         $invalid = 0;        

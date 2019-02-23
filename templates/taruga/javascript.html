@@ -2,12 +2,18 @@
 <script src="{{ asset('js/moment-with-locales.min.js') }}"></script>
 <script src="{{ asset('js/bootstrap-datetimepicker.min.js') }}"></script>
 <script src="{{ asset('js/jquery.nanogallery2.min.js') }}"></script>
+
+<script src="{{ asset('js/cleave.min.js')}}"></script>
+<script src="{{ asset('js/addons/cleave-phone.pt-PT.js') }}"></script>
+<script src="{{ asset('js/addons/cleave-phone.en-EN.js') }}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.js"></script>
+
 <script>
 
 
 t = '{{locale}}' == 'pt-PT' ? 1 : 2
 l = '{{locale}}' == 'pt-PT' ? 'pt_PT' : 'en_EN' 
+
 
 languages(l,t)
 
@@ -442,6 +448,9 @@ function showRgpd(){
 function checkOut(){
   $('.required').addClass('w3-hide')
   $("#myOverlay, #loader-cont").show()
+
+  //console.log($('#get-available').serialize())
+
   setTimeout(function(){
     $.ajax({ 
       url: '{{ path('set_booking') }}',
@@ -450,7 +459,7 @@ function checkOut(){
       data: $('#get-available').serialize()+'&evt='+sessionStorage.getItem('userEvent'),
       success: function(data){
         
-        console.log(data)
+        //console.log(data)
 
         $("#myOverlay, #loader-cont").hide()
         if (data.status == 1){
@@ -460,6 +469,7 @@ function checkOut(){
           $('#get-available').trigger('reset')
           $('.set-visible, .wp-active').addClass('w3-hide')
           sessionStorage.clear()
+          $('.icon-unknown').removeClass('w3-hide')
         }
         else{
           for(k = 0; k<data.data.length;k++)
@@ -475,20 +485,43 @@ function checkOut(){
   }, 500)
 }
 
-$('input[name=date_card]').datetimepicker({
-  format : 'MM/YYYY',
-  ignoreReadonly: true,
-  icons: {
-    time: "fa-3x fa fa-clock-o",
-    date: "fa-3x fa fa-calendar",
-    up: "fa-3x fa fa-arrow-up",
-    down: "fa-3x fa fa-arrow-down",
-    left: "fa-3x fa fa-arrow-left",
-    right: "fa-3x fa fa-arrow-right"
-  },
-  minDate: {{ "now"|date("Y/m/d") }}
+typeof(Storage) !== "undefined" ? false : setTimeout(function(){$('#modal-no-storage').show();},1500)
+
+'{{ id }}' != '#home' ? setTimeout(function(){navigation('{{id}}');},1000) : false
+
+
+
+
+var tl = new Cleave('input[name=telephone]', {
+    phone: true,
+    phoneRegionCode: '{{locale}}'
 })
 
-typeof(Storage) !== "undefined" ? false : setTimeout(function(){$('#modal-no-storage').show();},1500)
-'{{ id }}' != '#home' ?  setTimeout(function(){navigation('{{id}}');},1000) : false
+var dc = new Cleave('input[name=date_card]', {
+    date: true,
+    datePattern: ['m', 'Y']
+});
+
+var cc = new Cleave('input[name=card_nr]', {
+    creditCard: true,
+    delimiter: '-',
+    onCreditCardTypeChanged: function (type) {
+        type = type.split('15')[0]
+        if(type == "unknown"){
+          $('.icon').addClass('w3-hide').removeClass('w3-animate-zoom')
+          $('.icon-unknown').removeClass('w3-hide')
+        }
+        else{
+          $('.icon').addClass('w3-hide').removeClass('w3-animate-zoom')
+          $('.icon-' + type).removeClass('w3-hide').addClass('w3-animate-zoom')
+        }
+
+    }
+})
+
 </script>
+
+
+
+
+

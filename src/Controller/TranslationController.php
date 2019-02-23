@@ -149,7 +149,7 @@ class TranslationController extends AbstractController
         'sorry' => 'Lamentamos mas...',
         'cvv_invalid' => 'CVV (3 digitos)',
         'no_match_names' => 'Nome e Nome Cartão tem que ser iguais',
-        'card_nr_invalid' => 'Nº Cartão Crédito (16 digitos)',
+        'card_nr_invalid' => 'Nº Cartão Crédito Inválido',
         'telephone_invalid' => 'Telefone (Min: 9 digitos)',
         'name_invalid' => 'Name (Apenas Letras)'
     ),
@@ -330,7 +330,7 @@ array(
     'sorry' => 'Sorry but...',
     'cvv_invalid' => 'CVV (3 digits)',
     'no_match_names' => 'Name and Owner Credit Card must be the same',
-    'card_nr_invalid' => 'Credit Card Nº (16 digits)',
+    'card_nr_invalid' => 'Credit Card Invalid',
     'telephone_invalid' => 'Telephone (Min: 9 digits)',
     'name_invalid' => 'Name (Only Letters)'
 ),
