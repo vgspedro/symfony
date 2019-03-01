@@ -3,52 +3,23 @@
 <script src="{{ asset('js/bootstrap-datetimepicker.min.js') }}"></script>
 <script src="{{ asset('js/jquery.nanogallery2.min.js') }}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.js"></script>
+<script type='text/javascript' src="{{ asset('js/unitegallery.min.js') }}"></script>
+<script src="{{ asset('js/ug-theme-video.js') }}" type='text/javascript'></script>
+
 <script>
+
+
+$("#gallery").unitegallery({
+  gallery_theme: "video",
+  theme_autoplay: false,        //autoplay videos at start.  true / false. Don't working on mobiles.
+  theme_disable_panel_timeout:2500  //How much time the right panel will be disabled. in ms
+})
 
 
 t = '{{locale}}' == 'pt-PT' ? 1 : 2
 l = '{{locale}}' == 'pt-PT' ? 'pt_PT' : 'en_EN' 
 
 languages(l,t)
-
-//var video = document.getElementById("video")
-var video_full = document.getElementById("video_full")
-//var btn = document.getElementById("video_btn")
-
-var xhr = new XMLHttpRequest()
-xhr.open('GET', '{{ asset('videos/bg.mp4') }}', true)
-xhr.responseType = 'blob'
-xhr.onload = function(e) {
-  if (this.status == 200) {
-    var myBlob = this.response
-    var vid = (window.webkitURL || window.URL).createObjectURL(myBlob)
-    //var banner = document.getElementById("banner")
-    video_full.src = vid
-    //video.src = vid
-    videoLoaded()
-   }
-  }
-
-xhr.send()
-
-function videoLoaded(){
-  setTimeout(function(){
-    //banner.classList.add('w3-hide')
-    video_full.classList.remove('w3-hide')
-    //btn.classList.remove('w3-hide')
-  },1500)
-}
-
-function mobilePlayVideo() {
-  if (video_full.paused) {
-    video_full.play()
-    $('#mobile').hasClass('w3-show') ? $('#mobile').remove() : false
-    btn.innerHTML = '<i class="fa fa-pause"></i>'
-  } else {
-    video_full.pause()
-    btn.innerHTML = '<i class="fa fa-play"></i>'
-  }
-}
 
     window.addEventListener("load", function(){
         window.cookieconsent.initialise({

@@ -1,0 +1,74 @@
+<style type="text/css">
+.content{bottom: 0;background: rgba(0, 0, 0, 0.5);width: 100%;position:sticky}
+.w3-black-70{background: rgba(0, 0, 0, 0.80)}
+.full-h{height:auto!important}
+ .ug-preloader-trans {display: none}
+</style>
+
+<div class="w3-display-container w3-center w3-black-70" id="home" style="padding: 64px 8px 8px 8px !important">
+  {% if galleries %} 
+  <section id="gal-mob" class="full-h w3-hide-large w3-hide-medium" style="min-height:320px">
+    {% for gallery in galleries %}
+     {% if loop.revindex0 < 4 %}
+    <a href="/upload/gallery/{{gallery.image}}">
+      <img alt="{{gallery.namePt}}"
+        src="/upload/gallery/{{gallery.image}}"data-image="/upload/gallery/{{gallery.image}}"
+        data-description="{{gallery.namePt}}"
+        style="display:none">
+    </a>
+    {% endif %}   
+    {% endfor %}   
+  </section>
+   <section id="gal-desk" class="full-h w3-hide-small">
+    {% for gallery in galleries %}
+    {% if loop.index0 < 8 %}
+    <a href="/upload/gallery/{{gallery.image}}">
+      <img alt="{{gallery.namePt}}"
+        src="/upload/gallery/{{gallery.image}}"data-image="/upload/gallery/{{gallery.image}}"
+        data-description="{{gallery.namePt}}"
+        style="display:none">
+    </a>
+    {% endif %}
+    {% endfor %}   
+  </section>
+  {% endif %}
+  {% if category %}
+  <div class="w3-left-align w3-padding w3-text-white">
+      <div class="w3-row">
+        <div class="w3-col s12">
+          <h2>
+            <span class="PT">{{ category.namePt }}</span>
+            <span class="EN w3-hide">{{ category.nameEn }}</span>
+          </h2>
+          <div class="w3-col l4 m4 s0 w3-left-align w3-hide-small">
+             {% if category.adultAmount> 0 %}
+                <span class='ADULTO'>{% trans %}part_tree.adult{% endtrans %}</span>&nbsp;
+                <span>{{ category.adultAmount}}€</span>
+                <br>
+              {% else %}
+                <span class='ADULTO'>{% trans %}part_tree.adult{% endtrans %}</span>&nbsp;
+                <span>-/-</span>
+                <br>
+              {% endif %}
+              {% if category.childrenAmount > 0 %}
+                <span class='CRIANCA'>{% trans %}part_tree.children{% endtrans %}</span>&nbsp;
+                <span>{{ category.childrenAmount }}€</span>
+                <br>
+              {% else %}
+                <span class='CRIANCA'>{% trans %}part_tree.children{% endtrans %}</span>&nbsp;
+                <span>-/-</span>
+                <br>
+              {% endif %}
+          </div>
+          <div class="w3-col l4 m8 s12 w3-center w3-margin-bottom">
+            <span class="w3-btn w3-blue w3-center" onclick="navigation('#reservas', {{ category.id }})">
+              <i class="fa fa-calendar"></i>&nbsp;
+              <span class="GET_AVAILABLE w3-margin-left"> {% trans %}part_seven.get_available{% endtrans %}</span>
+            </span>
+          
+          </div>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+</div>

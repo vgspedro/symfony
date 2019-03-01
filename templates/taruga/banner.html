@@ -6,3 +6,48 @@
 <div class="mySlides w3-display-container w3-center w3-black" id="home" style="margin-top: 0px;padding-top: 0!important;">
 	<video id="video_full" autoplay muted loop class="banner-img w3-opacity-min"></video>
 </div>
+
+<script>
+
+
+//var video = document.getElementById("video")
+var video_full = document.getElementById("video_full")
+//var btn = document.getElementById("video_btn")
+
+var xhr = new XMLHttpRequest()
+xhr.open('GET', '{{ asset('videos/bg.mp4') }}', true)
+xhr.responseType = 'blob'
+xhr.onload = function(e) {
+  if (this.status == 200) {
+    var myBlob = this.response
+    var vid = (window.webkitURL || window.URL).createObjectURL(myBlob)
+    //var banner = document.getElementById("banner")
+    video_full.src = vid
+    //video.src = vid
+    videoLoaded()
+   }
+  }
+
+xhr.send()
+
+function videoLoaded(){
+  setTimeout(function(){
+    //banner.classList.add('w3-hide')
+    video_full.classList.remove('w3-hide')
+    //btn.classList.remove('w3-hide')
+  },1500)
+}
+
+function mobilePlayVideo() {
+  if (video_full.paused) {
+    video_full.play()
+    $('#mobile').hasClass('w3-show') ? $('#mobile').remove() : false
+    btn.innerHTML = '<i class="fa fa-pause"></i>'
+  } else {
+    video_full.pause()
+    btn.innerHTML = '<i class="fa fa-play"></i>'
+  }
+}
+
+
+</script>

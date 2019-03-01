@@ -52,7 +52,7 @@ class HomeController extends AbstractController
         $warning = $em->getRepository(Warning::class)->find(10);
         $category = $em->getRepository(Category::class)->findBy(['isActive' => 1],['namePt' => 'ASC']);
         $categoryHl = $em->getRepository(Category::class)->findOneBy(['highlight' => 1],['namePt' => 'ASC']);
-        $gallery = $em->getRepository(Gallery::class)->findBy(['isActive' => 1],['namePt' => 'ASC']);
+        $gallery = $em->getRepository(Gallery::class)->findBy(['isActive' => 1],['namePt' => 'DESC']);
 
         $cH = array(
             'adultAmount' => $moneyFormatter->format($categoryHl->getAdultPrice()),
@@ -98,7 +98,7 @@ class HomeController extends AbstractController
     }
 
 
-    public function info($id = null, Request $request)
+    public function info(Request $request, MoneyFormatter $moneyFormatter)
     {   
         $id = !$request->query->get('id') ? 'home': $request->query->get('id');
         
@@ -108,13 +108,41 @@ class HomeController extends AbstractController
         $locale = $ua['lang'];
         $locales = $em->getRepository(Locales::class)->findAll();
         $gallery = $em->getRepository(Gallery::class)->findBy(['isActive' => 1],['namePt' => 'ASC']);
-        
+        $category = $em->getRepository(Category::class)->findBy(['isActive' => 1],['namePt' => 'ASC']);
+
+        foreach ($category as $categories){
+            
+            $s = explode(":",$categories->getDuration());
+            $minutes = (int)$s[0]*60 + (int)$s[1];
+            
+            $cS[]= array(
+                'adultAmount' => $moneyFormatter->format($categories->getAdultPrice()),
+                'childrenAmount'  => $moneyFormatter->format($categories->getChildrenPrice()),
+                'namePt' => $categories->getNamePt(),
+                'nameEn' => $categories->getNameEn(),
+                'descriptionPt' => $categories->getDescriptionPt(),
+                'descriptionEn' => $categories->getDescriptionEn(),
+                'image' => $categories->getImage(),
+                'id' => $categories->getId(),
+                'warrantyPayment' => $categories->getwarrantyPayment(),
+                'warrantyPaymentPt' => $categories->getwarrantyPaymentPt(),
+                'warrantyPaymentEn' => $categories->getwarrantyPaymentEn(),
+                'duration' => $minutes
+            );
+        }
+
+
+
+
+
+
         return $this->render('info.html.twig', 
             array(
                 'colors'=> $this->color(),
                 'warning' => $warning,
                 'locale' => $locale,
                 'galleries' => $gallery,
+                'categories' => $cS,
                 'locales' => $locales,
                 'id' => '#'.$id
                 )

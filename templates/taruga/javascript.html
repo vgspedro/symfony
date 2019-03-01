@@ -1,15 +1,18 @@
-<script src="{{ asset('js/jquery-2.1.1.min.js') }}"></script>
+<script src="{{ asset('js/jquery-11.0.min.js') }}"></script>
 <script src="{{ asset('js/moment-with-locales.min.js') }}"></script>
 <script src="{{ asset('js/bootstrap-datetimepicker.min.js') }}"></script>
 <script src="{{ asset('js/jquery.nanogallery2.min.js') }}"></script>
-
 <script src="{{ asset('js/cleave.min.js')}}"></script>
 <script src="{{ asset('js/addons/cleave-phone.pt-PT.js') }}"></script>
 <script src="{{ asset('js/addons/cleave-phone.en-EN.js') }}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.js"></script>
 
-<script>
 
+<script type='text/javascript' src="{{ asset('js/unitegallery.min.js') }}"></script>
+<script type='text/javascript' src="{{ asset('js/ug-theme-tiles.js') }}"></script>
+
+
+<script>
 
 t = '{{locale}}' == 'pt-PT' ? 1 : 2
 l = '{{locale}}' == 'pt-PT' ? 'pt_PT' : 'en_EN' 
@@ -491,11 +494,11 @@ typeof(Storage) !== "undefined" ? false : setTimeout(function(){$('#modal-no-sto
 
 
 
-
 var tl = new Cleave('input[name=telephone]', {
     phone: true,
     phoneRegionCode: '{{locale}}'
 })
+
 
 var dc = new Cleave('input[name=date_card]', {
     date: true,
@@ -518,6 +521,22 @@ var cc = new Cleave('input[name=card_nr]', {
 
     }
 })
+
+var ugapi1
+
+
+ugapi1 = $("#gal-mob").unitegallery({
+tiles_justified_space_between:8,
+tiles_type: "justified",
+})
+
+var ugapi2
+ugapi2 = $("#gal-desk").unitegallery({
+tiles_justified_space_between:8,
+tiles_type: "justified"                
+})
+
+
 
 </script>
 

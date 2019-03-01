@@ -234,7 +234,8 @@ class AvailableController extends AbstractController
             $response = array(
                 'status' => 1,
                 'message' => 'success',
-                'data' => $available->getId());
+                'data' => ['id' => $available->getId(), 'stock' => $available->getStock(), 'lotation' => $available->getLotation() ]
+            );
 
         } catch (Exception $e) {
        

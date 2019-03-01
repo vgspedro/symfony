@@ -175,7 +175,7 @@ $('.w3-overlay').show()
       success: function(data){
         $('.w3-overlay').hide()
         if(data.status == 1)
-         $('.evt-'+$('#set-stock-id').val()+' .fc-title').html('Total: '+$('#set-stock-lotation').val()+' Disponivel: '+$('#set-stock-available').val()).addClass('blink')
+         $('.evt-'+data.data.id+' .fc-title').html('Total: '+data.data.lotation+' Disponivel: '+data.data.stock).addClass('blink')
         else {
           alert(data.message)
         }

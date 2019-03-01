@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: 21-Fev-2019 às 23:41
+-- Generation Time: 01-Mar-2019 às 14:36
 -- Versão do servidor: 10.1.22-MariaDB
 -- PHP Version: 7.0.18
 
@@ -42,32 +42,32 @@ CREATE TABLE `available` (
 --
 
 INSERT INTO `available` (`id`, `category_id`, `datetimestart`, `stock`, `lotation`, `datetimeend`) VALUES
-(59, 16, '2019-02-20 11:30:00', 1, 30, '2019-02-20 12:15:00'),
+(59, 16, '2019-02-20 11:30:00', 0, 30, '2019-02-20 12:15:00'),
 (60, 17, '2019-02-20 09:45:00', 27, 30, '2019-02-20 11:15:00'),
-(61, 16, '2019-02-21 08:30:00', 27, 30, '2019-02-21 09:15:00'),
-(62, 16, '2019-02-25 08:30:00', 30, 30, '2019-02-25 09:15:00'),
-(63, 16, '2019-02-26 08:30:00', 30, 30, '2019-02-26 09:15:00'),
-(107, 16, '2019-02-25 11:30:00', 30, 30, '2019-02-25 12:15:00'),
+(61, 16, '2019-02-21 08:30:00', 30, 30, '2019-02-21 09:15:00'),
+(62, 16, '2019-02-25 08:30:00', 29, 30, '2019-02-25 09:15:00'),
+(63, 16, '2019-02-26 08:30:00', 0, 30, '2019-02-26 09:15:00'),
+(107, 16, '2019-02-25 11:30:00', 1, 30, '2019-02-25 12:15:00'),
 (108, 16, '2019-02-26 11:30:00', 30, 30, '2019-02-26 12:15:00'),
-(109, 16, '2019-02-27 11:30:00', 30, 30, '2019-02-27 12:15:00'),
+(109, 16, '2019-02-27 11:30:00', 0, 30, '2019-02-27 12:15:00'),
 (110, 16, '2019-02-28 11:30:00', 28, 30, '2019-02-28 12:15:00'),
 (111, 16, '2019-03-01 11:30:00', 30, 30, '2019-03-01 12:15:00'),
-(112, 16, '2019-03-02 11:30:00', 30, 30, '2019-03-02 12:15:00'),
+(112, 16, '2019-03-02 11:30:00', 39, 31, '2019-03-02 12:15:00'),
 (113, 16, '2019-03-03 11:30:00', 30, 30, '2019-03-03 12:15:00'),
-(183, 18, '2019-02-25 15:30:00', 30, 30, '2019-02-25 16:00:00'),
-(184, 18, '2019-02-26 15:30:00', 30, 30, '2019-02-26 16:00:00'),
-(185, 18, '2019-02-27 15:30:00', 27, 30, '2019-02-27 16:00:00'),
+(183, 18, '2019-02-25 15:30:00', 0, 30, '2019-02-25 16:00:00'),
+(184, 18, '2019-02-26 15:30:00', 29, 30, '2019-02-26 16:00:00'),
+(185, 18, '2019-02-27 15:30:00', 0, 30, '2019-02-27 16:00:00'),
 (186, 18, '2019-02-28 15:30:00', 30, 30, '2019-02-28 16:00:00'),
-(187, 16, '2019-02-25 10:30:00', 30, 30, '2019-02-25 11:15:00'),
+(187, 16, '2019-02-25 10:30:00', 9, 30, '2019-02-25 11:15:00'),
 (188, 16, '2019-02-26 10:30:00', 30, 30, '2019-02-26 11:15:00'),
 (189, 16, '2019-02-27 10:30:00', 0, 30, '2019-02-27 11:15:00'),
-(190, 16, '2019-02-28 10:30:00', 22, 30, '2019-02-28 11:15:00'),
+(190, 16, '2019-02-28 10:30:00', 299, 30, '2019-02-28 11:15:00'),
 (191, 18, '2019-02-28 09:30:00', 27, 30, '2019-02-28 10:00:00'),
-(192, 18, '2019-03-01 09:30:00', 30, 30, '2019-03-01 10:00:00'),
+(192, 18, '2019-03-01 09:30:00', 99, 29, '2019-03-01 10:00:00'),
 (193, 18, '2019-03-02 09:30:00', 30, 30, '2019-03-02 10:00:00'),
 (194, 18, '2019-03-03 09:30:00', 30, 30, '2019-03-03 10:00:00'),
 (195, 18, '2019-03-04 09:30:00', 27, 30, '2019-03-04 10:00:00'),
-(196, 17, '2019-02-28 14:45:00', 30, 30, '2019-02-28 16:15:00'),
+(196, 17, '2019-02-28 14:45:00', 26, 30, '2019-02-28 16:15:00'),
 (197, 17, '2019-03-01 14:45:00', 30, 30, '2019-03-01 16:15:00'),
 (198, 17, '2019-03-02 14:45:00', 30, 30, '2019-03-02 16:15:00'),
 (199, 17, '2019-03-03 14:45:00', 29, 30, '2019-03-03 16:15:00'),
@@ -75,14 +75,14 @@ INSERT INTO `available` (`id`, `category_id`, `datetimestart`, `stock`, `lotatio
 (201, 17, '2019-03-05 14:45:00', 30, 30, '2019-03-05 16:15:00'),
 (202, 17, '2019-03-06 14:45:00', 30, 30, '2019-03-06 16:15:00'),
 (203, 17, '2019-03-07 14:45:00', 30, 30, '2019-03-07 16:15:00'),
-(204, 17, '2019-03-08 14:45:00', 30, 30, '2019-03-08 16:15:00'),
+(204, 17, '2019-03-08 14:45:00', 27, 30, '2019-03-08 16:15:00'),
 (205, 17, '2019-03-09 14:45:00', 30, 30, '2019-03-09 16:15:00'),
 (206, 17, '2019-03-10 14:45:00', 30, 30, '2019-03-10 16:15:00'),
-(207, 15, '2019-02-25 09:00:00', 15, 15, '2019-02-25 10:15:00'),
-(208, 15, '2019-02-26 09:00:00', 15, 15, '2019-02-26 10:15:00'),
-(209, 15, '2019-02-27 09:00:00', 15, 15, '2019-02-27 10:15:00'),
-(210, 15, '2019-02-28 09:00:00', 15, 15, '2019-02-28 10:15:00'),
-(211, 15, '2019-03-01 09:00:00', 15, 15, '2019-03-01 10:15:00'),
+(207, 15, '2019-02-25 09:00:00', 1, 15, '2019-02-25 10:15:00'),
+(208, 15, '2019-02-26 09:00:00', 1, 15, '2019-02-26 10:15:00'),
+(209, 15, '2019-02-27 09:00:00', 0, 15, '2019-02-27 10:15:00'),
+(210, 15, '2019-02-28 09:00:00', 1, 15, '2019-02-28 10:15:00'),
+(211, 15, '2019-03-01 09:00:00', 0, 111, '2019-03-01 10:15:00'),
 (212, 15, '2019-03-02 09:00:00', 15, 15, '2019-03-02 10:15:00'),
 (213, 15, '2019-03-03 09:00:00', 15, 15, '2019-03-03 10:15:00'),
 (214, 15, '2019-03-04 09:00:00', 15, 15, '2019-03-04 10:15:00'),
@@ -145,7 +145,11 @@ INSERT INTO `booking` (`id`, `adult`, `children`, `baby`, `posted_at`, `notes`, 
 (56, 1, 1, 1, '2019-02-20', NULL, 'pending', 2000, 61, 78, '2019-02-21', '08:30:00'),
 (57, 1, 1, 1, '2019-02-20', NULL, 'pending', 2500, 185, 79, '2019-02-27', '15:30:00'),
 (58, 1, 1, 1, '2019-02-20', NULL, 'pending', 4500, 218, 80, '2019-03-08', '09:00:00'),
-(59, 1, 1, 1, '2019-02-21', NULL, 'pending', 2500, 191, 81, '2019-02-28', '09:30:00');
+(59, 1, 1, 1, '2019-02-21', NULL, 'pending', 2500, 191, 81, '2019-02-28', '09:30:00'),
+(60, 1, 1, 1, '2019-02-23', NULL, 'pending', 4500, 204, 82, '2019-03-08', '14:45:00'),
+(61, 1, 0, 0, '2019-02-25', NULL, 'pending', 1500, 184, 83, '2019-02-26', '15:30:00'),
+(62, 1, 0, 1, '2019-02-25', NULL, 'pending', 3000, 196, 84, '2019-02-28', '14:45:00'),
+(63, 1, 1, 0, '2019-02-27', NULL, 'pending', 4500, 196, 85, '2019-02-28', '14:45:00');
 
 -- --------------------------------------------------------
 
@@ -177,7 +181,7 @@ CREATE TABLE `category` (
 
 INSERT INTO `category` (`id`, `name_pt`, `name_en`, `description_pt`, `description_en`, `children_price`, `adult_price`, `is_active`, `image`, `availability`, `highlight`, `warranty_payment_pt`, `warranty_payment_en`, `warranty_payment`, `duration`) VALUES
 (15, 'Visita Tradicional', 'Traditional Visit', 'Visite entre 15/20 grutas, algares e praias desertas. Inclui uma paragem de 10 min para mergulho, quando as condições do mar permitirem. O mergulho pode ser dado numa gruta ou numa praia deserta.\r\n(Bébés grátis até 23 meses.)', 'Visit about 15/20 caves. If we have good sea conditions, a 10 minute refreshing dive along the shore.\r\n(Free Babies till 23 months.)', 1500, 3000, 1, 'c1de35fcca54082b1874dbd824550143.jpeg', 15, 0, NULL, NULL, 0, '01:15'),
-(16, 'Aluguer Kayak', 'Kayak Rental', 'É um aluguer livre que obriga o preenchimento de um termo de responsabilidade onde a pessoa que aluga tem de possuir o seu documento de identificação. \r\nNão guardamos bens pessoais no local. \r\nO equipamento é adquirido na entrada da praia ficando à responsabilidade de quem aluga a entrega do mesmo no final do aluguer.', 'Rental, no guide, only for children more than 5 years old.', 500, 1500, 1, '58ec7e3faedc9095005c1769f5294676.jpeg', 30, 0, NULL, NULL, 0, '00:45'),
+(16, 'Aluguer Kayak', 'Kayak Rental', 'É um aluguer livre que obriga o preenchimento de um termo de responsabilidade onde a pessoa que aluga tem de possuir o seu documento de identificação. \r\nNão guardamos bens pessoais no local. \r\nO equipamento é adquirido na entrada da praia ficando à responsabilidade de quem aluga a entrega do mesmo no final do aluguer.', 'Rental, no guide, only for children more than 5 years old.', 0, 1500, 1, '58ec7e3faedc9095005c1769f5294676.jpeg', 30, 0, NULL, NULL, 0, '00:45'),
 (17, 'Visita de Portimão', 'Boarding in marina of Portimão', 'O passeio começa a partir da Marina de Portimão e também visitamos as grutas de Benagil, Carvoeiro, Carvalho e Marinha. É semelhante à nossa visita tradicional. Também é possível parar 10 minutos para um mergulho refrescante - com a mesma equipa da praia (Taruga). (Bébés grátis até 23 meses.)', 'The tour starts from Marina of Portimão and we also visit the Benagil sea caves, Carvoeiro, Carvalho and Marinha beach. It´s similar from our tour number 2. Also possible to stop 10 minutes for a refreshing dive - with the same team of the beach (Taruga). (Free Babies till 23 months.)', 1500, 3000, 1, '577ec312a2cbcd3d317a05cbd1e24fec.jpeg', 30, 0, 'Tem Garantia Pagamento, é necessário inserir os dados do cartão crédito, Apenas será cobrado na falta de comparência.', 'It has Guarantee Payment, it is necessary to insert your credit card information.  We will only charged in absence of appearance.', 1, '01:30'),
 (18, 'Visita Express', 'Express Visit', 'Visite cerca de 8 grutas incluindo: Algar de Benagil, Praia da Marinha. (Bébés grátis até 23 meses.)', 'Visit about 8 caves, included: Algar de Benagil, Marinha beach. (Free Babies till 23 months.)', 1000, 1500, 1, '74d8433950d0c9dd324a5e2806aa2d6c.jpeg', 30, 1, NULL, NULL, 0, '00:30');
 
@@ -221,7 +225,11 @@ INSERT INTO `client` (`id`, `email`, `password`, `username`, `address`, `telepho
 (78, 'aXRmY3JxZWJAdHpudnkucGJ6', '', 'Q3JxZWIgSXZydG5m', 'RWhuIFB2ZWhldHbDo2IgMjg=', 'OTI2NjQ3NzU2', 'a:1:{i:0;s:11:\"ROLE_CLIENT\";}', 1, 2, NULL, NULL, '', NULL),
 (79, 'aXRmY3JxZWJAdHpudnkucGJ6', '', 'Q3JxZWIgSXZydG5m', 'RWhuIFB2ZWhldHbDo2IgMjg=', 'OTI2NjQ3NzU2', 'a:1:{i:0;s:11:\"ROLE_CLIENT\";}', 1, 1, NULL, NULL, '', NULL),
 (80, 'aXRmY3JxZWJAb2J0aGYucGJ6', '', 'Q3JxZWIgSXZydG5m', 'RWhuIFB2ZWhldHbDo2IgMjg=', 'OTI2Njc1Ng==', 'a:1:{i:0;s:11:\"ROLE_CLIENT\";}', 1, 1, NULL, NULL, '', NULL),
-(81, 'aXRmY3JxZWJAdHpudnkucGJ6', '', 'Q3JxZWIgSXZydG5m', 'RWhuIFB2ZWhldHbDo2IgMjg=', 'OTI2NjQ3NzU2', 'a:1:{i:0;s:11:\"ROLE_CLIENT\";}', 1, 1, NULL, NULL, '', NULL);
+(81, 'aXRmY3JxZWJAdHpudnkucGJ6', '', 'Q3JxZWIgSXZydG5m', 'RWhuIFB2ZWhldHbDo2IgMjg=', 'OTI2NjQ3NzU2', 'a:1:{i:0;s:11:\"ROLE_CLIENT\";}', 1, 1, NULL, NULL, '', NULL),
+(82, 'aXRmY3JxZWJAdHpudnkucGJ6', '', 'Q3JxZWIgSXZydG5m', 'RWhuIFB2ZWhldHbDo2IgMjg=', 'OTI2NjQ3NzU2', 'a:1:{i:0;s:11:\"ROLE_CLIENT\";}', 1, 1, 'NzU4', 'Q3JxZWIgSXZydG5m', 'MzcwNC00OTM3NjAtMzY0MzE=', 'MDgvMjAyNA=='),
+(83, 'aXRmY3JxZWIxNUBmbmNiLmNn', '', 'Q3JxZWIgSXZydG5m', 'RWhuIFB2ZWhldHbDo2IgMjg=', 'OTI2NjQ3NzU2', 'a:1:{i:0;s:11:\"ROLE_CLIENT\";}', 1, 1, NULL, NULL, NULL, NULL),
+(84, 'aXRmY3JxZWJAdHpudnkucGJ6', '', 'Q3JxZWIgSXZydG5m', 'RWhuIFB2ZWhldHbDo2IgMjg=', 'OTI2NjQ3NzU2', 'a:1:{i:0;s:11:\"ROLE_CLIENT\";}', 1, 1, 'MjMz', 'Q3JxZWIgSXZydG5m', 'NDI0Mi00MjQyLTQyMjQtMjQyMA==', 'MDEvMjAzOQ=='),
+(85, 'aXRmY3JxZWJAdHpudnkucGJ6', '', 'RnJ0aHI=', 'eW50Ym4gbnl0bmVpcg==', 'OTYzOTYzOTYz', 'a:1:{i:0;s:11:\"ROLE_CLIENT\";}', 1, 1, 'MTIz', 'RnJ0aHI=', 'NDI0Mi00MjQyLTQyNDItNDI0Mg==', 'MTIvMjAxOQ==');
 
 -- --------------------------------------------------------
 
@@ -287,7 +295,7 @@ CREATE TABLE `gallery` (
 --
 
 INSERT INTO `gallery` (`id`, `name_pt`, `name_en`, `description_pt`, `description_en`, `is_active`, `image`) VALUES
-(1, 'im pt4', 'im en', 'desc pt', 'desc en', 1, 'aaa8358bb5e15ef1307ef58850629682.jpeg'),
+(1, 'im pt4', 'im en', 'desc pt', 'desc en', 0, 'aaa8358bb5e15ef1307ef58850629682.jpeg'),
 (2, 'im pt', 'im en', 'desc pt', 'desc en', 1, '972dabbc8130385d8e51b3add68d24c3.jpeg'),
 (3, 'img 2', 'img 2', 'img 2', 'img 2', 1, '79741a0156e7c8b39a48901b5eed5292.jpeg'),
 (4, 'img 2', 'img 2', 'img 2', 'img 2', 1, '09ba4f89a15f55955e63db76c6d8509d.jpeg'),
@@ -304,10 +312,7 @@ INSERT INTO `gallery` (`id`, `name_pt`, `name_en`, `description_pt`, `descriptio
 (15, 'img 2', 'img 2', 'img 2', 'img 2', 1, '0ad7090b02d2bb37958ff73f481575d5.jpeg'),
 (16, 'img 2', 'img 2', 'img 2', 'img 2', 1, 'cf07f2b40ba6763c751d87cf3913faad.jpeg'),
 (17, 'img 2', 'img 2', 'img 2', 'img 2', 1, 'caf68c2d0e92c02d9466d037e75af928.jpeg'),
-(18, 'img 2', 'img 2', 'img 2', 'img 2', 1, 'dff35cf7c8315fbc8d6584bc86087738.jpeg'),
-(19, 'img 2', 'img 2', 'img 2', 'img 2', 1, '52ff070121b0439f4564c07175e11222.jpeg'),
-(20, 'img 2', 'img 2', 'img 2', 'img 2', 1, '294cc4bbe18ee2ca67f7cea34dd161b8.jpeg'),
-(21, 'ka', 'ka', '', '', 0, 'f3d6fb71938ddb0e213ffba0acda3603.jpeg');
+(20, 'img 2', 'img 2', 'img 2', 'img 2', 1, '294cc4bbe18ee2ca67f7cea34dd161b8.jpeg');
 
 -- --------------------------------------------------------
 
@@ -566,7 +571,7 @@ ALTER TABLE `blockdate`
 -- AUTO_INCREMENT for table `booking`
 --
 ALTER TABLE `booking`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=60;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=64;
 --
 -- AUTO_INCREMENT for table `category`
 --
@@ -576,7 +581,7 @@ ALTER TABLE `category`
 -- AUTO_INCREMENT for table `client`
 --
 ALTER TABLE `client`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=82;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=86;
 --
 -- AUTO_INCREMENT for table `easytext`
 --
@@ -591,7 +596,7 @@ ALTER TABLE `event`
 -- AUTO_INCREMENT for table `gallery`
 --
 ALTER TABLE `gallery`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 --
 -- AUTO_INCREMENT for table `locales`
 --
