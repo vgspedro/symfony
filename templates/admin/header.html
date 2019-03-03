@@ -57,24 +57,33 @@
        <i class="far fa-calendar-check"></i> Disponibilidades
     </a>
 
-
     <a href="#" onclick="ajaxUpload(this.id)" id="booking" class="nav w3-bar-item w3-button w3-padding w3-sand w3-border-top w3-border-brown">
       <i class="far fa-calendar-alt fa-fw"></i> Reservas
     </a>
-    <!--
-    <a href="#" onclick="ajaxUpload(this.id)" id="block-date-edit" class="nav w3-bar-item w3-button w3-padding w3-sand w3-border-top w3-border-brown">
-      <i class="fas fa-calendar-times fa-fw"></i> Bloquear Datas
-    </a>
-  -->
+
     <a href="#" onclick="ajaxUpload(this.id)" id="easy-text" class="nav w3-bar-item w3-button w3-padding w3-sand w3-border-top w3-border-brown">
       <i class="fas fa-signal"></i> Texto Fácil
     </a>
     <a href="#" onclick="ajaxUpload(this.id)" id="warning" class="nav w3-bar-item w3-button w3-padding w3-sand w3-border-top w3-border-brown">
       <i class="fa fa-exclamation-triangle fa-fw"></i> Aviso
     </a>
-    <a href="#" onclick="ajaxUpload(this.id)" id="app-users" class="nav w3-bar-item w3-button w3-padding w3-sand w3-border-top w3-border-brown">
-      <i class="fas fa-user-shield"></i> Utilizadores
-    </a>
+
+    <div class="w3-dropdown-click">
+      <button onclick="dropDownMenu('user')" class="w3-tooltip nav w3-hover-grey w3-bar-item w3-padding w3-sand w3-border-top w3-border-brown">
+         <i class="fas fa-user-shield"></i> Utilizadores
+      </button>
+      <div id="user" class="w3-dropdown-content w3-bar-block" style="position:relative">
+        <a href="#" onclick="ajaxUpload(this.id)" id="user-new" class="w3-right-align nav w3-border-brown w3-border-bottom w3-border-top w3-bar-item w3-button w3-padding">
+          <i class="far fa-plus-square fa-fw"></i> Novo
+        </a>
+        <a href="#" onclick="ajaxUpload(this.id)" id="app-users" class="w3-right-align nav w3-bar-item w3-button w3-padding">
+          <i class="far fa-edit fa-fw"></i> Editar/Listar
+        </a>
+      </div>
+    </div>
+
+
+
     <a href="#" onclick="ajaxUpload(this.id)" id="rgpd" class="nav w3-bar-item w3-button w3-padding w3-sand w3-border-top w3-border-brown">
       <i class="far fa-file-alt"></i> Rgpd
     </a>

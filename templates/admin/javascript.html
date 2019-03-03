@@ -41,6 +41,9 @@ function ajaxUpload(block){
         case 'app-users': 
             url = '{{ path("list_user") }}' 
         break
+        case 'user-new': 
+            url = '{{ path("user_registration") }}' 
+        break
         case 'warning': 
             url = '{{ path("admin_warning") }}' 
         break

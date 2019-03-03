@@ -9,13 +9,13 @@ security:
     providers:
         chain_provider:
             chain:
-                providers: [user] 
+                providers: [user]
         user:
             entity:
                 class: App\Entity\User
                 property: username
         #in_memory: { memory: ~ }
-    
+
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
@@ -34,7 +34,7 @@ security:
                 username_parameter: username
                 csrf_token_generator: security.csrf.token_manager
             user_checker: App\Security\UserChecker
-            
+
             # activate different ways to authenticate
 
             # http_basic: ~

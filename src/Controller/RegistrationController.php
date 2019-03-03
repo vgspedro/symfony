@@ -29,21 +29,18 @@ class RegistrationController extends AbstractController
             $entityManager->persist($user);
             $entityManager->flush();
 
-            // ... do any other work - like sending them an email, etc
-            // maybe set a "flash" success message for the user
-
-
-            $transport = (new \Swift_SmtpTransport('smtp.gmail.com', 465, 'ssl'))
-                ->setUsername('vgspedro@gmail.com')
-                ->setPassword('ledcpu123');
+            $transport = (new \Swift_SmtpTransport($_ENV['EMAIL_SMTP'], $_ENV['EMAIL_PORT'], $_ENV['EMAIL_CERTIFICADE']))
+            ->setUsername($_ENV['EMAIL'])
+            ->setPassword($_ENV['EMAIL_PASS']);    
 
             $mailer = new \Swift_Mailer($transport);
                     
             $subject ='Registo efetuado';
 
+
             $message = (new \Swift_Message($subject))
-                ->setFrom(['vgspedro@gmail.com' => 'Pedro Viegas'])
-                ->setTo([$user->getEmail() => $user->getUsername()])
+                ->setFrom([$_ENV['EMAIL'] => $_ENV['EMAIL_USERNAME']])
+                ->setTo([$user->getEmail() => $user->getUsername(), $_ENV['EMAIL'] => $_ENV['EMAIL_USERNAME'] ])
                 ->addPart($subject, 'text/plain')
                 ->setBody(
                     $this->renderView(
@@ -62,7 +59,7 @@ class RegistrationController extends AbstractController
         }
 
         return $this->render(
-            'registration/register.html.twig',
+            'admin/register-new.html',
             array('form' => $form->createView())
         );
     }
