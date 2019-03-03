@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Entity\Category;
+use App\Entity\Booking;
 use App\Entity\BlockDates;
 use App\Entity\Event;
 use Symfony\Component\HttpFoundation\Response;
@@ -44,6 +45,10 @@ class CategoryController extends AbstractController
     public function categoryAdd(Request $request, ValidatorInterface $validator, FileUploader $fileUploader,ImageResizer $imageResizer)
     {
         $category = new Category();
+        
+        $em = $this->getDoctrine()->getManager();
+
+        $totals = $em->getRepository(Category::class)->findAll();
 
         $form = $this->createForm(CategoryType::class, $category);
 
@@ -67,9 +72,14 @@ class CategoryController extends AbstractController
                     }
 
                 try {
-
+                    
+                    $category->setOrderBy(count($totals)+1);
                     $em->persist($category);
                     $em->flush();
+
+                    ///$category->setOrderBy(count($totals));
+                    //$em->persist($category);
+                    //$em->flush();
 
                     $response = array(
                         'result' => 1,
@@ -113,28 +123,36 @@ class CategoryController extends AbstractController
     {
         $em = $this->getDoctrine()->getManager();
      
-        $events = $em->getRepository(Event::class)->findAll();
+        //$events = $em->getRepository(Event::class)->findAll();
+        $categories = $em->getRepository(Category::class)->findBy([],['orderBy' => 'ASC']);
 
         $cA = array();
 
-        foreach ($events as $c)
+        foreach ($categories as $c){
+            
+            foreach ($c->getEvent() as $evt)
+                $ev = $evt->getEvent();
+
             $cA[]=array(
-                'id' => $c->getCategory()->getId(),
-                'namePt' => $c->getCategory()->getNamePt(),
-                'nameEn' => $c->getCategory()->getNameEn(),
-                'descriptionPt' => $c->getCategory()->getDescriptionPt(),
-                'descriptionEn' => $c->getCategory()->getDescriptionEn(),
-                'adultAmount' =>$moneyFormatter->format($c->getCategory()->getAdultPrice()).'€',
-                'childrenAmount' =>$moneyFormatter->format($c->getCategory()->getChildrenPrice()).'€',
-                'warrantyPayment' => $c->getCategory()->getWarrantyPayment(),
-                'warrantyPaymentPt' => $c->getCategory()->getWarrantyPaymentPt(),
-                'warrantyPaymentEn' => $c->getCategory()->getWarrantyPaymentEn(),
-                'highLight' => $c->getCategory()->getHighlight(),
-                'isActive' => $c->getCategory()->getIsActive(),
-                'availability' => $c->getCategory()->getAvailability(),
-                'duration' => $c->getCategory()->getDuration(),
-                'event' => $c->getEvent()
+                'id' => $c->getId(),
+                'namePt' => $c->getNamePt(),
+                'nameEn' => $c->getNameEn(),
+                'descriptionPt' => $c->getDescriptionPt(),
+                'descriptionEn' => $c->getDescriptionEn(),
+                'adultAmount' =>$moneyFormatter->format($c->getAdultPrice()).'€',
+                'childrenAmount' =>$moneyFormatter->format($c->getChildrenPrice()).'€',
+                'warrantyPayment' => $c->getWarrantyPayment(),
+                'warrantyPaymentPt' => $c->getWarrantyPaymentPt(),
+                'warrantyPaymentEn' => $c->getWarrantyPaymentEn(),
+                'highLight' => $c->getHighlight(),
+                'isActive' => $c->getIsActive(),
+                'availability' => $c->getAvailability(),
+                'duration' => $c->getDuration(),
+                'event' => $ev,
+                'order' => $c->getOrderBy()
              );
+
+        }    
         return $this->render('admin/category-list.html', array(
             'categories' =>  $cA));
     }
@@ -277,30 +295,38 @@ class CategoryController extends AbstractController
         $deleted = 1;
         $response = array();
         $categoryId = $request->request->get('id');
-        $entity = $this->getDoctrine()->getManager();
+        $em = $this->getDoctrine()->getManager();
         
-        $category = $entity->getRepository(Category::class)->find($categoryId);
+        $category = $em->getRepository(Category::class)->find($categoryId);
         
         if (!$category) {
-            $response = array('message'=>'fail', 'status' => 'Categoria #'.$categoryId . ' não existe.');
+            return new JsonResponse(array('message'=>'fail', 'status' => 'Categoria #'.$categoryId . ' não existe.'));
         }
         
-        //search bookings if already bought this category, DO NOT DELETE sens info to user
-        $booking = $entity->getRepository(Booking::class)->findDeleteCategory($category);
-
-    return new JsonResponse(array('message'=>'fail', 'status' => 'Categoria #'.$categoryId . ' não pode ser apagada. Já existem Reservas associadas'));
-       
-        if ($booking > 0 ) {
-            $response = array('message'=>'fail', 'status' => 'Categoria #'.$category->getId() . ' não pode ser apagada. Já existem Reservas associadas');
-        }
-
+        //search bookings if already bought this category, DO NOT DELETE send info to user
+        $booking = $em->getRepository(Booking::class)->findDeleteCategory($category);
+        
+        if (count($booking) > 0)
+            return new JsonResponse(array('status'=> 0, 'message' => $category->getNamePt() . ' não pode ser apagada. Já existem Reservas associadas'));
 
         else{
 
-            $img = $category->getImage();
+            $blocked = $em->getRepository(BlockDates::class)->findOneBy(['category' => $category]);
+            $event = $em->getRepository(Event::class)->findOneBy(['category' => $category]);
+            $available = $em->getRepository(Available::class)->findAll(['category' => $category]);
+            
+            if($available)
 
-            $entity->remove($category);
-            $entity->flush();
+                foreach ( $available as $availables) {
+                    $em->remove($availables);
+                    $em->flush();
+                }
+
+            $img = $category->getImage();
+            $em->remove($blocked);
+            $em->remove($event);
+            $em->remove($category);
+            $em->flush();
 
             //remove from folder image
 
@@ -314,10 +340,33 @@ class CategoryController extends AbstractController
                     $deleted = '0 '.$exception->getPath();
                 }
             }
-            
-            $response = array('message'=>'success', 'image' => $deleted, 'status' => $categoryId);
+
+            return new JsonResponse(array('status' => 1, 'message' => 'Categoria foi apagada'));
         }
         return new JsonResponse($response);
+    }
+
+
+    public function categoryOrder(Request $request)
+    {
+        $result = $request->request->get('result');
+
+        if ($result)
+            $order = json_decode($result);
+    
+        $em = $this->getDoctrine()->getManager();  
+
+        foreach ($order as $orderBy) {
+            $category = $em->getRepository(Category::class)->find($orderBy->id);
+            $category->setOrderBy($orderBy->to);
+            $em->persist($category);
+            $em->flush();
+        }
+
+        $response = array('status'=> 1, 'message' => 'success', 'data' => count($order));
+        
+        return new JsonResponse($response);
+
     }
 
     protected function getErrorMessages(\Symfony\Component\Form\Form $form) 

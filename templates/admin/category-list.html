@@ -16,17 +16,28 @@ table.dataTable.dtr-inline.collapsed > tbody > tr > td:first-child, table.dataTa
 input, select, textarea {color: #000!important}
 .form-control{ border: 1px solid #ccc!important;height: 50px;padding: 0px 0px 0px 4px;padding-bottom: 0px}
 div.dataTables_length select {height: 50px}
+table.dt-rowReorder-float{position:absolute !important;opacity:0.8;table-layout:fixed;outline:2px solid #888;outline-offset:-2px;z-index:2001}tr.dt-rowReorder-moving{outline:2px solid #555;outline-offset:-2px}body.dt-rowReorder-noOverflow{overflow-x:hidden}table.dataTable td.reorder{text-align:center;cursor:move}
+table.dataTable thead > tr > th {padding-left: 8px!important}
+
 </style>
+
 
 <header class="w3-container" style="padding-top:22px">
    <h5><b><i class="far fa-edit fa-fw"></i> Categorias</b></h5>
 </header>
 <div class="w3-row-padding">
   <div class="w3-col s12">
+
+  
+
+  <div style="overflow-x:auto">
+
   <table id="dataTable" class="w3-border table table-striped centered hover table-bordered" style="width:100%">
     <thead class="w3-sand">
       <tr>
-      <th class="w3-center">#</th>    
+      <th class="w3-center">Ord</th>
+      <th class="">#</th>
+      <th class="w3-center">Acções</th>    
       <th class="w3-center">Nome PT</th>    
       <th class="w3-center">Nome EN</th>    
       <th class="w3-center">Preço Adulto</th>    
@@ -48,6 +59,8 @@ div.dataTables_length select {height: 50px}
 
       {% for category in categories%}
        <tr>
+        <td>{{category.order}}</td>
+        <td>{{category.id}}</td>
         <td>
           <span class="w3-tooltip">
             <span style="position:absolute;left:0;bottom:32px" class="w3-round w3-text w3-tag">Editar a categoria</span>
@@ -120,9 +133,12 @@ div.dataTables_length select {height: 50px}
         <td></td>
         <td></td>
         <td></td>
+        <td></td>
+        <td></td>
       </tr>
     </tfoot>
   </table>
+</div>
 </div>
 </div>
 
@@ -163,7 +179,7 @@ function addAvailable(id,name){
   }, 500)
 }
 
-stored = tablecategory = [2,5,6,12,13,14]
+stored = tablecategory = [1, 4, 7, 8, 15, 16]
 
 function editCategory(id, name){
   $('.w3-overlay').show()
@@ -192,13 +208,6 @@ function editCategory(id, name){
 }
 
 
-
-
-
-
-
-
-
 function deleteCategoryConfirm(id,n){
   $('#delete-category').html('<p class="w3-center w3-large">Tem a certeza que pretende apagar a categoria, <b>'+n+'</b> ?</p>')
   $('#delete-id').val(id)
@@ -214,11 +223,13 @@ function deleteCategory(id){
     data:'id='+id,
     success: function(data){
       $('.w3-overlay').hide()
-      //console.log(data)
-      if (data.message == 'success'){
+      console.log(data)
+      if (data.status == 1){
         ajaxUpload('category-list')
         $('#modal-delete-category').hide()
       }
+      else
+        alert(data.message)
     },
     error:function(data){
       $('.w3-overlay').hide()
@@ -230,25 +241,24 @@ function deleteCategory(id){
 
 $(function(){
 
-table = $('#dataTable').DataTable({
-        dom: 'lBfrtip',
-        order: [ 3, "ASC" ],
-        buttons: [
+  table = $('#dataTable').DataTable({
+    dom: 'lBfrtip',
+    rowReorder: true,
+    buttons: [
         {
         extend:    'excelHtml5',
         text:      '<i class="far fa-file-excel"></i>',
         titleAttr: 'Excel',
         exportOptions: {
-          columns: [ 0, 1, 2, 3, 4, 5, 6]
+          columns: ':visible'
           }
         },
-
         {
         extend:    'pdfHtml5',
         text:      '<i class="far fa-file-pdf"></i>',
         titleAttr: 'PDF',
         exportOptions: {
-          columns: [ 0, 1, 2, 3, 4,5,6]
+          columns: ':visible'
           },
           customize: function (doc) {
             //doc.content[1].table.widths = Array(doc.content[1].table.body[0].length + 1).join('*').split('')
@@ -271,11 +281,11 @@ table = $('#dataTable').DataTable({
         text:      '<i class="far fa-eye-slash"></i>',
         titleAttr: 'Colunas',
         exportOptions: {
-          columns: [ 0, 1, 2, 3, 4, 5]
+          columns: ':visible' // [ 0, 1, 2, 3, 4, 5]
         }
       }
     ],
-    "columnDefs": [
+    columnDefs: [
       //{ className:"my_class", "targets": [4] },
       //{ "orderData":[ 2 ], "targets": [ 3 ] },
         {
@@ -285,7 +295,7 @@ table = $('#dataTable').DataTable({
         }
     ],
     "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
-      responsive: true,
+      responsive: false,
       searching: true,
       language: {
         "lengthMenu": "Mostrar _MENU_ por pagina",
@@ -297,11 +307,47 @@ table = $('#dataTable').DataTable({
         "previous": "Anterior",
         "next": "Seguinte",
       }
-    },
-    order: [[ 1, 'asc' ]]
+    }
   })
   $('#dataTable_length, .dt-buttons').addClass('w3-center w3-col s12 m6 l4 w3-section')
   $('#dataTable_filter').addClass('w3-col s8 m12 l4 w3-center w3-section')
+
+  table.on( 'row-reorder', function ( e, diff, edit ) {
+    var result = []
+    for ( var i=0, ien=diff.length ; i<ien ; i++ ) {
+      var rowData = table.row( diff[i].node ).data()  
+      result.push({'id':rowData[1],'from':diff[i].oldData,'to':diff[i].newData})
+    }
+    console.log(result)
+
+    if (result.length>0){
+
+      $.ajax({  
+        url:'{{ path('admin_category_order') }}',
+        type: "POST",
+        data:'result='+JSON.stringify(result),
+        dataType: 'json',
+        success: function(data){
+          $('.w3-overlay').hide()
+          console.log(data)
+          if (data.status == 1){
+
+          }
+          else{
+            alert('Não foi possivel mudar a ordem. Tente novamente')
+          }
+        },
+        error:function(data){
+          $('.w3-overlay').hide()
+          $('#modal-error').show()
+        }
+      })
+    }
+  })
 })
+
+
+
+
 
 </script>

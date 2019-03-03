@@ -43,9 +43,8 @@ class Warning
 
     public function setInfoPt($infoPt)
     {
-        $this->infoPt = $infoPt;
+        $this->infoPt = str_replace("'","’",$infoPt);
     }
-
 
     public function getInfoEn()
     {
@@ -54,7 +53,7 @@ class Warning
 
     public function setInfoEn($infoEn)
     {
-        $this->infoEn = $infoEn;
+        $this->infoEn = str_replace("'","’",$infoEn);
     }
 
 

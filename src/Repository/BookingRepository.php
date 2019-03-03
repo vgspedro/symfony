@@ -2,6 +2,8 @@
 
 namespace App\Repository;
 
+use App\Entity\Category;
+use App\Entity\Available;
 use App\Entity\Booking;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
@@ -102,16 +104,17 @@ class BookingRepository extends ServiceEntityRepository
 
     }
 
-    public function findDeleteCategory(Category $category){
+
+    public function findDeleteCategory($category){
 
         $query = $this->getEntityManager()->createQuery(
-                'SELECT b, a, c,
+                'SELECT b, a
                 FROM App\Entity\Booking b
                 JOIN b.available a
-                JOIN a.category c
                 WHERE a.category = :category')
                 ->setParameter('category', $category);
-        return $query->getSingleScalarResult();
+        return $query->getResult();
+
     }
 
 }

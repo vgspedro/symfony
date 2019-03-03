@@ -90,6 +90,9 @@ class Category
      /** @ORM\Column(type="string", length=5, name="duration", options={"default":"00:00"})*/
     private $duration; 
 
+    /** @ORM\Column(type="integer", name="order_by", nullable=true)*/
+    private $orderBy;
+
     public function __construct()
     {   
         
@@ -115,7 +118,17 @@ class Category
 
     public function setWarrantyPaymentPt($warrantyPaymentPt)
     {
-        $this->warrantyPaymentPt = $warrantyPaymentPt;
+        $this->warrantyPaymentPt = str_replace("'","’",$warrantyPaymentPt);
+    }
+
+    public function getOrderBy()
+    {
+        return $this->orderBy;
+    }
+
+    public function setOrderBy($orderBy)
+    {
+        $this->orderBy = $orderBy;
     }
 
     public function getWarrantyPaymentEn()
@@ -125,7 +138,7 @@ class Category
 
     public function setWarrantyPaymentEn($warrantyPaymentEn)
     {
-        $this->warrantyPaymentEn = $warrantyPaymentEn;
+        $this->warrantyPaymentEn = str_replace("'","’",$warrantyPaymentEn);
     }
 
     public function getAvailability()
@@ -190,7 +203,7 @@ class Category
 
     public function setNamePt($namePt)
     {
-        $this->namePt = $namePt;
+        $this->namePt = str_replace("'","’",$namePt);
     }
 
     public function getNameEn()
@@ -200,7 +213,7 @@ class Category
 
     public function setNameEn($nameEn)
     {
-        $this->nameEn = $nameEn;
+        $this->nameEn = str_replace("'","’",$nameEn);
     }
 
     public function getDescriptionPt()
@@ -210,7 +223,7 @@ class Category
 
     public function setDescriptionPt($descriptionPt)
     {
-        $this->descriptionPt = $descriptionPt;
+        $this->descriptionPt = str_replace("'","’",$descriptionPt);
     }
 
     public function getDescriptionEn()
@@ -220,7 +233,7 @@ class Category
 
     public function setDescriptionEn($descriptionEn)
     {
-        $this->descriptionEn = $descriptionEn;
+        $this->descriptionEn = str_replace("'","’",$descriptionEn);
     }
 
     public function getEvent()

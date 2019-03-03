@@ -50,7 +50,7 @@ class HomeController extends AbstractController
         $cS = array();
         $locales = $em->getRepository(Locales::class)->findAll();
         $warning = $em->getRepository(Warning::class)->find(10);
-        $category = $em->getRepository(Category::class)->findBy(['isActive' => 1],['namePt' => 'ASC']);
+        $category = $em->getRepository(Category::class)->findBy(['isActive' => 1],['orderBy' => 'ASC']);
         $categoryHl = $em->getRepository(Category::class)->findOneBy(['highlight' => 1],['namePt' => 'ASC']);
         $gallery = $em->getRepository(Gallery::class)->findBy(['isActive' => 1],['namePt' => 'DESC']);
 
@@ -108,33 +108,6 @@ class HomeController extends AbstractController
         $locale = $ua['lang'];
         $locales = $em->getRepository(Locales::class)->findAll();
         $gallery = $em->getRepository(Gallery::class)->findBy(['isActive' => 1],['namePt' => 'ASC']);
-        $category = $em->getRepository(Category::class)->findBy(['isActive' => 1],['namePt' => 'ASC']);
-
-        foreach ($category as $categories){
-            
-            $s = explode(":",$categories->getDuration());
-            $minutes = (int)$s[0]*60 + (int)$s[1];
-            
-            $cS[]= array(
-                'adultAmount' => $moneyFormatter->format($categories->getAdultPrice()),
-                'childrenAmount'  => $moneyFormatter->format($categories->getChildrenPrice()),
-                'namePt' => $categories->getNamePt(),
-                'nameEn' => $categories->getNameEn(),
-                'descriptionPt' => $categories->getDescriptionPt(),
-                'descriptionEn' => $categories->getDescriptionEn(),
-                'image' => $categories->getImage(),
-                'id' => $categories->getId(),
-                'warrantyPayment' => $categories->getwarrantyPayment(),
-                'warrantyPaymentPt' => $categories->getwarrantyPaymentPt(),
-                'warrantyPaymentEn' => $categories->getwarrantyPaymentEn(),
-                'duration' => $minutes
-            );
-        }
-
-
-
-
-
 
         return $this->render('info.html.twig', 
             array(
@@ -142,7 +115,6 @@ class HomeController extends AbstractController
                 'warning' => $warning,
                 'locale' => $locale,
                 'galleries' => $gallery,
-                'categories' => $cS,
                 'locales' => $locales,
                 'id' => '#'.$id
                 )

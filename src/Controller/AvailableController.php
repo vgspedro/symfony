@@ -171,7 +171,7 @@ class AvailableController extends AbstractController
 
         $end = \DateTime::createFromFormat('U', $request->query->get('end'));
 
-        $categories = $em->getRepository(Category::class)->findAll();
+        $categories = $em->getRepository(Category::class)->findBy([],['orderBy' => 'DESC']);
 
         $availables = $em->getRepository(Available::class)->findAvailableFromInterval($start, $end);
 

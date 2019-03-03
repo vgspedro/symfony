@@ -69,7 +69,7 @@ class Gallery
 
     public function setNamePt($namePt)
     {
-        $this->namePt = $namePt;
+        $this->namePt = str_replace("'","’", $namePt);
     }
 
     public function getNameEn()
@@ -79,6 +79,6 @@ class Gallery
 
     public function setNameEn($nameEn)
     {
-        $this->nameEn = $nameEn;
+        $this->nameEn = str_replace("'","’",$nameEn);
     }
 }

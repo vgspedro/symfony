@@ -1,0 +1,57 @@
+<style type="text/css">
+.hight-light{bottom: 0;background: rgba(0, 0, 0, 0.6);width: 100%;position:sticky; margin-top:-122px}
+@media only screen and (max-width:601px){
+.hight-light { margin-top: -107px}
+}
+</style>
+
+<section id="home" style="padding-top:56px" class="w3-border-bottom">
+  <div class="w3-display-container w3-center">
+    <div class="w3-display-container w3-center">
+      <img class="banner-img" alt="Taruga Benagil Tours, caves, Benagil, Algarve" src="images/banner.jpg">
+    
+    {% if category %}
+
+      <div class="w3-left-align w3-padding w3-text-white hight-light">
+      <div class="w3-row">
+        <div class="w3-col s12">
+          <h2>
+            <span class="PT">{{ category.namePt }}</span>
+            <span class="EN w3-hide">{{ category.nameEn }}</span>
+          </h2>
+          <div class="w3-col l4 m4 s0 w3-left-align w3-hide-small">
+             {% if category.adultAmount> 0 %}
+                <span class='ADULTO'>{% trans %}part_tree.adult{% endtrans %}</span>&nbsp;
+                <span>{{ category.adultAmount}}€</span>
+                <br>
+              {% else %}
+                <span class='ADULTO'>{% trans %}part_tree.adult{% endtrans %}</span>&nbsp;
+                <span>-/-</span>
+                <br>
+              {% endif %}
+              {% if category.childrenAmount > 0 %}
+                <span class='CRIANCA'>{% trans %}part_tree.children{% endtrans %}</span>&nbsp;
+                <span>{{ category.childrenAmount }}€</span>
+                <br>
+              {% else %}
+                <span class='CRIANCA'>{% trans %}part_tree.children{% endtrans %}</span>&nbsp;
+                <span>-/-</span>
+                <br>
+              {% endif %}
+          </div>
+          <div class="w3-col l4 m8 s12 w3-center">
+            <span class="w3-btn w3-blue w3-center" onclick="navigation('#reservas', {{ category.id }})">
+              <i class="fa fa-calendar"></i>&nbsp;
+              <span class="GET_AVAILABLE"> {% trans %}part_seven.get_available{% endtrans %}</span>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    {% endif %}
+
+  </div>
+</div>
+
+</section>

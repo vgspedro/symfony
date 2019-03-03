@@ -1,4 +1,8 @@
 
+<style>.day{background:rgba(76,175,80,0.7);color:#000}
+.prev,.picker-switch,.next, .dow{background-color: #EEE}
+</style>
+
 <section class="w3-container w3-padding-16 bgi_mg-3 w3-khaki reservas-cont w3-border-top" id="reservas">
 
  <div class="w3-padding-8">
@@ -45,8 +49,8 @@
       <div class="w3-col l4 m3 s2">&nbsp;</div>
       <div class="w3-col l4 m6 s8 w3-margin-top w3-center">
         <span class="w3-btn w3-blue w3-center" onclick="getAvailable()">
-          <i class="fa fa-calendar"></i>&nbsp;
-        <span class="GET_AVAILABLE w3-margin-left"> {% trans %}part_seven.get_available{% endtrans %}</span>
+          <i class="fa fa-check"></i>&nbsp;
+        <span class="GET_AVAILABLE"> {% trans %}part_seven.get_available{% endtrans %}</span>
         </span>
       </div>
     </div>
@@ -163,7 +167,7 @@
           <i class="fa fa-plus w3-text-blue"></i>
         </span>
         <br>
-        <input type="checkbox" name="check_rgpd" class="w3-check">
+        <input type="checkbox" name="check_rgpd" class="w3-check" checked>
         <span class="RGPD_TXT w3-small" style="line-height:10px">{% trans %}part_seven.rgpd_txt{% endtrans %}</span>
       </div>
 

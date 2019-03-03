@@ -80,6 +80,11 @@ admin_category_delete:
     controller: App\Controller\CategoryController::categoryDelete
     #condition: 'request.isXmlHttpRequest()'
 
+admin_category_order:
+    path: /admin-category-order/
+    controller: App\Controller\CategoryController::categoryOrder
+    #condition: 'request.isXmlHttpRequest()'
+
 ##
 # BOOKINGS ADMIN EVENTS
 ##

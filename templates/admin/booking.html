@@ -343,7 +343,7 @@ $(function(){$("#get-card-data").trigger('reset')})
         text:      '<i class="far fa-file-excel"></i>',
         titleAttr: 'Excel',
         exportOptions: {
-          columns: [2, 3, 4, 5, 6, 7]
+          columns: ':visible'
           }
         },
         {
@@ -351,7 +351,7 @@ $(function(){$("#get-card-data").trigger('reset')})
         text:      '<i class="far fa-file-pdf"></i>',
         titleAttr: 'PDF',
         exportOptions: {
-          columns: [ 2, 3, 4, 5, 6, 7]
+          columns: ':visible'
           },
           customize: function (doc) {
             //doc.content[1].table.widths = Array(doc.content[1].table.body[0].length + 1).join('*').split('')
@@ -374,11 +374,11 @@ $(function(){$("#get-card-data").trigger('reset')})
         text:      '<i class="far fa-eye-slash"></i>',
         titleAttr: 'Colunas',
         exportOptions: {
-          columns: [ 0, 1, 2, 3, 4,5]
+         columns: ':visible'
         }
       }
     ],
-    "columnDefs": [
+    columnDefs: [
       //{ className:"my_class", "targets": [4] },
     //  { "orderData":[ 1 ],   "targets": [ 2 ] },
         {
