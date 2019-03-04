@@ -242,8 +242,8 @@ admin_gallery_edit:
 # USERS
 ##
 
-list_user:
-    path: /list-user/
+user_list:
+    path: /user-list/
     controller: App\Controller\UserController::listUser
 
 status_user:
@@ -261,10 +261,10 @@ password_user:
     controller: App\Controller\UserController::passwordUser
     #condition: 'request.isXmlHttpRequest()'
 
-##
-# USERS REGISTRY
-##
+user_new:
+    path: /user-new/
+    controller: App\Controller\RegistrationController::userNew
 
-user_registration:
-    path: /register
-    controller: App\Controller\RegistrationController::register
+user_create:
+    path: /user-create/
+    controller: App\Controller\RegistrationController::userCreate

@@ -120,8 +120,6 @@ $('#available-form').on('submit',function(e){
       cache: false,
       success: function(data){  
         
-        //console.log('aqui'+data)
-
         $('.w3-overlay').hide()
         if (data.status == 1){
           $('.set-available-info').removeClass('w3-text-red').addClass('w3-text-green').html(data.message)

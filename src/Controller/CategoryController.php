@@ -300,7 +300,7 @@ class CategoryController extends AbstractController
         $category = $em->getRepository(Category::class)->find($categoryId);
         
         if (!$category) {
-            return new JsonResponse(array('message'=>'fail', 'status' => 'Categoria #'.$categoryId . ' não existe.'));
+            return new JsonResponse(array('status'=> 0, 'message' => 'Categoria #'.$categoryId . ' não existe.'));
         }
         
         //search bookings if already bought this category, DO NOT DELETE send info to user
@@ -351,8 +351,11 @@ class CategoryController extends AbstractController
     {
         $result = $request->request->get('result');
 
-        if ($result)
-            $order = json_decode($result);
+        if (!$result)
+        
+           return new JsonResponse(array('status'=> 0, 'message' => 'nada para ordenar', 'data' => null));
+
+        $order = json_decode($result);
     
         $em = $this->getDoctrine()->getManager();  
 

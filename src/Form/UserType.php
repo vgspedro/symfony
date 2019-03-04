@@ -20,17 +20,17 @@ class UserType extends AbstractType
             array(
                 'label'=>'part_seven.email',
                 'required' => true,
-                'attr' => ['class' => 'w3-input w3-padding-16 EMAIL','placeholder'=>'part_seven.email',]
+                'attr' => ['class' => 'w3-input w3-border w3-white EMAIL','placeholder'=>'part_seven.email',]
             ))
             ->add('username', TextType::class, array(
                 'label'=>'part_seven.name',
                 'required' => true,
-                'attr' => ['class' => 'w3-input w3-padding-16 NAME','placeholder'=>'part_seven.name','autofocus'=>'autofocus']
+                'attr' => ['class' => 'w3-input w3-border w3-white NAME','placeholder'=>'part_seven.name','autofocus'=>'autofocus']
             ))
             ->add('plainPassword', RepeatedType::class, array(
                 'type' => PasswordType::class,
-                'first_options'  => array('label' => 'Password *', 'attr' => ['class' => 'w3-input w3-padding-16','placeholder'=>'Password *']),
-                'second_options' => array('label' => 'Repetir Password *', 'attr' => ['class' => 'w3-input w3-padding-16','placeholder'=>'Repetir Password *'])
+                'first_options'  => array('label' => 'Password *', 'attr' => ['class' => 'w3-input w3-border w3-white','placeholder'=>'Password *']),
+                'second_options' => array('label' => 'Repetir Password *', 'attr' => ['class' => 'w3-input w3-border w3-white','placeholder'=>'Repetir Password *'])
             ))
         ;
     }

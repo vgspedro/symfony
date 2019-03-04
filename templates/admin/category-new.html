@@ -211,8 +211,8 @@ $('#category_duration').datetimepicker({format: 'HH:mm', ignoreReadonly:true ,ic
         $('.w3-overlay').hide()
         //console.log(data)
         if (data.message == 'success'){
-          $('#datetimepicker3').data('DateTimePicker').destroy()
-          ajaxUpload('category-new')
+          //$('#datetimepicker3').data('DateTimePicker').destroy()
+          ajaxUpload('category-list')
         }
         else if (data.message=='fail'){
           for(i=0;i<data.data.length;i++)
