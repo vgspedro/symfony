@@ -3,28 +3,29 @@
 textarea {color: #FFF!important}
 .btn-fullscreen{display: none}
 .w3-input {border-bottom: 0px solid #05788d}
+.w3-select {padding: 11.5px 0px}
 </style>
 
 <header class="w3-container" style="padding-top:22px">
-   <h5><b><i class="far fa-file-alt"></i> RGPD</b></h5>
+   <h5><b><i class="fas fa-asterisk"></i> Termos & Condições</b></h5>
 </header>
 
 <div class="w3-row-padding">
-  {% for category in rgpd%}
+  {% for category in terms%}
   <div class="w3-col s12 m6 l4 w3-margin-bottom">
-     <input type="hidden" id='{{category.id}}-rgpd' value="{{category.rgpdhtml}}">
+     <input type="hidden" id='{{category.id}}-terms' value="{{category.termshtml}}">
     <div class="w3-card-2 w3-sand w3-border">
       <div class="w3-center w3-col s12 w3-padding-small">
       {{category.name}}
       </div>
       <div class="w3-row">
         <div class="w3-col s6">
-          <button class="w3-btn w3-block w3-border w3-blue btn-{{ loop.index }}" onclick="editRgpd({{category.id}},'{{category.name}}', {{category.locales.id}})">
+          <button class="w3-btn w3-block w3-border w3-blue btn-{{ loop.index }}" onclick="editTerms({{category.id}},'{{category.name}}', {{category.locales.id}})">
             <i class="far fa-edit fa-fw"></i>
           </button>
         </div>
         <div class="w3-col s6">
-        <button class="w3-btn w3-block w3-border w3-red" onclick="deleteRgpdConfirm({{ category.id}},'{{ category.name }}')">
+        <button class="w3-btn w3-block w3-border w3-red" onclick="deleteTermsConfirm({{ category.id}},'{{ category.name }}')">
           <i class="fas fa-trash-alt"></i>
         </button>
         </div>
@@ -35,17 +36,17 @@ textarea {color: #FFF!important}
 </div>
 
 <div class="w3-container">
-  {{form_start(form, {'attr': {'id': 'rgpd-form'}})}}
+  {{form_start(form, {'attr': {'id': 'terms-form'}})}}
   <div class="w3-row-padding w3-sand w3-border w3-padding-16">
-    <div class="w3-col s12 w3-hide">
+    <div class="w3-col l6 m6 s12">
       {{form_label(form.locales)}}
       {{form_widget(form.locales)}}
     </div>
 
-    <div class="w3-col s12">
+    <div class="w3-col l6 m6 s12">
       {{form_label(form.name)}}
       {{form_widget(form.name)}}
-      {{form_widget(form.rgpdhtml)}}
+      {{form_widget(form.termshtml)}}
     </div>
 
     <div class="w3-col s12">
@@ -58,12 +59,12 @@ textarea {color: #FFF!important}
       <button class="w3-btn-block w3-margin-left w3-right w3-button w3-border w3-green">
         <i class="fa fa-check"></i> Guardar
       </button>
-      <span class="w3-btn-block w3-button w3-right w3-border w3-white" onclick="clearRgpd()">
+      <span class="w3-btn-block w3-button w3-right w3-border w3-white" onclick="clearTerms()">
          <i class="fa fa-eraser"></i> Limpar
       </span>
     </div>
   </div>
-  <input type="hidden" name="id" id="rgpd_id">
+  <input type="hidden" name="id" id="terms_id">
   {{ form_end(form) }}
 </div>
 
@@ -72,29 +73,29 @@ textarea {color: #FFF!important}
 $('#summernote').summernote({
   placeholder: 'Insira ....',
   tabsize: 3,
-  height: 400,
+  height: 300,
   fontName:'Arial'
 })
 
-function deleteRgpdConfirm(id, n)
+function deleteTermsConfirm(id, n)
 {
-  $('#delete-rgpd').html('<p class="w3-center w3-large">Tem a certeza que pretende apagar,<br><b>'+n+'</b> ?</p>')
-  $('#rgpd-id').val(id)
-  $('#modal-delete-rgpd').show()
+  $('#delete-terms').html('<p class="w3-center w3-large">Tem a certeza que pretende apagar,<br><b>'+n+'</b> ?</p>')
+  $('#terms-id').val(id)
+  $('#modal-delete-terms').show()
 }
 
-function deleteRgpd(id){
-  $('#modal-delete-rgpd').hide()
+function deleteTerms(id){
+  $('#modal-delete-terms').hide()
   $('.w3-overlay').show()
   setTimeout(function(){ 
   $.ajax({
-    url:'{{ path('admin_rgpd_delete') }}',  
+    url:'{{ path('admin_terms_delete') }}',  
     type: "POST",
     data:'id='+id,
     success: function(data){
       $('.w3-overlay').hide()
       if (data.message == 'success'){
-        ajaxUpload('rgpd')
+        ajaxUpload('terms')
       }
     },
     error:function(data){
@@ -105,39 +106,36 @@ function deleteRgpd(id){
   }, 500)
 }
 
-function clearRgpd(){
+function clearTerms(){
   $('#summernote').summernote('reset')
   //$('#easytext, #easy_text_name').val('')
 } 
 
 
-function editRgpd(id,name,locales){
-	$('#summernote').summernote('code', $('#'+id+'-rgpd').val())
-  $('#rgpd_id').val(id)
-  $('#rgpd_name').val(name)
-  $('#rgpd_locales').val(locales)
+function editTerms(id,name,locales){
+	$('#summernote').summernote('code', $('#'+id+'-terms').val())
+  $('#terms_id').val(id)
+  $('#terms_conditions_name').val(name)
+  $('#terms_conditions_locales').val(locales)
 }
 
-$('#rgpd-form').on('submit',function(e){
+$('#terms-form').on('submit',function(e){
   e.preventDefault()
   obj=''
   $('.w3-overlay').show()
-  $('#rgpd_rgpdhtml').val($('#summernote').summernote('code'))
+  $('#terms_conditions_termshtml').val($('#summernote').summernote('code'))
   setTimeout(function(){
     $.ajax({  
-      //url:'{{ path('admin_rgpd') }}',
-      url:'{{ path('admin_rgpd_edit') }}',
+      url:'{{ path('admin_terms_edit') }}',
       type: "POST",
-      data:$('#rgpd-form').serialize(),
+      data:$('#terms-form').serialize(),
       success: function(data){ 
       //console.log(data) 
         $('.w3-overlay').hide()
-         if (data.message == 'success'){
-          ajaxUpload('rgpd')
-          clearRgpd()
-          $('#easy_text_name').val('')
+         if (data.status == 1){
+          ajaxUpload('terms')
         }
-        else if (data.message=='fail'){
+        else{
           for(i=0;i<data.data.length;i++)
             obj += data.data[i]+'<br>'
           $('#set-fields').html(obj)
@@ -153,4 +151,5 @@ $('#rgpd-form').on('submit',function(e){
 })
 
 $('.btn-1').trigger('click')
+
 </script>

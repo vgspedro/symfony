@@ -2,7 +2,9 @@
 namespace App\Controller;
 
 use App\Entity\Category;
+use App\Entity\Booking;
 use App\Entity\Event;
+use App\Entity\Logs;
 use App\Entity\Available;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -171,7 +173,7 @@ class AvailableController extends AbstractController
 
         $end = \DateTime::createFromFormat('U', $request->query->get('end'));
 
-        $categories = $em->getRepository(Category::class)->findBy([],['orderBy' => 'DESC']);
+        $categories = $em->getRepository(Category::class)->findBy([],['orderBy' => 'ASC']);
 
         $availables = $em->getRepository(Available::class)->findAvailableFromInterval($start, $end);
 
@@ -188,9 +190,10 @@ class AvailableController extends AbstractController
         foreach ($categories as $category) {
             $counter++;
             $data_resources[] = array(
+                'eventColor' => $rand_color[$counter],
                 'id' => $category->getId(),
                 'title' => $category->getNamePt(),
-                'eventColor' => $rand_color[$counter]
+                'order' => $category->getOrderBy()
             );
         }
 
@@ -252,26 +255,42 @@ class AvailableController extends AbstractController
     public function adminAvailableDelete(Request $request){
 
         $em = $this->getDoctrine()->getManager();
-        
+    
         $available = $em->getRepository(Available::class)->find($request->request->get('id'));
+        
+        if(!$available)
+            return new JsonResponse(array(
+                'status' => 0,
+                'message' => 'Disponibilidade não foi encontrada!',
+                'data' => null));
 
-        if ($available->getLotation() == $available->getStock()){
-            $entityManager->remove($available);
-            $entityManager->flush();
+        $booking = $em->getRepository(Booking::class)->findOneBy(['available' => $available]);
+            
+        if($booking)
+            return new JsonResponse(array(
+                'status' => 0,
+                'message' => 'Não é possivel apagar a Disponibilidade, tem reservas associadas!',
+                'data' => null));
+        
+        $logTxt = 'Utilizador: '.$this->getUser()->getUsername().'Evento: #'.$available->getId().'
+        Start: '.$available->getDatetimeStart()->format('d/m/Y H:i:s').' End: '.$available->getDatetimeEnd()->format('d/m/Y H:i:s').'
+        Lotação : '.$available->getLotation().' Stock : '.$available->getStock().'Categoria: '.$available->getCategory()->getNamePt();
 
-            $response = array(
-                'result' => 1,
-                'message' => 'deleted',
-                'data' => $request->request->get('id'));
-            }
-        else 
-            $response = array(
-                'result' => 0,
-                'message' => 'not possible',
-                'data' => $request->request->get('id'));
+        $now = new \DateTime('now');
+        $log = new Logs();
+        $log->setDatetime($now);
+        $log->setLog($logTxt);
+        $log->setStatus('delete');
+        $em->persist($log);
+        $em->flush();
 
-        return new JsonResponse($response);
+        $em->remove($available);
+        $em->flush();
 
-   }
+        return new JsonResponse(array(
+            'status' => 1,
+            'message' => 'Disponibilidade foi Apagada',
+            'data' => $request->request->get('id')));
+    }
 
 }

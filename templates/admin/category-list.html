@@ -163,11 +163,11 @@ function addAvailable(id,name){
     type: "POST",
     data:'id='+id,
     success: function(data){
-      console.log(data)
+      //console.log(data)
       $('.w3-overlay').hide()
-      $('#set-id').text(name)
-      $('#set-category').html(data)
-      $('#modal-edit-category').show()
+      $('#set-id-available').text(name)
+      $('#set-available').html(data)
+      $('#modal-new-available').show()
       if (data.message == 'success'){
       }
     },
@@ -193,11 +193,6 @@ function editCategory(id, name){
       $('#set-id').text(name)
       $('#set-category').html(data)
       $('#modal-edit-category').show()
-      if (data.message == 'success'){
-        $('#info-client').show()                
-        $('#info-client-head').removeClass('w3-red').addClass('w3-green').html('<span onclick="$(\'#info-client\').hide()" class="w3-button w3-display-topright w3-large"><i class="fa fa-times"></i></span><h1><i class="fa fa-check"></i> Sucesso</h1>')
-        $('#client-txt').html('')
-      }
     },
     error:function(data){
       $('.w3-overlay').hide()
@@ -224,12 +219,15 @@ function deleteCategory(id){
     success: function(data){
       $('.w3-overlay').hide()
       console.log(data)
+      $('#modal-delete-category').hide()
       if (data.status == 1){
         ajaxUpload('category-list')
-        $('#modal-delete-category').hide()
       }
-      else
-        alert(data.message)
+      else{
+        $('#info-client').show()                
+        $('#info-client-head').removeClass('w3-green w3-red w3-amber').addClass('w3-blue').html('<span onclick="$(\'#info-client\').hide()" class="w3-button w3-display-topright w3-large"><i class="fa fa-times"></i></span><h1><i class="fa fa-info-circle"></i> Verifique</h1>')
+        $('#client-txt').html(data.message)
+      }
     },
     error:function(data){
       $('.w3-overlay').hide()
@@ -318,7 +316,7 @@ $(function(){
       var rowData = table.row( diff[i].node ).data()  
       result.push({'id':rowData[1],'from':diff[i].oldData,'to':diff[i].newData})
     }
-    console.log(result)
+    //console.log(result)
 
     if (result.length>0){
 
@@ -329,12 +327,11 @@ $(function(){
         dataType: 'json',
         success: function(data){
           $('.w3-overlay').hide()
-          console.log(data)
-          if (data.status == 1){
-
-          }
-          else{
-            alert('Não foi possivel mudar a ordem. Tente novamente')
+          //console.log(data)
+          if (data.status != 1){
+            $('#info-client').show()                
+            $('#info-client-head').removeClass('w3-green w3-red w3-amber').addClass('w3-blue').html('<span onclick="$(\'#info-client\').hide()" class="w3-button w3-display-topright w3-large"><i class="fa fa-times"></i></span><h1><i class="fa fa-info-circle"></i> Verifique</h1>')
+          $('#client-txt').html('Não foi possivel mudar a ordem. Tente novamente!')
           }
         },
         error:function(data){

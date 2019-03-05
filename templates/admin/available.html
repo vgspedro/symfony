@@ -12,6 +12,7 @@
 <script src="{{ asset('fullcalendar/packages/tooltip.min.js') }}"></script>
 
 <style>
+.fa, .far, .fas {font-family: Font Awesome\ 5 Free!important}
 .w3-input {border-bottom: 0px solid #05788d}
 input, select, textarea {color: #000!important}
 .fc-left, .fc-right, .fc-center{padding: 4px 6px}
@@ -27,7 +28,6 @@ input, select, textarea {color: #000!important}
 .fc-center h2{font-size: 23px}
 .fc-time-grid-event{cursor: pointer}
 .fc-license-message{display: none!important}
-.fa, .far, .fas {font-family: Font Awesome\ 5 Free!important}
 </style>
 
 <script>
@@ -46,9 +46,10 @@ function getResources(t) {
     url: '{{ path("admin_available_list") }}',
     data:'start='+start+'&end='+end,
     dataType: 'json',
+    cache:false,
     success: function(data) {
+      //console.log(data)
       startCalendar(data)
-
       for (var k in data.resources)
         template += '<span class="w3-padding-small w3-border" style="width:25%;background-color:'+data.resources[k].eventColor+';color:#FFF">'+data.resources[k].title+'</span>'
 
@@ -123,6 +124,7 @@ function startCalendar(data){
       });
     },
     allDaySlot: false,
+    resourceOrder: 'order',
     resources: data.resources,
     // events: data.events,
     events: function(info, successCallback, failureCallback) {
@@ -130,6 +132,7 @@ function startCalendar(data){
         url: '{{ path("admin_available_list") }}',
         data:'start='+info.start.valueOf()/1000+'&end='+info.end.valueOf()/1000,
         dataType: 'json',
+        cache:false,
         success: function(info) {
           ev = info.events
           successCallback(ev)
@@ -160,7 +163,9 @@ function startCalendar(data){
   calendar.render()
 }
 
-getResources()
+setTimeout(function(){
+  getResources()
+}, 750)
 
 $('#add').next().remove()
 
@@ -170,25 +175,61 @@ $('.w3-overlay').show()
     $.ajax({  
       url:'{{ path('admin_available_edit') }}',
       type: "POST",
+      cache:false,
       data: $('#set-stock').serialize(),
       dataType:'json',
       success: function(data){
         $('.w3-overlay').hide()
+        $('#modal-edit-stock').hide()
         if(data.status == 1)
          $('.evt-'+data.data.id+' .fc-title').html('Total: '+data.data.lotation+' Disponivel: '+data.data.stock).addClass('blink')
         else {
-          alert(data.message)
+          $('#info-client').show()                
+          $('#info-client-head').removeClass('w3-green w3-red w3-amber').addClass('w3-blue').html('<span onclick="$(\'#info-client\').hide()" class="w3-button w3-display-topright w3-large"><i class="fa fa-times"></i></span><h1><i class="fa fa-info-circle"></i> Verifique</h1>')
+          $('#client-txt').html(data.message)
         }
       },
       error:function(data){
+        $('#modal-edit-stock').hide()
         $('.w3-overlay').hide()
         $('#modal-error').show()
       }
     })
   }, 500)
-
-$('#modal-edit-stock').hide()
 }
+
+
+function deleteAvailable(){
+  $('.w3-overlay').show()
+  setTimeout(function(){
+    $.ajax({  
+      url:'{{ path('admin_available_delete') }}',
+      type: "POST",
+      cache:false,
+      data: $('#set-stock').serialize(),
+      dataType:'json',
+      success: function(data){
+        $('.w3-overlay').hide()
+        $("#modal-edit-stock").hide()
+        if(data.status == 1)
+        
+          $('.evt-'+data.data).remove()
+        
+        else{
+          $('#info-client').show()                
+          $('#info-client-head').removeClass('w3-green w3-red w3-amber').addClass('w3-blue').html('<span onclick="$(\'#info-client\').hide()" class="w3-button w3-display-topright w3-large"><i class="fa fa-times"></i></span><h1><i class="fa fa-info-circle"></i> Verifique</h1>')
+          $('#client-txt').html(data.message)
+        }
+      },
+      error:function(data){
+        $('#modal-edit-stock').hide()
+        $('.w3-overlay').hide()
+        $('#modal-error').show()
+      }
+    })
+  }, 500)
+}
+
 
 
 </script>

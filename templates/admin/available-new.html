@@ -21,9 +21,8 @@
   </h5>
 </header>
 
-<div class="">
-  <form id="available-form">
-    <div class="w3-padding-16 w3-row-padding w3-large w3-border w3-sand">
+<form id="available-form">
+    <div class="w3-padding-16 w3-row-padding w3-border w3-sand">
       <div class="w3-col l12 m12 l12">
         <h5 class="w3-center"> Para criar disponibilidades, escolha as "Horas", e escolha o periodo temporal, Inicio e Fim nos calendarios<h5> 
         <h5 class="w3-text-red w3-center">(Periodo máximo é de 2 anos, 732 dias)</h5> 
@@ -55,31 +54,23 @@
       <div class="w3-col l3 m0 w3-hide-medium w3-hide-small">&nbsp;</div>
       
       <div class="w3-col l3 m6 s12">
-        <label>Data Inicio</label>
+        <label>Data Inicio*</label><label class="startDate required w3-text-red w3-right w3-hide">Obrigatório *</label>
         <input class="w3-input w3-border w3-white" id='startDate' name="startDate" readonly type="text" placeholder="&#xF274; Inicio" style="font-family:Raleway, FontAwesome;cursor:pointer">
       </div>
       <div class="w3-col l3 m6 s12">
-        <label>Data Fim</label>
+        <label>Data Fim*</label><label class="endDate required w3-text-red w3-right w3-hide">Obrigatório *</label>
         <input class="w3-input w3-border w3-white" id='endDate' readonly name="endDate" type="text" placeholder="&#xF273; Fim" style="font-family:Raleway, FontAwesome;cursor:pointer">
       </div>
       
     </div>
       <div class="w3-col s12 set-available-info w3-padding-small w3-center"></div>
-      <div class="w3-col s12 w3-margin-top w3-margin-bottom w3-border-top">
-        <span class="w3-btn w3-border w3-green w3-right w3-margin-top btn-available" onclick="$('#available-form').trigger('submit')">
-          <i class="fa fa-check"></i> Guardar
-        </span>
-      </div>
     </div>
   </form>
-</div>
   
 <script src="{{ asset('js/bootstrap-datepicker.min.js') }}"></script>
 <script src="{{ asset('js/ui.datepicker-pt-BR.js') }}"></script>
 
 <script>
-
-
 
   function clearBookSearch(){
     $('#startDate, #endDate').datepicker('clearDates')
@@ -108,11 +99,22 @@
 
 $('#available-form').on('submit',function(e){
   e.preventDefault()
-//console.log($('#available-form').serialize())
   obj=''
   $('.w3-overlay').show()
+  
   $('.required').addClass('w3-hide')
+  
   setTimeout(function(){
+
+  if (!$('input[name=startDate]').val()){
+    $('.w3-overlay').hide()
+    $('.startDate').removeClass('w3-hide')
+  }
+  if (!$('input[name=endDate]').val()){
+    $('.w3-overlay').hide()
+    $('.endDate').removeClass('w3-hide')
+  }
+  else{
     $.ajax({
       url: '{{ path('admin_available_create') }}',
       type: "POST",
@@ -133,6 +135,7 @@ $('#available-form').on('submit',function(e){
         $('#modal-error').show()
       }
     })
+  }
   }, 500)
 })
 

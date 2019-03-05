@@ -12,7 +12,7 @@
   
   {{ form_start(form, {'attr': {'id': 'register-form'}})  }}
   
-  <div class="w3-padding-16 w3-row-padding w3-large w3-border w3-sand">
+  <div class="w3-padding-16 w3-row-padding w3-border w3-sand">
     <div class="w3-col m6 s12 w3-left-align">
       {{ form_label(form.username) }}<br>
       {{ form_widget(form.username) }}
@@ -25,11 +25,11 @@
       {{ form_label(form.plainPassword.first) }}<br>
       {{ form_widget(form.plainPassword.first) }}
     </div>
-    <div class="w3-col m6 s12 w3-left-align">
+    <div class="w3-col m6 s12 w3-left-align w3-margin-bottom">
       {{ form_label(form.plainPassword.second) }}<br>
       {{ form_widget(form.plainPassword.second) }}
     </div>
-    <div class="w3-col s12 w3-margin-top">
+    <div class="w3-col s12 w3-border-top" style="padding-top:16px">
       <button type="submit" class="w3-btn-block w3-margin-left w3-right w3-button w3-border w3-green">
         <i class="fa fa-check"></i> 
         Registar
@@ -37,7 +37,6 @@
       <button type="reset" class="w3-btn-block w3-button w3-right w3-border w3-white">
         <i class="fa fa-eraser"></i> Limpar
       </button>
-
     </div>
   </div>  
 
@@ -60,7 +59,7 @@
       cache: false,
       success: function(data){  
         $('.w3-overlay').hide()
-        console.log(data)
+        //console.log(data)
         if (data.status == 1){
           ajaxUpload('user-list')
         }
@@ -78,14 +77,5 @@
     })
   }, 500)
 })
-
-
-
-
-
-
-
-
-
 
 </script>

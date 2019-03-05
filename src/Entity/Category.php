@@ -278,9 +278,6 @@ class Category
         $this->available->removeElement($available);
     }
 
-
-
-
     /** 
      * @return \Money\Money
      */

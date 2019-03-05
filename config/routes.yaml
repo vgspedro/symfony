@@ -178,6 +178,29 @@ index_rgpd:
     #condition: 'request.isXmlHttpRequest()'
 
 ##
+# TERMS CONDITIONS
+##
+
+admin_terms:
+    path: /admin-terms/
+    controller: App\Controller\TermsConditionsController::terms
+    #condition: 'request.isXmlHttpRequest()'
+
+admin_terms_delete:
+    path: /admin-easy-terms-delete/
+    controller: App\Controller\TermsConditionsController::termsDelete
+
+admin_terms_edit:
+    path: /admin-easy-terms-edit/
+    controller: App\Controller\TermsConditionsController::termsEdit
+
+index_terms:
+    path: /index-terms/
+    controller: App\Controller\TermsConditionsController::termsShow
+    #condition: 'request.isXmlHttpRequest()'
+
+
+##
 # BLOCK DATES
 ##
 

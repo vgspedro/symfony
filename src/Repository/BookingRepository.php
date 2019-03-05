@@ -61,15 +61,52 @@ class BookingRepository extends ServiceEntityRepository
         $stmt->execute();
         $day1 = $stmt->fetchAll();
 
-        $dashRowTree = $this->createQueryBuilder('b')
-            ->select('SUM(b.adult) as adults, SUM(b.children) AS childrens, SUM(b.baby) AS babies, SUM(b.adult) + SUM(b.children) + SUM(b.baby) AS total')
-            ->getQuery()
-            ->getResult()
-        ;
-        return array('day0' => $day0, 'day1' => $day1, 'total' => $dashRowTree); 
+        $sql = "SELECT c.name_pt AS category, COUNT(c.name_pt) AS total 
+            FROM booking b
+            JOIN available a
+            ON b.available_id = a.id
+            JOIN category c
+            ON a.category_id = c.id
+            GROUP BY c.name_pt";
+
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+        $c0 = $stmt->fetchAll();
+        
+        $chart0 = array();
+        $tmp = ['Categoria', 'Total'];
+        array_push($chart0, $tmp);
+        
+        foreach ($c0 as $key => $value) {
+            $tmp = array( $value['category'], (int)$value['total']); 
+            array_push($chart0, $tmp);
+        }
+
+        $sql = "SELECT b.status AS status, COUNT(b.status) AS total 
+            FROM booking b
+            WHERE 1 = 1
+            GROUP BY b.status
+            ORDER BY b.status ASC";
+
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+        $c1 = $stmt->fetchAll();
+        
+        $chart1 = array();
+        $tmp = ['Status', 'Total'];
+        array_push($chart1, $tmp);
+        
+        foreach ($c1 as $key => $value) {
+            $tmp = array(strtoupper($value['status']), (int)$value['total']); 
+            array_push($chart1, $tmp);
+        }
+
+        $charts = array();
+        array_push($charts, $chart0, $chart1);
+
+        return array('day0' => $day0, 'day1' => $day1, 'chart' => $charts); 
     }
   
-
     public function bookingFilter($start, $end){
 
         if ($start && $end)
@@ -115,6 +152,21 @@ class BookingRepository extends ServiceEntityRepository
                 ->setParameter('category', $category);
         return $query->getResult();
 
+    }
+
+
+
+    private function objectToArray( $object )
+    {
+        if( !is_object( $object ) && !is_array( $object ) )
+        {
+            return $object;
+        }
+        if( is_object( $object ) )
+        {
+            $object = get_object_vars( $object );
+        }
+        return array_map( array($this, 'objectToArray'), $object );
     }
 
 }

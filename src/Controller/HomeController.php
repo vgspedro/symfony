@@ -21,6 +21,7 @@ use App\Entity\Available;
 use EmailValidator\EmailValidator;
 use App\Service\MoneyFormatter;
 use Money\Money;
+use App\Entity\TermsConditions;
 /*https://packagist.org/packages/inacho/php-credit-card-validator*/
 use Inacho\CreditCard;
 
@@ -50,8 +51,10 @@ class HomeController extends AbstractController
         $cS = array();
         $locales = $em->getRepository(Locales::class)->findAll();
         $warning = $em->getRepository(Warning::class)->find(10);
+        
         $category = $em->getRepository(Category::class)->findBy(['isActive' => 1],['orderBy' => 'ASC']);
-        $categoryHl = $em->getRepository(Category::class)->findOneBy(['highlight' => 1],['namePt' => 'ASC']);
+        
+        $categoryHl = $em->getRepository(Category::class)->findOneBy(['highlight' => 1],['orderBy' => 'ASC']);
         $gallery = $em->getRepository(Gallery::class)->findBy(['isActive' => 1],['namePt' => 'DESC']);
 
         $cH = array(
@@ -62,8 +65,25 @@ class HomeController extends AbstractController
             'id' => $categoryHl->getId()
         );
         
+        $now = new \DateTime('tomorrow');
+
         foreach ($category as $categories){
-            
+
+            $flag = true;
+            $ord = array();
+
+            if($categories->getAvailable()){
+                foreach ($categories->getAvailable() as $available)
+                   array_push($ord, $available->getDatetimeStart()->format('U'));
+                    
+                sort($ord);
+                
+                for($t = 0; $t<count($ord); $t++) {
+                    if($ord[$t] >= $now->format('U'))
+                    $flag = false;
+                }
+            }
+
             $s = explode(":",$categories->getDuration());
             $minutes = (int)$s[0]*60 + (int)$s[1];
             
@@ -79,7 +99,8 @@ class HomeController extends AbstractController
                 'warrantyPayment' => $categories->getwarrantyPayment(),
                 'warrantyPaymentPt' => $categories->getwarrantyPaymentPt(),
                 'warrantyPaymentEn' => $categories->getwarrantyPaymentEn(),
-                'duration' => $minutes
+                'duration' => $minutes,
+                'no_stock' => $flag,
             );
         }
         return $this->render('base.html.twig', 
@@ -159,11 +180,7 @@ class HomeController extends AbstractController
 
         if($wp){
             $name != $name_card ? $err[] = 'NO_MATCH_NAMES' : false;
-            //$this->noFakeCvv($cvv) ? $err[] = 'CVV_INVALID' : false;
-            //$this->noFakeCcard($card_nr) ? $err[] = 'CARD_NR_INVALID' : false;
-            //$this->noFakeCardDate($date_card) ? $err[] = 'DATE_CARD_INVALID' : false;
             $this->noFakeCcard($date_card,$cvv, $card_nr) ? $err[] = $this->noFakeCcard($date_card,$cvv, $card_nr) : false; 
-        
         }
 
         //NO FAKE DATA
@@ -204,12 +221,10 @@ class HomeController extends AbstractController
              //Get the total number of Pax.
             $paxCount = $userEvent->adult + $userEvent->children + $userEvent->baby; 
 
-
         //total amount of booking
         $amountA = Money::EUR(0);
         $amountC = Money::EUR(0);
         $total = Money::EUR(0);
-
 
         $amountA = $available->getCategory()->getAdultPrice();
         $amountA = $amountA->multiply($userEvent->adult);
@@ -323,6 +338,8 @@ class HomeController extends AbstractController
 
         $locale = $client->getLocale();
 
+        $terms = $em->getRepository(TermsConditions::class)->findOneBy(['locales' => $locale]);
+
         $transport = (new \Swift_SmtpTransport($_ENV['EMAIL_SMTP'], $_ENV['EMAIL_PORT'], $_ENV['EMAIL_CERTIFICADE']))
             ->setUsername($_ENV['EMAIL'])
             ->setPassword($_ENV['EMAIL_PASS']);       
@@ -352,7 +369,9 @@ class HomeController extends AbstractController
                         'children' => $booking->getChildren(),
                         'baby' => $booking->getBaby(),
                         'wp' => $category->getWarrantyPayment(),
-                        'logo' => 'https://tarugatoursbenagilcaves.pt/images/logo.png'
+                        'logo' => 'https://tarugatoursbenagilcaves.pt/images/logo.png',
+                        'terms' => !$terms ? '' : $terms->getName(),
+                        'terms_txt' => !$terms ? '' : $terms->getTermsHtml()
                     )
                 ),
                 'text/html'

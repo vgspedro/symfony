@@ -73,36 +73,6 @@ div.dataTables_length select {height: 50px}
 </div>
 </div>
 
-<div id="modal-edit-password" class="w3-modal" style="z-index:9999999;padding-top: 12px;padding-bottom:32px">
-  <div class="w3-modal-content w3-animate-zoom" style="max-width:400px">
-      <div class="w3-container w3-blue w3-padding">
-          <span onclick="$('#modal-edit-password').hide()" class="w3-padding w3-button w3-display-topright">
-            <i class="w3-xlarge fa fa-times"></i>
-          </span>
-          <h2>
-            <i class="fas fa-unlock-alt"></i>
-            <span>Password</span>
-          </h2>
-      </div>
-      <input type="hidden" id="set-user-id">
-      <div class="w3-container w3-padding w3-large w3-sand" id="set-password"></div>
-    <div class="w3-row-padding w3-xlarge w3-padding-large w3-border-top">
-      <div class="w3-col s6">
-      <span style="padding: 0 8px" class="w3-block w3-border w3-btn" onclick="$('#modal-edit-password').hide()">
-        <i class="fa fa-times"></i>
-      </span>
-      </div>
-      <div class="w3-col s6">
-        <span style="padding: 0 8px" class="w3-green w3-border w3-block w3-btn" onclick="$('#change-password').trigger('submit')">
-        <i class="fas fa-check"></i>
-      </span>
-    </div>
-    </div>
-  </div>
-</div>
-
-
-
 <script>
  
 function deleteUserConfirm(id,n){
@@ -157,10 +127,11 @@ function deleteUser(id){
 }, 500)
 }
 
+
 function statusUserConfirm(id,n,v){
   $('#confirm').html('<p class="w3-center w3-large">Tem a certeza que pretende mudar o acesso ao utilizador, <b>'+n+'</b> ?</p>')
   $('#confirm-id').val(id)
-  $('#action-confirm').html('<span style="padding: 0 8px" class="w3-amber w3-border w3-block w3-btn" onclick="statusUser('+id+','+v+')"><i class="fas fa-check"></i></span>')
+  $('#action-confirm').html('<span class="w3-green w3-border w3-btn w3-right" onclick="statusUser('+id+','+v+')"><i class="fas fa-check"></i> Gravar</span>')
   $('#modal-confirm').show()
 }
 

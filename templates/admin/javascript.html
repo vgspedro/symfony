@@ -53,6 +53,9 @@ function ajaxUpload(block){
         case 'rgpd': 
             url = '{{ path("admin_rgpd") }}' 
         break
+        case 'terms': 
+            url = '{{ path("admin_terms") }}' 
+        break
     }
 
     $('.w3-overlay').show() 

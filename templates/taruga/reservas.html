@@ -23,8 +23,10 @@
         <select class="w3-select w3-input" name="category" onchange="updateTourData()">
            <option class="TOUR w3-opacity" value="">{% trans %}part_seven.tour{% endtrans %}</option>
           {% for category in categories %}
+          {% if category.no_stock == false %} 
           <option class="PT" value="{{category.id}}">{{category.namePt}}</option>
           <option class="EN w3-hide" value="{{category.id}}">{{category.nameEn}}</option>
+          {% endif %} 
           {% endfor %}
         </select>
       </div>

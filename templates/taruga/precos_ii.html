@@ -23,19 +23,28 @@
           <img class="w3-card-4" src="/upload/category/{{ category.image }}" onerror="this.src='/upload/category/no-image.png'" style="width:100%">
           <div class="w3-display-topright w3-center w3-opacity-min w3-card-4" style="margin:-4px">
             <span class="w3-tag w3-padding-small">Aprox: {{ category.duration}} Min.</span>
+          </div>  
           </div>
-        </div>
           <p class="w3-padding-8">
             <span class="PT">{{ category.descriptionPt }}</span>
             <span class="EN w3-hide">{{ category.descriptionEn }}</span>
           </p>
           <div class="w3-padding-8 w3-border-top">
+          {% if category.no_stock %} 
+            <span class="w3-right w3-margin-right w3-large">
+              <span class="fa-stack fa-lg">
+                <i class="fa w3-text-black fa-ticket fa-stack-1x fa-rotate-90"></i>
+                <i class="fa fa-ban fa-stack-2x w3-text-red w3-opacity"></i>
+              </span>
+            </span>
+          {% else %}
 
             <span class="w3-btn w3-blue w3-right" onclick="navigation('#reservas', {{ category.id }})">
               <i class="fa fa-calendar"></i>&nbsp;
               <span class="GET_AVAILABLE">{% trans %}part_seven.get_available{% endtrans %}</span>
             </span>
-            
+            {% endif %}
+
             <p class="">
             {% if category.adultAmount > 0 %}
                 <span class='ADULTO'>{% trans %}part_tree.adult{% endtrans %}</span>&nbsp;

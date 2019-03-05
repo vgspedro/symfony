@@ -22,7 +22,7 @@
 
     <input type="hidden" name="id" value="{{ category.id }}">
   
-    <div class="w3-padding-16 w3-row-padding w3-large w3-border w3-sand">
+    <div class="w3-padding-16 w3-row-padding w3-border w3-sand">
     <div class="w3-col s6 l2 m3" title="Em destaque no banner">
       {{ form_label(form.highlight)}}<br>
       {{ form_widget(form.highlight)}}
@@ -121,13 +121,7 @@
       <div class="w3-hide">
         {{ form_widget(form.submit)}}
       </div>
-      <div class="w3-col s12 w3-margin-top w3-margin-bottom w3-border-top">
-        <span class="w3-btn w3-border w3-green w3-right w3-margin-top" onclick="$('#category-form').trigger('submit')">
-            <i class="fa fa-check"></i> Guardar
-          </span>
-      </div>
-
-  </div>
+    </div>
       {{ form_end(form) }}
   </div>
   

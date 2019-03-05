@@ -110,7 +110,7 @@ div.dataTables_length select {height: 50px}
         <i class="fa fa-times"></i>
       </span>
       <h1>
-        <i class="fa fa-exclamation-triangle"></i> Confirme
+        <i class="fa fa-info-circle"></i> Confirme
       </h1>
     </div>
     <div class="w3-border-bottom w3-container w3-padding">
@@ -142,13 +142,15 @@ div.dataTables_length select {height: 50px}
         </div>
       </form>
     </div>
-    <div class="w3-padding w3-margin-top">
-      <span class="w3-button w3-border" onclick="$('#modal-data-validate').hide(); $('.show-user-info').empty()">
-        <i class="w3-text-black fa fa-times"></i>
-      </span>
-      <span class="w3-green w3-button w3-right w3-border" onclick="getCardData()">
-        <i class="fa fa-check"></i>
-      </span>
+    <div class="w3-row-padding w3-border-top">
+      <div class="w3-col s12 w3-margin-top w3-margin-bottom">
+        <span class="w3-btn-block w3-margin-left w3-right w3-button w3-border w3-green" onclick="getCardData()">
+          <i class="fa fa-check"></i> Enviar
+        </span>
+        <span class="w3-btn-block w3-button w3-left w3-border w3-white" onclick="$('#modal-data-validate').hide(); $('.show-user-info').empty()">
+          <i class="fa fa-times"></i> Fechar
+        </span>
+      </div>
     </div>
   </div>
 </div>
@@ -210,7 +212,10 @@ $('.username').removeClass('w3-hide')
           $('.show-user-info').html('<div class="w3-light-grey w3-text-black w3-padding w3-left-align w3-border w3-large">'+templ+'</div>')
         }
         else{
-          $('.show-user-info').addClass('w3-animate-zoom').html(data.message)
+          $('#info-client').show()                
+          $('#info-client-head').removeClass('w3-green w3-red w3-amber').addClass('w3-blue').html('<span onclick="$(\'#info-client\').hide()" class="w3-button w3-display-topright w3-large"><i class="fa fa-times"></i></span><h1><i class="fa fa-info-circle"></i> Verifique</h1>')
+          $('#client-txt').html(data.message)
+
         }
       },
       error:function(data){
@@ -225,7 +230,6 @@ $('.username').removeClass('w3-hide')
 
 
 $(function(){$("#get-card-data").trigger('reset')})
-
 
   function clearBookSearch(){
     $('#startDate, #endDate').datepicker('clearDates')
@@ -460,7 +464,7 @@ function modalBookingSetStatus(bookingId){
       type: "POST",
       data:'id='+bookingId,
       success: function(data){
-        console.log(data)
+        //console.log(data)
         $('.w3-overlay').hide()
         $('#set-booking').html(data)
         $('#booking-id').text(bookingId)

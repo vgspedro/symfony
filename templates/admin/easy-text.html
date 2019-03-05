@@ -35,7 +35,7 @@
 
 <div class="w3-container">
   {{form_start(form, {'attr': {'id': 'easytext-form'}})}}
-    <div class="w3-row-padding w3-large w3-sand w3-border w3-padding-16">
+    <div class="w3-row-padding w3-sand w3-border w3-padding-16">
       <div class="w3-col s12">
         {{form_label(form.name)}}
         {{form_widget(form.name)}}
@@ -45,23 +45,17 @@
         <label>Texto</label>
         <div id="editor" class="w3-white" style="height: 375px"></div>
       </div>
-      
-      <div class="w3-col s12 w3-border-bottom">&nbsp;</div> 
-
-      <div class="w3-col l6 m0 s0 w3-hide-small w3-hide-medium">&nbsp;</div> 
-
-      <div class="w3-col l3 m6 s6 w3-margin-top w3-margin-bottom">
-        <button type="reset" class="w3-button w3-block w3-border w3-white" onclick="clearEasyText()">
-        	<i class="fa fa-eraser"></i> Limpar
+    </div>
+    <div class="w3-row-padding w3-border-top">
+      <div class="w3-col s12 w3-margin-top w3-margin-bottom">
+        <button class="w3-btn-block w3-margin-left w3-right w3-button w3-border w3-green">
+          <i class="fa fa-check"></i> Guardar
         </button>
+        <span class="w3-btn-block w3-button w3-right w3-border w3-white" onclick="clearEasyText()">
+           <i class="fa fa-eraser"></i> Limpar
+        </span>
       </div>
-      
-    	<div class="w3-col l3 m6 s6 w3-margin-top w3-margin-bottom">
-        <button class="w3-btn w3-block w3-border w3-green">
-        	<i class="fa fa-check"></i> Guardar
-        </button>
-      </div>
-	   </div>
+    </div>
     <input type="hidden" name="id" id="easytext">
     {{form_widget(form.easytext)}}
     {{form_widget(form.easytexthtml)}}
@@ -116,7 +110,6 @@ function deleteEasyText(id){
       $('.w3-overlay').hide()
       if (data.message == 'success'){
         ajaxUpload('easy-text')
-        
       }
     },
     error:function(data){

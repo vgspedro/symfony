@@ -36,7 +36,6 @@ class AdminController extends AbstractController
 	{
         $em = $this->getDoctrine()->getManager();
         $booking = $em->getRepository(Booking::class)->dashboardValues();
-
         return $this->render('admin/dashboard.html', array('booking' => $booking));
     }
 

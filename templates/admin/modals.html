@@ -22,17 +22,15 @@
         <span>Reserva #<span id="booking-id"></span></span>
       </h2>
     </div>
-    <div class="w3-row-padding w3-large w3-margin-top" id="set-booking"></div>
-    <div class="w3-row-padding w3-large">
-      <div class="w3-col l6 m0 s0 w3-hide-small w3-hide-medium">&nbsp;</div> 
-      <div class="w3-col l3 m6 s6 w3-margin-top w3-margin-bottom">
-        <button type="reset" class="w3-btn w3-block w3-border w3-white" onclick="$('#modal-booking-set-status').hide()">
+    <div class="w3-row-padding w3-margin-top" id="set-booking"></div>
+    <div class="w3-row-padding w3-border-top">
+      <div class="w3-col s12 w3-margin-top w3-margin-bottom">
+        <span class="w3-btn-block w3-margin-left w3-right w3-button w3-border w3-green" onclick="$('#bookingstatus').trigger('submit')">
+          <i class="fa fa-envelope"></i> Enviar
+        </span>
+        <span class="w3-btn-block w3-button w3-left w3-border w3-white" onclick="$('#modal-booking-set-status').hide()">
           <i class="fa fa-times"></i> Fechar
-        </button>
-      </div>
-      <div class="w3-col l3 m6 s6 w3-margin-top w3-margin-bottom">
-        <button onclick="$('#bookingstatus').trigger('submit')" class="w3-btn w3-block w3-border w3-green">
-          <i class="fa fa-check"></i> Guardar</button>
+        </span>
       </div>
     </div>
   </div>
@@ -51,16 +49,14 @@
     </div>
     <div class="w3-container w3-padding" id="delete-category">
     </div>
-    <div class="w3-row-padding w3-xlarge w3-padding-large w3-border-top">
-      <div class="w3-col s6">
-        <span style="padding: 0 8px" class="w3-block w3-border w3-btn" onclick="$('#modal-delete-category').hide()">
-          <i class="fa fa-times"></i>
+    <div class="w3-row-padding w3-border-top">
+      <div class="w3-col s12 w3-margin-top w3-margin-bottom">
+        <span class="w3-btn-block w3-margin-left w3-right w3-button w3-border w3-green" onclick="deleteCategory($('#delete-id').val())">
+          <i class="fas fa-trash-alt"></i> Apagar
         </span>
-      </div>
-        <div class="w3-col s6">
-        <span style="padding: 0 8px" class="w3-red w3-block w3-border w3-btn" onclick="deleteCategory($('#delete-id').val())">
-        <i class="fas fa-trash-alt"></i>
-      </span>
+        <span class="w3-btn-block w3-button w3-left w3-border w3-white" onclick="$('#modal-delete-category').hide()">
+          <i class="fa fa-times"></i> Fechar
+        </span>
       </div>
     </div>
   </div>
@@ -80,22 +76,18 @@
     </div>
     <div class="w3-container w3-padding" id="delete-easytext">
     </div>
-    <div class="w3-row-padding w3-xlarge w3-padding-large w3-border-top">
-      <div class="w3-col s6">
-      <span style="padding: 0 8px" class="w3-block w3-border w3-btn" onclick="$('#modal-delete-easytext').hide()">
-        <i class="fa fa-times"></i>
-      </span>
+    <div class="w3-row-padding w3-border-top">
+      <div class="w3-col s12 w3-margin-top w3-margin-bottom">
+        <span class="w3-btn-block w3-margin-left w3-right w3-button w3-border w3-green" onclick="deleteEasyText($('#easytext-id').val())">
+          <i class="fas fa-trash-alt"></i> Apagar
+        </span>
+        <span class="w3-btn-block w3-button w3-left w3-border w3-white" onclick="$('#modal-delete-easytext').hide()">
+          <i class="fa fa-times"></i> Fechar
+        </span>
       </div>
-      <div class="w3-col s6">
-        <span style="padding: 0 8px" class="w3-red w3-border w3-block w3-btn" onclick="deleteEasyText($('#easytext-id').val())">
-        <i class="fas fa-trash-alt"></i>
-      </span>
-    </div>
     </div>
   </div>
 </div>
-
-
 
 <div id="modal-delete-rgpd" class="w3-modal" style="z-index: 9999999;padding-top: 12px; padding-bottom: 32px">
   <div class="w3-modal-content w3-animate-zoom" style="max-width:400px">
@@ -110,23 +102,45 @@
     </div>
     <div class="w3-container w3-padding" id="delete-rgpd">
     </div>
-    <div class="w3-row-padding w3-xlarge w3-padding-large w3-border-top">
-      <div class="w3-col s6">
-      <span style="padding: 0 8px" class="w3-block w3-border w3-btn" onclick="$('#modal-delete-rgpd').hide()">
-        <i class="fa fa-times"></i>
-      </span>
+    <div class="w3-row-padding w3-border-top">
+      <div class="w3-col s12 w3-margin-top w3-margin-bottom">
+        <span class="w3-btn-block w3-margin-left w3-right w3-button w3-border w3-green" onclick="deleteRgpd($('#rgpd-id').val())">
+          <i class="fas fa-trash-alt"></i> Apagar
+        </span>
+        <span class="w3-btn-block w3-button w3-left w3-border w3-white" onclick="$('#modal-delete-rgpd').hide()">
+          <i class="fa fa-times"></i> Fechar
+        </span>
       </div>
-      <div class="w3-col s6">
-        <span style="padding: 0 8px" class="w3-red w3-border w3-block w3-btn" onclick="deleteRgpd($('#rgpd-id').val())">
-        <i class="fas fa-trash-alt"></i>
-      </span>
-    </div>
     </div>
   </div>
 </div>
 
 
-
+<div id="modal-delete-terms" class="w3-modal" style="z-index: 9999999;padding-top: 12px; padding-bottom: 32px">
+  <div class="w3-modal-content w3-animate-zoom" style="max-width:400px">
+    <div class="w3-container w3-red w3-padding">
+      <span onclick="$('#modal-delete-terms').hide()" class="w3-padding w3-button w3-display-topright">
+        <i class="w3-xlarge fa fa-times"></i>
+      </span>
+      <h2>
+        <i class="fas fa-exclamation-circle"></i>
+        <span>Apagar ?<input type="hidden" id="terms-id"></span>
+      </h2>
+    </div>
+    <div class="w3-container w3-padding" id="delete-terms">
+    </div>
+    <div class="w3-row-padding w3-border-top">
+      <div class="w3-col s12 w3-margin-top w3-margin-bottom">
+        <span class="w3-btn-block w3-margin-left w3-right w3-button w3-border w3-green" onclick="deleteTerms($('#terms-id').val())">
+          <i class="fas fa-trash-alt"></i> Apagar
+        </span>
+        <span class="w3-btn-block w3-button w3-left w3-border w3-white" onclick="$('#modal-delete-terms').hide()">
+          <i class="fa fa-times"></i> Fechar
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
 
 
 
@@ -143,21 +157,18 @@
     </div>
     <div class="w3-container w3-padding" id="delete-user">
     </div>
-    <div class="w3-row-padding w3-xlarge w3-padding-large w3-border-top">
-      <div class="w3-col s6">
-      <span style="padding: 0 8px" class="w3-block w3-border w3-btn" onclick="$('#modal-delete-user').hide()">
-        <i class="fa fa-times"></i>
-      </span>
+    <div class="w3-row-padding w3-border-top">
+      <div class="w3-col s12 w3-margin-top w3-margin-bottom">
+        <span class="w3-btn-block w3-margin-left w3-right w3-button w3-border w3-green" onclick="deleteUser($('#user-id').val())">
+          <i class="fas fa-trash-alt"></i> Apagar
+        </span>
+        <span class="w3-btn-block w3-button w3-left w3-border w3-white" onclick="$('#modal-delete-user').hide()">
+          <i class="fa fa-times"></i> Fechar
+        </span>
       </div>
-      <div class="w3-col s6">
-        <span style="padding: 0 8px" class="w3-red w3-border w3-block w3-btn" onclick="deleteUser($('#user-id').val())">
-        <i class="fas fa-trash-alt"></i>
-      </span>
-    </div>
     </div>
   </div>
 </div>
-
 
 <div id="modal-delete-gallery" class="w3-modal" style="z-index: 9999999;padding-top: 12px; padding-bottom: 32px">
   <div class="w3-modal-content w3-animate-zoom" style="max-width:400px">
@@ -170,84 +181,111 @@
         <span>Apagar ?<input type="hidden" id="delete-id"></span>
       </h2>
     </div>
-    <div class="w3-container w3-padding" id="delete-gallery">
-    </div>
-    <div class="w3-row-padding w3-xlarge w3-padding-large w3-border-top">
-      <div class="w3-col s6">
-        <span style="padding: 0 8px" class="w3-block w3-border w3-btn" onclick="$('#modal-delete-gallery').hide()">
-          <i class="fa fa-times"></i>
+    <div class="w3-container w3-padding" id="delete-gallery"></div>
+    <div class="w3-row-padding w3-border-top">
+      <div class="w3-col s12 w3-margin-top w3-margin-bottom">
+        <span class="w3-btn-block w3-margin-left w3-right w3-button w3-border w3-green" onclick="deleteGallery($('#delete-id').val())">
+          <i class="fas fa-trash-alt"></i> Apagar
         </span>
-      </div>
-        <div class="w3-col s6">
-        <span style="padding: 0 8px" class="w3-red w3-block w3-border w3-btn" onclick="deleteGallery($('#delete-id').val())">
-        <i class="fas fa-trash-alt"></i>
-      </span>
+        <span class="w3-btn-block w3-button w3-left w3-border w3-white" onclick="$('#modal-delete-gallery').hide()">
+          <i class="fa fa-times"></i> Fechar
+        </span>
       </div>
     </div>
   </div>
 </div>
 
-
-
-
 <div id="modal-edit-stock" class="w3-modal" style="z-index:9999999;padding-top: 12px;padding-bottom:32px">
   <div class="w3-modal-content w3-animate-zoom" style="max-width:450px">
-      <div class="w3-container w3-blue w3-padding">
-          <span onclick="$('#modal-edit-stock').hide()" class="w3-padding w3-button w3-display-topright">
-            <i class="w3-xlarge fa fa-times"></i>
-          </span>
-          <h2>
-            <i class="far fa-edit fa-fw"></i>Alterar Disponibilidade ? <br>
-          </h2>
-      </div>
-      <form id="set-stock">
-        
-        <div class="w3-container w3-padding">
-          <p class="w3-center w3-large" id="set-stock-info"></p>
-
-          <input type="hidden" id="set-stock-id" name="id">
-          <div class="w3-row-padding">
-            <div class="w3-col s12 m6">
-              <label>Total</label>
-              <input type="number" name="lotation" class="w3-input w3-border" id="set-stock-lotation">
-            </div>
-            <div class="w3-col s12 m6">
-              <label>Disponivel</label>
-              <input type="number" name="stock" class="w3-input w3-border" id="set-stock-available">
-            </div>
-          </div>
-      </div>
-      <div class="w3-row-padding w3-xlarge w3-padding-large w3-border-top">
-        <span class="w3-col s6 w3-block w3-btn w3-left" onclick="$('#modal-edit-stock').hide()">
-            <i class="fa fa-times"></i>
-        </span>
-        <span class="w3-col w3-green s6 w3-block w3-btn w3-right" onclick="editAvailable()">
-          <i class="fa fa-check"></i>
-        </span>
+    <div class="w3-container w3-blue w3-padding">
+      <span onclick="$('#modal-edit-stock').hide()" class="w3-padding w3-button w3-display-topright">
+        <i class="w3-xlarge fa fa-times"></i>
+      </span>
+      <h2>
+        <i class="far fa-edit fa-fw"></i>Alterar Disponibilidade ? <br>
+      </h2>
     </div>
+    <form id="set-stock">
+      <div class="w3-container w3-padding w3-sand">
+        <p class="w3-center" id="set-stock-info"></p>
+        <input type="hidden" id="set-stock-id" name="id">
+        <div class="w3-row-padding">
+          <div class="w3-col s12 m6">
+            <label>Total</label>
+            <input type="number" name="lotation" class="w3-input w3-white w3-border" id="set-stock-lotation">
+          </div>
+          <div class="w3-col s12 m6">
+            <label>Disponivel</label>
+            <input type="number" name="stock" class="w3-input w3-white w3-border" id="set-stock-available">
+          </div>
+        </div>
+      </div>
+      <div class="w3-row-padding w3-border-top">
+        <div class="w3-col s12 w3-margin-top w3-margin-bottom">
+          <span class="w3-btn-block w3-right w3-button w3-border w3-green" onclick="editAvailable()">
+            <i class="fa fa-check"></i> Gravar
+          </span>
+          <span class="w3-btn-block w3-margin-left w3-button w3-border w3-red" onclick="deleteAvailable()">
+            <i class="fas fa-trash-alt"></i> Apagar
+          </span>
+          <span class="w3-btn-block w3-button w3-left w3-border w3-white" onclick="$('#modal-edit-stock').hide()">
+            <i class="fa fa-times"></i> Fechar
+          </span>
+        </div>
+      </div>
     </form>
   </div>
 </div>
 
-
-
 <div id="modal-edit-category" class="w3-modal" style="z-index:9999999;padding-top: 12px;padding-bottom:32px">
   <div class="w3-modal-content w3-animate-zoom" style="min-width:95%">
-      <div class="w3-container w3-blue w3-padding">
-          <span onclick="$('#modal-edit-category').hide()" class="w3-padding w3-button w3-display-topright">
-            <i class="w3-xlarge fa fa-times"></i>
-          </span>
-          <h2>
-            <i class="far fa-edit fa-fw"></i>
-            <span id="set-id"></span>
-          </h2>
-      </div>
-      <div class="w3-container w3-padding" id="set-category">
-      </div>
-      <div class="w3-row-padding w3-xlarge w3-padding-large w3-border-top">
-        <span class="w3-col s6 w3-block w3-btn w3-right" onclick="$('#modal-edit-category').hide()">
-            <i class="fa fa-times"></i>
+    <div class="w3-container w3-blue w3-padding">
+      <span onclick="$('#modal-edit-category').hide()" class="w3-padding w3-button w3-display-topright">
+        <i class="w3-xlarge fa fa-times"></i>
+      </span>
+      <h2>
+        <i class="far fa-edit fa-fw"></i>
+        <span id="set-id"></span>
+      </h2>
+    </div>
+    <div class="w3-container w3-padding" id="set-category"></div>
+    <div class="w3-row-padding w3-border-top">
+      <div class="w3-col s12 w3-margin-top w3-margin-bottom">
+        <span class="w3-btn-block w3-margin-left w3-right w3-button w3-border w3-green" onclick="$('#category-form').trigger('submit')">
+          <i class="fa fa-check"></i> Gravar
         </span>
+        <span class="w3-btn-block w3-button w3-left w3-border w3-white" onclick="$('#modal-edit-category').hide()">
+          <i class="fa fa-times"></i> Fechar
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+<div id="modal-new-available" class="w3-modal" style="z-index:9999999;padding-top: 12px;padding-bottom:32px">
+  <div class="w3-modal-content w3-animate-zoom" style="min-width:95%">
+    <div class="w3-container w3-blue w3-padding">
+      <span onclick="$('#modal-new-available').hide()" class="w3-padding w3-button w3-display-topright">
+        <i class="w3-xlarge fa fa-times"></i>
+      </span>
+      <h2>
+        <i class="far fa-edit fa-fw"></i>
+        <span id="set-id-available"></span>
+      </h2>
+    </div>
+    <div class="w3-container w3-padding" id="set-available"></div>
+    <div class="w3-row-padding w3-border-top">
+      <div class="w3-col s12 w3-margin-top w3-margin-bottom">
+        <span class="w3-btn-block w3-margin-left w3-right w3-button w3-border w3-green" onclick="$('#available-form').trigger('submit')">
+          <i class="fa fa-check"></i> Gravar
+        </span>
+        <span class="w3-btn-block w3-button w3-left w3-border w3-white" onclick="$('#modal-new-available').hide()">
+          <i class="fa fa-times"></i> Fechar
+        </span>
+      </div>
     </div>
   </div>
 </div>
@@ -255,25 +293,54 @@
 
 <div id="modal-edit-gallery" class="w3-modal" style="z-index:9999999;padding-top: 12px;padding-bottom:32px">
   <div class="w3-modal-content w3-animate-zoom" style="min-width:95%">
-      <div class="w3-container w3-blue w3-padding">
-          <span onclick="$('#modal-edit-gallery').hide()" class="w3-padding w3-button w3-display-topright">
-            <i class="w3-xlarge fa fa-times"></i>
-          </span>
-          <h2>
-            <i class="far fa-edit fa-fw"></i>
-            <span>Galeria <span id="set-id"></span>
-          </h2>
-      </div>
-      <div class="w3-container w3-padding" id="set-gallery">
-      </div>
-      <div class="w3-row-padding w3-xlarge w3-padding-large w3-border-top">
-        <span class="w3-col s6 w3-block w3-btn w3-right" onclick="$('#modal-edit-gallery').hide()">
-            <i class="fa fa-times"></i>
+    <div class="w3-container w3-blue w3-padding">
+      <span onclick="$('#modal-edit-gallery').hide()" class="w3-padding w3-button w3-display-topright">
+        <i class="w3-xlarge fa fa-times"></i>
+      </span>
+      <h2>
+        <i class="far fa-edit fa-fw"></i>
+        <span>Galeria <span id="set-id"></span>
+      </h2>
+    </div>
+    <div class="w3-container w3-padding" id="set-gallery"></div>
+    <div class="w3-row-padding w3-border-top">
+      <div class="w3-col s12 w3-margin-top w3-margin-bottom">
+        <span class="w3-btn-block w3-margin-left w3-right w3-button w3-border w3-green" onclick="$('#gallery-form').trigger('submit')">
+          <i class="fa fa-check"></i> Gravar
         </span>
+        <span class="w3-btn-block w3-button w3-left w3-border w3-white" onclick="$('#modal-edit-gallery').hide()">
+          <i class="fa fa-times"></i> Fechar
+        </span>
+      </div>
     </div>
   </div>
 </div>
 
+<div id="modal-edit-password" class="w3-modal" style="z-index:9999999;padding-top: 12px;padding-bottom:32px">
+  <div class="w3-modal-content w3-animate-zoom" style="max-width:400px">
+    <div class="w3-container w3-blue w3-padding">
+      <span onclick="$('#modal-edit-password').hide()" class="w3-padding w3-button w3-display-topright">
+        <i class="w3-xlarge fa fa-times"></i>
+      </span>
+      <h2>
+        <i class="fas fa-unlock-alt"></i>
+        <span>Password</span>
+      </h2>
+    </div>
+    <input type="hidden" id="set-user-id">
+    <div class="w3-container w3-padding w3-sand" id="set-password"></div>
+    <div class="w3-row-padding w3-border-top">
+      <div class="w3-col s12 w3-margin-top w3-margin-bottom">
+        <span class="w3-btn-block w3-margin-left w3-right w3-button w3-border w3-green" onclick="$('#change-password').trigger('submit')">
+          <i class="fa fa-check"></i> Gravar
+        </span>
+        <span class="w3-btn-block w3-button w3-left w3-border w3-white" onclick="$('#modal-edit-password').hide()">
+          <i class="fa fa-times"></i> Fechar
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
 
 <div id="modal-error" class="w3-modal" style="z-index: 9999999;padding-top:100px; padding-bottom: 32px">
   <div class="w3-modal-content w3-animate-zoom" style="max-width:400px">
@@ -290,7 +357,6 @@
     </div>
   </div>
 </div>
-
 
 <div id="modal-fields" class="w3-modal" style="z-index: 9999999;padding-top:60px; padding-bottom: 32px">
   <div class="w3-modal-content w3-animate-zoom" style="max-width:400px">
@@ -321,6 +387,7 @@
   </div>
 </div>
 
+
 <div id="modal-confirm" class="w3-modal" style="z-index: 9999999;padding-top: 12px; padding-bottom: 32px">
   <div class="w3-modal-content w3-animate-zoom" style="max-width:400px">
     <div class="w3-container w3-amber w3-padding">
@@ -334,10 +401,10 @@
     </div>
     <div class="w3-container w3-padding" id="confirm">
     </div>
-    <div class="w3-row-padding w3-xlarge w3-padding-large w3-border-top">
+    <div class="w3-row w3-padding-large w3-border-top">
       <div class="w3-col s6">
-        <span class="w3-block w3-btn w3-border" style="padding: 0 8px" onclick="$('#modal-confirm').hide()">
-          <i class="fa fa-times"></i>
+        <span class="w3-btn w3-border" onclick="$('#modal-confirm').hide()">
+          <i class="fa fa-times"></i> Fechar
         </span>
       </div>
       <div id="action-confirm" class="w3-col s6">
@@ -368,3 +435,22 @@
     </div>
   </div>
 </div>
+
+<div id="info-client" class="w3-modal" style="z-index: 9999999;padding-top: 12px; padding-bottom: 32px">
+  <div class="w3-modal-content w3-animate-zoom" style="max-width:400px">
+    <div class="w3-container w3-padding" id="info-client-head">
+    </div>
+    <div class="w3-container w3-padding" id="client-txt">
+    </div>
+    <div class="w3-row-padding w3-border-top">
+      <div class="w3-col s12 w3-margin-top w3-margin-bottom">
+        <span class="w3-btn-block w3-button w3-right w3-border w3-white" onclick="$('#info-client').hide()">
+          <i class="fa fa-times"></i> Fechar
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
