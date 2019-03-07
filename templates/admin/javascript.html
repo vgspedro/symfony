@@ -29,9 +29,6 @@ function ajaxUpload(block){
         case 'available': 
             url = '{{ path("admin_available") }}' 
         break
-        case 'block-date-edit': 
-            url = '{{ path("admin_block_date_edit") }}' 
-        break
         case 'easy-text': 
             url = '{{ path("admin_easy_text") }}' 
         break
@@ -55,6 +52,9 @@ function ajaxUpload(block){
         break
         case 'terms': 
             url = '{{ path("admin_terms") }}' 
+        break
+        case 'company': 
+            url = '{{ path("admin_company_show_edit") }}' 
         break
     }
 

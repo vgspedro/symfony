@@ -34,15 +34,9 @@
     </div>
    </div>
 
-
-
    <h3 class="w3-center">
     <span class='CONTATOS_TXT'>{% trans %}part_six.contact_txt{% endtrans %}</span>
    </h3>
-
-
-
-
 
    <div class="w3-col m6 w3-center s12 w3-container w3-padding-8">
     <div class="w3-container">
@@ -51,7 +45,7 @@
        <i class="fa-ta ta-4 fa-ta-mobile"></i>
       </h2>
       <h3 class="w3-center">
-       <a class="mobile-call" href="tel:<?php echo $tel; ?>"> +351969617828</a>
+       <a class="mobile-call" href="tel:{{company.telephone}}"> {{company.telephone}}</a>
       </h3>
      </div>
     </div>
@@ -63,27 +57,61 @@
       <h2 class="w3-center">
        <i class="fa-ta ta-4 fa-ta-email"></i>
       </h2>
-      <h4 class="w3-center mail-txt">tarugabenagiltours@gmail.com</h4>
+      <h4 class="w3-center mail-txt">{{company.email}}</h4>
      </div>
     </div>
    </div>
 
-   <div class="w3-col w3-center s12 w3-container w3-padding-8"> 
-    <a class="no-txt-dec" href="https://facebook.com/Taruga-benagil-tours-1429577477372009/" target="_blank">
-     <i class="ta-28 fa fa-facebook w3-margin" style="padding: 5px 11px 5px 11px;"></i>
-    </a> 
-    <a class="no-txt-dec" href="https://instagram.com/tarugabenagiltours/" target="_blank">
-     <i class="ta-28 fa fa-instagram w3-margin"></i>
-    </a> 
-    <a class="no-txt-dec" href="https://youtube.com/channel/UCXdOWNzDhQCvrO05cekWV8A" target="_blank">
-     <i class="ta-28 fa fa-youtube w3-margin"></i>
-    </a>
-   </div>
+<div class=" w3-col  w3-xxlarge w3-padding-8 s12 w3-center w3-opacity-min">
+  {% if company.linkFacebookActive == true %}
+  <a href="{{company.linkFacebook}}" target="_blank" style="display:inline; padding:0px;margin: 2px;">
+    <i class="fa fa-facebook-official w3-hover-opacity w3-text-indigo"></i>
+  </a>
+  {% endif %}
+  
+  {% if company.linkInstagramActive == true %}
+  <a href="{{company.linkInstagram}}" target="_blank" style="display:inline; padding:0px;margin: 2px;">
+    <i class="fa fa-instagram w3-hover-opacity w3-text-brown"></i>
+  </a>
+  {% endif %}
+  
+  {% if company.linkPinterestActive == true %}
+  <a href="{{company.linkPinterest}}" target="_blank" style="display:inline; padding:0px;margin: 2px;">
+    <i class="fa fa-pinterest-p w3-hover-opacity w3-text-red"></i>
+  </a>
+  {% endif %}
+  
+  {% if company.linkTwitterActive == true %}
+  <a href="{{company.linkTwitter}}" target="_blank" style="display:inline; padding:0px;margin: 2px;">
+    <i class="fa fa-twitter w3-hover-opacity w3-text-blue"></i>
+  </a>
+  {% endif %}
+  
+  {% if company.linkLinkenActive == true %}
+  <a href="{{company.linkLinken}}" target="_blank" style="display:inline; padding:0px;margin: 2px;">
+    <i class="fa fa-linkedin w3-hover-opacity w3-text-blue"></i>
+  </a>
+  {% endif %}
+  
+  {% if company.linkBehanceActive == true %}
+  <a href="{{company.linkBehance}}" target="_blank" style="display:inline; padding:0px;margin: 2px;">
+    <i class="fa fa-behance w3-hover-opacity w3-teal"></i>
+  </a>
+  {% endif %}
+  
+  {% if company.linkYoutubeActive == true %}
+  <a href="{{company.linkYoutube}}" target="_blank" style="display:inline; padding:0px;margin:2px;font-size: 30px">
+    <i class="fa fa-youtube w3-hover-opacity w3-text-red"></i>
+  </a>
+  {% endif %}
+</div>
+
+
   </div>
 
  </div>
 
-<a style="position:absolute;margin-top:-32px;z-index:1" target="_blank" href='https://www.google.pt/maps/dir//Taruga+Tours/@37.0877204,-8.4284601,16.33z/data=!4m5!3m4!1s0x0:0xf0cf03939dd0825a!8m2!3d37.0873492!4d-8.4263098'>
+<a style="position:absolute;margin-top:-32px;z-index:1" target="_blank" href='https://www.google.pt/maps/dir//{{company.name}}/@{{company.CoordsGoogleMaps}},16.33z/data=!4m5!3m4!1s0x0:0xf0cf03939dd0825a!8m2!3d37.0873492!4d-8.4263098'>
     <img class="qr-code FIND_US w3-btn" title="{% trans %}part_one.find_us{% endtrans %}" src="{{ asset('images/qr.jpg') }}"/>
     </a>
 </section>

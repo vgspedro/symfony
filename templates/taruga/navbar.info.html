@@ -3,10 +3,11 @@
  <div class='nav-container w3-sand'>
   <ul class="w3-navbar" id="myNavbar">
    <li>
-    <a href="javascript:void(0)" onclick="navigation('#home')" class="w3-animate-zoom logo-lg w3-hide-medium w3-hide-small"></a>
-    <a href="javascript:void(0)" onclick="navigation('#home')" class="w3-animate-zoom logo-md w3-hide-large w3-hide-small"></a>
-    <a href="javascript:void(0)" style="margin-top:-2px" onclick="navigation('#home')" class="w3-animate-zoom w3-opacity-min logo-sm w3-hide-large w3-hide-medium" id="mylogo"></a>
+    <span onclick="navigation('#home')" class="w3-animate-zoom">
+        <img src="{{ asset('upload/gallery/') }}{{company.logo}}" style="position:absolute;width:98px;left:8px">
+    </span>
    </li>
+
 
     <!-- Right-sided navbar links -->
  

@@ -5,7 +5,7 @@
   <span style="cursor:pointer;position:fixed" class="w3-bar-item" onclick="w3_open()">
     <i class="fa-2x fa fa-bars"></i>
   </span>
-  <span class="w3-bar-item w3-right" style="color: #05788D;line-height: 40px">Taruga Tours</span>
+  <span class="w3-bar-item w3-right" style="color: #05788D;line-height: 40px">{{ company.name }}</span>
 </div>
 
 <!-- Sidebar/menu -->
@@ -15,7 +15,7 @@
   <div class="w3-container w3-row">
     <div class="w3-col s12 w3-center" style="margin-top:40px">
       <i style="cursor:pointer" onclick="w3_open()" class="w3-right fa-2x fas fa-times fa-fw"></i>
-      <img src="{{ asset('images/logo.png') }}" style=" z-index: -1;position: absolute;left: 0;margin-top: -60px;width: 196px;opacity: 0.15">
+      <img src="{{ asset('upload/gallery/') }}{{company.logo}}" style=" z-index: -1;position: absolute;left: 0;margin-top: -60px;width: 196px;opacity: 0.15">
     </div>
     <div class="w3-col s12 w3-center">
       <span>Olá, 
@@ -85,6 +85,17 @@
     <a href="#" onclick="ajaxUpload(this.id)" id="rgpd" class="nav w3-bar-item w3-button w3-padding w3-sand w3-border-top w3-border-brown">
       <i class="far fa-file-alt"></i> Rgpd
     </a>
+
+    <div class="w3-dropdown-click">
+      <button onclick="dropDownMenu('company')" class="w3-tooltip nav w3-hover-grey w3-bar-item w3-padding w3-sand w3-border-top w3-border-brown">
+         <i class="fa fa-home"></i> Empresa
+      </button>
+      <div id="company" class="w3-dropdown-content w3-bar-block" style="position:relative">
+        <a href="#" onclick="ajaxUpload('company')" class="w3-right-align nav w3-border-top w3-border-brown w3-bar-item w3-button w3-padding">
+          <i class="far fa-edit fa-fw"></i> Editar
+        </a>
+      </div>
+    </div>
 
     <a href="#" onclick="ajaxUpload(this.id)" id="terms" class="nav w3-bar-item w3-button w3-padding w3-sand w3-border-top w3-border-brown">
       <i class="fas fa-asterisk"></i> Termos & Cond.

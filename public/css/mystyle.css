@@ -271,13 +271,7 @@ input, select, textarea{color: #05788d!important;}
 
 .w3-sidenav a:hover, .w3-navbar li a:hover ,.nav-text-m:hover{color: #444;background-color: transparent;-webkit-filter: grayscale(75%);filter: grayscale(75%)}
 
-.fa-facebook{font-size: 20px;border: 2px solid #05788d;border-radius: 50%;padding: 5px 9px 5px 9px;color:#05788d;}
-
 .fa-info{ border: 5px solid #006280;border-radius: 50%;padding: 6px 12px 6px 27px;color: #006280;}
-
-.fa-instagram{font-size: 20px;border: 2px solid #05788d;border-radius: 50%;padding: 5px 6px 5px 6px;color:#05788d;}
-
-.fa-youtube{ font-size: 20px; border: 2px solid #05788d;border-radius: 50%;padding: 5px 6px 5px 6px; color:#05788d;}
 
 .marquee { padding: 6px 0px 0px 0px; width: 100%;margin: 0 auto;overflow: hidden;white-space: nowrap;box-sizing: border-box; animation: marquee 100s linear infinite; -webkit-animation: marquee 50s linear infinite;}
 

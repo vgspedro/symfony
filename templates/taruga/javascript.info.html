@@ -207,8 +207,6 @@ loader = document.getElementById("loader-cont")
 
 count = 0
 
-path = "https://www.google.pt/maps/@37.087802,-8.4264864,3a,75y,185.03h,76.94t/data=!3m6!1e1!3m4!1s9suOi359S8Fqb6ihifQaAQ!2e0!7i13312!8i6656"
-
 function w3_open() {
     if (mySidenav.style.display === "block") {
         mySidenav.style.display = "none"
@@ -258,7 +256,7 @@ function navigation(pos,id){
 
 function myMap() {
     
-  var myCenter = new google.maps.LatLng(37.0872609,-8.4263386)
+  var myCenter = new google.maps.LatLng({{company.CoordsGoogleMaps}})
   var mapCanvas = document.getElementById("map")
   var mapOptions = {
     center: myCenter,
@@ -540,4 +538,4 @@ $('input[name=date_card]').datetimepicker({
 typeof(Storage) !== "undefined" ? false : setTimeout(function(){$('#modal-no-storage').show();},1500)
 '{{ id }}' != '#home' ?  setTimeout(function(){navigation('{{id}}');},1000) : false
 </script>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAcWwuJpAyu4XwgbPwJxexBO0fsZ2SxDk8&callback=myMap"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key={{company.GoogleMapsApiKey}}&callback=myMap"></script>

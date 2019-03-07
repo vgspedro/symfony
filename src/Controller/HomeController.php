@@ -11,6 +11,7 @@ use Doctrine\ORM\PessimisticLockException;
 //LockMode::PESSIMISTIC_WRITE
 use App\Entity\Booking;
 use App\Entity\Category;
+use App\Entity\Company;
 use App\Entity\Warning;
 use App\Entity\Client;
 use App\Entity\Gallery;
@@ -51,6 +52,7 @@ class HomeController extends AbstractController
         $cS = array();
         $locales = $em->getRepository(Locales::class)->findAll();
         $warning = $em->getRepository(Warning::class)->find(10);
+        $company = $em->getRepository(Company::class)->find(1);
         
         $category = $em->getRepository(Category::class)->findBy(['isActive' => 1],['orderBy' => 'ASC']);
         
@@ -113,7 +115,8 @@ class HomeController extends AbstractController
                 'galleries' => $gallery,
                 'locale' => $locale,
                 'locales' => $locales, 
-                'id' => '#'.$id
+                'id' => '#'.$id,
+                'company' => $company
                 )
             );
     }
@@ -125,6 +128,7 @@ class HomeController extends AbstractController
         
         $em = $this->getDoctrine()->getManager();
         $warning = $em->getRepository(Warning::class)->find(10);
+        $company = $em->getRepository(Company::class)->find(1);
         $ua = $this->getBrowser();
         $locale = $ua['lang'];
         $locales = $em->getRepository(Locales::class)->findAll();
@@ -137,7 +141,8 @@ class HomeController extends AbstractController
                 'locale' => $locale,
                 'galleries' => $gallery,
                 'locales' => $locales,
-                'id' => '#'.$id
+                'id' => '#'.$id,
+                'company' => $company
                 )
             );
     }
@@ -334,6 +339,8 @@ class HomeController extends AbstractController
 
         $category = $booking->getAvailable()->getCategory();
 
+        $company = $em->getRepository(Company::class)->find(1);
+
         $client = $booking->getClient();
 
         $locale = $client->getLocale();
@@ -341,8 +348,8 @@ class HomeController extends AbstractController
         $terms = $em->getRepository(TermsConditions::class)->findOneBy(['locales' => $locale]);
 
         $transport = (new \Swift_SmtpTransport($_ENV['EMAIL_SMTP'], $_ENV['EMAIL_PORT'], $_ENV['EMAIL_CERTIFICADE']))
-            ->setUsername($_ENV['EMAIL'])
-            ->setPassword($_ENV['EMAIL_PASS']);       
+            ->setUsername($company->getEmail())
+            ->setPassword($company->getEmailPass());       
 
         $locale->getName() == 'pt_PT' ? $category->getNamePt() : $category->getNameEn();
 
@@ -351,8 +358,8 @@ class HomeController extends AbstractController
         $subject ='Reserva / Order #'.$booking->getId().' ('.$this->translateStatus('PENDING', $locale->getName()).')';
                     
         $message = (new \Swift_Message($subject))
-            ->setFrom([$_ENV['EMAIL'] => $_ENV['EMAIL_USERNAME']])
-            ->setTo([$client->getEmail() => $client->getUsername(), $_ENV['EMAIL'] => $_ENV['EMAIL_USERNAME'] ])
+            ->setFrom([$company->getEmail() => $company->getName()])
+            ->setTo([$client->getEmail() => $client->getUsername(), $company->getEmail() => $company->getName()])
             ->addPart($subject, 'text/plain')
             ->setBody(
                 $this->renderView(
@@ -369,7 +376,7 @@ class HomeController extends AbstractController
                         'children' => $booking->getChildren(),
                         'baby' => $booking->getBaby(),
                         'wp' => $category->getWarrantyPayment(),
-                        'logo' => 'https://tarugatoursbenagilcaves.pt/images/logo.png',
+                        'logo' => '/upload/gallery/'.$company->getLogo(),
                         'terms' => !$terms ? '' : $terms->getName(),
                         'terms_txt' => !$terms ? '' : $terms->getTermsHtml()
                     )

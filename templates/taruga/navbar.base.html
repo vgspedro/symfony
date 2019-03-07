@@ -3,10 +3,11 @@
  <div class='nav-container w3-sand'>
   <ul class="w3-navbar" id="myNavbar">
    <li>
-    <a href="javascript:void(0)" onclick="navigation('#home')" class="w3-animate-zoom logo-lg w3-hide-medium w3-hide-small"></a>
-    <a href="javascript:void(0)" onclick="navigation('#home')" class="w3-animate-zoom logo-md w3-hide-large w3-hide-small"></a>
-    <a href="javascript:void(0)" style="margin-top:-2px" onclick="navigation('#home')" class="w3-animate-zoom w3-opacity-min logo-sm w3-hide-large w3-hide-medium" id="mylogo"></a>
+    <span onclick="navigation('#home')" class="w3-animate-zoom">
+        <img src="{{ asset('upload/gallery/') }}{{company.logo}}" style="position:absolute;width:96px;left:8px">
+    </span>
    </li>
+
 
     <!-- Right-sided navbar links -->
  
@@ -68,15 +69,21 @@
    </li>
 
    <li class="w3-right w3-hide-small w3-hide-medium w3-hide nav-desk-socials">
-    <a class="nav-desk-fcb" href="https://facebook.com/Taruga-benagil-tours-1429577477372009/" target="_blank">
+    {% if company.linkFacebookActive == true %}
+    <a class="nav-desk-fcb" href="{{company.linkFacebook}}" target="_blank">
      <i class="fa fa-facebook"></i>
     </a>
-    <a class="nav-desk-inst" href="https://instagram.com/tarugabenagiltours/" target="_blank">
+    {% endif %}
+    {% if company.linkInstagramActive == true %}
+    <a class="nav-desk-inst" href="{{company.linkInstagram}}" target="_blank">
      <i class="fa fa-instagram"></i>
     </a>
+    {% endif %}
+    {% if company.linkFacebookActive == true %}
     <a class="nav-desk-ytb" href="https://youtube.com/channel/UCXdOWNzDhQCvrO05cekWV8A" target="_blank">
      <i class="fa fa-youtube"></i>
     </a>
+    {% endif %}
    </li>
     <li class="w3-right w3-hide-larg_e">
       <a href="javascript:void(0)" class="w3-right w3-hide-larg_e" onclick="w3_open()">

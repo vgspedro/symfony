@@ -79,6 +79,14 @@ services:
         arguments:
             - '%gallery_images_directory%'
 
+    App\Controller\CompanyController:
+        bind:
+            App\Service\FileUploader: '@file_uploader.gallery'
+            App\Service\ImageResizer: '@image_resizer.gallery'
+        arguments:
+            - '%gallery_images_directory%'
+
+
 security:
     encoders:
         App\Entity\User: bcrypt

@@ -7,6 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Doctrine\DBAL\DBALException;
+use App\Entity\Company;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -40,29 +41,32 @@ class RegistrationController extends AbstractController
             $user->setPassword($password);
 
             try {
+
                 // 4) save the User!
-                $entityManager = $this->getDoctrine()->getManager();
-                $entityManager->persist($user);
-                $entityManager->flush();
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($user);
+                $em->flush();
+                
+                $company = $em->getRepository(Company::class)->find(1);
 
                 $transport = (new \Swift_SmtpTransport($_ENV['EMAIL_SMTP'], $_ENV['EMAIL_PORT'], $_ENV['EMAIL_CERTIFICADE']))
-                ->setUsername($_ENV['EMAIL'])
-                ->setPassword($_ENV['EMAIL_PASS']);    
+                    ->setUsername($company->getEmail())
+                    ->setPassword($company->getEmailPass());       
 
                 $mailer = new \Swift_Mailer($transport);
                         
                 $subject ='Registo efetuado';
 
                 $message = (new \Swift_Message($subject))
-                    ->setFrom([$_ENV['EMAIL'] => $_ENV['EMAIL_USERNAME']])
-                    ->setTo([$user->getEmail() => $user->getUsername(), $_ENV['EMAIL'] => $_ENV['EMAIL_USERNAME'] ])
+                    ->setFrom([$company->getEmail() => $company->getName()])
+                    ->setTo([$user->getEmail() => $user->getUsername(), $company->getEmail() => $company->getName()])
                     ->addPart($subject, 'text/plain')
                     ->setBody(
                         $this->renderView(
                             'emails/register.html.twig',
                             array(
                                 'username' => $user->getUsername(),
-                                'logo' => '/images/logo.png'
+                                'logo' => '/upload/gallery/'.$company->getLogo()
                             )
                         ),
                     'text/html'

@@ -8,6 +8,7 @@ use App\Entity\Booking;
 use App\Entity\Event;
 use App\Entity\User;
 use App\Entity\Client;
+use App\Entity\Company;
 use App\Entity\EasyText;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -28,9 +29,11 @@ class AdminController extends AbstractController
     {
         $em = $this->getDoctrine()->getManager();
         $booking = $em->getRepository(Booking::class)->dashboardValues();
+        $company = $em->getRepository(Company::class)->find(1);
         $ua = $this->getBrowser();
-        return $this->render('admin/base.html.twig', array('browser'=>$ua,'booking' => $booking));
+        return $this->render('admin/base.html.twig',['browser' => $ua,'booking' => $booking, 'company' => $company]);
     }
+
 
 	public function adminDashboard()
 	{
@@ -105,6 +108,8 @@ class AdminController extends AbstractController
         
         }
 
+        $company = $em->getRepository(Company::class)->find(1);
+
         $booking->setStatus($status);
         $booking->setNotes($notes);
 
@@ -133,20 +138,20 @@ class AdminController extends AbstractController
                 'notes' => $booking->getNotes(),
                 'user_id' => $client->getId(),   
                 'username' => $client->getUsername(),
-                'logo' => 'https://tarugatoursbenagilcaves.pt/images/logo.png'
+                'logo' => '/upload/gallery/'.$company->getLogo()
             );          
 
         $transport = (new \Swift_SmtpTransport($_ENV['EMAIL_SMTP'], $_ENV['EMAIL_PORT'], $_ENV['EMAIL_CERTIFICADE']))
-            ->setUsername($_ENV['EMAIL'])
-            ->setPassword($_ENV['EMAIL_PASS']);    
+            ->setUsername($company->getEmail())
+            ->setPassword($company->getEmailPass());
 
         $mailer = new \Swift_Mailer($transport);
 
         $subject ='Reserva / Order #'.$booking->getId().' ('.$this->translateStatus($booking->getStatus(), $client->getLocale()->getName()).')';
 
         $message = (new \Swift_Message($subject))
-            ->setFrom([$_ENV['EMAIL'] => $_ENV['EMAIL_USERNAME']])
-            ->setTo([ $client->getEmail() => $client->getUsername(), $_ENV['EMAIL'] => $_ENV['EMAIL_USERNAME'] ])
+            ->setFrom([$company->getEmail() => $company->getName()])
+            ->setTo([$client->getEmail() => $client->getUsername(), $company->getEmail() => $company->getName()])
             ->addPart($subject, 'text/plain')
             ->setBody($this->renderView(
                 'emails/booking-status-'.$client->getLocale()->getName().'.html.twig',$seeBooking

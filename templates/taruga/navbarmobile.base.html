@@ -40,28 +40,60 @@
  </form>
 
 <div class="w3-border-top w3-border-bottom">
- <li class='w3-center w3-padding' style="display: inline-flex;margin-left:34px">
-
+ <li class='w3-center w3-padding w3-opacity-min' style="display: inline-flex;margin-left:34px">
     {% if locales %}
         {% for local in locales %}
         <img style="cursor:pointer;height:36px;width:36px;margin:0px 8px" class="lang-action w3-round w3-border" src='{{local.filename}}' title="{{local.name}}" onclick="languages(this.title, {{ loop.index }})">
         {% endfor %}
 
     {% endif %}
-
  </li>
 
 </div>
 
- <li class='w3-center socials-mob'>
-  <a href="https://facebook.com/Taruga-benagil-tours-1429577477372009/" target="_blank">
-   <i class="fa fa-facebook"></i>
+<div class="w3-xxlarge w3-padding-small w3-center w3-opacity-min">
+  <img src="{{ asset('upload/gallery/') }}{{company.logo}}" style=" z-index: -1;position:absolute;left:0;margin-top: 0px;width: 196px;opacity:0.1">
+  {% if company.linkFacebookActive == true %}
+  <a href="{{company.linkFacebook}}" target="_blank" style="display:inline; padding:0px;margin: 2px;">
+    <i class="fa fa-facebook-official w3-hover-opacity w3-text-indigo"></i>
   </a>
-  <a href="https://instagram.com/tarugabenagiltours/" target="_blank">
-   <i class="fa fa-instagram"></i>
+  {% endif %}
+  
+  {% if company.linkInstagramActive == true %}
+  <a href="{{company.linkInstagram}}" target="_blank" style="display:inline; padding:0px;margin: 2px;">
+    <i class="fa fa-instagram w3-hover-opacity w3-text-brown"></i>
   </a>
-  <a href="https://youtube.com/channel/UCXdOWNzDhQCvrO05cekWV8A" target="_blank">
-   <i class="fa fa-youtube"></i>
+  {% endif %}
+  
+  {% if company.linkPinterestActive == true %}
+  <a href="{{company.linkPinterest}}" target="_blank" style="display:inline; padding:0px;margin: 2px;">
+    <i class="fa fa-pinterest-p w3-hover-opacity w3-text-red"></i>
   </a>
- </li>
+  {% endif %}
+  
+  {% if company.linkTwitterActive == true %}
+  <a href="{{company.linkTwitter}}" target="_blank" style="display:inline; padding:0px;margin: 2px;">
+    <i class="fa fa-twitter w3-hover-opacity w3-text-blue"></i>
+  </a>
+  {% endif %}
+  
+  {% if company.linkLinkenActive == true %}
+  <a href="{{company.linkLinken}}" target="_blank" style="display:inline; padding:0px;margin: 2px;">
+    <i class="fa fa-linkedin w3-hover-opacity w3-text-blue"></i>
+  </a>
+  {% endif %}
+  
+  {% if company.linkBehanceActive == true %}
+  <a href="{{company.linkBehance}}" target="_blank" style="display:inline; padding:0px;margin: 2px;">
+    <i class="fa fa-behance w3-hover-opacity w3-teal"></i>
+  </a>
+  {% endif %}
+  
+  {% if company.linkYoutubeActive == true %}
+  <a href="{{company.linkYoutube}}" target="_blank" style="display:inline; padding:0px;margin:2px;font-size: 30px">
+    <i class="fa fa-youtube w3-hover-opacity w3-text-red"></i>
+  </a>
+  {% endif %}
+</div>
+
 </nav>

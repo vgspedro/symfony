@@ -1,0 +1,189 @@
+<header class="w3-container" style="padding-top:22px">
+    <h5><b><i class="fa fa-home"></i> Empresa <i class="far fa-edit fa-fw"></i></b></h5>
+</header>
+<div class="w3-container">
+<div class="w3-border w3-sand">
+  {{ form_start(form, {'attr': {'id': 'company-form'}})  }}
+  <div class="w3-row-padding w3-margin-top">
+    <div class="w3-col l4 m3 s0">&nbsp;</div>
+    <div class="w3-col s12 l4 m6 w3-center" title="Logotipo da empresa">
+      <div class="w3-center w3-margin-bottom w3-border w3-imput w3-section set-image-container w3-padding" style="cursor:pointer"onclick="$('.set-image').trigger('click')">
+        {% if company.logo %}
+        {% set url=company.logo|split('/public/') %}
+          <img id="output" src="../{{ url[1] }}" class="w3-image w3-animate-zoom">
+        {% else %}
+        <i class="fa fa-camera w3-jumbo" style="color:#05788d"></i>
+        {% endif %}
+      </div>
+      {{ form_widget(form.logo)}}
+    </div>
+  </div>
+
+  <div class="w3-row-padding w3-border-bottom w3-margin-top" id="desc">
+
+  </div>
+  <div class="w3-row-padding w3-margin-top w3-border-bottom">
+    <div class="w3-col l6 m6 s12 w3-margin-bottom">
+      {{ form_label(form.name) }}
+      {{ form_widget(form.name) }}
+    </div>
+    
+    <div class="w3-col l6 m6 s12 w3-margin-bottom">
+      {{ form_label(form.address) }}
+      {{ form_widget(form.address) }}
+    </div>
+
+    <div class="w3-col l4 m6 s5 w3-margin-bottom">
+      {{ form_label(form.p_code) }}
+      {{ form_widget(form.p_code) }}
+    </div>
+
+    <div class="w3-col l4 m6 s7 w3-margin-bottom">
+      {{ form_label(form.city) }}
+      {{ form_widget(form.city) }}
+    </div>
+
+    <div class="w3-col l4 m6 s12 w3-margin-bottom">
+      {{ form_label(form.country) }}
+      {{ form_widget(form.country) }}
+    </div>
+
+    <div class="w3-col l3 m6 s8 w3-margin-bottom">
+      {{ form_label(form.fiscal_number) }}
+      {{ form_widget(form.fiscal_number) }}
+    </div>
+    <div class="w3-col l2 m3 s4 w3-margin-bottom">
+      {{ form_label(form.currency) }}
+      {{ form_widget(form.currency) }}
+    </div>
+
+  </div>
+
+  <div class="w3-row-padding w3-margin-top w3-border-bottom">
+    <div class="w3-col s12 l3 m4 w3-margin-bottom">
+      {{ form_label(form.email)}}<br>
+      {{ form_widget(form.email)}}
+    </div>
+    <div class="w3-col s12 l3 m4 w3-margin-bottom">
+      {{ form_label(form.email_pass)}}<br>
+      {{ form_widget(form.email_pass)}}
+    </div>
+    <div class="w3-col s12 l3 m4 w3-margin-bottom">
+      {{ form_label(form.telephone)}}<br>
+      {{ form_widget(form.telephone)}}
+    </div>
+  </div>
+
+  <div class="w3-row-padding w3-margin-top w3-border-bottom">
+    <div class="w3-col s12 l4 m5 w3-margin-bottom">
+      {{ form_label(form.coords_google_maps)}}<br>
+      {{ form_widget(form.coords_google_maps)}}
+    </div>
+    <div class="w3-col s12 l6 m7 w3-margin-bottom">
+      {{ form_label(form.google_maps_api_key)}}<br>
+      {{ form_widget(form.google_maps_api_key)}}
+    </div>
+  </div>
+
+  <div class="w3-row-padding w3-margin-top w3-border-bottom">
+    <div class="w3-col s2 l1 m1 w3-margin-bottom" title="Ativar o link">
+      {{ form_label(form.link_facebook_active)}}<br>
+      {{ form_widget(form.link_facebook_active)}}
+    </div>
+    <div class="w3-col s10 l11 m11 w3-margin-bottom">
+      {{ form_label(form.link_facebook)}}<br>
+      {{ form_widget(form.link_facebook)}}
+    </div>
+
+    <div class="w3-col s2 l1 m1 w3-margin-bottom" title="Ativar o link">
+      {{ form_label(form.link_twitter_active)}}<br>
+      {{ form_widget(form.link_twitter_active)}}
+    </div>
+    <div class="w3-col s10 l11 m11 w3-margin-bottom">
+      {{ form_label(form.link_twitter)}}<br>
+      {{ form_widget(form.link_twitter)}}
+    </div>
+    <div class="w3-col s2 l1 m1 w3-margin-bottom" title="Ativar o link">
+      {{ form_label(form.link_instagram_active)}}<br>
+      {{ form_widget(form.link_instagram_active)}}
+    </div>
+    <div class="w3-col s10 l11 m11 w3-margin-bottom">
+      {{ form_label(form.link_instagram)}}<br>
+      {{ form_widget(form.link_instagram)}}
+    </div>
+    <div class="w3-col s2 l1 m1 w3-margin-bottom" title="Ativar o link">
+      {{ form_label(form.link_linken_active)}}<br>
+      {{ form_widget(form.link_linken_active)}}
+    </div>
+    <div class="w3-col s10 l11 m11 w3-margin-bottom">
+      {{ form_label(form.link_linken)}}<br>
+      {{ form_widget(form.link_linken)}}
+    </div>
+    <div class="w3-col s2 l1 m1 w3-margin-bottom" title="Ativar o link">
+      {{ form_label(form.link_pinterest_active)}}<br>
+      {{ form_widget(form.link_pinterest_active)}}
+    </div>
+    <div class="w3-col s10 l11 m11 w3-margin-bottom">
+      {{ form_label(form.link_pinterest)}}<br>
+      {{ form_widget(form.link_pinterest)}}
+    </div>
+  </div>
+  <div class="w3-row-padding w3-margin-top w3-border-bottom">
+    <div class="w3-hide">
+        {{ form_widget(form.submit)}}
+    </div>
+    <div class="w3-col s12 w3-margin-bottom">
+      <span class="w3-btn w3-border w3-green w3-right w3-margin-top" onclick="$('#company-form').trigger('submit')">
+        <i class="fa fa-check"></i> Guardar
+      </span>
+    </div>
+  </div>
+  {{ form_end(form) }}
+</div>
+
+</div>
+
+<script>
+
+  var loadFile = function(event) {
+    $('.set-image-container').html('<img id="output" class="w3-image w3-animate-zoom">')
+    var output = document.getElementById('output')
+    output.src = URL.createObjectURL(event.target.files[0])
+  }
+
+  $('#company-form').on('submit',function(e){
+  obj=''
+  e.preventDefault()
+  $('.w3-overlay').show()
+  $('.required').addClass('w3-hide')
+  //setTimeout(function(){
+    $.ajax({  
+      url:'{{ path('admin_company_edit') }}',
+      type: "POST",
+      data: new FormData($(this)[0]),
+      processData: false,
+      contentType: false,
+      cache: false,
+      success: function(data){  
+        $('.w3-overlay').hide()
+        console.log(data)
+        if (data.status == 1){
+          ajaxUpload('company-list')
+        }
+        else{
+          for(i=0;i<data.data.length;i++)
+            obj += data.data[i]+'<br>'
+          $('#set-fields').html(obj)
+          $('#modal-fields').show()
+        }
+      },
+      error:function(data){
+        $('.w3-overlay').hide()
+        $('#modal-error').show()
+      }
+    })
+  //}, 500)
+})
+
+</script>
+

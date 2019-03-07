@@ -48,6 +48,40 @@ admin_dashboard:
     path: /admin-dashboard/
     controller: App\Controller\AdminController::adminDashboard
 
+
+
+
+
+##
+# COMPANY
+##
+
+admin_company_new:
+    path: /admin-company-new/
+    controller: App\Controller\CompanyController::companyNew
+
+admin_company_add:
+    path: /admin-company-add/
+    controller: App\Controller\CompanyController::companyAdd
+    #condition: 'request.isXmlHttpRequest()'
+
+admin_company_list:
+    path: /admin-company-list/
+    controller: App\Controller\CompanyController::CompanyList
+
+admin_company_show_edit:
+    path: /admin-company-show-edit/
+    controller: App\Controller\CompanyController::companyShowEdit
+    condition: 'request.isXmlHttpRequest()'
+
+admin_company_edit:
+    path: /admin-company-edit/
+    controller: App\Controller\CompanyController::companyEdit
+    condition: 'request.isXmlHttpRequest()'
+
+
+
+
 ##
 # CATEGORIES
 ##
