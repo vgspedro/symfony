@@ -49,7 +49,7 @@ class RegistrationController extends AbstractController
                 
                 $company = $em->getRepository(Company::class)->find(1);
 
-                $transport = (new \Swift_SmtpTransport($_ENV['EMAIL_SMTP'], $_ENV['EMAIL_PORT'], $_ENV['EMAIL_CERTIFICADE']))
+                $transport = (new \Swift_SmtpTransport($company->getEmailSmtp(), $company->getEmailPort(), $company->getEmailCertificade()))
                     ->setUsername($company->getEmail())
                     ->setPassword($company->getEmailPass());       
 
@@ -66,7 +66,8 @@ class RegistrationController extends AbstractController
                             'emails/register.html.twig',
                             array(
                                 'username' => $user->getUsername(),
-                                'logo' => '/upload/gallery/'.$company->getLogo()
+                                'logo' => '/upload/gallery/'.$company->getLogo(),
+                                'company_name' => $company->getName()
                             )
                         ),
                     'text/html'

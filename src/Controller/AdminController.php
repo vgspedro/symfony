@@ -138,10 +138,11 @@ class AdminController extends AbstractController
                 'notes' => $booking->getNotes(),
                 'user_id' => $client->getId(),   
                 'username' => $client->getUsername(),
-                'logo' => '/upload/gallery/'.$company->getLogo()
+                'logo' => '/upload/gallery/'.$company->getLogo(),
+                'company_name' => $company->getName()
             );          
 
-        $transport = (new \Swift_SmtpTransport($_ENV['EMAIL_SMTP'], $_ENV['EMAIL_PORT'], $_ENV['EMAIL_CERTIFICADE']))
+        $transport = (new \Swift_SmtpTransport($company->getEmailSmtp(), $company->getEmailPort(), $company->getEmailCertificade()))
             ->setUsername($company->getEmail())
             ->setPassword($company->getEmailPass());
 

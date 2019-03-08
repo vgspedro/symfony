@@ -40,9 +40,7 @@ class Company
     */
     private $city;
     /**
-    * @Assert\NotBlank(message="COUNTRY")
-    * @ORM\Column(type="string", length=20, name="country")
-    */
+    *@ORM\ManyToOne(targetEntity="Countries", inversedBy="company") */
     private $country;
     /**
     * @Assert\NotBlank(message="EMAIL")
@@ -55,12 +53,23 @@ class Company
     */
     private $email_pass;
     /**
+    * @ORM\Column(type="integer")
+    */
+    private $email_port;
+    /**
+    * @ORM\Column(type="string", length=24, name="email_smtp")
+    */
+    private $email_smtp;
+    /**
+    * @ORM\Column(type="string", length=4, name="email_certificade")
+    */
+    private $email_certificade;
+    /**
      * @ORM\Column(type="string", length=20, name="telephone", nullable=true)
      */
     private $telephone;
     /**
-     * @ORM\Column(type="string", length=20, name="currency", nullable=true)
-     */
+     *@ORM\ManyToOne(targetEntity="Currency", inversedBy="company") */
     private $currency;
     /**
      * @ORM\Column(type="string", length=50, name="fiscal_number")
@@ -99,6 +108,8 @@ class Company
     private $link_youtube;
     /** @ORM\Column(type="string", name="link_behance",nullable=true)*/
     private $link_behance;
+    /** @ORM\Column(type="string", name="link_snapchat",nullable=true)*/
+    private $link_snapchat;
 
     /** @ORM\Column(type="boolean", name="link_facebook_active", options={"default":0}) */
     private $link_facebook_active = false;
@@ -114,15 +125,37 @@ class Company
     private $link_youtube_active = false;
     /** @ORM\Column(type="boolean", name="link_behance_active",nullable=true)*/
     private $link_behance_active = false;
+    /** @ORM\Column(type="boolean", name="link_snapchat_active",nullable=true)*/
+    private $link_snapchat_active = false;
 
-
-
-/*
-    public function __construct()
-    {   
-        $this->description = new ArrayCollection();  
+    public function getEmailPort()
+    {
+        return $this->email_port;
     }
-*/
+    public function setEmailPort($email_port)
+    {
+        $this->email_port = $email_port;
+    }
+
+    public function getEmailSmtp()
+    {
+        return $this->email_smtp;
+    }
+    public function setEmailSmtp($email_smtp)
+    {
+        $this->email_smtp = $email_smtp;
+    }
+
+    public function getEmailCertificade()
+    {
+        return $this->email_certificade;
+    }
+    public function setEmailCertificade($email_certificade)
+    {
+        $this->email_certificade = $email_certificade;
+    }
+
+
     public function getId()
     {
         return $this->id;
@@ -137,28 +170,6 @@ class Company
     {
         $this->name = str_replace("'","’",$name);
     }
-
-    /*
-    public function getDescription()
-    {
-        return $this->description;
-    }
-    
-    public function setDescription(ArrayCollection $description) {
-        $this->description = $description;
-    }
-
-    public function addDescription(CompanyTranslation $description)
-    {
-        $description->setDescription($this);
-        $this->description->add($description);
-    }
-    
-    public function removeDescription(CompanyTranslation $description)
-    {
-        $this->description->removeElement($description);
-    }
-    */
 
     public function getAddress()
     {
@@ -175,7 +186,7 @@ class Company
         return $this->currency;
     }
 
-    public function setCurrency($currency)
+    public function setCurrency(Currency $currency)
     {
         $this->currency = $currency;
     }
@@ -205,9 +216,9 @@ class Company
         return $this->country;
     }
 
-    public function setCountry($country)
+    public function setCountry(Countries $country)
     {
-        $this->country = str_replace("'","’",$country);
+        $this->country = $country;
     }
 
     public function getEmail()
@@ -361,6 +372,17 @@ class Company
         $this->link_youtube = str_replace("'","’",$link_youtube);
     }
 
+    public function getLinkSnapChat()
+    {
+        return $this->link_snapchat;
+    }
+
+    public function setLinkSnapChat($link_snapchat)
+    {
+        $this->link_snapchat = str_replace("'","’",$link_snapchat);
+    }
+
+
     public function getLinkBehanceActive()
     {
         return $this->link_behance_active;
@@ -431,8 +453,13 @@ class Company
         $this->link_pinterest_active = $link_pinterest_active;
     }
 
+    public function getLinkSnapChatActive()
+    {
+        return $this->link_snapchat_active;
+    }
 
-
-
-
+    public function setLinkSnapChatActive($link_snapchat_active)
+    {
+        $this->link_snapchat_active = $link_snapchat_active;
+    }
 }

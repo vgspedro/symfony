@@ -347,7 +347,7 @@ class HomeController extends AbstractController
 
         $terms = $em->getRepository(TermsConditions::class)->findOneBy(['locales' => $locale]);
 
-        $transport = (new \Swift_SmtpTransport($_ENV['EMAIL_SMTP'], $_ENV['EMAIL_PORT'], $_ENV['EMAIL_CERTIFICADE']))
+        $transport = (new \Swift_SmtpTransport($company->getEmailSmtp(), $company->getEmailPort(), $company->getEmailCertificade()))
             ->setUsername($company->getEmail())
             ->setPassword($company->getEmailPass());       
 
@@ -378,7 +378,8 @@ class HomeController extends AbstractController
                         'wp' => $category->getWarrantyPayment(),
                         'logo' => '/upload/gallery/'.$company->getLogo(),
                         'terms' => !$terms ? '' : $terms->getName(),
-                        'terms_txt' => !$terms ? '' : $terms->getTermsHtml()
+                        'terms_txt' => !$terms ? '' : $terms->getTermsHtml(),
+                        'company_name' => $company->getName()
                     )
                 ),
                 'text/html'

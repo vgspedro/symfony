@@ -3,6 +3,8 @@
 namespace App\Form;
 
 use App\Entity\Company;
+use App\Entity\Currency;
+use App\Entity\Countries;
 use App\Entity\CompanyTranslation;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -17,6 +19,7 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Doctrine\ORM\EntityRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 
 class CompanyType extends AbstractType
@@ -48,11 +51,12 @@ class CompanyType extends AbstractType
                 'label' => 'Cidade *',
                 'attr' => ['class' => 'w3-input w3-border w3-white','placeholder'=>'Cidade *']
             ))
-            ->add('country', TextType::class,
-            array(
-                'required' => true,
+            ->add('country', EntityType::class, array(
+                'class' => Countries::class,
+                'choice_label' => 'name',
+                'placeholder' => 'Pais *',
                 'label' => 'Pais *',
-                'attr' => ['class' => 'w3-input w3-border w3-white','placeholder'=>'Pais *']
+                'attr' => ['class' => 'w3-select w3-border w3-white']   
             ))
             ->add('email', TextType::class,
             array(
@@ -60,20 +64,36 @@ class CompanyType extends AbstractType
                 'label' => 'Email *',
                 'attr' => ['class' => 'w3-input w3-border w3-white','placeholder'=>'Email *']
             ))
+            ->add('email_smtp', TextType::class,
+            array(
+                'required' => true,
+                'label' => 'Email SMTP *',
+                'attr' => ['class' => 'w3-input w3-border w3-white','placeholder'=>'Email SMTP*']
+            ))
             ->add('email_pass', TextType::class,
             array(
                 'required' => true,
                 'label' => 'Email Pass *',
                 'attr' => ['class' => 'w3-input w3-border w3-white','placeholder'=>'Email Pass *']
             ))
-
+            ->add('email_port', IntegerType::class,
+            array(
+                'required' => true,
+                'label' => 'Porta Email *',
+                'attr' => ['class' => 'w3-input w3-border w3-white','placeholder'=>'465, 143']
+            ))
+            ->add('email_certificade', TextType::class,
+            array(
+                'required' => true,
+                'label' => 'Email Certificado *',
+                'attr' => ['class' => 'w3-input w3-border w3-white','placeholder'=>'ssl, tls']
+            ))
             ->add('telephone', TextType::class,
             array(
                 'required' => false,
                 'label' => 'Telefone',
                 'attr' => ['class' => 'w3-input w3-border w3-white','placeholder'=>'Telefone']
             ))
-
             ->add('fiscal_number', IntegerType::class,
             array(
                 'required' => true,
@@ -90,27 +110,18 @@ class CompanyType extends AbstractType
                 'label' => 'Google Maps Api Key *',
                 'attr' => ['class' => 'w3-input w3-border w3-white','placeholder'=>'Google Maps Api Key *']
             ))
-/*
-            ->add('description', CollectionType::class, array(
-                'entry_type' => CompanyTranslationType::class,
-                'entry_options' => array('label' => false),
-                'allow_add' => true,
-                'allow_delete' => true,                 
-                'by_reference' => false,
-                'label' => false   
-            ))
-*/
             ->add('logo', FileType::class, array(
                 'label' => 'Logo',
                 'required' => false,
                 'attr' => ['class' => 'w3-hide set-image','onchange' => 'loadFile(event)']
             ))
-            ->add('currency', TextType::class, array(
-                'required' => false,
+            ->add('currency', EntityType::class, array(
+                'class' => Currency::class,
+                'choice_label' => 'entity',
+                'placeholder' => 'Moeda *',
                 'label' => 'Moeda *',
-                'attr' => ['class' => 'w3-input w3-border w3-white']
+                'attr' => ['class' => 'w3-select w3-border w3-white']   
             ))
-
             ->add('link_facebook', TextType::class, array(
                 'required' => false,
                 'label' => 'Facebook Url',
@@ -157,6 +168,11 @@ class CompanyType extends AbstractType
                 'label' => 'Pinterest Url',
                 'attr' => ['class' => 'w3-input w3-border w3-white','placeholder'=>'https://pinterest']
             ))
+            ->add('link_snapchat', TextType::class, array(
+                'required' => false,
+                'label' => 'Snapchat Url',
+                'attr' => ['class' => 'w3-input w3-border w3-white','placeholder'=>'https://snapchat']
+            ))
             ->add('link_facebook_active', CheckboxType::class, array(
                 'label'    => 'Ativo',
                 'required' => false,
@@ -188,6 +204,11 @@ class CompanyType extends AbstractType
                 'attr' => ['class' => 'w3-check']
             ))
             ->add('link_pinterest_active', CheckboxType::class, array(
+                'label'    => 'Ativo',
+                'required' => false,
+                'attr' => ['class' => 'w3-check']
+            ))
+            ->add('link_snapchat_active', CheckboxType::class, array(
                 'label'    => 'Ativo',
                 'required' => false,
                 'attr' => ['class' => 'w3-check']

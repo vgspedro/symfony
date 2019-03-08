@@ -1,3 +1,7 @@
+
+<style>
+.w3-select {padding: 11.5px 4px}
+</style>
 <header class="w3-container" style="padding-top:22px">
     <h5><b><i class="fa fa-home"></i> Empresa <i class="far fa-edit fa-fw"></i></b></h5>
 </header>
@@ -64,9 +68,22 @@
       {{ form_label(form.email)}}<br>
       {{ form_widget(form.email)}}
     </div>
-    <div class="w3-col s12 l3 m4 w3-margin-bottom">
+    <div class="w3-col s12 l2 m4 w3-margin-bottom">
       {{ form_label(form.email_pass)}}<br>
       {{ form_widget(form.email_pass)}}
+    </div>
+    <div class="w3-col s6 l2 m4 w3-margin-bottom">
+      {{ form_label(form.email_certificade)}}<br>
+      {{ form_widget(form.email_certificade)}}
+    </div>
+
+    <div class="w3-col s6 l2 m4 w3-margin-bottom">
+      {{ form_label(form.email_port)}}<br>
+      {{ form_widget(form.email_port)}}
+    </div>
+    <div class="w3-col s12 l3 m4 w3-margin-bottom">
+      {{ form_label(form.email_smtp)}}<br>
+      {{ form_widget(form.email_smtp)}}
     </div>
     <div class="w3-col s12 l3 m4 w3-margin-bottom">
       {{ form_label(form.telephone)}}<br>
@@ -77,7 +94,6 @@
       {{ form_widget(form.link_my_domain)}}
     </div>
   </div>
-
   <div class="w3-row-padding w3-margin-top w3-border-bottom">
     <div class="w3-col s12 l4 m5 w3-margin-bottom">
       {{ form_label(form.coords_google_maps)}}<br>
@@ -148,6 +164,16 @@
       {{ form_label(form.link_behance)}}<br>
       {{ form_widget(form.link_behance)}}
     </div>
+    <div class="w3-col s2 l1 m1 w3-margin-bottom" title="Ativar o link">
+      {{ form_label(form.link_snapchat_active)}}<br>
+      {{ form_widget(form.link_snapchat_active)}}
+    </div>
+    <div class="w3-col s10 l11 m11 w3-margin-bottom">
+      {{ form_label(form.link_snapchat)}}<br>
+      {{ form_widget(form.link_snapchat)}}
+    </div>
+
+
   </div>
   <div class="w3-row-padding w3-margin-top w3-border-bottom">
     <div class="w3-hide">
