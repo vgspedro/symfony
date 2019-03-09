@@ -17,6 +17,7 @@ use App\Entity\Client;
 use App\Entity\Gallery;
 use App\Entity\User;
 use App\Entity\Locales;
+use App\Entity\AboutUs;
 use App\Entity\Available;
 /*https://github.com/nojacko/email-validator*/
 use EmailValidator\EmailValidator;
@@ -47,13 +48,18 @@ class HomeController extends AbstractController
         $em = $this->getDoctrine()->getManager();
 
         $ua = $this->getBrowser();
-        $locale = $ua['lang'];
-    
+        
+        //$locale =  $ua['lang'];
+        $locale = $request->query->get('current-local') ? $request->query->get('current-local') : $ua['lang'];
+        
+        $locale = $locale != 'pt_PT' ? 'en_EN' : 'pt_PT';
+
         $cS = array();
         $locales = $em->getRepository(Locales::class)->findAll();
         $warning = $em->getRepository(Warning::class)->find(10);
         $company = $em->getRepository(Company::class)->find(1);
-        
+        $about = $em->getRepository(AboutUs::class)->findAll();
+
         $category = $em->getRepository(Category::class)->findBy(['isActive' => 1],['orderBy' => 'ASC']);
         
         $categoryHl = $em->getRepository(Category::class)->findOneBy(['highlight' => 1],['orderBy' => 'ASC']);
@@ -116,7 +122,8 @@ class HomeController extends AbstractController
                 'locale' => $locale,
                 'locales' => $locales, 
                 'id' => '#'.$id,
-                'company' => $company
+                'company' => $company,
+                'about' => $about
                 )
             );
     }
@@ -130,7 +137,11 @@ class HomeController extends AbstractController
         $warning = $em->getRepository(Warning::class)->find(10);
         $company = $em->getRepository(Company::class)->find(1);
         $ua = $this->getBrowser();
-        $locale = $ua['lang'];
+
+        $locale = $request->query->get('current-local') ? $request->query->get('current-local') : $ua['lang'];
+
+        $locale = $locale != 'pt_PT' ? 'en_EN' : 'pt_PT';
+
         $locales = $em->getRepository(Locales::class)->findAll();
         $gallery = $em->getRepository(Gallery::class)->findBy(['isActive' => 1],['namePt' => 'ASC']);
 
@@ -152,6 +163,7 @@ class HomeController extends AbstractController
     public function setBooking(Request $request, MoneyFormatter $moneyFormatter, \Swift_Mailer $mailer){
                     
         $err = array();
+
         $this->session->get('_locale')->getName();
 
         $em = $this->getDoctrine()->getManager();
@@ -507,9 +519,6 @@ class HomeController extends AbstractController
         );
     }
 
-
-
-
     private function getBrowser() 
     { 
         $u_agent = $_SERVER['HTTP_USER_AGENT']; 
@@ -617,7 +626,7 @@ class HomeController extends AbstractController
             'name'      => $bname,
             'os'        => ucfirst($platform),
             'platform'  => ucfirst($os_platform),
-            'lang'      => $lang[0],
+            'lang'      => str_replace("-","_",$lang[0]),
             'country'   => $current_country,
             'city'      => $current_city,
             'ip'        => $_SERVER['REMOTE_ADDR']
@@ -625,11 +634,12 @@ class HomeController extends AbstractController
         }
 
 
+
         else $response =  array(
             'name'      => $bname,
             'os'        => ucfirst($platform),
             'platform'  => ucfirst($os_platform),
-            'lang'      => $lang[0],
+            'lang'      => str_replace("-","_",$lang[0]),
             'country'   => '-/-',
             'city'      => '-/-',
             'ip'        => $_SERVER['REMOTE_ADDR']

@@ -211,6 +211,30 @@ index_rgpd:
     controller: App\Controller\RgpdController::rgpdShow
     #condition: 'request.isXmlHttpRequest()'
 
+
+##
+# ABOUT-US
+##
+
+admin_about_us:
+    path: /admin-about-us/
+    controller: App\Controller\AboutUsController::aboutUs
+    #condition: 'request.isXmlHttpRequest()'
+
+admin_about_us_delete:
+    path: /admin-about-us-delete/
+    controller: App\Controller\AboutUsController::aboutUsDelete
+
+admin_about_us_edit:
+    path: /admin-about-us-edit/
+    controller: App\Controller\AboutUsController::aboutUsEdit
+
+index_about_us:
+    path: /index-about-us/
+    controller: App\Controller\AboutUsController::aboutUsShow
+    #condition: 'request.isXmlHttpRequest()'
+
+
 ##
 # TERMS CONDITIONS
 ##

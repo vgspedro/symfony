@@ -20,22 +20,26 @@
 
   <form action="{{ path('index_info') }}" method="get" class='w3-padding-8 w3-border-bottom w3-border-top' onclick="$(this).trigger('submit')">
     <input type="hidden" name="id" value="home">
+    <input type="hidden" name="current-locale" class="current-locale" value="{{locale}}">
     <span class='USEFULL_INFO w3-medium nav-text-m w3-margin-left' style="text-transform:uppercase">{% trans %}info.usefull_info{% endtrans %}</span>
   </form>
 
   <form action="{{ path('index_info') }}" method="get" class='w3-padding-8 w3-margin-left' onclick="$(this).trigger('submit')">
     <input type="hidden" name="id" value="aequipa_iii">
+    <input type="hidden" name="current-locale" class="current-locale" value="{{locale}}">
     <span class='DOUBTS nav-text-m w3-margin-left'>{% trans %}info.doubts{% endtrans %}</span>
  </form>
 
 
   <form action="{{ path('index_info') }}" method="get" class='w3-padding-8 w3-margin-left' onclick="$(this).trigger('submit')">
     <input type="hidden" name="id" value="aequipa_ii">
+    <input type="hidden" name="current-locale" class="current-locale" value="{{locale}}">
     <span class='GALLERY nav-text-m w3-margin-left'>{% trans %}info.gallery{% endtrans %}</span>
  </form>
 
   <form action="{{ path('index_info') }}" method="get" class='w3-padding-8 w3-margin-left' onclick="$(this).trigger('submit')">
     <input type="hidden" name="id" value="contatos">
+    <input type="hidden" name="current-locale" class="current-locale" value="{{locale}}">
     <span class='CONTATOS nav-text-m w3-margin-left'>{% trans %}link.contact{% endtrans %}</span>
  </form>
 
@@ -92,6 +96,11 @@
   {% if company.linkYoutubeActive == true %}
   <a href="{{company.linkYoutube}}" target="_blank" style="display:inline; padding:0px;margin:2px;font-size: 30px">
     <i class="fa fa-youtube w3-hover-opacity w3-text-red"></i>
+  </a>
+  {% endif %}
+  {% if company.linkSnapchatActive== true %}
+  <a href="{{company.linkSnapchat}}" target="_blank" style="display:inline; padding:0px;margin: 2px;">
+    <i class="fa fa-snapchat w3-hover-opacity w3-text-brown"></i>
   </a>
   {% endif %}
 </div>

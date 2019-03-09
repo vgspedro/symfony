@@ -22,13 +22,10 @@ class TranslationController extends AbstractController
 
         $em = $this->getDoctrine()->getManager();
         
-        $userLocale = $request->request->get('lang') ? $request->request->get('lang') : 'pt_PT';
+        $userLocale = $request->request->get('lang');
 
         $userLocales = $em->getRepository(Locales::class)->findOneBy(['name' => $userLocale]);
         
-        if(!$userLocales)
-            $userLocales = $em->getRepository(Locales::class)->findOneBy(['name' => 'pt_PT']);
-
         $this->session->set('_locale', $userLocales);
 
         $userLocales->getName() == 'en_EN' ? 

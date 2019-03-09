@@ -8,43 +8,44 @@
 
 <script>
 
-
 $("#gallery").unitegallery({
   gallery_theme: "video",
   theme_autoplay: false,        //autoplay videos at start.  true / false. Don't working on mobiles.
   theme_disable_panel_timeout:2500  //How much time the right panel will be disabled. in ms
 })
 
+window.addEventListener("load", function(){
+  window.cookieconsent.initialise({
+    "palette": {
+      "popup":{"background":"rgba(214,209,156,0.85)","text":"#333"},
+      "button":{"background":"#3f51b5","text":"#FFF"}},
+      "content": {"message": "{% trans %}cookies.txt{% endtrans %}", 
+      "dismiss": "{% trans %}cookies.btn{% endtrans %}",
+      "link": "{% trans %}cookies.link{% endtrans %}",
+      "href": "https://cookiesandyou.com/"
+    }
+  })
+})
 
-t = '{{locale}}' == 'pt-PT' ? 1 : 2
-l = '{{locale}}' == 'pt-PT' ? 'pt_PT' : 'en_EN' 
+session_local = ''
 
-languages(l,t)
+{%if app.session.get('_locale') %}
+  session_local = '{{app.session.get('_locale').name}}'
+{% endif %}
 
-    window.addEventListener("load", function(){
-        window.cookieconsent.initialise({
-            "palette": {
-                "popup":{"background":"rgba(214,209,156,0.85)","text":"#333"},
-                "button":{"background":"#05788d","text":"#FFF"}},
-                "content": {"message": "{% trans %}cookies.txt{% endtrans %}", 
-                "dismiss": "{% trans %}cookies.btn{% endtrans %}",
-                "link": "{% trans %}cookies.link{% endtrans %}",
-                "href": "https://cookiesandyou.com/"
-            }
-        })
-    })
+session_local ? languages(session_local) : languages('{{locale}}')
 
-function languages(vl,tp){
+function languages(local){
 
   $("#myOverlay, #loader-cont").show()
   $.ajax({
     type: "POST",
     url :'{{ path('index_translate') }}',
-    data:'lang='+vl,
+    data:'lang='+local,
     cache:false,
     dataType:'json',
     success: function(data) {
-      
+
       data = data.data
       $(".ONDEESTAMOS").html(data.link.where_we_are)
       $(".AEQUIPA").html(data.link.the_team)
@@ -169,20 +170,15 @@ function languages(vl,tp){
 
       $(".cc-dismiss").text(data.cookies.btn)
       $(".cc-message").html(data.cookies.txt+'<br><a class="cc-link" target="_blank" href="https://cookiesandyou.com/">'+data.cookies.link+'</a>')
-      switch (tp){
-        case 1:
+      $('.current-locale').val(local)
+      switch (local){
+       case 'pt_PT':
           $('.EN').addClass('w3-hide')
           $('.PT').removeClass('w3-hide')
-           $('select[name=category]').val('').trigger('change')
-          //for(var e in arrTour)
-          //  $('#booking_tourtype option[value="'+arrTour[e].val+'"]').text(arrTour[e].pt)
         break
-        case 2:
+        case 'en_EN':
           $('.PT').addClass('w3-hide')
           $('.EN').removeClass('w3-hide')
-           $('select[name=category]').val('').trigger('change')
-          //for(var e in arrTour)
-          //  $('#booking_tourtype option[value="'+arrTour[e].val+'"]').text(arrTour[e].en)
         break
       }
       setTimeout(function(){
@@ -199,7 +195,6 @@ function languages(vl,tp){
     }
   })
 }
-
 
 mySidenav = document.getElementById("mySidenav")
 overlayBg = document.getElementById("myOverlay")
@@ -251,7 +246,6 @@ function navigation(pos,id){
   if (id)
     $('select[name=category]').val(id)
   }
-
 
 
 function myMap() {

@@ -22,12 +22,6 @@
         <label class="TOUR w3-small w3-text-red">{% trans %}part_seven.tour{% endtrans %}</label>
         <select class="w3-select w3-input" name="category" onchange="updateTourData()">
            <option class="TOUR w3-opacity" value="">{% trans %}part_seven.tour{% endtrans %}</option>
-          {% for category in categories %}
-          {% if category.no_stock == false %} 
-          <option class="PT" value="{{category.id}}">{{category.namePt}}</option>
-          <option class="EN w3-hide" value="{{category.id}}">{{category.nameEn}}</option>
-          {% endif %} 
-          {% endfor %}
         </select>
       </div>
       
@@ -183,18 +177,22 @@
     </div> 
     <input type="hidden" name="_csrf_token" value="{{csrf_token('authenticate') }}">
   </form>
+  
+  {% if about %}
+  <section class="w3-padding-64">
+    {% for c in about %}
+    {% if c.locales.name == 'en_EN' %}
+    {% set cl ='EN w3-hide' %}
+    {% else %}
+    {% set cl ='PT' %}
+    {% endif %}
+    <div class="{{ cl }}">
+     {{c.rgpdHtml|raw}}
+    </div>
+    {% endfor %}
+  </section>
+  {% endif %}
 
-<section class="w3-padding-64">
-   <h4 class="w3-center w3-content">
-    <p class='SPAM_TXT blink'>{% trans %}part_seven.spam_txt{% endtrans %}</p>
-    <p class='BOOKING bold'>{% trans %}part_seven.booking{% endtrans %}</p>
-    <p class='BOOK_EMAIL w3-text-red'>{% trans %}part_seven.book_email{% endtrans %}</p>
-    <p class='BOOK_PHONE'>{% trans %}part_seven.book_phone{% endtrans %}</p>
-   </h4>
-   <h4 class="w3-center w3-content">
-    <span class='BOOK_AFTER'>{% trans %}part_seven.book_after{% endtrans %}</span>
-   </h4>
-</section>
   {% else %}
 
     <h2 class="w3-center">Nothing available!</h2>

@@ -40,7 +40,7 @@ class Company
     */
     private $city;
     /**
-    *@ORM\ManyToOne(targetEntity="Countries", inversedBy="company") */
+    *@ORM\ManyToOne(targetEntity="Countries") */
     private $country;
     /**
     * @Assert\NotBlank(message="EMAIL")
@@ -69,7 +69,7 @@ class Company
      */
     private $telephone;
     /**
-     *@ORM\ManyToOne(targetEntity="Currency", inversedBy="company") */
+     *@ORM\ManyToOne(targetEntity="Currency") */
     private $currency;
     /**
      * @ORM\Column(type="string", length=50, name="fiscal_number")

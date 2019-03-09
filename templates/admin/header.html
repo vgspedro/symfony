@@ -82,10 +82,6 @@
       </div>
     </div>
 
-    <a href="#" onclick="ajaxUpload(this.id)" id="rgpd" class="nav w3-bar-item w3-button w3-padding w3-sand w3-border-top w3-border-brown">
-      <i class="far fa-file-alt"></i> Rgpd
-    </a>
-
     <div class="w3-dropdown-click">
       <button onclick="dropDownMenu('company')" class="w3-tooltip nav w3-hover-grey w3-bar-item w3-padding w3-sand w3-border-top w3-border-brown">
          <i class="fa fa-home"></i> Empresa
@@ -94,12 +90,17 @@
         <a href="#" onclick="ajaxUpload('company')" class="w3-right-align nav w3-border-top w3-border-brown w3-bar-item w3-button w3-padding">
           <i class="far fa-edit fa-fw"></i> Editar
         </a>
+        <a href="#" onclick="ajaxUpload(this.id)" id="about-us" class="w3-right-align nav w3-border-top w3-border-brown w3-bar-item w3-button w3-padding">
+          <i class="far fa-file-alt"></i> Sobre Nós
+        </a>
+        <a href="#" onclick="ajaxUpload(this.id)" id="rgpd" class="w3-right-align nav w3-border-top w3-border-brown w3-bar-item w3-button w3-padding">
+          <i class="far fa-file-alt"></i> Rgpd
+        </a>
+        <a href="#" onclick="ajaxUpload(this.id)" id="terms" class="w3-right-align nav w3-border-top w3-border-brown w3-bar-item w3-button w3-padding">
+          <i class="fas fa-asterisk"></i> Termos & Cond.
+        </a>
       </div>
     </div>
-
-    <a href="#" onclick="ajaxUpload(this.id)" id="terms" class="nav w3-bar-item w3-button w3-padding w3-sand w3-border-top w3-border-brown">
-      <i class="fas fa-asterisk"></i> Termos & Cond.
-    </a>
 
     <a href="{{ path('index') }}" target="_blank" class="w3-bar-item w3-button w3-padding w3-sand w3-border-top w3-border-brown">
       <i class="fas fa-external-link-alt fa-fw"></i> Ver Site

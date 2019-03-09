@@ -6,31 +6,27 @@ textarea {color: #FFF!important}
 </style>
 
 <header class="w3-container" style="padding-top:22px">
-   <h5><b><i class="far fa-file-alt"></i> RGPD</b></h5>
+   <h5><b><i class="far fa-file-alt"></i> Sobre Nós</b></h5>
 </header>
 
 <div class="w3-row-padding">
-  {% for category in rgpd%}
+  {% for about in aboutUs%}
   <div class="w3-col s12 m6 l4 w3-margin-bottom">
-     <input type="hidden" id='{{category.id}}-rgpd' value="{{category.rgpdhtml}}">
+     <input type="hidden" id='{{about.id}}-rgpd' value="{{about.rgpdhtml}}">
     <div class="w3-card-2 w3-sand w3-border">
       <div class="w3-center w3-col s12 w3-padding-small">
-      {{category.name}}
+      {{about.name}}
+   
       </div>
       <div class="w3-row">
         <div class="w3-col s6">
-          <button class="w3-btn w3-block w3-border w3-blue btn-{{ loop.index }}" onclick="editRgpd({{category.id}},'{{category.name}}', {{category.locales.id}})">
+          <button class="w3-btn w3-block w3-border w3-blue btn-{{ loop.index }}" onclick="editRgpd({{about.id}},'{{about.name}}', {{about.locales.id}})">
             <i class="far fa-edit fa-fw"></i>
           </button>
         </div>
         <div class="w3-col s6">
-          <img src="{{category.locales.filename}}" class="w3-right w3-border w3-opacity-min" style="height:45px">
+          <img src="{{about.locales.filename}}" class="w3-right w3-border w3-opacity-min" style="height:45px">
         </div>
-        <!--div class="w3-col s6">
-        <button class="w3-btn w3-block w3-border w3-red" onclick="deleteRgpdConfirm({{ category.id}},'{{ category.name }}')">
-          <i class="fas fa-trash-alt"></i>
-        </button>
-        </div-->
       </div>
     </div>
   </div>  
@@ -66,7 +62,7 @@ textarea {color: #FFF!important}
       </span>
     </div>
   </div>
-  <input type="hidden" name="id" id="rgpd_id">
+  <input type="hidden" name="id" id="about_us_id">
   {{ form_end(form) }}
 </div>
 
@@ -79,68 +75,36 @@ $('#summernote').summernote({
   fontName:'Arial'
 })
 
-function deleteRgpdConfirm(id, n)
-{
-  $('#delete-rgpd').html('<p class="w3-center w3-large">Tem a certeza que pretende apagar,<br><b>'+n+'</b> ?</p>')
-  $('#rgpd-id').val(id)
-  $('#modal-delete-rgpd').show()
-}
 
-function deleteRgpd(id){
-  $('#modal-delete-rgpd').hide()
-  $('.w3-overlay').show()
-  setTimeout(function(){ 
-  $.ajax({
-    url:'{{ path('admin_rgpd_delete') }}',  
-    type: "POST",
-    data:'id='+id,
-    success: function(data){
-      $('.w3-overlay').hide()
-      if (data.message == 'success'){
-        ajaxUpload('rgpd')
-      }
-    },
-    error:function(data){
-      $('.w3-overlay').hide()
-      $('#modal-error').show()
-    }
-  })
-  }, 500)
-}
-
-function clearRgpd(){
-  $('#summernote').summernote('reset')
-  //$('#easytext, #easy_text_name').val('')
-} 
+function clearRgpd(){ $('#summernote').summernote('reset')} 
 
 
 function editRgpd(id,name,locales){
 	$('#summernote').summernote('code', $('#'+id+'-rgpd').val())
-  $('#rgpd_id').val(id)
-  $('#rgpd_name').val(name)
-  $('#rgpd_locales').val(locales)
+  $('#about_us_id').val(id)
+  $('#about_us_name').val(name)
+  $('#about_us_locales').val(locales)
 }
 
 $('#rgpd-form').on('submit',function(e){
   e.preventDefault()
   obj=''
   $('.w3-overlay').show()
-  $('#rgpd_rgpdhtml').val($('#summernote').summernote('code'))
+  $('#about_us_rgpdhtml').val($('#summernote').summernote('code'))
   setTimeout(function(){
     $.ajax({  
-      //url:'{{ path('admin_rgpd') }}',
-      url:'{{ path('admin_rgpd_edit') }}',
+      url:'{{ path('admin_about_us_edit') }}',
       type: "POST",
       data:$('#rgpd-form').serialize(),
       success: function(data){ 
-      //console.log(data) 
+      console.log(data) 
         $('.w3-overlay').hide()
-         if (data.message == 'success'){
-          ajaxUpload('rgpd')
+         if (data.status == 1){
+          ajaxUpload('about-us')
           clearRgpd()
           $('#easy_text_name').val('')
         }
-        else if (data.message=='fail'){
+        else{
           for(i=0;i<data.data.length;i++)
             obj += data.data[i]+'<br>'
           $('#set-fields').html(obj)
