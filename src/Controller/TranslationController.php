@@ -314,7 +314,7 @@ array(
     'submit'=>'Send',
     'tour' =>'Tour *',
     'rgpd' => 'GDPR (General Data Protection Regulation)*',
-    'rgpd_txt' =>'I agree that Taruga Benagil Tours can contact and inform me about the status of my booking, in accordance with the GDPR. I agree that I can cancel at any time. I agree that the information provided through this site is stored and processed for the purpose of Booking Confirmation. The Taruga Benagil Tours takes data protection very seriously.<br>Email: <a class="w3-text-blue" href="mailto:rgpd@tarugabenagiltours.pt?subject=Protecao%20Dados">rgpd@tarugatbenagiltours.pt</a>',
+    'rgpd_txt' =>'I agree that Taruga Benagil Tours can contact and inform me about the status of my booking, in accordance with the GDPR. I agree that I can cancel at any time. I agree that the information provided through this site is stored and processed for the purpose of Booking Confirmation. The Taruga Benagil Tours takes data protection very seriously.<br>Email: <a class="w3-text-blue" href="mailto:rgpd@tarugabenagiltours.pt?subject=Protecao%20Dados">rgpd@tarugabenagiltours.pt</a>',
     'spam_txt' => 'You didn´t receive our email, please check your spam box or call +351969617828',
     'booking' => 'All bookings by:',
     'book_email' => 'EMAIL - Only valid after the confirmation from the Taruga Tours Team',
