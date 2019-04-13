@@ -5,7 +5,7 @@
   <span style="cursor:pointer;position:fixed" class="w3-bar-item" onclick="w3_open()">
     <i class="fa-2x fa fa-bars"></i>
   </span>
-  <span class="w3-bar-item w3-right" style="color: #05788D;line-height: 40px">{{ company.name }}</span>
+  <span class="w3-bar-item w3-right w3-text-indigo" style="line-height: 40px">{{ company.name }}</span>
 </div>
 
 <!-- Sidebar/menu -->
@@ -27,6 +27,26 @@
     <a href="#" onclick="ajaxUpload(this.id)" id="dashboard" class="nav w3-bar-item w3-button w3-padding w3-sand w3-border-top w3-border-brown">
       <i class="fas fa-tachometer-alt"></i> Painel Controlo
     </a>
+
+    <div class="w3-dropdown-click">
+      <button onclick="dropDownMenu('company')" class="w3-tooltip nav w3-hover-grey w3-bar-item w3-padding w3-sand w3-border-top w3-border-brown">
+         <i class="fa fa-home"></i> {%trans%}company{%endtrans%}
+      </button>
+      <div id="company" class="w3-dropdown-content w3-bar-block" style="position:relative">
+        <a href="#" onclick="ajaxUpload('company')" class="w3-right-align nav w3-border-top w3-border-brown w3-bar-item w3-button w3-padding">
+          <i class="far fa-edit fa-fw"></i> {%trans%}edit{%endtrans%}
+        </a>
+        <a href="#" onclick="ajaxUpload(this.id)" id="about-us" class="w3-right-align nav w3-border-top w3-border-brown w3-bar-item w3-button w3-padding">
+          <i class="far fa-file-alt"></i> {%trans%}about_us{%endtrans%}
+        </a>
+        <a href="#" onclick="ajaxUpload(this.id)" id="rgpd" class="w3-right-align nav w3-border-top w3-border-brown w3-bar-item w3-button w3-padding">
+          <i class="far fa-file-alt"></i> {%trans%}gdpr{%endtrans%}
+        </a>
+        <a href="#" onclick="ajaxUpload(this.id)" id="terms" class="w3-right-align nav w3-border-top w3-border-brown w3-bar-item w3-button w3-padding">
+          <i class="fas fa-asterisk"></i> {%trans%}terms_cond{%endtrans%}
+        </a>
+      </div>
+    </div>
     <div class="w3-dropdown-click">
       <button onclick="dropDownMenu('category')" class="w3-tooltip nav w3-hover-grey w3-bar-item w3-padding w3-sand w3-border-top w3-border-brown">
         <i class="fa fa-tags fa-fw"></i> Categorias</button>
@@ -78,26 +98,6 @@
         </a>
         <a href="#" onclick="ajaxUpload(this.id)" id="user-list" class="w3-right-align nav w3-bar-item w3-button w3-padding">
           <i class="far fa-edit fa-fw"></i> Editar/Listar
-        </a>
-      </div>
-    </div>
-
-    <div class="w3-dropdown-click">
-      <button onclick="dropDownMenu('company')" class="w3-tooltip nav w3-hover-grey w3-bar-item w3-padding w3-sand w3-border-top w3-border-brown">
-         <i class="fa fa-home"></i> Empresa
-      </button>
-      <div id="company" class="w3-dropdown-content w3-bar-block" style="position:relative">
-        <a href="#" onclick="ajaxUpload('company')" class="w3-right-align nav w3-border-top w3-border-brown w3-bar-item w3-button w3-padding">
-          <i class="far fa-edit fa-fw"></i> Editar
-        </a>
-        <a href="#" onclick="ajaxUpload(this.id)" id="about-us" class="w3-right-align nav w3-border-top w3-border-brown w3-bar-item w3-button w3-padding">
-          <i class="far fa-file-alt"></i> Sobre Nós
-        </a>
-        <a href="#" onclick="ajaxUpload(this.id)" id="rgpd" class="w3-right-align nav w3-border-top w3-border-brown w3-bar-item w3-button w3-padding">
-          <i class="far fa-file-alt"></i> Rgpd
-        </a>
-        <a href="#" onclick="ajaxUpload(this.id)" id="terms" class="w3-right-align nav w3-border-top w3-border-brown w3-bar-item w3-button w3-padding">
-          <i class="fas fa-asterisk"></i> Termos & Cond.
         </a>
       </div>
     </div>

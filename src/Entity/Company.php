@@ -57,7 +57,7 @@ class Company
     */
     private $email_port;
     /**
-    * @ORM\Column(type="string", length=24, name="email_smtp")
+    * @ORM\Column(type="string", length=50, name="email_smtp")
     */
     private $email_smtp;
     /**
@@ -68,6 +68,14 @@ class Company
      * @ORM\Column(type="string", length=20, name="telephone", nullable=true)
      */
     private $telephone;
+    /**
+    * @ORM\Column(type="text", name="meta_keywords", nullable=true)
+    */
+    private $meta_keywords;
+        /**
+     * @ORM\Column(type="text", name="meta_description", nullable=true)
+     */
+    private $meta_description;
     /**
      *@ORM\ManyToOne(targetEntity="Currency") */
     private $currency;
@@ -127,6 +135,24 @@ class Company
     private $link_behance_active = false;
     /** @ORM\Column(type="boolean", name="link_snapchat_active",nullable=true)*/
     private $link_snapchat_active = false;
+
+    public function getMetaKeywords()
+    {
+        return $this->meta_keywords;
+    }
+    public function setMetaKeywords($meta_keywords)
+    {
+        $this->meta_keywords = $meta_keywords;
+    }
+
+    public function getMetaDescription()
+    {
+        return $this->meta_description;
+    }
+    public function setMetaDescription($meta_description)
+    {
+        $this->meta_description = $meta_description;
+    }
 
     public function getEmailPort()
     {

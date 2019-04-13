@@ -76,6 +76,17 @@
 
   <div class="w3-row-padding w3-margin-top w3-border-bottom">
     <div class="w3-col s12 l4 m5 w3-margin-bottom">
+      {{ form_label(form.meta_description)}}<br>
+      {{ form_widget(form.meta_description)}}
+    </div>
+    <div class="w3-col s12 l6 m7 w3-margin-bottom">
+      {{ form_label(form.meta_keywords)}}<br>
+      {{ form_widget(form.meta_keywords)}}
+    </div>
+  </div>
+
+  <div class="w3-row-padding w3-margin-top w3-border-bottom">
+    <div class="w3-col s12 l4 m5 w3-margin-bottom">
       {{ form_label(form.coords_google_maps)}}<br>
       {{ form_widget(form.coords_google_maps)}}
     </div>

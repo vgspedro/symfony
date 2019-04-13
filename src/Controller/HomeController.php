@@ -26,11 +26,8 @@ use Money\Money;
 use App\Entity\TermsConditions;
 /*https://packagist.org/packages/inacho/php-credit-card-validator*/
 use Inacho\CreditCard;
-
-
 class HomeController extends AbstractController
 {
-
     /*set expiration on home page 15 minutes*/
     private $expiration = 9000;
     private $session;
@@ -39,47 +36,57 @@ class HomeController extends AbstractController
     {
         $this->session = $session; 
     }
-
-
     public function html(Request $request, MoneyFormatter $moneyFormatter)
     {   
         $id = !$request->query->get('id') ? 'home': $request->query->get('id');
-
         $em = $this->getDoctrine()->getManager();
-
         $ua = $this->getBrowser();
         
         //$locale =  $ua['lang'];
         $locale = $request->query->get('current-local') ? $request->query->get('current-local') : $ua['lang'];
         
         $locale = $locale != 'pt_PT' ? 'en_EN' : 'pt_PT';
-
         $cS = array();
         $locales = $em->getRepository(Locales::class)->findAll();
         $warning = $em->getRepository(Warning::class)->find(10);
         $company = $em->getRepository(Company::class)->find(1);
         $about = $em->getRepository(AboutUs::class)->findAll();
-
         $category = $em->getRepository(Category::class)->findBy(['isActive' => 1],['orderBy' => 'ASC']);
         
         $categoryHl = $em->getRepository(Category::class)->findOneBy(['highlight' => 1],['orderBy' => 'ASC']);
         $gallery = $em->getRepository(Gallery::class)->findBy(['isActive' => 1],['namePt' => 'DESC']);
 
-        $cH = array(
-            'adultAmount' => $moneyFormatter->format($categoryHl->getAdultPrice()),
-            'childrenAmount'  => $moneyFormatter->format($categoryHl->getChildrenPrice()),
-            'namePt' => $categoryHl->getNamePt(),
-            'nameEn' => $categoryHl->getNameEn(),
-            'id' => $categoryHl->getId()
-        );
-        
         $now = new \DateTime('tomorrow');
 
-        foreach ($category as $categories){
+        $flag = false;
+        $ord = array();
 
+        if($categoryHl->getAvailable()){
+            foreach ($categoryHl->getAvailable() as $available)
+                array_push($ord, $available->getDatetimeStart()->format('U'));
+
+            sort($ord);
+                
+            for($t = 0; $t<count($ord); $t++) {
+                if($ord[$t] >= $now->format('U'))
+                $flag = true;
+            }
+        }    
+        
+        $flag == true ? 
+            $cH = array(
+                'adultAmount' => $moneyFormatter->format($categoryHl->getAdultPrice()),
+                'childrenAmount'  => $moneyFormatter->format($categoryHl->getChildrenPrice()),
+                'namePt' => $categoryHl->getNamePt(),
+                'nameEn' => $categoryHl->getNameEn(),
+                'id' => $categoryHl->getId())
+                :
+                $cH = array();
+        
+
+        foreach ($category as $categories){
             $flag = true;
             $ord = array();
-
             if($categories->getAvailable()){
                 foreach ($categories->getAvailable() as $available)
                    array_push($ord, $available->getDatetimeStart()->format('U'));
@@ -91,7 +98,6 @@ class HomeController extends AbstractController
                     $flag = false;
                 }
             }
-
             $s = explode(":",$categories->getDuration());
             $minutes = (int)$s[0]*60 + (int)$s[1];
             
@@ -127,8 +133,6 @@ class HomeController extends AbstractController
                 )
             );
     }
-
-
     public function info(Request $request, MoneyFormatter $moneyFormatter)
     {   
         $id = !$request->query->get('id') ? 'home': $request->query->get('id');
@@ -137,14 +141,10 @@ class HomeController extends AbstractController
         $warning = $em->getRepository(Warning::class)->find(10);
         $company = $em->getRepository(Company::class)->find(1);
         $ua = $this->getBrowser();
-
         $locale = $request->query->get('current-local') ? $request->query->get('current-local') : $ua['lang'];
-
         $locale = $locale != 'pt_PT' ? 'en_EN' : 'pt_PT';
-
         $locales = $em->getRepository(Locales::class)->findAll();
         $gallery = $em->getRepository(Gallery::class)->findBy(['isActive' => 1],['namePt' => 'ASC']);
-
         return $this->render('info.html.twig', 
             array(
                 'colors'=> $this->color(),
@@ -157,15 +157,10 @@ class HomeController extends AbstractController
                 )
             );
     }
-
-
-
     public function setBooking(Request $request, MoneyFormatter $moneyFormatter, \Swift_Mailer $mailer){
                     
         $err = array();
-
         $this->session->get('_locale')->getName();
-
         $em = $this->getDoctrine()->getManager();
         
         //IF FIELDS IS NULL PUT IN ARRAY AND SEND BACK TO USER
@@ -183,7 +178,6 @@ class HomeController extends AbstractController
             $request->request->get('date_card') ? $date_card = $request->request->get('date_card') : $err[] = 'CREDIT_CARD_DATE';
             $request->request->get('card_nr') ? $card_nr = $request->request->get('card_nr') : $err[] = 'CREDIT_CARD_NR';
         }
-
         if($err){
             $response = array(
                 'status' => 0,
@@ -194,18 +188,14 @@ class HomeController extends AbstractController
             );
             return new JsonResponse($response);
         }
-
         if($wp){
             $name != $name_card ? $err[] = 'NO_MATCH_NAMES' : false;
             $this->noFakeCcard($date_card,$cvv, $card_nr) ? $err[] = $this->noFakeCcard($date_card,$cvv, $card_nr) : false; 
         }
-
         //NO FAKE DATA
         $this->noFakeEmails($email) == 1 ? $err[] = 'EMAIL_INVALID' : false;
         $this->noFakeTelephone($telephone) == 1 ? $err[] = 'TELEPHONE_INVALID' : false;
         $this->noFakeName($name) == 1 ? $err[] = 'NAME_INVALID' : false;
-
-
         if($err){
             $response = array(
                 'status' => 2,
@@ -216,18 +206,14 @@ class HomeController extends AbstractController
             );
             return new JsonResponse($response);
         }
-
         else{
         
         $locale = $this->session->get('_locale')->getName() ? $this->session->get('_locale')->getName() : 'pt_PT';
-
         $locales = $em->getRepository(Locales::class)->findOneBy(['name' => $locale]);
         
         if(!$locales)
             throw new Exception("Error Processing Request Locales", 1);
-
         $em->getConnection()->beginTransaction();
-
         $available = $em->getRepository(Available::class)->find($userEvent->event);
           if(!$available)
             throw new Exception("Error Processing Request Available", 1);
@@ -237,18 +223,15 @@ class HomeController extends AbstractController
     
              //Get the total number of Pax.
             $paxCount = $userEvent->adult + $userEvent->children + $userEvent->baby; 
-
         //total amount of booking
         $amountA = Money::EUR(0);
         $amountC = Money::EUR(0);
         $total = Money::EUR(0);
-
         $amountA = $available->getCategory()->getAdultPrice();
         $amountA = $amountA->multiply($userEvent->adult);
         $amountC = $available->getCategory()->getChildrenPrice();
         $amountC = $amountC->multiply($userEvent->children);
         $total = $amountA->add($amountC);   
-
             // When there is no availability for the number of Pax...
             if ($available->getStock() < $paxCount) {
                 // Abort and inform user.
@@ -271,7 +254,6 @@ class HomeController extends AbstractController
             $client->setTelephone($telephone);
             $client->setRgpd($rgpd);
             $client->setLocale($locales);
-
             //wp is set check if data from client isset
             if($available->getCategory()->getWarrantyPayment() && $wp){
                 $client->setCardName($name_card);
@@ -279,9 +261,7 @@ class HomeController extends AbstractController
                 $client->setCardDate($date_card);
                 $client->setCardNr($card_nr);
             }
-
             else if($available->getCategory()->getWarrantyPayment() && !$wp){
-
                 $err[] = 'WP_SET_NO_CC_DATA';
                 $response = array(
                     'status' => 0,
@@ -304,20 +284,16 @@ class HomeController extends AbstractController
             $booking->setClient($client);
             $booking->setDateEvent($available->getDatetimeStart());
             $booking->setTimeEvent($available->getDatetimeStart());
-
             $available->setStock($available->getStock() - $paxCount);
-
             $em->persist($available);
             $em->persist($client);
             $em->persist($booking);
             
             $em->flush();
-
             $em->getConnection()->commit();
             
         } catch (\Exception $e) {
             //echo $e->getMessage();
-
             $em->getConnection()->rollBack();
             
             throw $e;
@@ -331,7 +307,6 @@ class HomeController extends AbstractController
                 );
                 return new JsonResponse($response);
         }
-
         $send = $this->sendEmail($mailer, $booking);
         
         $response = array(
@@ -344,27 +319,17 @@ class HomeController extends AbstractController
         return new JsonResponse($response);
         }
     }
-
     private function sendEmail(\Swift_Mailer $mailer, Booking $booking){
-
         $em = $this->getDoctrine()->getManager();
-
         $category = $booking->getAvailable()->getCategory();
-
         $company = $em->getRepository(Company::class)->find(1);
-
         $client = $booking->getClient();
-
         $locale = $client->getLocale();
-
         $terms = $em->getRepository(TermsConditions::class)->findOneBy(['locales' => $locale]);
-
         $transport = (new \Swift_SmtpTransport($company->getEmailSmtp(), $company->getEmailPort(), $company->getEmailCertificade()))
             ->setUsername($company->getEmail())
             ->setPassword($company->getEmailPass());       
-
         $locale->getName() == 'pt_PT' ? $category->getNamePt() : $category->getNameEn();
-
         $mailer = new \Swift_Mailer($transport);
                     
         $subject ='Reserva / Order #'.$booking->getId().' ('.$this->translateStatus('PENDING', $locale->getName()).')';
@@ -398,11 +363,9 @@ class HomeController extends AbstractController
             );
             $send = $mailer->send($message);
     }
-
     private function noFakeEmails($email) {
         $invalid = 0;        
         if($email){
-
             $validator = new \EmailValidator\Validator();
             $validator->isEmail($email) ? false : $invalid = 1;
             $validator->isSendable($email) ? false : $invalid = 1;
@@ -412,13 +375,9 @@ class HomeController extends AbstractController
         }
         return $invalid;
     }
-
-
     private function noFakeCCard($date_card, $cvv, $card_nr) {
         $err = [];
-
         $card = CreditCard::validCreditCard($card_nr);
-
         if ($card['valid'] == 1) {
             $date = explode('/',$date_card);
             $validCvc = CreditCard::validCvc($cvv, $card['type']) == true ? false : $err[] = 'CVV_INVALID';
@@ -426,60 +385,47 @@ class HomeController extends AbstractController
         }
         
         else
-
             $err[] = 'CARD_NR_INVALID';
-
         return $err;
     }
-
     private function noFakeName($a){
         $invalid = 0;        
         if($a)
             $invalid = preg_replace("/[^!@#\$%\^&\*\(\)\[\]:;]/", "", $a);
         return $invalid;
     }
-
 /*
     private function noFakeCardDate($a){
         $invalid = 0;   
         if($a){
             $now = new \DateTime('now');
             $date = explode('/',$a);
-
             $invalid = $date[0] <= $now->format('m') || $date[1] < $now->format('Y') ? 1 : 0;
         }
         return $invalid;
     }
-
-
     private function noFakeCvv($a){
         $invalid = 0;        
         if($a)
             $invalid = preg_replace("/[0-9]{3}/", "", $a);
         return $invalid;
     }
-
     private function noFakeCcard($a){
         $invalid = 0;        
         if($a)
             $invalid = preg_replace("/[0-9]{16}/", "", $a);
         return $invalid;
     }
-
 */
-
-
     private function noFakeTelephone($a) {
         $invalid = 0;        
         if($a)
             $invalid = preg_replace("/[0-9|\+?]{0,2}[0-9]{5,12}/", "", $a);
         return $invalid;
     }
-
     private function getExpirationTime() {
         return $this->expiration;
     }
-
     private function translateStatus($status, $language){
         if ($language == 'pt_PT'){
             switch ($status) {
@@ -496,10 +442,8 @@ class HomeController extends AbstractController
             }
         }
     
-
     return $status;
 }
-
     private function color(){
         return array(
         'w3-text-black',
@@ -518,14 +462,12 @@ class HomeController extends AbstractController
         'w3-text-deep-orange',
         );
     }
-
     private function getBrowser() 
     { 
         $u_agent = $_SERVER['HTTP_USER_AGENT']; 
         $bname = 'Unknown';
         $platform = 'Unknown';
         $version= "";
-
         //First get the platform?
         if (preg_match('/linux/i', $u_agent)) {
             $platform = 'linux';
@@ -538,7 +480,6 @@ class HomeController extends AbstractController
         }
         
         $os_platform  = "Unknown OS Platform";
-
          $os_array     = array(
                           '/windows nt 10/i'      =>  'Windows 10',
                           '/windows nt 6.3/i'     =>  'Windows 8.1',
@@ -564,12 +505,9 @@ class HomeController extends AbstractController
                           '/blackberry/i'         =>  'BlackBerry',
                           '/webos/i'              =>  'Mobile'
                     );
-
         foreach ($os_array as $regex => $value)
          if (preg_match($regex, $u_agent))
                 $os_platform = $value;
-
-
         // Next get the name of the useragent yes seperately and for good reason
         if(preg_match('/MSIE/i',$u_agent) && !preg_match('/Opera/i',$u_agent)) 
         { 
@@ -603,15 +541,11 @@ class HomeController extends AbstractController
         } 
         
         $lang = explode(',',$_SERVER['HTTP_ACCEPT_LANGUAGE']);
-
         $current_country = '';
         $current_city = '';
-
-
         // if the link is down http://api.hostip.info/get_html.php bullshit happens, how to solve it.....
         
         $html = '';
-
         if ($html)
         {
             file_get_contents('http://api.hostip.info/get_html.php?ip='.$_SERVER['REMOTE_ADDR']);
@@ -632,9 +566,6 @@ class HomeController extends AbstractController
             'ip'        => $_SERVER['REMOTE_ADDR']
         );
         }
-
-
-
         else $response =  array(
             'name'      => $bname,
             'os'        => ucfirst($platform),
@@ -644,11 +575,7 @@ class HomeController extends AbstractController
             'city'      => '-/-',
             'ip'        => $_SERVER['REMOTE_ADDR']
         );
-
-
-
         return $response;
     } 
 }
-
 ?>

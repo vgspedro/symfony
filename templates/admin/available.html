@@ -33,7 +33,10 @@ input, select, textarea {color: #000!important}
 <script>
 
 
+
 var obj =''
+
+$('.w3-overlay').show()
 
 function getResources(t) {
 
@@ -48,11 +51,10 @@ function getResources(t) {
     dataType: 'json',
     cache:false,
     success: function(data) {
-      //console.log(data)
+      console.log(data)
       startCalendar(data)
       for (var k in data.resources)
         template += '<span class="w3-padding-small w3-border" style="width:25%;background-color:'+data.resources[k].eventColor+';color:#FFF">'+data.resources[k].title+'</span>'
-
       $('#legend').html(template)
     }
   })
@@ -62,9 +64,10 @@ function startCalendar(data){
 
   var calendar = new FullCalendar.Calendar(document.getElementById('calendar'), {
     plugins: [ 'interaction', 'resourceDayGrid', 'resourceTimeGrid' ],
-    defaultView: 'resourceTimeGridTwoDay',
+    defaultView: 'dayGridMonth',
     defaultDate: '{{ "now"|date("Y-m-d H:i:s") }}',
     editable: false,
+    height: 'auto',
     businessHours: {
       daysOfWeek: [ 0, 1, 2, 3, 4, 5, 6 ], // Monday - Thursday
       startTime: '8:00', // a start time (10am in this example)
@@ -84,7 +87,6 @@ function startCalendar(data){
     slotMinutes: 15,
     slotDuration: '00:15:00',
     slotLabelInterval: 15,
-    height:'parent',
     selectable: false,
     locale: 'pt',
     hour12: false,
@@ -112,7 +114,8 @@ function startCalendar(data){
         buttonText: '3 Dias'
       },
       dayGridMonth: {
-        buttonText: 'Mês'
+        buttonText: 'Mês',
+        hour12: true
       }
     },
     eventRender: function(info) {
@@ -134,6 +137,7 @@ function startCalendar(data){
         dataType: 'json',
         cache:false,
         success: function(info) {
+          console.log(info.events)
           ev = info.events
           successCallback(ev)
         }
@@ -165,7 +169,7 @@ function startCalendar(data){
 
 setTimeout(function(){
   getResources()
-}, 750)
+},0)
 
 $('#add').next().remove()
 
@@ -182,7 +186,7 @@ $('.w3-overlay').show()
         $('.w3-overlay').hide()
         $('#modal-edit-stock').hide()
         if(data.status == 1)
-         $('.evt-'+data.data.id+' .fc-title').html('Total: '+data.data.lotation+' Disponivel: '+data.data.stock).addClass('blink')
+         $('.evt-'+data.data.id+' .fc-title').html('Total: '+data.data.lotation+' Stock: '+data.data.stock).addClass('blink')
         else {
           $('#info-client').show()                
           $('#info-client-head').removeClass('w3-green w3-red w3-amber').addClass('w3-blue').html('<span onclick="$(\'#info-client\').hide()" class="w3-button w3-display-topright w3-large"><i class="fa fa-times"></i></span><h1><i class="fa fa-info-circle"></i> Verifique</h1>')

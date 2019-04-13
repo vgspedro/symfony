@@ -19,12 +19,10 @@ use Symfony\Component\Filesystem\Filesystem;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 use Doctrine\DBAL\DBALException;
-use App\Service\MoneyFormatter;
 
 
 class CompanyController extends AbstractController
 {
-
 
     private $gallery_images_directory;
 
@@ -82,14 +80,8 @@ class CompanyController extends AbstractController
                         'data' => $company->getId());
                     } 
                     catch(DBALException $e){
-
-                        if (preg_match("/'event'/i", $e))
-                            $a = array( "Insira pelo menos 1 hora.");
-
-                        else if (preg_match("/'children_price'/i", $e))
-                            $a = array("Preço Criança (€)* não pode ser vazio, insira 0 ou maior.");
-                        else
-                            $a = array("Contate administrador sistema sobre: ".$e->getMessage());
+                        
+                        $a = array("Contate administrador sistema sobre: ".$e->getMessage());
 
                         $response = array(
                             'result' => 0,
@@ -112,7 +104,6 @@ class CompanyController extends AbstractController
                     'data' => '');
         return new JsonResponse($response);
     }
-
 
 
     public function companyShowEdit(Request $request, ValidatorInterface $validator, FileUploader $fileUploader, ImageResizer $imageResizer)

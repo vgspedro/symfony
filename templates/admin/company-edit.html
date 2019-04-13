@@ -3,14 +3,14 @@
 .w3-select {padding: 11.5px 4px}
 </style>
 <header class="w3-container" style="padding-top:22px">
-    <h5><b><i class="fa fa-home"></i> Empresa <i class="far fa-edit fa-fw"></i></b></h5>
+    <h5><b><i class="fa fa-home"></i> {%trans%}company{%endtrans%} <i class="far fa-edit fa-fw"></i></b></h5>
 </header>
 <div class="w3-container">
 <div class="w3-border w3-sand">
   {{ form_start(form, {'attr': {'id': 'company-form'}})  }}
   <div class="w3-row-padding w3-margin-top">
     <div class="w3-col l4 m3 s0">&nbsp;</div>
-    <div class="w3-col s12 l4 m6 w3-center" title="Logotipo da empresa">
+    <div class="w3-col s12 l4 m6 w3-center" title="{%trans%}company_logo{%endtrans%}">
       <div class="w3-center w3-margin-bottom w3-border w3-imput w3-section set-image-container w3-padding" style="cursor:pointer"onclick="$('.set-image').trigger('click')">
         {% if company.logo %}
         {% set url=company.logo|split('/public/') %}
@@ -94,6 +94,18 @@
       {{ form_widget(form.link_my_domain)}}
     </div>
   </div>
+
+  <div class="w3-row-padding w3-margin-top w3-border-bottom">
+    <div class="w3-col s12 l6 m6 w3-margin-bottom">
+      {{ form_label(form.meta_description)}}<br>
+      {{ form_widget(form.meta_description)}}
+    </div>
+    <div class="w3-col s12 l6 m6 w3-margin-bottom">
+      {{ form_label(form.meta_keywords)}}<br>
+      {{ form_widget(form.meta_keywords)}}
+    </div>
+  </div>
+
   <div class="w3-row-padding w3-margin-top w3-border-bottom">
     <div class="w3-col s12 l4 m5 w3-margin-bottom">
       {{ form_label(form.coords_google_maps)}}<br>
@@ -181,7 +193,7 @@
     </div>
     <div class="w3-col s12 w3-margin-bottom">
       <span class="w3-btn w3-border w3-green w3-right w3-margin-top" onclick="$('#company-form').trigger('submit')">
-        <i class="fa fa-check"></i> Guardar
+        <i class="fa fa-check"></i> {%trans%}save{%endtrans%}
       </span>
     </div>
   </div>
@@ -213,7 +225,6 @@
       cache: false,
       success: function(data){  
         $('.w3-overlay').hide()
-        console.log(data)
         if (data.status == 1){
           ajaxUpload('company-list')
         }

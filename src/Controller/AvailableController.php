@@ -207,7 +207,7 @@ class AvailableController extends AbstractController
                 'resourceId' => $available->getCategory()->getId(),          
                 'start' => $finalStart,
                 'end' => $finalEnd,
-                'title' =>'Total: '.$available->getLotation().' Disponivel: '.$available->getStock(),
+                'title' =>'Total: '.$available->getLotation().' Stock: '.$available->getStock(),
                 'textColor' => $available->getStock().'**'.$available->getLotation().'**'.$available->getCategory()->getNamePt().'<br>Data: '.$available->getDatetimeStart()->format('d/m/Y H:i'),
             );
         }

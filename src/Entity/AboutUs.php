@@ -28,7 +28,7 @@ class AboutUs
     */
     private $name;
     /**
-     *@ORM\ManyToOne(targetEntity="Locales", inversedBy="about_us") */
+     *@ORM\ManyToOne(targetEntity="Locales") */
     private $locales;
     
     public function getId()

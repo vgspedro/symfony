@@ -2,12 +2,11 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>Taruga</title>
+        <title>{{ company.name }}</title>
  		<meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
-		<meta name="keywords" content="Taruga Benagil Tours, Taruga passeios maritímos, grutas, caves, algarve, grottos, Benagil, benagil, taruga, tarugatours
-tarugabenagiltours, algar de benagil, benagil cave, portugal, travel, boat trip, algarve boats, benagil boat trip, kayak, benagil kayak, kayaking, benagil paddle, paddle, sup benagil, benagil bookings, sup, kayak algarve, algarve benagil, algar benagil, caves">
+		<meta name="keywords" content="{{ company.metaKeywords }}">
  		<meta name="title" content="Bem Vindo Taruga | passeios maritímos no Algarve">
- 		<meta name="description" content="Taruga Visita às grutas em Benagil no Algarve.">
+ 		<meta name="description" content="{{ company.metaDescription }}">
         {% include 'taruga/styles.html' %}
     </head>
     <body>
