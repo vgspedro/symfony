@@ -7,7 +7,11 @@
 		<meta name="keywords" content="{{ company.metaKeywords }}">
  		<meta name="title" content="Bem Vindo Taruga | passeios maritímos no Algarve">
  		<meta name="description" content="{{ company.metaDescription }}">
-        {% include 'taruga/styles.html' %}
+        <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
+		<link rel="stylesheet" href="{{ asset('css/bootstrap-datetimepicker.min.css') }}">
+		<link rel="stylesheet" href="{{ asset('css/w3.css') }}">
+		<link rel="stylesheet" href="{{ asset('font/css/font-awesome.min.css') }}">
+		<link rel="stylesheet" href="{{ asset('css/mystyle.css') }}">
     </head>
     <body>
 		{% include 'taruga/navbar.base.html' %}
