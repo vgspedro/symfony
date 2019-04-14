@@ -29,7 +29,7 @@ use Inacho\CreditCard;
 class HomeController extends AbstractController
 {
     /*set expiration on home page 15 minutes*/
-    private $expiration = 9000;
+    private $expiration = 90000;
     private $session;
     
     public function __construct(SessionInterface $session)
@@ -218,7 +218,7 @@ class HomeController extends AbstractController
           if(!$available)
             throw new Exception("Error Processing Request Available", 1);
         
-     try {           
+        try {           
             $em->lock($available, LockMode::PESSIMISTIC_WRITE);
     
              //Get the total number of Pax.

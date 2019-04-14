@@ -275,8 +275,10 @@ function navigation(pos,id){
   $("html, body").animate({
     scrollTop: $(pos).offset().top -vl
   }, 750)
-  if (id)
+  if (id){
     $('select[name=category]').val(id)
+    updateTourData()
+  }
 }
 
 function updateTourData(){
@@ -307,7 +309,7 @@ function getAvailable(){
       data:dataValue,
       cache:false,
       success: function(data){
-        //console.log(data)
+        console.log(data)
           $('.w3-overlay, #loader-cont').hide()
 
           //user required fields messages 
@@ -366,7 +368,7 @@ function getAvailable(){
       $('.w3-overlay').hide()
       $('#info-client').show()                
       $('#info-client-head').removeClass('w3-green amber').addClass('w3-red').html('<span onclick="$(\'#info-client\').hide()" class="w3-button w3-display-topright w3-large"><i class="fa fa-times"></i></span><h1><i class="fa fa-exclamation-triangle"></i> error</h1>')
-        $('#client-txt').html(wifi_connection)
+        $('#client-txt').html($(".WIFIERROR").text())
     }
   })
 }, 500)
@@ -488,7 +490,7 @@ function checkOut(){
       data: $('#get-available').serialize()+'&evt='+sessionStorage.getItem('userEvent'),
       success: function(data){
         
-        //console.log(data)
+        console.log(data)
 
         $("#myOverlay, #loader-cont").hide()
         if (data.status == 1){
