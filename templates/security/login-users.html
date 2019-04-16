@@ -9,6 +9,14 @@
 .logo-md{height:104px;top:-47px;left:0px}
 </style>
 
+<div class="w3-overlay w3-animate-opacity" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay">
+    <div class="w3-display-container" style="height:100vh">
+      <div class="w3-display-middle">
+        <i class="w3-text-white fa fa-4x fa-spinner fa-pulse"></i>
+      </div>
+    </div>
+</div>
+
 <section class="bgimg-1" style="min-height:400px;height:100vh">
   <div class="w3-padding-32"> 
     <div class="w3-row-padding">
@@ -39,7 +47,7 @@
             <button type="reset" class="w3-btn-block w3-button w3-border w3-white"><i class="fa fa-eraser"></i> Limpar</button>
           </div>
           <div class="w3-col s6 w3-margin-top">
-            <button type="submit" class="w3-btn-block w3-button w3-border w3-green"><i class="fa fa-check"></i> Login</button>
+            <button type="submit" onclick="$('.w3-overlay').show()" class="w3-btn-block w3-button w3-border w3-green"><i class="fa fa-check"></i> Login</button>
           </div>
         </div>
         <input type="hidden" name="_target_path" value="/admin/" />

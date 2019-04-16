@@ -50,7 +50,7 @@
 
         {% if category.image %}
         {% set url=category.image|split('/public/') %}
-          <img id="output" src="../{{ url[1] }}" class="w3-image w3-animate-zoom">
+          <img id="output" src="/{{ url[1] }}" class="w3-image w3-animate-zoom">
         {% else %}
         <i class="fa fa-camera w3-jumbo" style="color:#05788d"></i>
         {% endif %}
