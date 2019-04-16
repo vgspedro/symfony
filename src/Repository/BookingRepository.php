@@ -36,6 +36,7 @@ class BookingRepository extends ServiceEntityRepository
     public function dashboardValues()
     {
         $today = new \Datetime('now');
+
         $tomorrow = new \Datetime('tomorrow');
 
         $conn = $this->getEntityManager()->getConnection();
@@ -46,7 +47,7 @@ class BookingRepository extends ServiceEntityRepository
             GROUP BY b.status";
 
         $stmt = $conn->prepare($sql);
-        $stmt->bindValue('date', $today->format('d/m/Y'));
+        $stmt->bindValue('date', $today->format('Y-m-d'));
         $stmt->execute();
         $day0 = $stmt->fetchAll();
 
@@ -57,7 +58,7 @@ class BookingRepository extends ServiceEntityRepository
             GROUP BY b.status";
 
         $stmt = $conn->prepare($sql);
-        $stmt->bindValue('date', $tomorrow->format('d/m/Y'));
+        $stmt->bindValue('date', $tomorrow->format('Y-m-d'));
         $stmt->execute();
         $day1 = $stmt->fetchAll();
 
