@@ -28,7 +28,7 @@
         <div class="w3-left"><i class="far fa-hand-point-up w3-xxxlarge"></i></div>
         <div class="w3-right">
           <h3>
-            {% for bookings in booking.day0 if bookings.status == "PENDING"  %}
+            {% for bookings in booking.day0 if bookings.status == "pending"  %}
               {{ bookings.count }}
               {% else %}
                 0
@@ -44,7 +44,7 @@
         <div class="w3-left"><i class="far fa-hand-paper w3-xxxlarge"></i></div>
         <div class="w3-right">
           <h3>
-            {% for bookings in booking.day0 if bookings.status == "CANCELED"  %}
+            {% for bookings in booking.day0 if bookings.status == "canceled"  %}
               {{ bookings.count }}
               {% else %}
                 0
@@ -60,7 +60,7 @@
         <div class="w3-left"><i class="far fa-thumbs-up w3-xxxlarge"></i></div>
         <div class="w3-right">
           <h3>
-            {% for bookings in booking.day0 if bookings.status == "CONFIRMED"  %}
+            {% for bookings in booking.day0 if bookings.status == "confirmed"  %}
               {{ bookings.count }}
               {% else %}
                 0
@@ -98,7 +98,7 @@
         <div class="w3-left"><i class="far fa-hand-point-up w3-xxxlarge"></i></div>
         <div class="w3-right">
           <h3>
-            {% for bookings in booking.day1 if bookings.status == "PENDING"  %}
+            {% for bookings in booking.day1 if bookings.status == "pending"  %}
               {{ bookings.count }}
               {% else %}
                 0
@@ -114,7 +114,7 @@
         <div class="w3-left"><i class="far fa-hand-paper w3-xxxlarge"></i></div>
         <div class="w3-right">
           <h3>
-            {% for bookings in booking.day1 if bookings.status == "CANCELED"  %}
+            {% for bookings in booking.day1 if bookings.status == "canceled"  %}
               {{ bookings.count }}
               {% else %}
                 0
@@ -130,7 +130,7 @@
         <div class="w3-left"><i class="far fa-thumbs-up w3-xxxlarge"></i></div>
         <div class="w3-right">
           <h3>
-            {% for bookings in booking.day1 if bookings.status == "CONFIRMED"  %}
+            {% for bookings in booking.day1 if bookings.status == "confirmed"  %}
               {{ bookings.count }}
               {% else %}
                 0
