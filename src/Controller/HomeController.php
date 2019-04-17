@@ -30,12 +30,14 @@ class HomeController extends AbstractController
 {
     /*set expiration on home page 15 minutes*/
     private $expiration = 90000;
+
     private $session;
     
     public function __construct(SessionInterface $session)
     {
         $this->session = $session; 
     }
+    
     public function html(Request $request, MoneyFormatter $moneyFormatter)
     {   
         $id = !$request->query->get('id') ? 'home': $request->query->get('id');
@@ -103,7 +105,7 @@ class HomeController extends AbstractController
             
             $cS[]= array(
                 'adultAmount' => $moneyFormatter->format($categories->getAdultPrice()),
-                'childrenAmount'  => $moneyFormatter->format($categories->getChildrenPrice()),
+                'childrenAmount' => $moneyFormatter->format($categories->getChildrenPrice()),
                 'namePt' => $categories->getNamePt(),
                 'nameEn' => $categories->getNameEn(),
                 'descriptionPt' => $categories->getDescriptionPt(),
@@ -133,6 +135,7 @@ class HomeController extends AbstractController
                 )
             );
     }
+
     public function info(Request $request, MoneyFormatter $moneyFormatter)
     {   
         $id = !$request->query->get('id') ? 'home': $request->query->get('id');
@@ -157,6 +160,7 @@ class HomeController extends AbstractController
                 )
             );
     }
+
     public function setBooking(Request $request, MoneyFormatter $moneyFormatter, \Swift_Mailer $mailer){
                     
         $err = array();
@@ -184,7 +188,8 @@ class HomeController extends AbstractController
                 'message' => 'fields empty',
                 'data' => $err,
                 'mail' => null,
-                'locale' => $this->session->get('_locale')->getName()
+                'locale' => $this->session->get('_locale')->getName(),
+                'expiration' => $this->getExpirationTime()
             );
             return new JsonResponse($response);
         }
@@ -202,7 +207,8 @@ class HomeController extends AbstractController
                 'message' => 'invalid fields',
                 'data' => $err,
                 'mail' => null,
-                'locale' => $this->session->get('_locale')->getName()
+                'locale' => $this->session->get('_locale')->getName(),
+                'expiration' => $this->getExpirationTime()
             );
             return new JsonResponse($response);
         }
@@ -213,10 +219,22 @@ class HomeController extends AbstractController
         
         if(!$locales)
             throw new Exception("Error Processing Request Locales", 1);
+        
         $em->getConnection()->beginTransaction();
         $available = $em->getRepository(Available::class)->find($userEvent->event);
-          if(!$available)
-            throw new Exception("Error Processing Request Available", 1);
+          
+        if(!$available){
+        //    throw new Exception("Error Processing Request Available", 1);     
+            $err[] = 'OTHER_BUY_IT';
+            $response = array(
+                'status' => 0,
+                'message' => 'no_vacancy_1',
+                'data' => $err,
+                'mail' => null,
+                'locale' => $this->session->get('_locale')->getName()
+            );
+            return new JsonResponse($response);
+        }
         
         try {           
             $em->lock($available, LockMode::PESSIMISTIC_WRITE);
@@ -319,6 +337,7 @@ class HomeController extends AbstractController
         return new JsonResponse($response);
         }
     }
+
     private function sendEmail(\Swift_Mailer $mailer, Booking $booking){
         $em = $this->getDoctrine()->getManager();
         $category = $booking->getAvailable()->getCategory();
@@ -326,6 +345,7 @@ class HomeController extends AbstractController
         $client = $booking->getClient();
         $locale = $client->getLocale();
         $terms = $em->getRepository(TermsConditions::class)->findOneBy(['locales' => $locale]);
+
         $transport = (new \Swift_SmtpTransport($company->getEmailSmtp(), $company->getEmailPort(), $company->getEmailCertificade()))
             ->setUsername($company->getEmail())
             ->setPassword($company->getEmailPass());       
@@ -353,7 +373,7 @@ class HomeController extends AbstractController
                         'children' => $booking->getChildren(),
                         'baby' => $booking->getBaby(),
                         'wp' => $category->getWarrantyPayment(),
-                        'logo' => '/upload/gallery/'.$company->getLogo(),
+                        'logo' => 'https://'.$request->getHost().'/upload/gallery/'.$company->getLogo(),
                         'terms' => !$terms ? '' : $terms->getName(),
                         'terms_txt' => !$terms ? '' : $terms->getTermsHtml(),
                         'company_name' => $company->getName()
@@ -363,6 +383,7 @@ class HomeController extends AbstractController
             );
             $send = $mailer->send($message);
     }
+    
     private function noFakeEmails($email) {
         $invalid = 0;        
         if($email){
@@ -375,6 +396,8 @@ class HomeController extends AbstractController
         }
         return $invalid;
     }
+
+
     private function noFakeCCard($date_card, $cvv, $card_nr) {
         $err = [];
         $card = CreditCard::validCreditCard($card_nr);
@@ -394,38 +417,18 @@ class HomeController extends AbstractController
             $invalid = preg_replace("/[^!@#\$%\^&\*\(\)\[\]:;]/", "", $a);
         return $invalid;
     }
-/*
-    private function noFakeCardDate($a){
-        $invalid = 0;   
-        if($a){
-            $now = new \DateTime('now');
-            $date = explode('/',$a);
-            $invalid = $date[0] <= $now->format('m') || $date[1] < $now->format('Y') ? 1 : 0;
-        }
-        return $invalid;
-    }
-    private function noFakeCvv($a){
-        $invalid = 0;        
-        if($a)
-            $invalid = preg_replace("/[0-9]{3}/", "", $a);
-        return $invalid;
-    }
-    private function noFakeCcard($a){
-        $invalid = 0;        
-        if($a)
-            $invalid = preg_replace("/[0-9]{16}/", "", $a);
-        return $invalid;
-    }
-*/
+
     private function noFakeTelephone($a) {
         $invalid = 0;        
         if($a)
             $invalid = preg_replace("/[0-9|\+?]{0,2}[0-9]{5,12}/", "", $a);
         return $invalid;
     }
+
     private function getExpirationTime() {
         return $this->expiration;
     }
+
     private function translateStatus($status, $language){
         if ($language == 'pt_PT'){
             switch ($status) {
@@ -442,8 +445,9 @@ class HomeController extends AbstractController
             }
         }
     
-    return $status;
-}
+        return $status;
+    }
+
     private function color(){
         return array(
         'w3-text-black',
@@ -462,6 +466,7 @@ class HomeController extends AbstractController
         'w3-text-deep-orange',
         );
     }
+
     private function getBrowser() 
     { 
         $u_agent = $_SERVER['HTTP_USER_AGENT']; 

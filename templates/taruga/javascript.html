@@ -361,6 +361,11 @@ function getAvailable(){
         $('.order_available').data("DateTimePicker").date(null)
         $('.get-dates').val('')
       }
+      
+      else{
+        $('#modal-check').show()
+      }
+    
     },
     error:function(data){
       $('.w3-overlay').hide()
@@ -500,11 +505,16 @@ function checkOut(){
           sessionStorage.clear()
           $('.icon-unknown').removeClass('w3-hide')
         }
-        else{
+        else if (data.status == 0){
           for(k = 0; k<data.data.length;k++)
             $('.'+data.data[k]).removeClass('w3-hide')
           $('#modal-info').show()
         }
+
+        else{
+          $('#modal-check').show()
+        }
+      
       },
       error:function(data){
         $("#myOverlay, #loader-cont").hide()
