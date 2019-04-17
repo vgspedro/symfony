@@ -25,15 +25,21 @@ use App\Service\MoneyFormatter;
 class AdminController extends AbstractController
 {
 
-    public function html()
+    public function html(Request $request)
     {
+
+        $uri = $request->getUri();
         $em = $this->getDoctrine()->getManager();
         $booking = $em->getRepository(Booking::class)->dashboardValues();
         $company = $em->getRepository(Company::class)->find(1);
         $ua = $this->getBrowser();
-        return $this->render('admin/base.html.twig',['browser' => $ua,'booking' => $booking, 'company' => $company]);
+        return $this->render('admin/base.html.twig',[
+            'browser' => $ua,
+            'booking' => $booking,
+            'company' => $company,
+            'url' => 'https://'.$request->getHost()
+            ]);
     }
-
 
 	public function adminDashboard()
 	{
@@ -138,7 +144,7 @@ class AdminController extends AbstractController
                 'notes' => $booking->getNotes(),
                 'user_id' => $client->getId(),   
                 'username' => $client->getUsername(),
-                'logo' => '/upload/gallery/'.$company->getLogo(),
+                'logo' => 'https://'.$request->getHost().'/upload/gallery/'.$company->getLogo(),
                 'company_name' => $company->getName()
             );          
 
@@ -367,8 +373,6 @@ class AdminController extends AbstractController
 
 
 
-
-
     private function getBrowser() 
     { 
         $u_agent = $_SERVER['HTTP_USER_AGENT']; 
@@ -389,7 +393,7 @@ class AdminController extends AbstractController
         
         $os_platform  = "Unknown OS Platform";
 
-         $os_array     = array(
+        $os_array     = array(
                           '/windows nt 10/i'      =>  'Windows 10',
                           '/windows nt 6.3/i'     =>  'Windows 8.1',
                           '/windows nt 6.2/i'     =>  'Windows 8',
@@ -493,8 +497,6 @@ class AdminController extends AbstractController
             'city'      => '-/-',
             'ip'        => $_SERVER['REMOTE_ADDR']
         );
-
-
 
         return $response;
     } 
