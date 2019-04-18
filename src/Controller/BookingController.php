@@ -106,7 +106,7 @@ class BookingController extends AbstractController
             'wp' => $category->getWarrantyPayment(),
             'message' => count($available),
             'max'=> null,
-            'minDate' => $mindate,
+            'minDate' => $minDate,
             'available' => $stockAvailable,
             'locale' => $this->session->get('_locale')->getName()
             );
