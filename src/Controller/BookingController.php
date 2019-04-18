@@ -92,19 +92,20 @@ class BookingController extends AbstractController
                 $stockAvailable[] = array(
                     'id' => $stock->getId(),
                     'datetime' => $stock->getDatetimeStart()->format('Y-m-d H:i'),
-                    'date' =>$stock->getDatetimeStart()->format('Y-m-d'),
+                    'date' => $stock->getDatetimeStart()->format('Y-m-d'),
                     'time' => $stock->getDatetimeStart()->format('H:i'),
                     'stock'=> $stock->getStock(),
                     'lotation' => $stock->getLotation(),
                     'onlyLeft' => $stock->getLotation() * 0.25 > $stock->getStock() ? $stock->getStock() : null 
                 );
             
+
             $response = array(
             'status' => 1,
             'wp' => $category->getWarrantyPayment(),
             'message' => count($available),
             'max'=> null,
-            'minDate' => $startDt->format('Y-m-d H:i:s'),
+            'minDate' => $stockAvailable[0]['date'],//$startDt->format('Y-m-d H:i:s'),
             'available' => $stockAvailable,
             'locale' => $this->session->get('_locale')->getName()
             );
