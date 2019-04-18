@@ -99,13 +99,14 @@ class BookingController extends AbstractController
                     'onlyLeft' => $stock->getLotation() * 0.25 > $stock->getStock() ? $stock->getStock() : null 
                 );
             
+            $minDate = $stockAvailable[0]['date'] >= $startDt->format('Y-m-d') ? $stockAvailable[0]['date'] : $startDt->format('Y-m-d') ;
 
             $response = array(
             'status' => 1,
             'wp' => $category->getWarrantyPayment(),
             'message' => count($available),
             'max'=> null,
-            'minDate' => $stockAvailable[0]['date'],//$startDt->format('Y-m-d H:i:s'),
+            'minDate' => $mindate,
             'available' => $stockAvailable,
             'locale' => $this->session->get('_locale')->getName()
             );

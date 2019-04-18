@@ -41,6 +41,4 @@ class AvailableRepository extends ServiceEntityRepository
         return $query->execute();
     }
 
-
-
 }
