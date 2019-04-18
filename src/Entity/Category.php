@@ -32,22 +32,22 @@ class Category
     private $nameEn;
     /**
      * @Assert\NotBlank(message="DESCRIPTION_PT")
-     * @ORM\Column(type="string", length=350)
+     * @ORM\Column(type="string", length=1000)
      */
     private $descriptionPt;
 
     /**
     * @Assert\NotBlank(message="DESCRIPTION_EN")
-     * @ORM\Column(type="string", length=350)
+     * @ORM\Column(type="string", length=1000)
      */
     private $descriptionEn;
 
     /**
-     * @ORM\Column(type="string", length=350, name="warranty_payment_pt", nullable=true)
+     * @ORM\Column(type="string", length=1000, name="warranty_payment_pt", nullable=true)
      */
     private $warrantyPaymentPt;
     /**
-     * @ORM\Column(type="string", length=350, name="warranty_payment_en", nullable=true)
+     * @ORM\Column(type="string", length=1000, name="warranty_payment_en", nullable=true)
      */
     private $warrantyPaymentEn;
     /**
