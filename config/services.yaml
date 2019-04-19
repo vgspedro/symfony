@@ -3,11 +3,11 @@
 parameters:
     locale: 'pt'
 
-    categories_images_directory: '%kernel.project_dir%/public/upload/category'
+    categories_images_directory: '%kernel.project_dir%/public_html/upload/category'
     categories_images_width: '640'
     categories_images_height: '480'
 
-    gallery_images_directory: '%kernel.project_dir%/public/upload/gallery'
+    gallery_images_directory: '%kernel.project_dir%/public_html/upload/gallery'
     gallery_images_width: '640'
     gallery_images_height: '480'
 

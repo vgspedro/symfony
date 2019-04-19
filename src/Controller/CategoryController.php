@@ -158,7 +158,6 @@ class CategoryController extends AbstractController
     }
 
 
-
     public function categoryShowEdit(Request $request, ValidatorInterface $validator, FileUploader $fileUploader, ImageResizer $imageResizer)
     {
 
@@ -177,7 +176,6 @@ class CategoryController extends AbstractController
 
             $category->setImage(new File($path));
         }
-
         else
             $category->setImage(new File($this->categories_images_directory.'/no-image.png'));
 

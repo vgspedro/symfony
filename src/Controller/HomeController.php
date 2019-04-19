@@ -325,7 +325,7 @@ class HomeController extends AbstractController
                 );
                 return new JsonResponse($response);
         }
-        $send = $this->sendEmail($mailer, $booking);
+        $send = $this->sendEmail($mailer, $booking, $request->getHost());
         
         $response = array(
             'status' => 1,
@@ -338,7 +338,7 @@ class HomeController extends AbstractController
         }
     }
 
-    private function sendEmail(\Swift_Mailer $mailer, Booking $booking){
+    private function sendEmail(\Swift_Mailer $mailer, Booking $booking, $domain){
         $em = $this->getDoctrine()->getManager();
         $category = $booking->getAvailable()->getCategory();
         $company = $em->getRepository(Company::class)->find(1);
@@ -373,7 +373,7 @@ class HomeController extends AbstractController
                         'children' => $booking->getChildren(),
                         'baby' => $booking->getBaby(),
                         'wp' => $category->getWarrantyPayment(),
-                        'logo' => 'https://'.$request->getHost().'/upload/gallery/'.$company->getLogo(),
+                        'logo' => 'https://'.$domain.'/upload/gallery/'.$company->getLogo(),
                         'terms' => !$terms ? '' : $terms->getName(),
                         'terms_txt' => !$terms ? '' : $terms->getTermsHtml(),
                         'company_name' => $company->getName()

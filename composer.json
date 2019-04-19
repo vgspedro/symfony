@@ -87,6 +87,7 @@
         "symfony/symfony": "*"
     },
     "extra": {
+        "public-dir": "public_html",
         "symfony": {
             "id": "01C5VEEPYTBF3X0WFDYNEQHSR6",
             "allow-contrib": false

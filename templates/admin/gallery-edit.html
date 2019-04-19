@@ -29,8 +29,8 @@
       <div class="w3-center w3-margin-bottom w3-border w3-imput w3-section set-image-container w3-padding" style="cursor:pointer"onclick="$('.set-image').trigger('click')">
 
         {% if gallery.image %}
-        {% set url=gallery.image|split('/public/') %}
-          <img id="output" src="../{{ url[1] }}" class="w3-image w3-animate-zoom">
+        {% set url=gallery.image|split('/public_html/') %}
+          <img id="output" src="/{{ url[1] }}" class="w3-image w3-animate-zoom">
         {% else %}
         <i class="fa fa-camera w3-jumbo" style="color:#05788d"></i>
         {% endif %}
