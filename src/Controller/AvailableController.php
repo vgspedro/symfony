@@ -159,14 +159,11 @@ class AvailableController extends AbstractController
         return new JsonResponse($response);
     }
 
-
-
-
     public function adminAvailableResourcesActions(Request $request){
 
         $categoryId = $request->request->get('resource-id') ? $request->request->get('resource-id') : '';
-        $start = $request->request->get('start-date') ? \DateTime::createFromFormat('d/M/Y', $request->request->get('start-date')) : '' ;
-        $end = $request->request->get('end-date') ? \DateTime::createFromFormat('d/m/Y', $request->request->get('end-date')): '';
+        $start = $request->request->get('start-date') ? $request->request->get('start-date') : '' ;
+        $end = $request->request->get('end-date') ? $request->request->get('end-date') : '';
         $stock = $request->request->get('stock') ? $request->request->get('stock') : '';
         
         //action 0 delete || 1 edit
@@ -188,17 +185,50 @@ class AvailableController extends AbstractController
                 'message' => 'Insira um periodo Inicio, Fim e o Stock!',
                 'data' => null));
 
-        else if(!$start && !$end && $action == 0) 
+        else if(!$start && !$end && $action == 0 ) 
             return new JsonResponse(array(
                 'status' => 0,
                 'message' => 'Insira um periodo Inicio e Fim!',
                 'data' => null));
 
-        $response = array(
-            'status' => 1,
-            'message' => $action,
-            'data' => null,
+        else if(!$start || !$end) 
+            return new JsonResponse(array(
+                'status' => 0,
+                'message' => 'Insira um periodo Inicio e Fim!',
+                'data' => null));
+
+        $start = \DateTime::createFromFormat('d/m/Y', $start);
+        $start->setTime(00, 00, 00);
+        $end = \DateTime::createFromFormat('d/m/Y', $end);
+        $end->setTime(23, 59, 59);
+
+        //edit stock of category
+        if ($action == 1){
+    
+            $availables = $em->getRepository(Available::class)->findAvailableFromIntervalAndCategory($start, $end, $category);
+            
+            foreach ($availables as $available){
+                if($stock > $category->getAvailability())
+                    $stock = $category->getAvailability();
+                $available->setStock($stock);
+                $em->persist($available);
+            }
+            
+            $em->flush();
+
+            $response = array(
+                'status' => 1,
+                'message' => 'Editadas '.count($availables).' diponibilidades',
+                'data' => null,
             );
+        }
+        
+        //DELETE
+        
+        else{
+        
+        }
+
         return new JsonResponse($response); 
 
     }

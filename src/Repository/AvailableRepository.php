@@ -41,4 +41,23 @@ class AvailableRepository extends ServiceEntityRepository
         return $query->execute();
     }
 
+
+     public function findAvailableFromIntervalAndCategory($start = null, $end = null, $category){
+
+        $entityManager = $this->getEntityManager();
+        $query = $entityManager->createQuery(
+            'SELECT a
+            FROM App\Entity\Available a
+            WHERE a.datetimeend <= :end
+            AND a.datetimestart >= :start
+            AND a.category = :category
+            ORDER BY a.datetimestart ASC')
+            ->setParameter('start', $start->format('Y-m-d H:i:s'))
+            ->setParameter('end', $end->format('Y-m-d H:i:s'))
+            ->setParameter('category', $category->getId());
+        return $query->execute();
+    }
+
+
+
 }

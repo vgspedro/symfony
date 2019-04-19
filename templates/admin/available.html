@@ -263,8 +263,10 @@ function resourceAction(){
 
         $('#modal-edit-resource').hide()
         
-        if(data.status == 1)
-          $('.evt-'+data.data).remove()
+        if(data.status == 1){
+          $('#calendar').empty()
+          getResources()
+        }
         else{
           $('#info-client').show()                
           $('#info-client-head').removeClass('w3-green w3-red w3-amber').addClass('w3-blue').html('<span onclick="$(\'#info-client\').hide()" class="w3-button w3-display-topright w3-large"><i class="fa fa-times"></i></span><h1><i class="fa fa-info-circle"></i> Verifique</h1>')
@@ -351,19 +353,19 @@ $(function(){
       <div class="w3-row-padding w3-padding-16">
 
         <div class="w3-col m6 s12 w3-margin-bottom">
-          <label>Data Inicio</label>
-          <input class="w3-input w3-border w3-white" id="startDate" name="start-date" readonly type="text" placeholder="Inicio">
+          <label>Data Inicio *</label>
+          <input class="w3-input w3-border w3-white" id="startDate" name="start-date" readonly type="text" placeholder="Inicio *">
         </div>
 
         <div class="w3-col m6 s12 w3-margin-bottom">
           <input type="hidden" name="resource-id">
-          <label>Data Fim</label>
+          <label>Data Fim *</label>
           <input class="w3-input w3-border w3-white" id="endDate" name="end-date" readonly type="text" placeholder="Fim">
         </div>
       
         <div class="w3-col m6 s12 w3-margin-bottom stock-hide">
-          <label>Stock <span class="w3-red w3-padding-small w3-opacity-min" id="set-max-stock"></span></label>
-          <input class="w3-input w3-border w3-white set-max-stock" type="number" min="0" name="stock" placeholder="Stock">
+          <label>Stock *<span class="w3-red w3-padding-small w3-opacity-min" id="set-max-stock"></span></label>
+          <input class="w3-input w3-border w3-white set-max-stock" type="number" min="0" name="stock" placeholder="Stock *">
         </div>
       
       </div>
