@@ -157,7 +157,51 @@ class AvailableController extends AbstractController
             'data' => null,
             );
         return new JsonResponse($response);
-   }
+    }
+
+
+
+
+    public function adminAvailableResourcesActions(Request $request){
+
+        $categoryId = $request->request->get('resource-id') ? $request->request->get('resource-id') : '';
+        $start = $request->request->get('start-date') ? \DateTime::createFromFormat('d/M/Y', $request->request->get('start-date')) : '' ;
+        $end = $request->request->get('end-date') ? \DateTime::createFromFormat('d/m/Y', $request->request->get('end-date')): '';
+        $stock = $request->request->get('stock') ? $request->request->get('stock') : '';
+        
+        //action 0 delete || 1 edit
+        $action = $request->request->get('action');
+
+        $em = $this->getDoctrine()->getManager();
+
+        $category = $em->getRepository(Category::class)->find($categoryId);
+
+        if(!$category)    
+            return new JsonResponse(array(
+                'status' => 0,
+                'message' => 'Categoria não foi encontrada!',
+                'data' => null));
+        
+        if(!$start && !$end && $action == 1 && !$stock ) 
+            return new JsonResponse(array(
+                'status' => 0,
+                'message' => 'Insira um periodo Inicio, Fim e o Stock!',
+                'data' => null));
+
+        else if(!$start && !$end && $action == 0) 
+            return new JsonResponse(array(
+                'status' => 0,
+                'message' => 'Insira um periodo Inicio e Fim!',
+                'data' => null));
+
+        $response = array(
+            'status' => 1,
+            'message' => $action,
+            'data' => null,
+            );
+        return new JsonResponse($response); 
+
+    }
 
 
     /**
@@ -192,6 +236,7 @@ class AvailableController extends AbstractController
             $data_resources[] = array(
                 'eventColor' => $rand_color[$counter],
                 'id' => $category->getId(),
+                'lotation' => $category->getAvailability(),
                 'title' => $category->getNamePt(),
                 'order' => $category->getOrderBy()
             );

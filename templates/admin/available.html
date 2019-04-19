@@ -1,6 +1,8 @@
 <link href="{{ asset('fullcalendar/packages/core/main.css') }}" rel='stylesheet' />
 <link href="{{ asset('fullcalendar/packages/daygrid/main.css') }}" rel='stylesheet' />
 <link href="{{ asset('fullcalendar/packages/timegrid/main.css') }}" rel='stylesheet' />
+<link href="{{ asset('css/bootstrap-datepicker.min.css') }}" rel="stylesheet">
+
 <script src="{{ asset('fullcalendar/packages/core/main.js') }}"></script>
 <script src="{{ asset('fullcalendar/packages/interaction/main.js') }}"></script>
 <script src="{{ asset('fullcalendar/packages/daygrid/main.js') }}"></script>
@@ -10,6 +12,11 @@
 <script src="{{ asset('fullcalendar/packages/resource-timegrid/main.js') }}"></script>
 <script src="{{ asset('fullcalendar/packages/popper.min.js') }}"></script>
 <script src="{{ asset('fullcalendar/packages/tooltip.min.js') }}"></script>
+
+<script src="{{ asset('js/bootstrap-datepicker.min.js') }}"></script>
+<script src="{{ asset('js/ui.datepicker-pt-BR.js') }}"></script>
+
+
 
 <style>
 .fa, .far, .fas {font-family: Font Awesome\ 5 Free!important}
@@ -32,8 +39,6 @@ input, select, textarea {color: #000!important}
 
 <script>
 
-
-
 var obj =''
 
 $('.w3-overlay').show()
@@ -51,10 +56,10 @@ function getResources(t) {
     dataType: 'json',
     cache:false,
     success: function(data) {
-      console.log(data)
+      //console.log(data)
       startCalendar(data)
       for (var k in data.resources)
-        template += '<span class="w3-padding-small w3-border" style="width:25%;background-color:'+data.resources[k].eventColor+';color:#FFF">'+data.resources[k].title+'</span>'
+        template += '<span class="w3-padding-small w3-padding-16 w3-border w3-border-gray w3-text-white" style="width:25%;background-color:'+data.resources[k].eventColor+';margin:2px 2px">'+data.resources[k].title+' <button title="Editar Disponibilidades desta Categoria" onclick="resourceActions('+data.resources[k].id+',\''+data.resources[k].title+'\', '+data.resources[k].lotation+')" class="w3-blue w3-btn w3-border" style="padding:4px 14px"><i class="far fa-edit"></i></button></span>'
       $('#legend').html(template)
     }
   })
@@ -137,7 +142,7 @@ function startCalendar(data){
         dataType: 'json',
         cache:false,
         success: function(info) {
-          console.log(info.events)
+          //console.log(info.events)
           ev = info.events
           successCallback(ev)
         }
@@ -216,9 +221,50 @@ function deleteAvailable(){
         $('.w3-overlay').hide()
         $("#modal-edit-stock").hide()
         if(data.status == 1)
-        
           $('.evt-'+data.data).remove()
+        else{
+          $('#info-client').show()                
+          $('#info-client-head').removeClass('w3-green w3-red w3-amber').addClass('w3-blue').html('<span onclick="$(\'#info-client\').hide()" class="w3-button w3-display-topright w3-large"><i class="fa fa-times"></i></span><h1><i class="fa fa-info-circle"></i> Verifique</h1>')
+          $('#client-txt').html(data.message)
+        }
+      },
+      error:function(data){
+        $('#modal-edit-stock').hide()
+        $('.w3-overlay').hide()
+        $('#modal-error').show()
+      }
+    })
+  }, 500)
+}
+
+function resourceActions(id, resource, lotation){
+  $('#resource-action').trigger('reset')
+  $('.stock-hide').removeClass('w3-hide')
+  $('#modal-edit-resource').show()
+  $("#resource-title").html(resource)
+  $('#set-max-stock').html(' Máx: '+lotation)
+  $('.set-max-stock').prop('max', lotation)
+  $("input[name=resource-id]").val(id)
+}
+
+function resourceAction(){
+  $('.w3-overlay').show()
+
+  setTimeout(function(){
+    $.ajax({  
+      url:'{{ path('admin_available_resources_actions') }}',
+      type: "POST",
+      cache: false,
+      data: $('#resource-action').serialize(),
+      dataType:'json',
+      success: function(data){
+        console.log(data)
+        $('.w3-overlay').hide()
+
+        $('#modal-edit-resource').hide()
         
+        if(data.status == 1)
+          $('.evt-'+data.data).remove()
         else{
           $('#info-client').show()                
           $('#info-client-head').removeClass('w3-green w3-red w3-amber').addClass('w3-blue').html('<span onclick="$(\'#info-client\').hide()" class="w3-button w3-display-topright w3-large"><i class="fa fa-times"></i></span><h1><i class="fa fa-info-circle"></i> Verifique</h1>')
@@ -235,6 +281,32 @@ function deleteAvailable(){
 }
 
 
+$(function(){
+  $('input[type=radio]').click(function() {
+    $(this).val() == 0 ? $('.stock-hide').addClass('w3-hide') : $('.stock-hide').removeClass('w3-hide')
+  })
+
+  jQuery('#startDate').datepicker({
+      language:'pt-BR',
+      format: 'dd/mm/yyyy',
+      weekStart: 1,
+      todayHighlight: true,
+      autoclose: true,
+    }).on("changeDate",function (e) {
+      jQuery('#endDate').datepicker("setStartDate", e.date)
+    })
+
+    jQuery('#endDate').datepicker({
+      language:'pt-BR',
+      format: 'dd/mm/yyyy',
+      todayHighlight: true,
+      weekStart: 1,
+      autoclose: true
+    }).on("changeDate",function (e) {
+      jQuery('#startDate').datepicker("setEndDate", e.date)
+    })
+  })
+
 
 </script>
 
@@ -244,8 +316,70 @@ function deleteAvailable(){
    <h5><b><i class="far fa-calendar-check"></i> Disponibilidades</b></h5>
 </header>
 
-<div id='calendar'></div>
+<div id='calendar' style="padding-bottom:64px"></div>
 
-<div class="w3-hide-small w3-row w3-center" style="position:fixed;bottom:0px;z-index:99;width:100%">
+<div class="w3-hide-small w3-row w3-center w3-padding-16" style="background:rgba(0, 0, 0, 0.8);position:fixed;bottom:0px;z-index:99;width:100%">
   <div id="legend" class="w3-center"></div>
 </div>
+
+<div id="modal-edit-resource" class="w3-modal" style="z-index: 9999999; padding-top: 64px; padding-bottom: 32px">
+  <div class="w3-animate-top">
+  </div>
+
+  <div class="w3-modal-content w3-sand w3-animate-zoom" style="max-width: 450px">
+    <div class="w3-container w3-orange w3-padding">
+      <span onclick="$('#modal-edit-resource').hide()" class="w3-padding w3-button w3-display-topright">
+        <i class="w3-xlarge fa fa-times"></i>
+      </span>
+      <h2>
+        <i class="far fa-calendar-check"></i> Disponibilidades
+        <p class="w3-center"id="resource-title"></p>
+      </h2>
+    </div>
+
+    <div class="w3-row-padding w3-margin-top">
+    <form id="resource-action">
+      <p class="w3-large w3-center">Escolha a acção pretendida:<br>
+      <span class="w3-text-red w3-center w3-small">Ao Guardar está a executar a acção escolhida.</span>
+      </p>
+      <div class="w3-row-padding w3-border-bottom w3-border-top w3-padding-16">
+        <input type="radio" checked name="action" value="1" class="w3-radio"> Editar stock entre Datas<br>
+        <span class="w3-text-red w3-center w3-small">Máx. é a Lotação definida na Categoria.</span><br>
+        <input type="radio" name="action" value="0" class="w3-radio"> Apagar Disponibilidades entre Datas<br>
+        <span class="w3-text-red w3-center w3-small">Apenas serão apagadas as Disponibilidades que NÃO têm Reservas.</span> 
+      </div>
+      <div class="w3-row-padding w3-padding-16">
+
+        <div class="w3-col m6 s12 w3-margin-bottom">
+          <label>Data Inicio</label>
+          <input class="w3-input w3-border w3-white" id="startDate" name="start-date" readonly type="text" placeholder="Inicio">
+        </div>
+
+        <div class="w3-col m6 s12 w3-margin-bottom">
+          <input type="hidden" name="resource-id">
+          <label>Data Fim</label>
+          <input class="w3-input w3-border w3-white" id="endDate" name="end-date" readonly type="text" placeholder="Fim">
+        </div>
+      
+        <div class="w3-col m6 s12 w3-margin-bottom stock-hide">
+          <label>Stock <span class="w3-red w3-padding-small w3-opacity-min" id="set-max-stock"></span></label>
+          <input class="w3-input w3-border w3-white set-max-stock" type="number" min="0" name="stock" placeholder="Stock">
+        </div>
+      
+      </div>
+
+    </form>
+    </div>
+    <div class="w3-row-padding w3-border-top">
+      <div class="w3-col s12 w3-margin-top w3-margin-bottom">
+        <span class="w3-btn-block w3-margin-left w3-right w3-button w3-border w3-green" onclick="resourceAction()">
+          <i class="fa fa-check"></i> Guardar
+        </span>
+        <span class="w3-btn-block w3-button w3-left w3-border w3-white" onclick="$('#modal-edit-resource').hide()">
+          <i class="fa fa-times"></i> Fechar
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+
