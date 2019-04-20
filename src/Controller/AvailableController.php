@@ -203,6 +203,7 @@ class AvailableController extends AbstractController
         $end->setTime(23, 59, 59);
 
         //edit stock of category
+
         if ($action == 1){
     
             $availables = $em->getRepository(Available::class)->findAvailableFromIntervalAndCategory($start, $end, $category);
@@ -218,21 +219,66 @@ class AvailableController extends AbstractController
 
             $response = array(
                 'status' => 1,
-                'message' => 'Editadas '.count($availables).' diponibilidades',
+                'message' => 'Editadas '.count($availables).' disponibilidades',
                 'data' => null,
             );
         }
         
         //DELETE
-        
-        else{
-        
+        else {
+
+            $undeletable = array();
+
+            //CHECK IF IN DATE PERIOD ON WE HAVE BOOKINGS 
+            $hasBookings = $em->getRepository(Available::class)->findAvailableByDatesAndCategoryBookingJoin($start, $end, $category);
+
+            if($hasBookings){
+
+                foreach ($hasBookings as $av)
+                    $undeletable[] = $av['id'];
+                
+                //GET ALL AVAILABLES EXCEPT THE undeletable, THE ONES WITH BOOKINGS
+                $findNoBookings = $em->getRepository(Available::class)->findAvailableWithDatesAndCategoryNoBookingJoin($start, $end, $undeletable, $category);
+                    
+                foreach ($findNoBookings as $deletable){
+                    $available = $em->getRepository(Available::class)->find($deletable);
+                    $em->remove($available);
+                    //$available->setStock(88);
+                }
+                
+                $em->flush();
+                
+                $message = count($undeletable) > 0 ? 
+                    'Foram apagadas '.count($findNoBookings).', ficaram por apagar '.count($undeletable).' disponibilidades, por ter reservas associadas.'
+                    :
+                    'Foram apagadas '.count($findNoBookings).' disponibilidades';
+
+                $response = array(
+                    'status' => 1,
+                    'message' => $message,
+                    'data' => null,
+                );
+            }
+
+            else{
+
+                $availables = $em->getRepository(Available::class)->findAvailableFromIntervalAndCategory($start, $end, $category);
+                
+                foreach ($availables as $available)
+                    $em->remove($available);
+                    //$available->setStock(99);
+
+                $em->flush();
+
+                $response = array(
+                    'status' => 1,
+                    'message' => 'Foram apagadas '.count($availables).' disponibilidades',
+                    'data' => null,
+                );
+            }
         }
-
         return new JsonResponse($response); 
-
     }
-
 
     /**
      * Gets events for the calendar (only accessible by ajax).

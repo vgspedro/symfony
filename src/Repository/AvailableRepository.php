@@ -42,7 +42,7 @@ class AvailableRepository extends ServiceEntityRepository
     }
 
 
-     public function findAvailableFromIntervalAndCategory($start = null, $end = null, $category){
+    public function findAvailableFromIntervalAndCategory($start = null, $end = null, $category){
 
         $entityManager = $this->getEntityManager();
         $query = $entityManager->createQuery(
@@ -59,5 +59,37 @@ class AvailableRepository extends ServiceEntityRepository
     }
 
 
+    public function findAvailableByDatesAndCategoryBookingJoin($start, $end, $category){
+
+        $conn = $this->getEntityManager()->getConnection();
+                        
+        $sql = 'SELECT DISTINCT (a.id) AS id 
+                FROM available a
+                INNER JOIN booking b 
+                ON a.id = b.available_id           
+                WHERE a.category_id = :c
+                AND a.datetimeend <= :e
+                AND a.datetimestart >= :s';
+
+        $stmt = $conn->prepare($sql);
+        $stmt->execute(array('s' => $start->format('Y-m-d H:i:s'), 'e' => $end->format('Y-m-d H:i:s') ,'c' => $category->getId()));
+        return $stmt->fetchAll();
+    }
+
+
+    public function findAvailableWithDatesAndCategoryNoBookingJoin($start, $end, $available, $category){
+
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = 'SELECT a.id AS id
+                FROM available a
+                WHERE a.datetimestart >= :s
+                AND a.datetimeend <= :e
+                AND a.category_id = :c
+                AND a.id NOT IN ('. implode(",",$available) .')';
+
+        $stmt = $conn->prepare($sql);
+        $stmt->execute(array('s' => $start->format('Y-m-d H:i:s'), 'e' => $end->format('Y-m-d H:i:s'), 'c' => $category->getId()));
+        return $stmt->fetchAll();
+    }
 
 }
