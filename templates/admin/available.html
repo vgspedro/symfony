@@ -16,8 +16,6 @@
 <script src="{{ asset('js/bootstrap-datepicker.min.js') }}"></script>
 <script src="{{ asset('js/ui.datepicker-pt-BR.js') }}"></script>
 
-
-
 <style>
 .fa, .far, .fas {font-family: Font Awesome\ 5 Free!important}
 .w3-input {border-bottom: 0px solid #05788d}
@@ -254,6 +252,7 @@ function resourceActions(id, resource, lotation, color){
 }
 
 function resourceAction(){
+
   $('.w3-overlay').show()
 
   setTimeout(function(){
@@ -264,11 +263,15 @@ function resourceAction(){
       data: $('#resource-action').serialize(),
       dataType:'json',
       success: function(data){
-        console.log(data)
         $('.w3-overlay').hide()
-        $('#modal-edit-resource').hide()
-        if(data.status == 1)
+        if(data.status == 1){
+          $('#startDate, #endDate').datepicker('clearDates')
+          $('#modal-edit-resource').hide()
+          $('#info-client').show()                
+          $('#info-client-head').removeClass('w3-red w3-amber w3-blue').addClass('w3-green').html('<span onclick="$(\'#info-client\').hide()" class="w3-button w3-display-topright w3-large"><i class="fa fa-times"></i></span><h1><i class="fa fa-check"></i> Sucesso</h1>')
+          $('#client-txt').html(data.message).addClass('w3-center')
           calendar.refetchEvents()
+        }
         else{
           $('#info-client').show()                
           $('#info-client-head').removeClass('w3-green w3-red w3-amber').addClass('w3-blue').html('<span onclick="$(\'#info-client\').hide()" class="w3-button w3-display-topright w3-large"><i class="fa fa-times"></i></span><h1><i class="fa fa-info-circle"></i> Verifique</h1>')
@@ -347,9 +350,9 @@ $(function(){
       <span class="w3-text-red w3-center w3-small">Ao Guardar está a executar a acção escolhida.</span>
       </p>
       <div class="w3-row-padding w3-border-bottom w3-border-top w3-padding-16">
-        <input type="radio" checked name="action" value="1" class="w3-radio"> Editar stock entre Datas<br>
+        <input type="radio" checked name="action" value="1" class="w3-radio" style="cursor:pointer"> Editar stock entre Datas<br>
         <span class="w3-text-red w3-center w3-small">Máx. é a Lotação definida na Categoria.</span><br>
-        <input type="radio" name="action" value="0" class="w3-radio"> Apagar Disponibilidades entre Datas<br>
+        <input type="radio" name="action" value="0" class="w3-radio" style="cursor:pointer"> Apagar Disponibilidades entre Datas<br>
         <span class="w3-text-red w3-center w3-small">Apenas serão apagadas as Disponibilidades que NÃO têm Reservas.</span> 
       </div>
       <div class="w3-row-padding w3-padding-16">

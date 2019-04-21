@@ -7,7 +7,8 @@
 ::-moz-placeholder {opacity: 0.3}
 :-ms-input-placeholder{opacity: 0.3}
 :-moz-placeholder {opacity: 0.3}
-.logo-md{height:104px;top:-47px;left:0px}
+.logo{position:absolute;left: 0;margin-top:-74px;width:120px}
+.bgimg-login{background-image:url(../images/login.jpg)}
 </style>
 
 <div class="w3-overlay w3-animate-opacity" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay">
@@ -18,7 +19,7 @@
     </div>
 </div>
 
-<section class="bgimg-1" style="min-height:400px;height:100vh">
+<section class="bgimg-login" style="min-height:400px;height:100vh">
   <div class="w3-padding-32"> 
     <div class="w3-row-padding">
       <div class="w3-col l3 m1 s0">&nbsp;</div>
@@ -28,7 +29,8 @@
   <div class="w3-modal-content w3-card-8 w3-border" style="max-width:600px">
     <div class="w3-white w3-center">
       <form action="{{ path('login_clients') }}" method="post">
-        <div class="logo-md w3-animate-zoom"></div>
+        <img class="w3-animate-zoom logo" src="{{ asset('upload/gallery/') }}{{company.logo}}">
+
         <div class="w3-padding-8 w3-sand w3-padding-small w3-xlarge w3-border-bottom">Acesso Clientes</div>
         <div class="w3-content w3-padding-16 w3-row-padding w3-large">
           <div class="w3-col m6 s12 w3-left-align w3-large">

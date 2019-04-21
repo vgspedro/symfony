@@ -219,7 +219,7 @@ class AvailableController extends AbstractController
 
             $response = array(
                 'status' => 1,
-                'message' => 'Editadas '.count($availables).' disponibilidades',
+                'message' => 'Editadas '.count($availables).' disponibilidades.<br>Categoria: '.$category->getNamePt().'<br>Datas: '.$start->format('d/m/Y').' @ '.$end->format('d/m/Y'),
                 'data' => null,
             );
         }
@@ -243,15 +243,14 @@ class AvailableController extends AbstractController
                 foreach ($findNoBookings as $deletable){
                     $available = $em->getRepository(Available::class)->find($deletable);
                     $em->remove($available);
-                    //$available->setStock(88);
                 }
                 
                 $em->flush();
                 
                 $message = count($undeletable) > 0 ? 
-                    'Foram apagadas '.count($findNoBookings).', ficaram por apagar '.count($undeletable).' disponibilidades, por ter reservas associadas.'
+                    'Apagadas '.count($findNoBookings).', ficaram por apagar '.count($undeletable).' disponibilidades, por ter reservas associadas.<br>Categoria '.$category->getNamePt().'<br>Datas '.$start->format('d/m/Y').' @ '.$end->format('d/m/Y')
                     :
-                    'Foram apagadas '.count($findNoBookings).' disponibilidades';
+                    'Apagadas '.count($findNoBookings).' disponibilidades.<br>Categoria: '.$category->getNamePt().'<br>Datas: '.$start->format('d/m/Y').' @ '.$end->format('d/m/Y');
 
                 $response = array(
                     'status' => 1,
@@ -259,21 +258,18 @@ class AvailableController extends AbstractController
                     'data' => null,
                 );
             }
-
             else{
 
                 $availables = $em->getRepository(Available::class)->findAvailableFromIntervalAndCategory($start, $end, $category);
                 
                 foreach ($availables as $available)
                     $em->remove($available);
-                    //$available->setStock(99);
-
                 $em->flush();
 
                 $response = array(
                     'status' => 1,
-                    'message' => 'Foram apagadas '.count($availables).' disponibilidades',
-                    'data' => null,
+                    'message' => 'Apagadas '.count($availables).' disponibilidades.<br>Categoria: '.$category->getNamePt().'<br>Datas: '.$start->format('d/m/Y').' @ '.$end->format('d/m/Y'),
+                    'data' => null, 
                 );
             }
         }
@@ -301,7 +297,7 @@ class AvailableController extends AbstractController
         
         $data_resources = array();
 
-        $rand_color = array('','blue','green','black','blueviolet','brown','cadetblue','cornflowerblue','darkcyan','orange');
+        $rand_color = array('','blue','green','black','blueviolet','brown','cadetblue','cornflowerblue','darkcyan','orange', );
 
         $id = null;
 

@@ -7,6 +7,7 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
+use App\Entity\Company;
 
 class SecurityController extends AbstractController
 
@@ -19,10 +20,14 @@ class SecurityController extends AbstractController
 
     // last username entered by the user
         $lastUsername = $authenticationUtils->getLastUsername();
+        
+        $em = $this->getDoctrine()->getManager();
+        $company = $em->getRepository(Company::class)->find(1);
 
         return $this->render('security/login-users.html', array(
         'last_username' => $lastUsername,
         'error'         => $error,
+        'company' => $company,
         ));
     }
    
@@ -35,9 +40,13 @@ class SecurityController extends AbstractController
     // last username entered by the user
         $lastUsername = $authenticationUtils->getLastUsername();
 
+        $em = $this->getDoctrine()->getManager();
+        $company = $em->getRepository(Company::class)->find(1);
+        
         return $this->render('security/login-clients.html', array(
         'last_username' => $lastUsername,
         'error'         => $error,
+        'company' => $company,
         ));
     }
 
