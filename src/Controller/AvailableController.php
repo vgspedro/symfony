@@ -297,7 +297,7 @@ class AvailableController extends AbstractController
         
         $data_resources = array();
 
-        $rand_color = array('','blue','green','black','blueviolet','brown','cadetblue','cornflowerblue','darkcyan','orange', );
+        $rand_color = array('','blue','green','black','blueviolet','brown','forestgreen','cadetblue','cornflowerblue','chocolate','darkcyan','orange','darkgoldenrod');
 
         $id = null;
 
