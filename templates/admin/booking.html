@@ -429,7 +429,7 @@ $(function(){$("#get-card-data").trigger('reset')})
               }, 0 )
             // Update footer
             k == 8 ? 
-            $( api.column( k ).footer() ).html(parseFloat(total).toFixed(2)+'€ ('+parseFloat(total).toFixed(2)+'€)')
+            $( api.column( k ).footer() ).html(parseFloat(pageTotal).toFixed(2)+'€ ('+parseFloat(total).toFixed(2)+'€)')
             : 
             $( api.column( k ).footer() ).html(pageTotal+' ('+total+')')
           }
