@@ -319,7 +319,7 @@ $(function(){$("#get-card-data").trigger('reset')})
         wp = row.wp ? '<button class="w3-btn w3-border w3-indigo" style="margin-left:4px" onclick="modalToCardData('+row.id+')"><i class="far fa-credit-card"></i></button>'
       : '<button disabled class="w3-btn w3-border w3-indigo" style="margin-left:4px"><i class="far fa-credit-card"></i></button>'
 
-        return '<div style="width:186px;max-width:186px" class="w3-small"><button id="'+row.booking+'" class="'+color+' w3-btn w3-border" onclick="modalBookingSetStatus('+row.id+')">#'+row.id+' '+data+'</button>'+wp+'</div>'
+        return '<div style="width:190px;max-width:190px" class="w3-small"><button id="'+row.id+'" style="padding:8px!important" class="'+color+' w3-btn w3-border" onclick="modalBookingSetStatus('+row.id+')">#'+row.id+' '+data+'</button>'+wp+'</div>'
       }},
       { data: "tour"},
       { data: "date"},
