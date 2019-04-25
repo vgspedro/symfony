@@ -18,7 +18,7 @@ div.dataTables_length select {height: 50px}
    <h5><b><i class="far fa-calendar-alt"></i> Reservas</b></h5>
 </header>
 
-  <div class="w3-row-padding">
+  <div class="w3-row-padding w3-opacity-min">
 
   {% for statuses in status %}
 
@@ -54,9 +54,9 @@ div.dataTables_length select {height: 50px}
 
 </div>
 
-<div class="w3-row-padding w3-margin-top">
+<div class="w3-row-padding w3-margin-top" style="min-height:40vh">
   <div class="w3-col s12">
-  <table id="dataTables" class="w3-border table table-striped centered hover table-bordered" style="width:100%">
+  <table id="dataTables" class="w3-border table table-striped centered hover table-bordered w3-hide" style="width:100%">
     <thead class="w3-sand">
       <tr>
       <th>Reserva</th>    
@@ -159,7 +159,8 @@ div.dataTables_length select {height: 50px}
 <script src="{{ asset('js/ui.datepicker-pt-BR.js') }}"></script>
 <script>
 
-
+var table=''
+var index = 0
 $( ".see-pass" ).hover(
   function() {
     $('input[name="pass"]').addClass('w3-hide').next().removeClass('w3-hide')
@@ -186,45 +187,40 @@ function getCardData(){
   setTimeout(function(){
     if (!$('#get-card-data input[name="username"]').val()){
       $('.w3-overlay').hide()
-
-$('.username').removeClass('w3-hide')
+      $('.username').removeClass('w3-hide')
     }
     else if (!$('#get-card-data input[name="pass"]').val()){
       $('.w3-overlay').hide()
-
       $('.pass').removeClass('w3-hide')
    }
-
-  else{
-    $.ajax({  
-      url: '{{ path('admin_booking_validate_user') }}',
-      type: "POST",
-      data: $("#get-card-data").serialize(),
-      cache: false,
-      success: function(data){
-        //console.log(data)
-        $('.w3-overlay').hide()
-        if (data.status == 1){
-          $("#get-card-data").trigger('reset')
-          templ=''
-          for (k in data.data)
-            templ+='<div>'+data.data[k]+'</div>' 
-          $('.show-user-info').html('<div class="w3-light-grey w3-text-black w3-padding w3-left-align w3-border w3-large">'+templ+'</div>')
-        }
-        else{
-          $('#info-client').show()                
-          $('#info-client-head').removeClass('w3-green w3-red w3-amber').addClass('w3-blue').html('<span onclick="$(\'#info-client\').hide()" class="w3-button w3-display-topright w3-large"><i class="fa fa-times"></i></span><h1><i class="fa fa-info-circle"></i> Verifique</h1>')
-          $('#client-txt').html(data.message)
-
-        }
-      },
-      error:function(data){
-        $('.w3-overlay').hide()
-        $('#modal-error').show()
-      }
-    })
-}
-
+   else{
+     $.ajax({  
+        url: '{{ path('admin_booking_validate_user') }}',
+        type: "POST",
+        data: $("#get-card-data").serialize(),
+        cache: false,
+        success: function(data){
+          //console.log(data)
+          $('.w3-overlay').hide()
+          if (data.status == 1){
+            $("#get-card-data").trigger('reset')
+            templ=''
+            for (k in data.data)
+              templ+='<div>'+data.data[k]+'</div>' 
+            $('.show-user-info').html('<div class="w3-light-grey w3-text-black w3-padding w3-left-align w3-border w3-large">'+templ+'</div>')
+          }
+          else{
+            $('#info-client').show()                
+            $('#info-client-head').removeClass('w3-green w3-red w3-amber').addClass('w3-blue').html('<span onclick="$(\'#info-client\').hide()" class="w3-button w3-display-topright w3-large"><i class="fa fa-times"></i></span><h1><i class="fa fa-info-circle"></i> Verifique</h1>')
+            $('#client-txt').html(data.message)
+          }
+        },
+        error:function(data){
+          $('.w3-overlay').hide()
+          $('#modal-error').show()
+        }
+      })
+    }
   }, 500)
 }
 
@@ -307,23 +303,23 @@ $(function(){$("#get-card-data").trigger('reset')})
           $('.set-canceled').text(j.canceled)
           $('.set-confirmed').text(j.confirmed)
           $('.set-pending').text(j.pending)
-
+          $('#dataTables').removeClass('w3-hide')
           return j.data
         }
       }
       },
       order:[],
       columns: [
-      { data: "booking"},
+      { data: "id"},
       { data: "status", render: function(data, type,row){
-        if (data == 'pending') color = 'w3-red'
-        else if (data == 'canceled') color = 'w3-blue'
-        else if (data == 'confirmed') color = 'w3-green'
+        if (data == 'PENDING') color = 'w3-red'
+        else if (data == 'CANCELED') color = 'w3-blue'
+        else if (data == 'CONFIRMED') color = 'w3-green'
         
-        wp = row.wp ? '<button class="w3-btn w3-border w3-indigo" style="margin-left:4px" onclick="modalToCardData('+row.booking+')"><i class="far fa-credit-card"></i></button>'
+        wp = row.wp ? '<button class="w3-btn w3-border w3-indigo" style="margin-left:4px" onclick="modalToCardData('+row.id+')"><i class="far fa-credit-card"></i></button>'
       : '<button disabled class="w3-btn w3-border w3-indigo" style="margin-left:4px"><i class="far fa-credit-card"></i></button>'
 
-        return '<button id="'+row.booking+'" class="'+color+' w3-btn w3-border" onclick="modalBookingSetStatus('+row.booking+')">#'+row.booking+' '+data+'</button>'+wp
+        return '<div style="width:186px;max-width:186px" class="w3-small"><button id="'+row.booking+'" class="'+color+' w3-btn w3-border" onclick="modalBookingSetStatus('+row.id+')">#'+row.id+' '+data+'</button>'+wp+'</div>'
       }},
       { data: "tour"},
       { data: "date"},
@@ -340,7 +336,7 @@ $(function(){$("#get-card-data").trigger('reset')})
       { data: "posted_at"},
       { data: "wp"}
     ],
-     "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+     "lengthMenu": [[25, 50, -1, 10], [25, 50, "Todos", 10]],
     buttons: [
         {
         extend:    'excelHtml5',
@@ -456,22 +452,26 @@ function setStatusTable(v){
   $('input.form-control.input-sm').val(v).trigger("keyup")
 }
 
+$('#dataTables').on( 'click', 'tr', function () { index = table.row( this ).index()})
+
 function modalBookingSetStatus(bookingId){
   $('.w3-overlay').show()
   setTimeout(function(){
     $.ajax({  
       url:'{{ path('admin_booking_set_status') }}',
       type: "POST",
-      data:'id='+bookingId,
+      data:'id='+bookingId+'&index='+index,
       success: function(data){
-        //console.log(data)
         $('.w3-overlay').hide()
-        $('#set-booking').html(data)
-        $('#booking-id').text(bookingId)
-        $('#modal-booking-set-status').show()
-        $('#bookingstatus_id').val(bookingId)
-        if(data.data == 'success'){
-        
+        if(data.status ==  0){
+          $('#info-client').show()                
+          $('#info-client-head').removeClass('w3-green w3-red w3-amber').addClass('w3-blue').html('<span onclick="$(\'#info-client\').hide()" class="w3-button w3-display-topright w3-large"><i class="fa fa-times"></i></span><h1><i class="fa fa-info-circle"></i> Verifique</h1>')
+          $('#client-txt').addClass('w3-center').html(data.message)
+        }
+        else{
+          $('#set-booking').html(data)
+          $('#booking-id').text(bookingId)
+          $('#modal-booking-set-status').show()
         }
       },
       error:function(data){

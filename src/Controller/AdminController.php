@@ -31,11 +31,17 @@ class AdminController extends AbstractController
         $uri = $request->getUri();
         $em = $this->getDoctrine()->getManager();
         $booking = $em->getRepository(Booking::class)->dashboardValues();
+
+        $start = new \DateTime('first day of this month');
+        $end = new \DateTime('last day of this month');
+        $booking_month = $em->getRepository(Booking::class)->dashboardCurrentMonth($start, $end);
+
         $company = $em->getRepository(Company::class)->find(1);
         $ua = $this->getBrowser();
         return $this->render('admin/base.html.twig',[
             'browser' => $ua,
             'booking' => $booking,
+            'booking_month' => $booking_month,
             'company' => $company,
             'url' => 'https://'.$request->getHost()
             ]);
@@ -45,13 +51,18 @@ class AdminController extends AbstractController
 	{
         $em = $this->getDoctrine()->getManager();
         $booking = $em->getRepository(Booking::class)->dashboardValues();
-        return $this->render('admin/dashboard.html', array('booking' => $booking));
+        $start = new \DateTime('first day of this month');
+        $end = new \DateTime('last day of this month');
+        $booking_month = $em->getRepository(Booking::class)->dashboardCurrentMonth($start, $end);
+        return $this->render('admin/dashboard.html', 
+            ['booking' => $booking,
+            'booking_month' => $booking_month]);
     }
 
     public function adminBookingSetStatus(Request $request){
 
         $bookingId = $request->request->get('id');
-        
+        $index =  $request->request->get('index');
         $em = $this->getDoctrine()->getManager();
                 
         $booking = $em->getRepository(Booking::class)->find($bookingId);
@@ -77,7 +88,8 @@ class AdminController extends AbstractController
                 'telephone' => $client->getTelephone(),
                 'wp' => $client->getCvv() ? 1 : 0, 
                 'language' => $client->getLocale()->getName(),
-                'easyText' => $easyText
+                'easyText' => $easyText,
+                'index' => $index
             );          
 
         return $this->render('admin/booking-set-status.html', array('seeBooking' => $seeBooking));
@@ -89,9 +101,10 @@ class AdminController extends AbstractController
         $em = $this->getDoctrine()->getManager();
                 
         $bookingId = $request->request->get('bookingstatusId');
-        $status = $request->request->get('status');
+        $status = strtolower($request->request->get('status'));
         $email = $request->request->get('email');
         $notes = $request->request->get('notes');
+        $index = $request->request->get('index');
         
         $booking = $em->getRepository(Booking::class)->find($bookingId);
 
@@ -171,7 +184,7 @@ class AdminController extends AbstractController
             $response = array(
                 'status' => 1,
                 'message' => 'Sucesso',
-                'data' => $booking->getId(),
+                'data' => array('id' => $booking->getId(), 'index' => (int)$index, 'status' => strtoupper($booking->getStatus())),
                 'mail' => $send,
                 'stock_it' => $stockIt
              );
@@ -214,7 +227,7 @@ class AdminController extends AbstractController
         if ($booking){
 
             foreach ($booking as $bookings) {
-            
+
                 if ($bookings->getStatus() ==='canceled')
                     $canceled = $canceled+1;
                 else if ($bookings->getStatus() ==='pending')
@@ -226,11 +239,11 @@ class AdminController extends AbstractController
 
                 $seeBookings[] =
                     array(
-                    'booking' => $bookings->getId(),
+                    'id' => $bookings->getId(),
                     'adult' => $bookings->getAdult(),
                     'children' => $bookings->getChildren(),
                     'baby' => $bookings->getBaby(),
-                    'status' => $bookings->getStatus(),
+                    'status' => strtoupper($bookings->getStatus()),
                     'date' => $bookings->getDateEvent()->format('d/m/Y'),
                     'hour' => $bookings->getTimeEvent()->format('H:i'),
                     'tour' => $bookings->getAvailable()->getCategory()->getNamePt(),

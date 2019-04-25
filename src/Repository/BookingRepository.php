@@ -33,15 +33,16 @@ class BookingRepository extends ServiceEntityRepository
         return $query->getResult();
     }
 
+
+
     public function dashboardValues()
     {
         $today = new \Datetime('now');
-
         $tomorrow = new \Datetime('tomorrow');
 
         $conn = $this->getEntityManager()->getConnection();
 
-        $sql = "SELECT  b.status, COUNT(b.status) AS count, COUNT(b.id) AS total
+        $sql = "SELECT b.status, COUNT(b.status) AS count, COUNT(b.id) AS total
             FROM booking b
             WHERE b.date_event = :date
             GROUP BY b.status";
@@ -108,6 +109,53 @@ class BookingRepository extends ServiceEntityRepository
         return array('day0' => $day0, 'day1' => $day1, 'chart' => $charts); 
     }
   
+
+    public function dashboardCurrentMonth($start, $end){
+
+        $month_b_status = $this->createQueryBuilder('b')
+            ->andWhere('b.dateEvent >= :start')
+            ->andWhere('b.dateEvent <= :end')
+            ->groupBy('b.status')
+            ->setParameter('start', $start)
+            ->setParameter('end', $end)
+            ->select('COUNT(b.status) as count, b.status')
+            ->getQuery();
+
+        $month_person_types = $this->createQueryBuilder('b')
+            ->andWhere('b.dateEvent >= :start')
+            ->andWhere('b.dateEvent <= :end')
+            ->setParameter('start', $start)
+            ->setParameter('end', $end)
+            ->select('SUM(b.adult) as adult, SUM(b.children) as children, SUM(b.baby) as baby')
+            ->getQuery();
+
+
+        $m_s = array();
+        array_push($m_s, ['Status', 'Total']);
+        
+        foreach ($month_b_status->execute() as $key => $value)
+            array_push($m_s,[strtoupper($value['status']), (int)$value['count']]);
+        
+        $m_t = array();
+        array_push($m_t, ['Type', 'Total']);
+        
+        foreach ($month_person_types->execute() as $key => $value){
+            if($key == 'adult')
+                array_push($m_t, ['ADULTS', (int)$value['adult']]);
+            
+            if($key == 'children')
+                array_push($m_t, ['CHILDREN', (int)$value['children']]);
+            
+            if($key =='baby')
+                array_push($m_t, ['BABY', (int)$value['baby']]);
+        }
+
+         return array(
+            'month_status' => $m_s,
+            'month_persons' => $m_t
+        );
+    }
+
     public function bookingFilter($start, $end){
 
         if ($start && $end)

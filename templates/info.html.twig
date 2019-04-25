@@ -8,6 +8,13 @@
  		<meta name="title" content="{{ company.metaDescription }}">
  		<meta name="description" content="{{ company.metaDescription }}">
         {% include 'taruga/styles.html' %}
+        		<!-- Global site tag (gtag.js) - Google Analytics -->
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-138976385-1"></script><script>
+ 	 		window.dataLayer = window.dataLayer || [];
+  			function gtag(){dataLayer.push(arguments);}
+  			gtag('js', new Date());
+			 gtag('config', 'UA-138976385-1');
+		</script>
     </head>
     <body>
 		{% include 'taruga/navbar.base.html' %}
