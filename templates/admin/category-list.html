@@ -62,6 +62,7 @@ table.dataTable thead > tr > th {padding-left: 8px!important}
         <td>{{category.order}}</td>
         <td>{{category.id}}</td>
         <td>
+          <div style="width:154px;min-width:154px">
           <span class="w3-tooltip">
             <span style="position:absolute;left:0;bottom:32px" class="w3-round w3-text w3-tag">Editar a categoria</span>
             <button class="w3-btn w3-border w3-blue w3-tooltip" style="width: 13px" onclick="editCategory({{category.id}},'{{ category.namePt}}')"> 
@@ -80,6 +81,7 @@ table.dataTable thead > tr > th {padding-left: 8px!important}
               <i class="far fa-calendar-check"></i>
             </button>
           </span>
+        </div>
         </td>
         <td>{{ category.namePt }}</td>
         <td>{{ category.nameEn }}</td>
