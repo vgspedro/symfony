@@ -4,8 +4,6 @@
  .dt-button{background: #FFF;border:1px solid #ccc;
  display: inline-block; padding: 8px 16px; vertical-align: middle;overflow: hidden;text-decoration: none; color: inherit;
     background-color: inherit;text-align: center; cursor: pointer; white-space: nowrap;color: #000!important;background-color: #87CEEB!important;font-size:18px}
-
-
 select.input-sm, input .form-control .input-sm {height: 36px}
 table.dataTable.dtr-inline.collapsed > tbody > tr > td:first-child:before, table.dataTable.dtr-inline.collapsed > tbody > tr > th:first-child:before {
     height: 24px;width: 24px;border-radius: 16px; text-align: center;line-height: 23px;font-size: 24px;border-radius: 0px;border: 1px solid #ddd;box-shadow: 0 0 0 #000}
@@ -18,17 +16,14 @@ input, select, textarea {color: #000!important}
 div.dataTables_length select {height: 50px}
 table.dt-rowReorder-float{position:absolute !important;opacity:0.8;table-layout:fixed;outline:2px solid #888;outline-offset:-2px;z-index:2001}tr.dt-rowReorder-moving{outline:2px solid #555;outline-offset:-2px}body.dt-rowReorder-noOverflow{overflow-x:hidden}table.dataTable td.reorder{text-align:center;cursor:move}
 table.dataTable thead > tr > th {padding-left: 8px!important}
-
+.grabbing {cursor: -webkit-grabbing; cursor: grabbing}
 </style>
-
 
 <header class="w3-container" style="padding-top:22px">
    <h5><b><i class="far fa-edit fa-fw"></i> Categorias</b></h5>
 </header>
 <div class="w3-row-padding">
   <div class="w3-col s12">
-
-  
 
   <div style="overflow-x:auto">
 
@@ -55,11 +50,9 @@ table.dataTable thead > tr > th {padding-left: 8px!important}
       </tr>
     </thead>
     <tbody>
-
-
       {% for category in categories%}
        <tr>
-        <td>{{category.order}}</td>
+        <td class="grabbing">{{category.order}}</td>
         <td>{{category.id}}</td>
         <td>
           <div style="width:154px;min-width:154px">
@@ -155,7 +148,6 @@ if(!localStorage.getItem("tablecategory") ){
 else
   stored = JSON.parse(localStorage.getItem("tablecategory"))
 */
-
 
 function addAvailable(id,name){
   $('.w3-overlay').show()

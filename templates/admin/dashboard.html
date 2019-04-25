@@ -159,47 +159,44 @@
     </div>
   </div>
 
-
   <div class="w3-row-padding w3-opacity-min">
-    <div class="w3-col l6 m12 s12 w3-margin-bottom">
-      <header class="w3-container">
-        <h5 style="margin-left:-16px"><b>Reservas {{ "now"|date("m/Y") }} (U)</b></h5>
-      </header>  
-      <div class="chart_wrap w3-card w3-sand">
-        <div class="chart-container" id="chart2"></div>
-      </div>
-    </div>
 
-    <div class="w3-col l6 m12 s12 w3-margin-bottom">
+    <div class="w3-col l3 m6 s12 w3-margin-bottom">
       <header class="w3-container">
         <h5 style="margin-left:-16px"><b>Passageiros {{ "now"|date("m/Y") }} (U)</b></h5>
       </header>  
-      <div class="chart_wrap w3-card w3-sand">
-        <div class="chart-container" id="chart3"></div>
-      </div>
-    </div>
-  </div>
-
-  <div class="w3-row-padding w3-opacity-min">
-    <div class="w3-col l6 m12 s12 w3-margin-bottom">
-      <header class="w3-container">
-        <h5 style="margin-left:-16px"><b>Reservas Global (U)</b></h5>
-      </header>  
-      <div class="chart_wrap w3-card w3-sand">
+      <div class="chart_wrap w3-card w3-sand w3-sepia-min">
         <div class="chart-container" id="chart0"></div>
       </div>
     </div>
 
-    <div class="w3-col l6 m12 s12 w3-margin-bottom">
+    <div class="w3-col l3 m6 s12 w3-margin-bottom">
       <header class="w3-container">
-        <h5 style="margin-left:-16px"><b>Estados Global (U)</b></h5>
+        <h5 style="margin-left:-16px"><b>Estados {{ "now"|date("m/Y") }} (U)</b></h5>
       </header>  
-      <div class="chart_wrap w3-card w3-sand">
+      <div class="chart_wrap w3-card w3-sand w3-grayscale-min">
         <div class="chart-container" id="chart1"></div>
       </div>
     </div>
-  </div>
 
+    <div class="w3-col l3 m6 s12 w3-margin-bottom">
+      <header class="w3-container">
+        <h5 style="margin-left:-16px"><b>Reservas Global (U)</b></h5>
+      </header>  
+      <div class="chart_wrap w3-card w3-sand w3-sepia-min">
+        <div class="chart-container" id="chart2"></div>
+      </div>
+    </div>
+
+    <div class="w3-col l3 m6 s12 w3-margin-bottom">
+      <header class="w3-container">
+        <h5 style="margin-left:-16px"><b>Estados Global (U)</b></h5>
+      </header>  
+      <div class="chart_wrap w3-card w3-sand w3-grayscale-min">
+        <div class="chart-container" id="chart3"></div>
+      </div>
+    </div>
+  </div>
 
 <script type="text/javascript">
 
@@ -215,29 +212,45 @@ a = []
   a.push({{ monthcharts|json_encode|raw }})
 {% endfor %}
 
-google.charts.setOnLoadCallback(function() { drawChart(a[0],0) })
-google.charts.setOnLoadCallback(function() { drawChart(a[1],1) })
-
-google.charts.setOnLoadCallback(function() { drawChart(a[2],2) })
-google.charts.setOnLoadCallback(function() { drawChart(a[3],3) })
+google.charts.setOnLoadCallback(function() { drawChart(a[3],0) })
+google.charts.setOnLoadCallback(function() { drawChart(a[2],1) })
+google.charts.setOnLoadCallback(function() { drawChart(a[0],2) })
+google.charts.setOnLoadCallback(function() { drawChart(a[1],3) })
 
   function drawChart(chrt,i) {
     var data = google.visualization.arrayToDataTable(chrt)
-    if (i == 1 || i == 2)
-    var options = {
+
+    if (i == 0)
+      options = {
+      legend: { position: 'bottom', alignment: 'start' },
+      width: '100%',
+      is3D:true,
+      colors: ['#3333FF', '#3366CC', '#0033CC'],
+      height: '250px',
+      slices: {
+        1: {offset: 0.2},
+        2: {offset: 0.2},
+        3: {offset: 0.2},
+      },
+    }
+
+    else if (i == 1 || i == 3)
+    options = {
       legend: { position: 'bottom', alignment: 'start' },
       width: '100%',
       is3D:true,
       colors: ['#f44336', '#2196F3', '#4CAF50'],
       height: '250px',
       slices: {
-        1: {offset: 0.3},
-        2: {offset: 0.3},
-        3: {offset: 0.3},
+        1: {offset: 0.2},
+        2: {offset: 0.2},
+        3: {offset: 0.2},
       },
     }
+    
     else
-    var options = {
+    
+    options = {
       legend: { position: 'bottom', alignment: 'start' },
       width: '100%',
       is3D:true,
@@ -249,9 +262,11 @@ google.charts.setOnLoadCallback(function() { drawChart(a[3],3) })
         4: {offset: 0.2},
         5: {offset: 0.2},
         6: {offset: 0.2},
+        7: {offset: 0.2},
+        8: {offset: 0.2}
       },
     }
-    var chart = new google.visualization.PieChart(document.getElementById('chart'+i));
+    var chart = new google.visualization.PieChart(document.getElementById('chart'+i))
     chart.draw(data, options)
   }
 

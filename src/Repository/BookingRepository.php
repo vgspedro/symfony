@@ -80,7 +80,7 @@ class BookingRepository extends ServiceEntityRepository
         array_push($chart0, $tmp);
         
         foreach ($c0 as $key => $value) {
-            $tmp = array( $value['category'], (int)$value['total']); 
+            $tmp = array(strtoupper($value['category']), (int)$value['total']); 
             array_push($chart0, $tmp);
         }
 
@@ -95,7 +95,7 @@ class BookingRepository extends ServiceEntityRepository
         $c1 = $stmt->fetchAll();
         
         $chart1 = array();
-        $tmp = ['Status', 'Total'];
+        $tmp = ['Estado', 'Total'];
         array_push($chart1, $tmp);
         
         foreach ($c1 as $key => $value) {
@@ -131,23 +131,23 @@ class BookingRepository extends ServiceEntityRepository
 
 
         $m_s = array();
-        array_push($m_s, ['Status', 'Total']);
+        array_push($m_s, ['Estado', 'Total']);
         
         foreach ($month_b_status->execute() as $key => $value)
             array_push($m_s,[strtoupper($value['status']), (int)$value['count']]);
         
         $m_t = array();
-        array_push($m_t, ['Type', 'Total']);
+        array_push($m_t, ['Tipo', 'Total']);
         
         foreach ($month_person_types->execute() as $key => $value){
             if($key == 'adult')
-                array_push($m_t, ['ADULTS', (int)$value['adult']]);
+                array_push($m_t, ['ADULTO', (int)$value['adult']]);
             
             if($key == 'children')
-                array_push($m_t, ['CHILDREN', (int)$value['children']]);
+                array_push($m_t, ['CRIANÇA', (int)$value['children']]);
             
             if($key =='baby')
-                array_push($m_t, ['BABY', (int)$value['baby']]);
+                array_push($m_t, ['BÉBÉ', (int)$value['baby']]);
         }
 
          return array(

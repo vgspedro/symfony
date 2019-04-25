@@ -159,17 +159,67 @@ div.dataTables_length select {height: 50px}
 <script src="{{ asset('js/ui.datepicker-pt-BR.js') }}"></script>
 <script>
 
-var table=''
-var index = 0
-$( ".see-pass" ).hover(
-  function() {
-    $('input[name="pass"]').addClass('w3-hide').next().removeClass('w3-hide')
-  },
-  function() {
-    $('input[name="pass"]').removeClass('w3-hide').next().addClass('w3-hide')
-  }
-)
 
+tablebooking = [0, 9, 11, 12, 14, 15]
+
+var table = ''
+var index = 0
+
+  $(function(){
+
+    $( ".see-pass" ).hover(
+    function() {
+      $('input[name="pass"]').addClass('w3-hide').next().removeClass('w3-hide')
+    },
+    function() {
+      $('input[name="pass"]').removeClass('w3-hide').next().addClass('w3-hide')
+    })
+
+    $("#get-card-data").trigger('reset')
+
+    $('#startDate').datepicker({
+      language:'pt-BR',
+      format: 'dd/mm/yyyy',
+      weekStart: 1,
+      todayHighlight: true,
+      autoclose: true,
+    }).on("changeDate",function (e) {
+      $('#endDate').datepicker("setStartDate", e.date)
+    })
+
+    $('#endDate').datepicker({
+      language:'pt-BR',
+      format: 'dd/mm/yyyy',
+      todayHighlight: true,
+      weekStart: 1,
+      autoclose: true
+    }).on("changeDate",function (e) {
+     $('#startDate').datepicker("setEndDate", e.date)
+    })
+
+/*
+    $(document).on('click','.buttons-columnVisibility',function(){
+      tablebooking = []
+      $('.buttons-columnVisibility').each(function( index ){
+        if(!$(this).hasClass('active'))
+          tablebooking.push(index)
+      })
+      localStorage.setItem("tablebooking", JSON.stringify(tablebooking))
+      bookingstored = tablebooking
+    })
+  */
+
+  })
+
+/*
+  if(!localStorage.getItem("tablebooking") ){
+    localStorage.setItem("tablebooking", JSON.stringify(tablebooking))
+    bookingstored = JSON.parse(localStorage.getItem("tablebooking"))
+  }
+  else{
+    bookingstored = JSON.parse(localStorage.getItem("tablebooking"))
+}
+*/
 
 /*MODAL TO USER GET CREDIT CARD INFO */
 function modalToCardData(id){
@@ -224,43 +274,10 @@ function getCardData(){
   }, 500)
 }
 
-
-$(function(){$("#get-card-data").trigger('reset')})
-
   function clearBookSearch(){
     $('#startDate, #endDate').datepicker('clearDates')
   }
 
-  $(function(){
-    jQuery('#startDate').datepicker({
-      language:'pt-BR',
-      format: 'dd/mm/yyyy',
-      weekStart: 1,
-      todayHighlight: true,
-      autoclose: true,
-    }).on("changeDate",function (e) {
-      jQuery('#endDate').datepicker("setStartDate", e.date)
-    })
-
-    jQuery('#endDate').datepicker({
-      language:'pt-BR',
-      format: 'dd/mm/yyyy',
-      todayHighlight: true,
-      weekStart: 1,
-      autoclose: true
-    }).on("changeDate",function (e) {
-      jQuery('#startDate').datepicker("setEndDate", e.date)
-    })
-
-  tablebooking = [0, 9 , 11, 12, 14, 15]
-
-  if(!localStorage.getItem("tablebooking") ){
-    localStorage.setItem("tablebooking", JSON.stringify(tablebooking))
-    bookingstored = JSON.parse(localStorage.getItem("tablebooking"))
-  }
-  else
-    bookingstored = JSON.parse(localStorage.getItem("tablebooking"))
-  })
 
   function searchValue(){
   my_total = 0
