@@ -505,7 +505,7 @@ function checkOut(){
           sessionStorage.clear()
           $('.icon-unknown').removeClass('w3-hide')
         }
-        else if (data.status == 0){
+        else if (data.status == 0 || data.status == 2){
           for(k = 0; k<data.data.length;k++)
             $('.'+data.data[k]).removeClass('w3-hide')
           $('#modal-info').show()
