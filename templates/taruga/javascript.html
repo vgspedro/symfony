@@ -307,7 +307,7 @@ function getAvailable(){
       data:dataValue,
       cache:false,
       success: function(data){
-        console.log(data)
+        //console.log(data)
           $('.w3-overlay, #loader-cont').hide()
 
           //user required fields messages 
@@ -365,13 +365,10 @@ function getAvailable(){
       else{
         $('#modal-check').show()
       }
-    
     },
     error:function(data){
-      $('.w3-overlay').hide()
-      $('#info-client').show()                
-      $('#info-client-head').removeClass('w3-green amber').addClass('w3-red').html('<span onclick="$(\'#info-client\').hide()" class="w3-button w3-display-topright w3-large"><i class="fa fa-times"></i></span><h1><i class="fa fa-exclamation-triangle"></i> error</h1>')
-        $('#client-txt').html($(".WIFIERROR").text())
+      $("#myOverlay, #loader-cont").hide()
+      $('#modal-error').show()
     }
   })
 }, 500)
@@ -412,7 +409,7 @@ function changeEventGetHour(v){
 function saveModalEvents(){
 
   userDate = $('#get-available-datetime input[name=date]').val()
-  userTime= $('#get-available-datetime select[name=time] option:selected').text();
+  userTime= $('#get-available-datetime select[name=time] option:selected').text()
   event = $('#get-available-datetime select[name=time]').val()
 
   $('.required').addClass('w3-hide')
@@ -493,7 +490,7 @@ function checkOut(){
       data: $('#get-available').serialize()+'&evt='+sessionStorage.getItem('userEvent'),
       success: function(data){
         
-        console.log(data)
+        //console.log(data)
 
         $("#myOverlay, #loader-cont").hide()
         if (data.status == 1){
