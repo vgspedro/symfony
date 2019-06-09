@@ -29,7 +29,7 @@ use Inacho\CreditCard;
 class HomeController extends AbstractController
 {
     /*set expiration on home page 15 minutes*/
-    private $expiration = 90000;
+    private $expiration = 900;
 
     private $session;
     
@@ -40,6 +40,9 @@ class HomeController extends AbstractController
     
     public function html(Request $request, MoneyFormatter $moneyFormatter)
     {   
+        //remove the session start_time
+        $this->session->remove('start_time');
+
         $id = !$request->query->get('id') ? 'home': $request->query->get('id');
         $em = $this->getDoctrine()->getManager();
         $ua = $this->getBrowser();
@@ -161,11 +164,25 @@ class HomeController extends AbstractController
             );
     }
 
+
     public function setBooking(Request $request, MoneyFormatter $moneyFormatter, \Swift_Mailer $mailer){
-                    
+
         $err = array();
-        $this->session->get('_locale')->getName();
+        //$this->session->get('_locale')->getName();
         $em = $this->getDoctrine()->getManager();
+
+        if($this->getExpirationTime($request) == 1){ 
+            $err[] = 'SESSION_END';
+            $response = array(
+                'status' => 3,
+                'message' => 'session_end',
+                'data' => $err,
+                'mail' => null,
+                'locale' => $this->session->get('_locale')->getName(),
+                'expiration' => 1
+            );
+            return new JsonResponse($response);
+        }
         
         //IF FIELDS IS NULL PUT IN ARRAY AND SEND BACK TO USER
         $request->request->get('name') ? $name = $request->request->get('name') : $err[] = 'NAME';
@@ -182,6 +199,7 @@ class HomeController extends AbstractController
             $request->request->get('date_card') ? $date_card = $request->request->get('date_card') : $err[] = 'CREDIT_CARD_DATE';
             $request->request->get('card_nr') ? $card_nr = $request->request->get('card_nr') : $err[] = 'CREDIT_CARD_NR';
         }
+
         if($err){
             $response = array(
                 'status' => 0,
@@ -189,7 +207,7 @@ class HomeController extends AbstractController
                 'data' => $err,
                 'mail' => null,
                 'locale' => $this->session->get('_locale')->getName(),
-                'expiration' => $this->getExpirationTime()
+                'expiration' => 0
             );
             return new JsonResponse($response);
         }
@@ -208,7 +226,7 @@ class HomeController extends AbstractController
                 'data' => $err,
                 'mail' => null,
                 'locale' => $this->session->get('_locale')->getName(),
-                'expiration' => $this->getExpirationTime()
+                'expiration' => 0
             );
             return new JsonResponse($response);
         }
@@ -218,8 +236,18 @@ class HomeController extends AbstractController
         $locales = $em->getRepository(Locales::class)->findOneBy(['name' => $locale]);
         
         if(!$locales)
-            throw new Exception("Error Processing Request Locales", 1);
-        
+            #throw new Exception("Error Processing Request Locales", 1);
+            $err[] = 'OTHER_BUY_IT';
+            $response = array(
+                'status' => 0,
+                'message' => 'no_vacancy_3',
+                'data' => $err,
+                'mail' => null,
+                'locale' => $this->session->get('_locale')->getName(),
+                'expiration' => 0
+            );
+
+
         $em->getConnection()->beginTransaction();
         $available = $em->getRepository(Available::class)->find($userEvent->event);
           
@@ -231,11 +259,12 @@ class HomeController extends AbstractController
                 'message' => 'no_vacancy_1',
                 'data' => $err,
                 'mail' => null,
-                'locale' => $this->session->get('_locale')->getName()
+                'locale' => $this->session->get('_locale')->getName(),
+                'expiration' => 0
             );
             return new JsonResponse($response);
         }
-        
+
         try {           
             $em->lock($available, LockMode::PESSIMISTIC_WRITE);
     
@@ -259,7 +288,8 @@ class HomeController extends AbstractController
                     'message' => 'no_vacancy_1',
                     'data' => $err,
                     'mail' => null,
-                    'locale' => $this->session->get('_locale')->getName()
+                    'locale' => $this->session->get('_locale')->getName(),
+                    'expiration' => 0
                 );
                 return new JsonResponse($response);
             }
@@ -286,7 +316,8 @@ class HomeController extends AbstractController
                     'message' => 'warranty payment set but no data to db',
                     'data' => $err,
                     'mail' => null,
-                    'locale' => $this->session->get('_locale')->getName()
+                    'locale' => $this->session->get('_locale')->getName(),
+                    'expiration' => 0
                 );
                 return new JsonResponse($response);
             }
@@ -314,29 +345,37 @@ class HomeController extends AbstractController
             //echo $e->getMessage();
             $em->getConnection()->rollBack();
             
-            throw $e;
+            //throw $e;
               $err[] = 'OTHER_BUY_IT';
                 $response = array(
                     'status' => 0,
                     'message' => 'no_vacancy_2',
                     'data' => $err,
                     'mail' => null,
-                    'locale' => $this->session->get('_locale')->getName()
+                    'locale' => $this->session->get('_locale')->getName(),
+                    'expiration' => 0
                 );
                 return new JsonResponse($response);
         }
         $send = $this->sendEmail($mailer, $booking, $request->getHost());
+
+        //remove the session start_time
+        $this->session->remove('start_time');
         
         $response = array(
             'status' => 1,
             'message' => 'all valid',
             'data' =>  $booking->getId(),
             'mail' => $send,
-            'locale' => $locales->getName());
+            'locale' => $locales->getName(),
+            'expiration' => 0
+            );
         
         return new JsonResponse($response);
         }
     }
+
+
 
     private function sendEmail(\Swift_Mailer $mailer, Booking $booking, $domain){
         $em = $this->getDoctrine()->getManager();
@@ -425,8 +464,18 @@ class HomeController extends AbstractController
         return $invalid;
     }
 
-    private function getExpirationTime() {
-        return $this->expiration;
+    //CHECK IF USER IS ON INTERVAL OF SUBMIT BOOKING ORDER 
+    private function getExpirationTime($request) {
+
+        $expired = 0;
+
+        if(!$this->session->get('start_time'))
+            $this->session->set('start_time', $request->server->get('REQUEST_TIME'));
+
+        if($request->server->get('REQUEST_TIME') > $this->session->get('start_time') + $this->expiration)
+            $expired = 1;
+
+        return $expired;
     }
 
     private function translateStatus($status, $language){

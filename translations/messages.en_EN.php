@@ -12,6 +12,9 @@ return array(
     'session' => 'Session timeout reached!!',
     'check' => 'Check',
     'session_info' => 'Please, refresh the page!',
+    'time_left' => 'Time left to finish your booking:',
+    'seconds' => 'seconds',
+
 
 'link' => array(
     'where_we_are'=>'Where we Are',

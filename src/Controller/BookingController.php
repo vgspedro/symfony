@@ -16,6 +16,8 @@ use App\Entity\Locales;
 class BookingController extends AbstractController
 {
 
+    private $session;
+
     public function __construct(SessionInterface $session)
     {
         $this->session = $session; 
@@ -33,7 +35,7 @@ class BookingController extends AbstractController
         $totalPax = (int)$baby + (int)$children + (int)$adult == 0 ? $err[] = 'ZERO' : (int)$baby + (int)$children + (int)$adult;
         if ((int)$adult < 1) $err[] = 'ZERO';
 
-        //user didnt fill teh necessary fields send back info
+        //user didnt fill the necessary fields send back info
         if ($err) {
             $response = array(
                 'status' => 0,
@@ -101,11 +103,15 @@ class BookingController extends AbstractController
             
             $minDate = $stockAvailable[0]['date'] >= $startDt->format('Y-m-d') ? $stockAvailable[0]['date'] : $startDt->format('Y-m-d') ;
 
+            //set the expiration time to purchase ticket
+            $this->session->set('start_time', $request->server->get('REQUEST_TIME'));
+
             $response = array(
             'status' => 1,
             'wp' => $category->getWarrantyPayment(),
             'message' => count($available),
             'max'=> null,
+            'expiration' => 900,
             'minDate' => $minDate,
             'available' => $stockAvailable,
             'locale' => $this->session->get('_locale')->getName()

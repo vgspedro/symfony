@@ -12,10 +12,14 @@ c_en=[]
 c_pt=[]
 
 {% for category in categories %}
+
   {% if category.no_stock == false %}
+
     c_en.push({id:{{category.id}},text:'{{category.nameEn|trim}}' })
     c_pt.push({id:{{category.id}},text:'{{category.namePt|trim}}' })
-{% endif %} 
+
+  {% endif %} 
+
 {% endfor %}
 
 window.addEventListener("load", function(){
@@ -180,6 +184,9 @@ function languages(local){
       $(".SUCCESS").text(data.success)
       $(".ORDER").text(data.order)
       $(".THANKYOU").text(data.thank_you)
+
+      $(".SECONDS").text(data.seconds)
+      $(".TIME_LEFT").text(data.time_left)
       
       $(".MESSAGE_TXT").text(data.part_seven.message)
       $(".NO_STOCK").text(data.part_seven.no_stock)
@@ -287,6 +294,8 @@ stockDate=[]
 
 function getAvailable(){
 
+//alert('f')
+
   var html = '';
   
   hours = ''
@@ -302,12 +311,12 @@ function getAvailable(){
 
   setTimeout(function(){
     $.ajax({  
-      url:'{{ path('index_available') }}',
+      url: '{{ path('index_available') }}',
       type: "POST",
-      data:dataValue,
-      cache:false,
+      data: dataValue,
+      cache: false,
       success: function(data){
-        //console.log(data)
+        console.log(data)
           $('.w3-overlay, #loader-cont').hide()
 
           //user required fields messages 
@@ -325,6 +334,9 @@ function getAvailable(){
           }
 
         else if (data.status == 1){
+          
+          timeDecrease(data.expiration)
+
         $('input[name=wp]').val(data.wp)
         stockDate = data.available
         date = []
@@ -480,7 +492,7 @@ function checkOut(){
   $('.required').addClass('w3-hide')
   $("#myOverlay, #loader-cont").show()
 
-  //console.log($('#get-available').serialize())
+  console.log($('#get-available').serialize())
 
   setTimeout(function(){
     $.ajax({ 
@@ -489,12 +501,18 @@ function checkOut(){
       cache: false,
       data: $('#get-available').serialize()+'&evt='+sessionStorage.getItem('userEvent'),
       success: function(data){
-        
-        //console.log(data)
+        console.log(data)
 
         $("#myOverlay, #loader-cont").hide()
-        if (data.status == 1){
+
+        //time of purchase reached 
+        if (data.status == 3)
+          $('#modal-check').show()
+
+        //sucess 
+        else if (data.status == 1){
           navigation('#reservas')
+          clearInterval(timer)
           $('#modal-success').show()
           $('.set-order-id').html(data.data)
           $('#get-available').trigger('reset')
@@ -502,12 +520,13 @@ function checkOut(){
           sessionStorage.clear()
           $('.icon-unknown').removeClass('w3-hide')
         }
+
+        //show what wetn wrong
         else if (data.status == 0 || data.status == 2){
           for(k = 0; k<data.data.length;k++)
             $('.'+data.data[k]).removeClass('w3-hide')
           $('#modal-info').show()
         }
-
         else{
           $('#modal-check').show()
         }
@@ -553,6 +572,32 @@ var cc = new Cleave('input[name=card_nr]', {
 
     }
 })
+
+
+timer =''
+
+function timeDecrease(v){
+
+  if (timer) clearInterval(timer)
+
+  timer = setInterval(function() {
+    
+    if (v == 0){
+      $('#modal-check').show()
+      clearInterval(timer)
+    }
+
+    $('.time_left').text(v)
+    
+    v--
+
+  }, 1000)
+
+
+
+}
+
+
 
 </script>
 

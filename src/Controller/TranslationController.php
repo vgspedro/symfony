@@ -49,6 +49,8 @@ class TranslationController extends AbstractController
         'session' => 'Sessão expirou!!',
         'check' => 'Verifique',
         'session_info' => 'Por favor, atualize a página!',
+        'time_left' => 'Tempo restante para finalizar a reserva:',
+        'seconds' => 'segundos',
 
     'link' => array(
         'where_we_are'=>'Onde Estamos',
@@ -224,6 +226,8 @@ array(
     'session' => 'Session timeout reached!!',
     'check' => 'Check',
     'session_info' => 'Please, refresh the page!',
+    'time_left' => 'Time left to finish your booking:',
+    'seconds' => 'seconds',
 
 'link' => array(
     'where_we_are'=>'Where we Are',
