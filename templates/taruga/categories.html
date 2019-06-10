@@ -21,14 +21,14 @@
           </p-->
           <div class="w3-display-container">
 
-<div class="w3-display-topleft w3-center w3-opa_city-min w3-ca_rd-4 w3-small" style="background: rgba(0, 0, 0, 0.6)">
-          <p class="w3-center w3-large w3-text-white" style="text-transform: uppercase;margin: 0px 8px">
-            <span class="TOUR_TXT1 PT bold">{{ category.namePt }}</span>
-            <span class="TOUR_TXT1 EN w3-hide bold">{{ category.nameEn }}</span>
-          </p>
-</div>
+          <div class="w3-display-topleft w3-center w3-opa_city-min w3-ca_rd-4 w3-small" style="background: rgba(0, 0, 0, 0.6)">
+            <h1 class="w3-center w3-large w3-text-white" style="text-transform: uppercase;margin: 0px 8px">
+              <span class="TOUR_TXT1 PT bold">{{ category.namePt }}</span>
+              <span class="TOUR_TXT1 EN w3-hide bold">{{ category.nameEn }}</span>
+            </h1>
+          </div>
 
-          <img class="w3-card-4" src="/upload/category/{{ category.image }}" onerror="this.src='/upload/category/no-image.png'" style="width:100%">
+          <img alt="{{ category.nameEn }}" class="w3-card-4" src="/upload/category/{{ category.image }}" onerror="this.src='/upload/category/no-image.png'" style="width:100%">
           <div class="w3-display-bottomright w3-center w3-opa_city-min w3-ca_rd-4 w3-small" style="margin:11px 8px">
             <span class="w3-tag w3-padding-small w3-white" style="text-transform: uppercase">Aprox: {{ category.duration}} Min.</span>
           </div>  
