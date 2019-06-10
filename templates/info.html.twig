@@ -12,20 +12,20 @@
  		<!-- Google / Search Engine Tags -->
         <meta itemprop="name" content="{{ company.metaDescription }}">
         <meta itemprop="description" content="{{ company.metaDescription }}">
-        <meta itemprop="image" content="">
+        <meta itemprop="image" content="{{ asset('upload/gallery/') }}{{company.logo}}">
         
         <!-- Facebook Meta Tags -->
         <meta property="og:url" content="{{ company.linkMyDomain }}">
         <meta property="og:type" content="website">
         <meta property="og:title" content="{{ company.metaDescription }}">
         <meta property="og:description" content="{{ company.metaDescription }}">
-        <meta property="og:image" content="">
+        <meta property="og:image" content="{{ asset('upload/gallery/') }}{{company.logo}}">
         
         <!-- Twitter Meta Tags -->
         <meta name="twitter:card" content="summary_large_image">
         <meta name="twitter:title" content="{{ company.metaDescription }}">
         <meta name="twitter:description" content="{{ company.metaDescription }}">
-        <meta name="twitter:image" content="">
+        <meta name="twitter:image" content="{{ asset('upload/gallery/') }}{{company.logo}}">
         {% include 'taruga/styles.html' %}
         		<!-- Global site tag (gtag.js) - Google Analytics -->
 		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-138976385-1"></script><script>
