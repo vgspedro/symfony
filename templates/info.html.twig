@@ -1,5 +1,9 @@
 <!DOCTYPE html>
-<html>
+
+{% set foo = locale |split('_') %}
+
+<html lang="{{ foo[0] }}" xml:lang="{{ foo[0] }}" xmlns="http://www.w3.org/1999/xhtml">
+
     <head>
  		<meta charset="UTF-8">
         <title>{{ company.metaDescription }}</title>

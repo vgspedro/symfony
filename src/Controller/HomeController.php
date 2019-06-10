@@ -47,7 +47,7 @@ class HomeController extends AbstractController
         $id = !$request->query->get('id') ? 'home': $request->query->get('id');
         $em = $this->getDoctrine()->getManager();
 
-        $locale = $request->query->get('current-local') ? $request->query->get('current-local') : $request->getLocale();
+        $locale = $request->query->get('current-local') ? $request->query->get('current-local') : $this->getBrownserLocale($request);
         
         $locale = $locale != 'pt_PT' ? 'en_EN' : 'pt_PT';
         $cS = array();
@@ -145,7 +145,9 @@ class HomeController extends AbstractController
         $em = $this->getDoctrine()->getManager();
         $warning = $em->getRepository(Warning::class)->find(10);
         $company = $em->getRepository(Company::class)->find(1);
-        $locale = $request->query->get('current-local') ? $request->query->get('current-local') : $request->getLocale();
+
+        $locale = $request->query->get('current-local') ? $request->query->get('current-local') : $this->getBrownserLocale($request);
+        
         $locale = $locale != 'pt_PT' ? 'en_EN' : 'pt_PT';
         $locales = $em->getRepository(Locales::class)->findAll();
         $gallery = $em->getRepository(Gallery::class)->findBy(['isActive' => 1],['namePt' => 'ASC']);
@@ -608,6 +610,19 @@ class HomeController extends AbstractController
         }
         
         return $platform; 
+
+    }
+
+
+    private function getBrownserLocale($request) 
+    { 
+        $u_agent = $request->headers->get('accept-language');
+        $locale = 'pt_PT';
+
+        if (!preg_match('/pt-PT/i', $u_agent))
+            $locale="en_EN";
+        
+        return $locale; 
 
     }
 
