@@ -2,11 +2,31 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>{{ company.name }}</title>
+        <title>{{ company.metaDescription }}</title>
  		<meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
 		<meta name="keywords" content="{{ company.metaKeywords }}">
  		<meta name="title" content="{{ company.metaDescription }}">
  		<meta name="description" content="{{ company.metaDescription }}">
+		<meta name="robots" content="index,follow">
+ 		
+ 		<!-- Google / Search Engine Tags -->
+        <meta itemprop="name" content="{{ company.metaDescription }}">
+        <meta itemprop="description" content="{{ company.metaDescription }}">
+        <meta itemprop="image" content="">
+        
+        <!-- Facebook Meta Tags -->
+        <meta property="og:url" content="{{ company.linkMyDomain }}">
+        <meta property="og:type" content="website">
+        <meta property="og:title" content="{{ company.metaDescription }}">
+        <meta property="og:description" content="{{ company.metaDescription }}">
+        <meta property="og:image" content="">
+        
+        <!-- Twitter Meta Tags -->
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" content="{{ company.metaDescription }}">
+        <meta name="twitter:description" content="{{ company.metaDescription }}">
+        <meta name="twitter:image" content="">
+
         <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
 		<link rel="stylesheet" href="{{ asset('css/bootstrap-datetimepicker.min.css') }}">
 		<link rel="stylesheet" href="{{ asset('css/w3.css') }}">

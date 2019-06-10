@@ -41,14 +41,13 @@ class HomeController extends AbstractController
     public function html(Request $request, MoneyFormatter $moneyFormatter)
     {   
         //remove the session start_time
+
         $this->session->remove('start_time');
 
         $id = !$request->query->get('id') ? 'home': $request->query->get('id');
         $em = $this->getDoctrine()->getManager();
-        $ua = $this->getBrowser();
-        
-        //$locale =  $ua['lang'];
-        $locale = $request->query->get('current-local') ? $request->query->get('current-local') : $ua['lang'];
+
+        $locale = $request->query->get('current-local') ? $request->query->get('current-local') : $request->getLocale();
         
         $locale = $locale != 'pt_PT' ? 'en_EN' : 'pt_PT';
         $cS = array();
@@ -127,7 +126,7 @@ class HomeController extends AbstractController
                 'colors'=> $this->color(),
                 'warning' => $warning,
                 'categories' => $cS,
-                'browser' => $ua,
+                'browser' => null,
                 'category' => $cH,
                 'galleries' => $gallery,
                 'locale' => $locale,
@@ -146,8 +145,7 @@ class HomeController extends AbstractController
         $em = $this->getDoctrine()->getManager();
         $warning = $em->getRepository(Warning::class)->find(10);
         $company = $em->getRepository(Company::class)->find(1);
-        $ua = $this->getBrowser();
-        $locale = $request->query->get('current-local') ? $request->query->get('current-local') : $ua['lang'];
+        $locale = $request->query->get('current-local') ? $request->query->get('current-local') : $request->getLocale();
         $locale = $locale != 'pt_PT' ? 'en_EN' : 'pt_PT';
         $locales = $em->getRepository(Locales::class)->findAll();
         $gallery = $em->getRepository(Gallery::class)->findBy(['isActive' => 1],['namePt' => 'ASC']);
@@ -516,120 +514,105 @@ class HomeController extends AbstractController
         );
     }
 
-    private function getBrowser() 
+ private function getOS($request) { 
+        $user_agent = $request->headers->get('user-agent');
+        $os_platform    =   "Unknown OS Platform";
+        $os_array       =   array(
+                                '/windows nt 6.3/i'     =>  'Windows 8.1',
+                                '/windows nt 6.2/i'     =>  'Windows 8',
+                                '/windows nt 6.1/i'     =>  'Windows 7',
+                                '/windows nt 6.0/i'     =>  'Windows Vista',
+                                '/windows nt 5.2/i'     =>  'Windows Server 2003/XP x64',
+                                '/windows nt 5.1/i'     =>  'Windows XP',
+                                '/windows xp/i'         =>  'Windows XP',
+                                '/windows nt 5.0/i'     =>  'Windows 2000',
+                                '/windows me/i'         =>  'Windows ME',
+                                '/win98/i'              =>  'Windows 98',
+                                '/win95/i'              =>  'Windows 95',
+                                '/win16/i'              =>  'Windows 3.11',
+                                '/macintosh|mac os x/i' =>  'Mac OS X',
+                                '/mac_powerpc/i'        =>  'Mac OS 9',
+                                '/linux/i'              =>  'Linux',
+                                '/ubuntu/i'             =>  'Ubuntu',
+                                '/iphone/i'             =>  'iPhone',
+                                '/ipod/i'               =>  'iPod',
+                                '/ipad/i'               =>  'iPad',
+                                '/android/i'            =>  'Android',
+                                '/blackberry/i'         =>  'BlackBerry',
+                                '/webos/i'              =>  'Mobile'
+                            );
+        foreach ($os_array as $regex => $value) { 
+            if (preg_match($regex, $user_agent)) {
+                $os_platform    =   $value;
+            }
+        }   
+        return $os_platform;
+    }
+
+    private function getBrowser($request) {
+        $user_agent = $request->headers->get('user-agent');
+        $browser        =   "Unknown Browser";
+        
+        $browser_array  =   array(
+                                '/msie|trident/i'       =>  'Internet Explorer',
+                                '/firefox/i'    =>  'Firefox',
+                                '/safari/i'     =>  'Safari',
+                                '/chrome/i'     =>  'Chrome',
+                                '/opera/i'      =>  'Opera',
+                                '/netscape/i'   =>  'Netscape',
+                                '/maxthon/i'    =>  'Maxthon',
+                                '/konqueror/i'  =>  'Konqueror',
+                                '/mobile/i'     =>  'Handheld Browser'
+                            );
+        foreach ($browser_array as $regex => $value) { 
+            if (preg_match($regex, $user_agent)) {
+                $browser    =   $value;
+            }
+        }
+        return $browser;
+    }
+
+
+    private function getPlatform($request) 
     { 
-        $u_agent = $_SERVER['HTTP_USER_AGENT']; 
-        $bname = 'Unknown';
+        $u_agent = $request->headers->get('user-agent');
         $platform = 'Unknown';
-        $version= "";
         //First get the platform?
         if (preg_match('/linux/i', $u_agent)) {
-            $platform = 'linux';
+            $platform = 'Linux';
         }
         elseif (preg_match('/macintosh|mac os x/i', $u_agent)) {
-            $platform = 'mac';
+            $platform = 'Mac';
         }
         elseif (preg_match('/windows|win32/i', $u_agent)) {
-            $platform = 'windows';
+            $platform = 'Windows';
+        }
+    
+        return $platform; 
+    }
+
+
+    private function getVersion($request) 
+    { 
+        $u_agent = $request->headers->get('user-agent');
+        $platform = 'Unknown';
+        $pf ='';
+        //First get the platform?
+        if (preg_match('/Android/i', $u_agent))
+            $pf = explode('Android ', $u_agent);
+        elseif (preg_match('/Windows/i', $u_agent))
+            $pf = explode('Windows ', $u_agent);
+        if ($pf){
+            $pf = explode(';', $pf[1]);
+            $platform = $pf[0];     
         }
         
-        $os_platform  = "Unknown OS Platform";
-         $os_array     = array(
-                          '/windows nt 10/i'      =>  'Windows 10',
-                          '/windows nt 6.3/i'     =>  'Windows 8.1',
-                          '/windows nt 6.2/i'     =>  'Windows 8',
-                          '/windows nt 6.1/i'     =>  'Windows 7',
-                          '/windows nt 6.0/i'     =>  'Windows Vista',
-                          '/windows nt 5.2/i'     =>  'Windows Server 2003/XP x64',
-                          '/windows nt 5.1/i'     =>  'Windows XP',
-                          '/windows xp/i'         =>  'Windows XP',
-                          '/windows nt 5.0/i'     =>  'Windows 2000',
-                          '/windows me/i'         =>  'Windows ME',
-                          '/win98/i'              =>  'Windows 98',
-                          '/win95/i'              =>  'Windows 95',
-                          '/win16/i'              =>  'Windows 3.11',
-                          '/macintosh|mac os x/i' =>  'Mac OS X',
-                          '/mac_powerpc/i'        =>  'Mac OS 9',
-                          '/linux/i'              =>  'Linux',
-                          '/ubuntu/i'             =>  'Ubuntu',
-                          '/iphone/i'             =>  'iPhone',
-                          '/ipod/i'               =>  'iPod',
-                          '/ipad/i'               =>  'iPad',
-                          '/android/i'            =>  'Android',
-                          '/blackberry/i'         =>  'BlackBerry',
-                          '/webos/i'              =>  'Mobile'
-                    );
-        foreach ($os_array as $regex => $value)
-         if (preg_match($regex, $u_agent))
-                $os_platform = $value;
-        // Next get the name of the useragent yes seperately and for good reason
-        if(preg_match('/MSIE/i',$u_agent) && !preg_match('/Opera/i',$u_agent)) 
-        { 
-            $bname = 'Internet Explorer'; 
-            $ub = "MSIE"; 
-        } 
-        elseif(preg_match('/Firefox/i',$u_agent)) 
-        { 
-            $bname = 'Mozilla Firefox'; 
-            $ub = "Firefox"; 
-        } 
-        elseif(preg_match('/Chrome/i',$u_agent)) 
-        { 
-            $bname = 'Google Chrome'; 
-            $ub = "Chrome"; 
-        } 
-        elseif(preg_match('/Safari/i',$u_agent)) 
-        { 
-            $bname = 'Apple Safari'; 
-            $ub = "Safari"; 
-        } 
-        elseif(preg_match('/Opera/i',$u_agent)) 
-        { 
-            $bname = 'Opera'; 
-            $ub = "Opera"; 
-        } 
-        elseif(preg_match('/Netscape/i',$u_agent)) 
-        { 
-            $bname = 'Netscape'; 
-            $ub = "Netscape"; 
-        } 
-        
-        $lang = explode(',',$_SERVER['HTTP_ACCEPT_LANGUAGE']);
-        $current_country = '';
-        $current_city = '';
-        // if the link is down http://api.hostip.info/get_html.php bullshit happens, how to solve it.....
-        
-        $html = '';
-        if ($html)
-        {
-            file_get_contents('http://api.hostip.info/get_html.php?ip='.$_SERVER['REMOTE_ADDR']);
-            $country = explode('Country: ',$country);
-            $city = explode('City: ',$country[1]);
-            $ip = explode('IP: ',$city[1]);
-            $location = explode('City: ',$country[1]);
-            $current_city = $ip[0];
-            $current_country = $location[0];
-        
-        $response =  array(
-            'name'      => $bname,
-            'os'        => ucfirst($platform),
-            'platform'  => ucfirst($os_platform),
-            'lang'      => str_replace("-","_",$lang[0]),
-            'country'   => $current_country,
-            'city'      => $current_city,
-            'ip'        => $_SERVER['REMOTE_ADDR']
-        );
-        }
-        else $response =  array(
-            'name'      => $bname,
-            'os'        => ucfirst($platform),
-            'platform'  => ucfirst($os_platform),
-            'lang'      => str_replace("-","_",$lang[0]),
-            'country'   => '-/-',
-            'city'      => '-/-',
-            'ip'        => $_SERVER['REMOTE_ADDR']
-        );
-        return $response;
-    } 
+        return $platform; 
+
+    }
+
+
 }
+
+
 ?>
