@@ -345,9 +345,10 @@ function getAvailable(){
         for (var k in data.available)
           date.push(data.available[k].datetime)
           
-          if($('.order_available').data("DateTimePicker")) 
-            $('.order_available').data("DateTimePicker").date(null) 
-            $('.get-dates').val('') 
+        if($('.order_available').data("DateTimePicker")) 
+            $('.order_available').data("DateTimePicker").date(null)
+
+          $('.get-dates').val('') 
             $('#modal-available-dates').show()
             $('.no-hours').addClass('w3-hide')
             $('.w3-overlay').hide()

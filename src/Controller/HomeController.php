@@ -47,9 +47,17 @@ class HomeController extends AbstractController
         $id = !$request->query->get('id') ? 'home': $request->query->get('id');
         $em = $this->getDoctrine()->getManager();
 
-        $locale = $request->query->get('current-local') ? $request->query->get('current-local') : $this->getBrownserLocale($request);
-        
-        $locale = $locale != 'pt_PT' ? 'en_EN' : 'pt_PT';
+        $locale = $this->getBrownserLocale($request);
+
+        if ($this->session->get('_locale')){
+            if($this->session->get('_locale')->getName())
+                $locale = $this->session->get('_locale')->getName();
+
+        }
+
+        //$locale = $request->query->get('current-local') ? $request->query->get('current-local') : $this->getBrownserLocale($request);
+        //$locale = $locale != 'pt_PT' ? 'en_EN' : 'pt_PT';
+
         $cS = array();
         $locales = $em->getRepository(Locales::class)->findAll();
         $warning = $em->getRepository(Warning::class)->find(10);
@@ -73,7 +81,7 @@ class HomeController extends AbstractController
                 
             for($t = 0; $t<count($ord); $t++) {
                 if($ord[$t] >= $now->format('U'))
-                $flag = true;
+                    $flag = true;
             }
         }    
         
@@ -146,9 +154,17 @@ class HomeController extends AbstractController
         $warning = $em->getRepository(Warning::class)->find(10);
         $company = $em->getRepository(Company::class)->find(1);
 
-        $locale = $request->query->get('current-local') ? $request->query->get('current-local') : $this->getBrownserLocale($request);
-        
-        $locale = $locale != 'pt_PT' ? 'en_EN' : 'pt_PT';
+        //$locale = $request->query->get('current-local') ? $request->query->get('current-local') : $this->getBrownserLocale($request);
+        //$locale = $locale != 'pt_PT' ? 'en_EN' : 'pt_PT';
+
+        $locale = $this->getBrownserLocale($request);
+
+        if ($this->session->get('_locale')){
+            if($this->session->get('_locale')->getName())
+                $locale = $this->session->get('_locale')->getName();
+
+        }
+
         $locales = $em->getRepository(Locales::class)->findAll();
         $gallery = $em->getRepository(Gallery::class)->findBy(['isActive' => 1],['namePt' => 'ASC']);
         return $this->render('info.html.twig', 
@@ -168,8 +184,15 @@ class HomeController extends AbstractController
     public function setBooking(Request $request, MoneyFormatter $moneyFormatter, \Swift_Mailer $mailer){
 
         $err = array();
-        //$this->session->get('_locale')->getName();
+
         $em = $this->getDoctrine()->getManager();
+
+        if ($this->session->get('_locale')){
+            if($this->session->get('_locale')->getName())
+                $locale = $this->session->get('_locale')->getName();
+        }
+        else
+            $locale = $this->getBrownserLocale($request);
 
         if($this->getExpirationTime($request) == 1){ 
             $err[] = 'SESSION_END';
@@ -178,7 +201,7 @@ class HomeController extends AbstractController
                 'message' => 'session_end',
                 'data' => $err,
                 'mail' => null,
-                'locale' => $this->session->get('_locale')->getName(),
+                'locale' => $locale,
                 'expiration' => 1
             );
             return new JsonResponse($response);
@@ -206,7 +229,7 @@ class HomeController extends AbstractController
                 'message' => 'fields empty',
                 'data' => $err,
                 'mail' => null,
-                'locale' => $this->session->get('_locale')->getName(),
+                'locale' => $locale,
                 'expiration' => 0
             );
             return new JsonResponse($response);
@@ -243,7 +266,7 @@ class HomeController extends AbstractController
                 'message' => 'no_vacancy_3',
                 'data' => $err,
                 'mail' => null,
-                'locale' => $this->session->get('_locale')->getName(),
+                'locale' => $locale,
                 'expiration' => 0
             );
 
@@ -259,7 +282,7 @@ class HomeController extends AbstractController
                 'message' => 'no_vacancy_1',
                 'data' => $err,
                 'mail' => null,
-                'locale' => $this->session->get('_locale')->getName(),
+                'locale' => $locale,
                 'expiration' => 0
             );
             return new JsonResponse($response);
@@ -288,7 +311,7 @@ class HomeController extends AbstractController
                     'message' => 'no_vacancy_1',
                     'data' => $err,
                     'mail' => null,
-                    'locale' => $this->session->get('_locale')->getName(),
+                    'locale' => $locale,
                     'expiration' => 0
                 );
                 return new JsonResponse($response);
@@ -316,7 +339,7 @@ class HomeController extends AbstractController
                     'message' => 'warranty payment set but no data to db',
                     'data' => $err,
                     'mail' => null,
-                    'locale' => $this->session->get('_locale')->getName(),
+                    'locale' => $locale,
                     'expiration' => 0
                 );
                 return new JsonResponse($response);
@@ -352,7 +375,7 @@ class HomeController extends AbstractController
                     'message' => 'no_vacancy_2',
                     'data' => $err,
                     'mail' => null,
-                    'locale' => $this->session->get('_locale')->getName(),
+                    'locale' => $locale,
                     'expiration' => 0
                 );
                 return new JsonResponse($response);
@@ -404,7 +427,7 @@ class HomeController extends AbstractController
                         'id' => $booking->getId(),
                         'username' => $client->getUsername(),
                         'email' => $client->getEmail(),
-                        'status' => $this->translateStatus('PENDING', $locale ->getName()),
+                        'status' => $this->translateStatus('PENDING', $locale->getName()),
                         'tour' => $locale->getName() == 'pt_PT' ? $category->getNamePt() : $category->getNameEn(),
                         'date' => $booking->getAvailable()->getDatetimeStart()->format('d/m/Y'),
                         'hour' =>  $booking->getAvailable()->getDatetimeStart()->format('H:i'),

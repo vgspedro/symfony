@@ -27,12 +27,27 @@ class BookingController extends AbstractController
     {
 
         $err = array();
+        
         $totalPax = 0;
+/*
+        if ($this->session->get('_locale')){
+            if($this->session->get('_locale')->getName())
+               $locale = $this->session->get('_locale')->getName();
+
+        }
+        else
+           $locale = $this->getBrownserLocale($request);
+*/        
         $categoryId = $request->request->get('category') ? $request->request->get('category') : $err[] = 'TOUR';
+        
         $adult = $request->request->get('adult') || $request->request->get('adult') === "0" ? $request->request->get('adult') : $err[] = 'ADULT';
+        
         $children = $request->request->get('children') || $request->request->get('children') === "0" ? $request->request->get('children') : $err[] = 'CHILDREN';
+        
         $baby = $request->request->get('baby') || $request->request->get('baby') === "0" ? $request->request->get('baby') :  $err[] = 'BABY';
+        
         $totalPax = (int)$baby + (int)$children + (int)$adult == 0 ? $err[] = 'ZERO' : (int)$baby + (int)$children + (int)$adult;
+        
         if ((int)$adult < 1) $err[] = 'ZERO';
 
         //user didnt fill the necessary fields send back info
@@ -42,7 +57,7 @@ class BookingController extends AbstractController
                 'message' => $err,
                 'minDate' => null,
                 'available' => null,
-                'locale' => $this->session->get('_locale')->getName()
+                //'locale' => $locale
             );
             return new JsonResponse($response);
         }
@@ -63,7 +78,7 @@ class BookingController extends AbstractController
                 'max' => null,
                 'minDate' => null,
                 'available' => null,
-                'locale' => $this->session->get('_locale')->getName()
+                //'locale' => $locale
             );
             return new JsonResponse($response);
         }
@@ -81,7 +96,7 @@ class BookingController extends AbstractController
             'max' => '(Máx: '.$category->getAvailability().' Pax)',
             'minDate' => null,
             'available' => null,
-            'locale' => $this->session->get('_locale')->getName()
+            //'locale' => $locale
             );
 
         return new JsonResponse($response);
@@ -114,7 +129,7 @@ class BookingController extends AbstractController
             'expiration' => 900,
             'minDate' => $minDate,
             'available' => $stockAvailable,
-            'locale' => $this->session->get('_locale')->getName()
+            //'locale' => $locale
             );
         }
 
@@ -126,10 +141,24 @@ class BookingController extends AbstractController
             'message' => 'NO_STOCK',
             'minDate' => null,
             'available' => null,
-            'locale' => $this->session->get('_locale')->getName()
+            //'locale' => $locale
             );
 
         return new JsonResponse($response);
     }
+
+/*
+    private function getBrownserLocale($request) 
+    { 
+        $u_agent = $request->headers->get('accept-language');
+        $locale = 'pt_PT';
+
+        if (!preg_match('/pt-PT/i', $u_agent))
+            $locale="en_EN";
+        
+        return $locale; 
+
+    }
+*/
 
  }
