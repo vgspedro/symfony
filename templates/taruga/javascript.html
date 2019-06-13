@@ -37,6 +37,8 @@ window.addEventListener("load", function(){
 
 function categoriesBuild(f){
 
+  var value = $('select[name=category]').val()
+
   var html = '<option class="TOUR w3-opacity" value=""></option>'
 
   if (f == 'en_EN')
@@ -46,7 +48,8 @@ function categoriesBuild(f){
     for (var k in c_pt)
       html +='<option value="'+c_pt[k].id+'">'+c_pt[k].text+'</option>'
 
-  $('select[name=category]').html(html)
+  $('select[name=category]').html(html).val(value)
+
 
 }
 
@@ -295,11 +298,9 @@ stockDate=[]
 
 function getAvailable(){
 
-//alert('f')
+  var html = ''
+  var hours = ''
 
-  var html = '';
-  
-  hours = ''
   $('.at-last, .required').addClass('w3-hide')
   $('.get-dates, #booking_date, #booking_hour').val('')
   $('.order_available').datetimepicker()
@@ -318,21 +319,21 @@ function getAvailable(){
       cache: false,
       success: function(data){
         console.log(data)
-          $('.w3-overlay, #loader-cont').hide()
+        $('.w3-overlay, #loader-cont').hide()
 
-          //user required fields messages 
-          if (data.status == 0){
+        //user required fields messages 
+        if (data.status == 0){
             for(k = 0; k < data.message.length; k++ )
               $('.'+data.message[k]).removeClass('w3-hide')
             $('#modal-info').show()
           }
 
-          //no stock available 
-          else if (data.status == 2){
-            $('.'+data.message).removeClass('w3-hide')
-            data.max ? $('.MAX').html(data.max) : $('.MAX').empty() 
-            $('#modal-no-stock').show()
-          }
+        //no stock available 
+        else if (data.status == 2){
+          $('.'+data.message).removeClass('w3-hide')
+          data.max ? $('.MAX').html(data.max) : $('.MAX').empty() 
+          $('#modal-no-stock').show()
+        }
 
         else if (data.status == 1){
           
@@ -346,36 +347,36 @@ function getAvailable(){
           date.push(data.available[k].datetime)
           
         if($('.order_available').data("DateTimePicker")) 
-            $('.order_available').data("DateTimePicker").date(null)
+          $('.order_available').data("DateTimePicker").date(null)
 
-          $('.get-dates').val('') 
-            $('#modal-available-dates').show()
-            $('.no-hours').addClass('w3-hide')
-            $('.w3-overlay').hide()
-            $('.order_available').data('DateTimePicker').destroy() 
-            $('.order_available').datetimepicker({
-              format : 'DD/MM/YYYY',
-              ignoreReadonly: true,
-              inline: true,
-              sideBySide: false,
-              icons: {
-                time: "fa-3x fa fa-clock-o",
-                date: "fa-3x fa fa-calendar",
-                up: "fa-3x fa fa-arrow-up",
-                down: "fa-3x fa fa-arrow-down",
-                left: "fa-3x fa fa-arrow-left",
-                right: "fa-3x fa fa-arrow-right"
-              },
-              keepOpen: true,
-              //debug:true,
-              enabledDates: date,
-              locale: data.locale,
-              minDate: data.minDate
-            })
+        $('.get-dates').val('') 
+        $('#modal-available-dates').show()
+        $('.no-hours').addClass('w3-hide')
+        $('.w3-overlay').hide()
+        $('.order_available').data('DateTimePicker').destroy() 
+        $('.order_available').datetimepicker({
+          format : 'DD/MM/YYYY',
+          ignoreReadonly: true,
+          inline: true,
+          sideBySide: false,
+          icons: {
+            time: "fa-3x fa fa-clock-o",
+            date: "fa-3x fa fa-calendar",
+            up: "fa-3x fa fa-arrow-up",
+            down: "fa-3x fa fa-arrow-down",
+            left: "fa-3x fa fa-arrow-left",
+            right: "fa-3x fa fa-arrow-right"
+          },
+          keepOpen: true,
+          //debug:true,
+          enabledDates: date,
+          locale: data.locale,
+          minDate: data.minDate
+        })
+        
         $('.order_available').data("DateTimePicker").date(null)
         $('.get-dates').val('')
       }
-      
       else{
         $('#modal-check').show()
       }
@@ -390,18 +391,20 @@ function getAvailable(){
 
 
 $('.order_available').on('dp.change', function(e){
-   var options= ''
-    var complete =''
-    $('.get-dates').val(moment(e.date).format("DD/MM/YYYY"))
-    d = new RegExp(moment(e.date).format("YYYY-MM-DD"), 'g')
-    for (i=0 ; i<stockDate.length; i++){   
-         r = stockDate[i].datetime.match(d)
-         if(r){
-            complete = stockDate[i].datetime.split(" ")
-            options += '<option value="'+stockDate[i].id+'">'+complete[1]+'</option>'
-         }
+  var options= ''
+  var complete =''
+  $('.get-dates').val(moment(e.date).format("DD/MM/YYYY"))
+  d = new RegExp(moment(e.date).format("YYYY-MM-DD"), 'g')
+  
+  //for (i=0 ; i<stockDate.length; i++){
+    for (var k in stockDate){
+    r = stockDate[k].datetime.match(d)
+    if(r){
+      complete = stockDate[k].datetime.split(" ")
+      options += '<option value="'+stockDate[k].id+'">'+complete[1]+'</option>'
     }
-    $('.set-hours').html(options)
+  }
+  $('.set-hours').html(options)
 })
 
 
@@ -494,7 +497,7 @@ function checkOut(){
   $('.required').addClass('w3-hide')
   $("#myOverlay, #loader-cont").show()
 
-  console.log($('#get-available').serialize())
+  //console.log($('#get-available').serialize())
 
   setTimeout(function(){
     $.ajax({ 
@@ -503,7 +506,7 @@ function checkOut(){
       cache: false,
       data: $('#get-available').serialize()+'&evt='+sessionStorage.getItem('userEvent'),
       success: function(data){
-        console.log(data)
+        //console.log(data)
 
         $("#myOverlay, #loader-cont").hide()
 
@@ -542,16 +545,14 @@ function checkOut(){
   }, 500)
 }
 
-typeof(Storage) !== "undefined" ? false : setTimeout(function(){$('#modal-no-storage').show();},1500)
+typeof(Storage) !== "undefined" ? false : setTimeout(function(){$('#modal-no-storage').show()},1500)
 
 '{{ id }}' != '#home' ? setTimeout(function(){navigation('{{id}}');},1000) : false
-
 
 var tl = new Cleave('input[name=telephone]', {
     phone: true,
     phoneRegionCode: '{{locale}}'
 })
-
 
 var dc = new Cleave('input[name=date_card]', {
     date: true,
@@ -559,24 +560,22 @@ var dc = new Cleave('input[name=date_card]', {
 });
 
 var cc = new Cleave('input[name=card_nr]', {
-    creditCard: true,
-    delimiter: '-',
-    onCreditCardTypeChanged: function (type) {
-        type = type.split('15')[0]
-        if(type == "unknown"){
-          $('.icon').addClass('w3-hide').removeClass('w3-animate-zoom')
-          $('.icon-unknown').removeClass('w3-hide')
-        }
-        else{
-          $('.icon').addClass('w3-hide').removeClass('w3-animate-zoom')
-          $('.icon-' + type).removeClass('w3-hide').addClass('w3-animate-zoom')
-        }
-
+  creditCard: true,
+  delimiter: '-',
+  onCreditCardTypeChanged: function (type) {
+    type = type.split('15')[0]
+    if(type == "unknown"){
+      $('.icon').addClass('w3-hide').removeClass('w3-animate-zoom')
+      $('.icon-unknown').removeClass('w3-hide')
     }
+    else{
+      $('.icon').addClass('w3-hide').removeClass('w3-animate-zoom')
+      $('.icon-' + type).removeClass('w3-hide').addClass('w3-animate-zoom')
+    }
+  }
 })
 
-
-timer =''
+var timer =''
 
 function timeDecrease(v){
 
@@ -592,10 +591,7 @@ function timeDecrease(v){
     $('.time_left').text(v)
     
     v--
-
   }, 1000)
-
-
 
 }
 
