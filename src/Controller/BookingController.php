@@ -29,7 +29,8 @@ class BookingController extends AbstractController
         $err = array();
         
         $totalPax = 0;
-/*
+        
+        //check if the user has _locale session
         if ($this->session->get('_locale')){
             if($this->session->get('_locale')->getName())
                $locale = $this->session->get('_locale')->getName();
@@ -37,7 +38,7 @@ class BookingController extends AbstractController
         }
         else
            $locale = $this->getBrownserLocale($request);
-*/        
+        
         $categoryId = $request->request->get('category') ? $request->request->get('category') : $err[] = 'TOUR';
         
         $adult = $request->request->get('adult') || $request->request->get('adult') === "0" ? $request->request->get('adult') : $err[] = 'ADULT';
@@ -57,7 +58,7 @@ class BookingController extends AbstractController
                 'message' => $err,
                 'minDate' => null,
                 'available' => null,
-                //'locale' => $locale
+                'locale' => $locale
             );
             return new JsonResponse($response);
         }
@@ -78,7 +79,7 @@ class BookingController extends AbstractController
                 'max' => null,
                 'minDate' => null,
                 'available' => null,
-                //'locale' => $locale
+                'locale' => $locale
             );
             return new JsonResponse($response);
         }
@@ -96,7 +97,7 @@ class BookingController extends AbstractController
             'max' => '(Máx: '.$category->getAvailability().' Pax)',
             'minDate' => null,
             'available' => null,
-            //'locale' => $locale
+            'locale' => $locale
             );
 
         return new JsonResponse($response);
@@ -117,8 +118,8 @@ class BookingController extends AbstractController
                 );
             
             $minDate = $stockAvailable[0]['date'] >= $startDt->format('Y-m-d') ? $stockAvailable[0]['date'] : $startDt->format('Y-m-d') ;
-
-            //set the expiration time to purchase ticket
+            
+            //since we have stock, set the expiration time to purchase ticket 
             $this->session->set('start_time', $request->server->get('REQUEST_TIME'));
 
             $response = array(
@@ -129,7 +130,7 @@ class BookingController extends AbstractController
             'expiration' => 900,
             'minDate' => $minDate,
             'available' => $stockAvailable,
-            //'locale' => $locale
+            'locale' => $locale
             );
         }
 
@@ -141,24 +142,23 @@ class BookingController extends AbstractController
             'message' => 'NO_STOCK',
             'minDate' => null,
             'available' => null,
-            //'locale' => $locale
+            'locale' => $locale
             );
 
         return new JsonResponse($response);
     }
 
-/*
+
     private function getBrownserLocale($request) 
     { 
         $u_agent = $request->headers->get('accept-language');
         $locale = 'pt_PT';
 
         if (!preg_match('/pt-PT/i', $u_agent))
-            $locale="en_EN";
-        
+            $locale = "en_EN";
+
         return $locale; 
 
     }
-*/
 
  }

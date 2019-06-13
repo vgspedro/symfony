@@ -539,7 +539,7 @@ class HomeController extends AbstractController
         );
     }
 
- private function getOS($request) { 
+    private function getOS($request) { 
         $user_agent = $request->headers->get('user-agent');
         $os_platform    =   "Unknown OS Platform";
         $os_array       =   array(
@@ -574,6 +574,7 @@ class HomeController extends AbstractController
         return $os_platform;
     }
 
+
     private function getBrowser($request) {
         $user_agent = $request->headers->get('user-agent');
         $browser        =   "Unknown Browser";
@@ -596,7 +597,6 @@ class HomeController extends AbstractController
         }
         return $browser;
     }
-
 
     private function getPlatform($request) 
     { 
