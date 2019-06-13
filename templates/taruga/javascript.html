@@ -14,10 +14,8 @@ c_pt=[]
 {% for category in categories %}
 
   {% if category.no_stock == false %}
-
     c_en.push({id:{{category.id}},text:'{{category.nameEn|trim}}' })
     c_pt.push({id:{{category.id}},text:'{{category.namePt|trim}}' })
-
   {% endif %} 
 
 {% endfor %}
@@ -39,37 +37,31 @@ function categoriesBuild(f){
 
   var value = $('select[name=category]').val()
 
-  var html = '<option class="TOUR w3-opacity" value=""></option>'
+  var html = '<option class="TOUR w3-opacity" value="">{% trans %}part_seven.tour{% endtrans %}</option>'
 
   if (f == 'en_EN')
     for (var k in c_en)
-    html +='<option value="'+c_en[k].id+'">'+c_en[k].text+'</option>'
+      html +='<option value="'+c_en[k].id+'">'+c_en[k].text+'</option>'
   else
     for (var k in c_pt)
       html +='<option value="'+c_pt[k].id+'">'+c_pt[k].text+'</option>'
 
   $('select[name=category]').html(html).val(value)
-
-
 }
 
-
-session_local = ''
+session_local = '{{locale}}'
 
 {%if app.session.get('_locale') %}
   session_local = '{{app.session.get('_locale').name}}'
 {% endif %}
 
-session_local ? languages(session_local) : languages('{{locale}}')
+session_local != 'pt_PT' ? languages(session_local) : false//languages('{{locale}}')
 
-//initialize
-languages('{{locale}}')
+categoriesBuild(session_local)
 
 function languages(local){
 
   categoriesBuild(local)
-
-  //console.log(local)
 
   $("#myOverlay, #loader-cont").show()
   $.ajax({
@@ -318,7 +310,7 @@ function getAvailable(){
       data: dataValue,
       cache: false,
       success: function(data){
-        console.log(data)
+        //console.log(data)
         $('.w3-overlay, #loader-cont').hide()
 
         //user required fields messages 
@@ -368,7 +360,6 @@ function getAvailable(){
             right: "fa-3x fa fa-arrow-right"
           },
           keepOpen: true,
-          //debug:true,
           enabledDates: date,
           locale: data.locale,
           minDate: data.minDate
@@ -401,7 +392,7 @@ $('.order_available').on('dp.change', function(e){
     r = stockDate[k].datetime.match(d)
     if(r){
       complete = stockDate[k].datetime.split(" ")
-      options += '<option value="'+stockDate[k].id+'">'+complete[1]+'</option>'
+      options += '<option data-left='+stockDate[k].onlyLeft+' value="'+stockDate[k].id+'">'+complete[1]+'</option>'
     }
   }
   $('.set-hours').html(options)
@@ -418,6 +409,7 @@ function closeModalEvents(){
 
 function changeEventGetHour(v){
   $('#booking_hour').val(v)
+  //alert($('.set-hours').data('left'))
 }
 
 //userDate=''
