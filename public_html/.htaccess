@@ -87,7 +87,7 @@ AddOutputFilterByType DEFLATE application/x-javascript
 
 <IfModule mod_deflate.c>
 
-    <filesMatch "\.(js|css|html|php|svg|jpg|png)$">
+    <filesMatch "\.(js|css|html|php|jpg|png|ico)$">
 
         SetOutputFilter DEFLATE
 
