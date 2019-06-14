@@ -74,6 +74,28 @@ DirectoryIndex index.php
     </IfModule>
 </IfModule>
 
+# compress text, html, javascript, css, xml:
+AddOutputFilterByType DEFLATE text/plain
+AddOutputFilterByType DEFLATE text/html
+AddOutputFilterByType DEFLATE text/xml
+AddOutputFilterByType DEFLATE text/css
+AddOutputFilterByType DEFLATE application/xml
+AddOutputFilterByType DEFLATE application/xhtml+xml
+AddOutputFilterByType DEFLATE application/rss+xml
+AddOutputFilterByType DEFLATE application/javascript
+AddOutputFilterByType DEFLATE application/x-javascript
+
+<IfModule mod_deflate.c>
+
+    <filesMatch "\.(js|css|html|php|svg|jpg|png)$">
+
+        SetOutputFilter DEFLATE
+
+    </filesMatch>
+
+</IfModule>
+
+
 # php -- BEGIN cPanel-generated handler, do not edit
 # Set the “ea-php72” package as the default “PHP” programming language.
 <IfModule mime_module>
