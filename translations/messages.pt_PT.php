@@ -30,6 +30,7 @@ return array(
     'session_info' => 'Por favor, atualize a página!',
     'time_left' => 'Tempo restante para finalizar a reserva:',
     'seconds' => 'segundos',
+    'gdpr_not_found' => 'RGPD não encontrado!',
 
 'link' => array(
     'where_we_are'=>'Onde Estamos',

@@ -72,6 +72,7 @@ function languages(local){
     dataType:'json',
     success: function(data) {
       data = data.data
+
       $(".ONDEESTAMOS").html(data.link.where_we_are)
       $(".AEQUIPA").html(data.link.the_team)
       $(".PRECOS").html(data.link.price)
@@ -195,6 +196,7 @@ function languages(local){
       $(".SESSION").text(data.session)
       $(".CHECK").text(data.check)
       $(".SESSION_INFO").text(data.session_info)
+      $(".GPDR_NOT_FOUND").text(data.gpdr_not_found)
 
       $(".cc-dismiss").text(data.cookies.btn)
       $(".cc-message").html(data.cookies.txt+'<br><a class="cc-link" target="_blank" href="https://cookiesandyou.com/">'+data.cookies.link+'</a>')
@@ -463,7 +465,7 @@ function showRgpd(){
       url:'{{ path('index_rgpd') }}',
       type: "POST",
       success: function(data){  
-        //console.log(data)
+        console.log(data)
         $("#myOverlay, #loader-cont").hide()
         if (data.status == 1){
           $('#modal-rgpd').show()
@@ -471,10 +473,8 @@ function showRgpd(){
           $('.rgpd-text').html(data.data)
         }        
         else {
-          obj=''
-          for(i=0;i<data.data.length;i++)
-            $('.'+data.data[i]).removeClass('w3-hide')
-          $('#modal-fields').show()
+          $('.GDPR_NOT_FOUND').removeClass('w3-hide')       
+          $('#modal-info').show()
         }
       },
       error:function(data){

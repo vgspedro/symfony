@@ -12,6 +12,7 @@ use App\Form\RgpdType;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 use Doctrine\DBAL\DBALException;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class RgpdController extends AbstractController
 {
@@ -162,21 +163,31 @@ class RgpdController extends AbstractController
 
 
 
-    public function rgpdShow(Request $request){
+    public function rgpdShow(Request $request, TranslatorInterface $translator)
+    {
 
         $response = array();
 
         $em = $this->getDoctrine()->getManager(); 
 
-        $locales = $em->getRepository(Locales::class)->findOneBy(['name' => $this->session->get('_locale')->getName()]);
+        $locale = $this->getBrownserLocale($request);
+
+        if ($this->session->get('_locale')){
+            if($this->session->get('_locale')->getName())
+                $locale = $this->session->get('_locale')->getName();
+        }
+
+        $locales = $em->getRepository(Locales::class)->findOneby(['name' => $locale.'p']);
 
         $rgpd = $em->getRepository(Rgpd::class)->findOneBy(['locales' => $locales]);
        
         $response = !$rgpd ?
-            array('status' => 0, 'message' => 'Rgpd não encontrado', 'data' => null)
+            array('status' => 0, 'message' => $translator->trans('gpdr_not_found'), 'data' => 'GPDR_NOT_FOUND')
             :
             array('status' => 1, 'message' => $rgpd->getName(), 'data' => $rgpd->getRgpdHtml());
+
         return new JsonResponse($response);
+
     }
 
 
@@ -194,6 +205,19 @@ class RgpdController extends AbstractController
         }
         return $errors;
     }
+
+    private function getBrownserLocale($request) 
+    { 
+        $u_agent = $request->headers->get('accept-language');
+        $locale = 'pt_PT';
+
+        if (!preg_match('/pt-PT/i', $u_agent))
+            $locale="en_EN";
+        
+        return $locale; 
+
+    }
+
 
 }
 
