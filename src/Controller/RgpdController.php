@@ -177,7 +177,7 @@ class RgpdController extends AbstractController
                 $locale = $this->session->get('_locale')->getName();
         }
 
-        $locales = $em->getRepository(Locales::class)->findOneby(['name' => $locale.'p']);
+        $locales = $em->getRepository(Locales::class)->findOneby(['name' => $locale]);
 
         $rgpd = $em->getRepository(Rgpd::class)->findOneBy(['locales' => $locales]);
        
