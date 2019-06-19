@@ -5,18 +5,71 @@
 <script src="{{ asset('js/addons/cleave-phone.pt-PT.js') }}"></script>
 <script src="{{ asset('js/addons/cleave-phone.en-EN.js') }}"></script>
 <script src="{{ asset('js/cookieconsent.min.js') }}"></script-->
-
-<script src="{{ asset('js/home.js') }}"></script>
 <script>
 
-c_en=[]
-c_pt=[]
+c_en=[];c_pt=[];{%for category in categories%}
+{%if category.no_stock==false%}
+c_en.push({id:{{category.id}},text:'{{category.nameEn|trim}}'});c_pt.push({id:{{category.id}},text:'{{category.namePt|trim}}'});{%endif%}
+{%endfor%}
+window.addEventListener("load",function(){window.cookieconsent.initialise({"palette":{"popup":{"background":"rgba(214,209,156,0.85)","text":"#333"},"button":{"background":"#3f51b5","text":"#FFF"}},"content":{"message":"{% trans %}cookies.txt{% endtrans %}","dismiss":"{% trans %}cookies.btn{% endtrans %}","link":"{% trans %}cookies.link{% endtrans %}","href":"https://cookiesandyou.com/"}})})
+function categoriesBuild(f){var value=$('select[name=category]').val();var html='<option class="TOUR w3-opacity" value="">{% trans %}part_seven.tour{% endtrans %}</option>';if(f=='en_EN')
+for(var k in c_en)
+html+='<option value="'+c_en[k].id+'">'+c_en[k].text+'</option>';else for(var k in c_pt)
+html+='<option value="'+c_pt[k].id+'">'+c_pt[k].text+'</option>';$('select[name=category]').html(html).val(value);}
+session_local='{{locale}}';{%if app.session.get('_locale')%}
+session_local='{{app.session.get('_locale').name}}';{%endif%}
+session_local!='pt_PT'?languages(session_local):!1;categoriesBuild(session_local);function languages(local){categoriesBuild(local);$("#myOverlay, #loader-cont").show()
+$.ajax({type:"POST",url:'{{ path('index_translate') }}',data:'lang='+local,cache:!1,dataType:'json',success:function(data){data=data.data;$(".ADULTO").html(data.part_tree.adult);$(".CRIANCA").html(data.part_tree.children);$(".RESERVAS").html(data.part_two.booking);$(".NAME").attr("placeholder",data.part_seven.name).text(data.part_seven.name);$(".ADDRESS").attr("placeholder",data.part_seven.address).text(data.part_seven.address);$(".ADULT").attr("placeholder",data.part_seven.adult).text(data.part_seven.adult);$(".CHILDREN").attr("placeholder",data.part_seven.children).text(data.part_seven.children);$(".BABY").attr("placeholder",data.part_seven.baby).text(data.part_seven.baby);$(".DATE").attr("placeholder",data.part_seven.date).text(data.part_seven.date);$(".MESSAGE").attr("placeholder",data.part_seven.message);$(".EMAIL").attr("placeholder",data.part_seven.email).text(data.part_seven.email);$(".TELEPHONE").attr("placeholder",data.part_seven.telephone).text(data.part_seven.telephone);$(".SUBMIT").text(data.part_seven.submit);$(".HOUR_TXT0, .HOUR_TXT, .HOUR").text(data.part_seven.hour);$(".TOUR").html(data.part_seven.tour);$(".RGPD").text(data.part_seven.rgpd);$(".RGPD_TXT").html(data.part_seven.rgpd_txt);$(".BOOKING").text(data.part_seven.booking);$(".SPAM_TXT").text(data.part_seven.spam_txt);$(".BOOK_EMAIL").text(data.part_seven.book_email);$(".BOOK_PHONE").text(data.part_seven.book_phone);$(".BOOK_AFTER").text(data.part_seven.book_after);$(".EMAIL_INVALID").text(data.part_seven.email_invalid);$(".ZERO").text(data.part_seven.zero);$(".OTHER_BUY_IT").text(data.part_seven.other_buy_it);$(".GET_AVAILABLE").text(data.part_seven.get_available);$(".NO_WEB_STORAGE").text(data.info.no_webstorage);$(".CREDIT_CARD_NR").attr("placeholder",data.info.credit_card_nr).text(data.info.credit_card_nr);$(".CREDIT_CARD_NAME").attr("placeholder",data.info.name_credit_card).text(data.info.name_credit_card);$(".CREDIT_CARD_DATE").attr("placeholder",data.info.date_credit_card).text(data.info.date_credit_card);$(".TOUR_DATA").text(data.info.tour_data);$(".PERSONAL_DATA").text(data.info.personal_data);$(".CREDIT_CARD_DATA").text(data.info.credit_card_data);$(".WP_SET_NO_CC_DATA").text(data.info.wp_set_no_cc_data);$(".DOUBTS").text(data.info.doubts);$(".HOME").text(data.info.home);$(".USEFULL_INFO").text(data.info.usefull_info);$(".GALLERY").text(data.info.gallery);$(".CONFIRM").text(data.info.confirm);$(".FILL_ALL").text(data.info.fill_all);$(".CVV_INVALID").text(data.part_seven.cvv_invalid);$(".NO_MATCH_NAMES").text(data.part_seven.no_match_names);$(".CARD_NR_INVALID").text(data.part_seven.card_nr_invalid);$(".TELEPHONE_INVALID").text(data.part_seven.telephone_invalid);$(".NAME_INVALID").text(data.part_seven.name_invalid);$(".DATE_CARD_INVALID").text(data.info.date_card_invalid);$(".BUY_NOW").text(data.info.buy_now);$(".DATE_HOUR").text(data.info.choose_date_hour);$(".CHOOSE_DATE_CALENDAR").attr("placeholder",data.info.choose_date_calendar);$(".CHOOSE_HOUR").text(data.info.choose_hour);$(".CLOSE").text(data.info.close);$(".SAVE").text(data.info.save);$(".ERROR").text(data.error);$(".WIFIERROR").text(data.wifi_error);$(".SUCCESS").text(data.success);$(".ORDER").text(data.order);$(".THANKYOU").text(data.thank_you);$(".SECONDS").text(data.seconds);$(".TIME_LEFT").text(data.time_left);$(".MESSAGE_TXT").text(data.part_seven.message);$(".NO_STOCK").text(data.part_seven.no_stock);$(".SORRY").text(data.part_seven.sorry);$(".ARBITRARY").html(data.arbitrary.txt);$(".ARBITRARY_CENTER").text(data.arbitrary.name);$(".REQUIRED").text(data.required);$(".SESSION").text(data.session);$(".CHECK").text(data.check);$(".SESSION_INFO").text(data.session_info);$(".GPDR_NOT_FOUND").text(data.gpdr_not_found);$(".cc-dismiss").text(data.cookies.btn);$(".cc-message").html(data.cookies.txt+'<br><a class="cc-link" target="_blank" href="https://cookiesandyou.com/">'+data.cookies.link+'</a>');$('.current-locale').val(local);switch(local){case 'pt_PT':$('.EN').addClass('w3-hide');$('.PT').removeClass('w3-hide');break
+case 'en_EN':$('.PT').addClass('w3-hide');$('.EN').removeClass('w3-hide');break}
+setTimeout(function(){w3_close();$("#myOverlay, #loader-cont").hide()},250)},error:function(data){setTimeout(function(){w3_close();$("#myOverlay, #loader-cont").hide()},250)}})}
+mySidenav=document.getElementById("mySidenav");overlayBg=document.getElementById("myOverlay");loader=document.getElementById("loader-cont");count=0;path="https://www.google.pt/maps/@37.087802,-8.4264864,3a,75y,185.03h,76.94t/data=!3m6!1e1!3m4!1s9suOi359S8Fqb6ihifQaAQ!2e0!7i13312!8i6656";function w3_open(){if(mySidenav.style.display==="block"){mySidenav.style.display="none";overlayBg.style.display="none";loader.style.display="none"}else{mySidenav.style.display="block";overlayBg.style.display="block";loader.style.display="none"}}
+function w3_close(){mySidenav.style.display="none";overlayBg.style.display="none"}
+window.onscroll=function(){myFunction()}
+function myFunction(){var topo=document.getElementById("bt-top");document.body.scrollTop>4000||document.documentElement.scrollTop>4000?topo.className="top w3-animate-zoom w3-hide-small":topo.className=topo.className.replace("top w3-animate-zoom w3-hide-small","top w3-hide w3-hide-small")}
+function onClick(element){document.getElementById("img01").src=element.src;document.getElementById("modal01").style.display="block";var captionText=document.getElementById("caption");captionText.innerHTML=element.alt}
+function navigation(pos,id){w3_close();vl=45;$(".nav-space").val()?vl=vl+parseInt($(".nav-space").val()):vl;$("html, body").animate({scrollTop:$(pos).offset().top-vl},750)
+if(id){$('select[name=category]').val(id);updateTourData()}}
+function updateTourData(){$('.set-visible, .wp-active').addClass('w3-hide')}
+stockDate=[];function getAvailable(){var html='';var hours='';$('.at-last, .required').addClass('w3-hide');$('.get-dates, #booking_date, #booking_hour').val('');$('.order_available').datetimepicker();$('.removal').remove();$('.w3-overlay, #loader-cont').show();dataValue=$('#get-available').serialize();setTimeout(function(){$.ajax({url:'{{ path('index_available') }}',type:"POST",data:dataValue,cache:!1,success:function(data){$('.w3-overlay, #loader-cont').hide();if(data.status==0){for(k=0;k<data.message.length;k++)
+$('.'+data.message[k]).removeClass('w3-hide');$('#modal-info').show()}
+else if(data.status==2){$('.'+data.message).removeClass('w3-hide');data.max?$('.MAX').html(data.max):$('.MAX').empty();$('#modal-no-stock').show()}
+else if(data.status==1){timeDecrease(data.expiration);$('input[name=wp]').val(data.wp)
+stockDate=data.available;date=[];for(var k in data.available)
+date.push(data.available[k].datetime);if($('.order_available').data("DateTimePicker"))
+$('.order_available').data("DateTimePicker").date(null);$('.get-dates').val('');$('#modal-available-dates').show();$('.no-hours').addClass('w3-hide');$('.w3-overlay').hide();$('.order_available').data('DateTimePicker').destroy();$('.order_available').datetimepicker({format:'DD/MM/YYYY',ignoreReadonly:!0,inline:!0,sideBySide:!1,icons:{time:"fa-3x fa fa-clock-o",date:"fa-3x fa fa-calendar",up:"fa-3x fa fa-arrow-up",down:"fa-3x fa fa-arrow-down",left:"fa-3x fa fa-arrow-left",right:"fa-3x fa fa-arrow-right"},keepOpen:!0,enabledDates:date,locale:data.locale,minDate:data.minDate})
+$('.order_available').data("DateTimePicker").date(null);$('.get-dates').val('')}
+else{$('#modal-check').show()}},error:function(data){$("#myOverlay, #loader-cont").hide();$('#modal-error').show()}})},500)}
+$('.order_available').on('dp.change',function(e){var options='';var complete='';$('.get-dates').val(moment(e.date).format("DD/MM/YYYY"));d=new RegExp(moment(e.date).format("YYYY-MM-DD"),'g');for(var k in stockDate){r=stockDate[k].datetime.match(d);if(r){complete=stockDate[k].datetime.split(" ");options+='<option data-left='+stockDate[k].onlyLeft+' value="'+stockDate[k].id+'">'+complete[1]+'</option>'}}
+$('.set-hours').html(options)})
+function closeModalEvents(){$('#modal-available-dates').hide();$('#booking_tourtype').val('');$('.at-last').addClass('w3-hide');if($('.order_available').data("DateTimePicker"))
+$('.order_available').data('DateTimePicker').destroy();$('.get-dates, .set-hours').val('').removeClass('w3-pale-red')}
+function changeEventGetHour(v){$('#booking_hour').val(v)}
+function saveModalEvents(){userDate=$('#get-available-datetime input[name=date]').val();userTime=$('#get-available-datetime select[name=time] option:selected').text();event=$('#get-available-datetime select[name=time]').val();$('.required').addClass('w3-hide');if(!$('.get-dates').val())$('.date').removeClass('w3-hide');if(!$('.set-hours').val())$('.hour').removeClass('w3-hide');if($('.get-dates').val()&&$('.set-hours').val()){$('#booking_date').val($('.get-dates').val());$('#modal-available-dates').hide();$('.at-last').removeClass('w3-hide');$('.order_available').data("DateTimePicker").date(null);navigation('#is-available');$('.client-tour-day').html(userDate);$('.client-tour-time').html(userTime);$('input[name=ev]').val(event);$('input[name=wp]').val()=='true'?$('.wp-active').removeClass('w3-hide'):$('.wp-active').addClass('w3-hide');$('.set-visible').removeClass('w3-hide');userEvent={'event':event,'adult':$('input[name=adult]').val(),'children':$('input[name=children]').val(),'baby':$('input[name=baby]').val()}
+sessionStorage.setItem('userEvent',JSON.stringify(userEvent));var uobject=sessionStorage.getItem('userEvent')}}
+function showRgpd(){$("#myOverlay, #loader-cont").show();setTimeout(function(){$.ajax({url:'{{ path('index_rgpd') }}',type:"POST",success:function(data){$("#myOverlay, #loader-cont").hide()
+if(data.status==1){$('#modal-rgpd').show();$('.rgpd-title').html(data.message);$('.rgpd-text').html(data.data)}
+else{$('.GDPR_NOT_FOUND').removeClass('w3-hide');$('#modal-info').show()}},error:function(data){$("#myOverlay, #loader-cont").hide();$('#modal-error').show()}})},500)}
+function checkOut(){$('.required').addClass('w3-hide');$("#myOverlay, #loader-cont").show();setTimeout(function(){$.ajax({url:'{{ path('set_booking') }}',type:"POST",cache:!1,data:$('#get-available').serialize()+'&evt='+sessionStorage.getItem('userEvent'),success:function(data){$("#myOverlay, #loader-cont").hide();if(data.status==3)
+$('#modal-check').show();else if(data.status==1){navigation('#reservas');clearInterval(timer);$('#modal-success').show();$('.set-order-id').html(data.data);$('#get-available').trigger('reset');$('.set-visible, .wp-active').addClass('w3-hide');sessionStorage.clear();$('.icon-unknown').removeClass('w3-hide')}
+else if(data.status==0||data.status==2){for(k=0;k<data.data.length;k++)
+$('.'+data.data[k]).removeClass('w3-hide');$('#modal-info').show()}
+else{$('#modal-check').show()}},error:function(data){$("#myOverlay, #loader-cont").hide();$('#modal-error').show()}})},500)}
+typeof(Storage)!=="undefined"?!1:setTimeout(function(){$('#modal-no-storage').show()},1500);'{{ id }}'!='#home'?setTimeout(function(){navigation('{{id}}')},1000):!1;var tl=new Cleave('input[name=telephone]',{phone:!0,phoneRegionCode:'{{locale}}'});var dc=new Cleave('input[name=date_card]',{date:!0,datePattern:['m','Y']});var cc=new Cleave('input[name=card_nr]',{creditCard:!0,delimiter:'-',onCreditCardTypeChanged:function(type){type=type.split('15')[0]
+if(type=="unknown"){$('.icon').addClass('w3-hide').removeClass('w3-animate-zoom')
+$('.icon-unknown').removeClass('w3-hide')}
+else{$('.icon').addClass('w3-hide').removeClass('w3-animate-zoom')
+$('.icon-'+type).removeClass('w3-hide').addClass('w3-animate-zoom')}}});var timer='';function timeDecrease(v){if(timer)
+clearInterval(timer);timer=setInterval(function(){if(v==0){$('#modal-check').show();clearInterval(timer)}
+$('.time_left').text(v);v--},1000)}
+/*
+c_en=[];
+c_pt=[];
 
 {% for category in categories %}
 
   {% if category.no_stock == false %}
-    c_en.push({id:{{category.id}},text:'{{category.nameEn|trim}}' })
-    c_pt.push({id:{{category.id}},text:'{{category.namePt|trim}}' })
+    c_en.push({id:{{category.id}},text:'{{category.nameEn|trim}}' });
+    c_pt.push({id:{{category.id}},text:'{{category.namePt|trim}}' });
   {% endif %} 
 
 {% endfor %}
@@ -36,33 +89,33 @@ window.addEventListener("load", function(){
 
 function categoriesBuild(f){
 
-  var value = $('select[name=category]').val()
+  var value = $('select[name=category]').val();
 
-  var html = '<option class="TOUR w3-opacity" value="">{% trans %}part_seven.tour{% endtrans %}</option>'
+  var html = '<option class="TOUR w3-opacity" value="">{% trans %}part_seven.tour{% endtrans %}</option>';
 
   if (f == 'en_EN')
     for (var k in c_en)
-      html +='<option value="'+c_en[k].id+'">'+c_en[k].text+'</option>'
+      html +='<option value="'+c_en[k].id+'">'+c_en[k].text+'</option>';
   else
     for (var k in c_pt)
-      html +='<option value="'+c_pt[k].id+'">'+c_pt[k].text+'</option>'
+      html +='<option value="'+c_pt[k].id+'">'+c_pt[k].text+'</option>';
 
-  $('select[name=category]').html(html).val(value)
+  $('select[name=category]').html(html).val(value);
 }
 
-session_local = '{{locale}}'
+session_local = '{{locale}}';
 
 {%if app.session.get('_locale') %}
-  session_local = '{{app.session.get('_locale').name}}'
+  session_local = '{{app.session.get('_locale').name}}';
 {% endif %}
 
-session_local != 'pt_PT' ? languages(session_local) : false//languages('{{locale}}')
+session_local != 'pt_PT' ? languages(session_local) : false;//languages('{{locale}}')
 
-categoriesBuild(session_local)
+categoriesBuild(session_local);
 
 function languages(local){
 
-  categoriesBuild(local)
+  categoriesBuild(local);
 
   $("#myOverlay, #loader-cont").show()
   $.ajax({
@@ -72,239 +125,195 @@ function languages(local){
     cache:false,
     dataType:'json',
     success: function(data) {
-      data = data.data
-
-      $(".ONDEESTAMOS").html(data.link.where_we_are)
-      $(".AEQUIPA").html(data.link.the_team)
-      $(".PRECOS").html(data.link.price)
-      $(".HORARIO").html(data.link.schedule)
-      $(".CONTATOS").html(data.link.contact)
-      $(".RESERVAS").html(data.link.booking)
-      $(".KAYAKS").html(data.link.kayak)
-
-      $(".INTRO").html(data.part_one.intro)
-      $(".LOCAL").html(data.part_one.local)
-      $(".FIND_US").attr('title',data.part_one.find_us)
-      $(".TICKET_SHOP").html(data.part_one.ticket_shop)
-
-      $(".IMPORTANTINFO").html(data.part_two.important_info)
-      $(".RESERVAS").html(data.part_two.booking)
-      $(".RESERVAS_TXT").html(data.part_two.booking_txt)
-      $(".LUMINOSIDADE").html(data.part_two.light)
-      $(".LUMINOSIDADE_TXT").html(data.part_two.light_txt)
-      $(".ESTACIONAMENTO").html(data.part_two.parking)
-      $(".ESTACIONAMENTO_TXT").html(data.part_two.parking_txt)
-      $(".PARAAVISITA").html(data.part_two.what_to_take)
-      $(".PARAAVISITA_TXT").html(data.part_two.what_to_take_txt)
-      $(".MARES").html(data.part_two.ties)
-      $(".MARES_TXT").html(data.part_two.ties_txt)
-      $(".ATENCAO").html(data.part_two.attention).text(data.part_two.attention)
-      $(".ATENCAO_TXT").html(data.part_two.attention_txt)
-      $(".VERIFIQUE").html(data.part_two.check)
-      $(".DATES_RED_TXT").html(data.part_two.no_bookings_txt)
-
-      $(".ADULTO").html(data.part_tree.adult)
-      $(".CRIANCA").html(data.part_tree.children)
-      $(".DURACAOPASSEIO").html(data.part_tree.duration)
-
-      $(".KAYAK_TXT_INTRO").html(data.part_four.kayak_txt)
-      $(".KAYAK_INFO").html(data.part_four.kayak_txt_i_info)
-      $(".KAYAK_CONDITIONS").html(data.part_four.kayak_txt_conditions)
-      $(".KAYAK_SCHEDULES").html(data.part_four.kayak_schedules)
-      $(".KAYAK_SINGLE").html(data.part_four.kayak_single+' '+data.part_four.kayak_single_price)
-      $(".KAYAK_DOUBLE").html(data.part_four.kayak_double+' '+data.part_four.kayak_double_price)
-      $(".PADDLE").html(data.part_four.paddle+' '+data.part_four.paddle_price)
-
-      $(".HORARIO_TXT").html(data.part_five.schedule_txt)
-      $(".HORARIO_TEMPO1").html(data.part_five.schedule_summer)
-      $(".HORARIO_TEMPO_TXT1").html(data.part_five.schedule_summer_txt)
-      $(".HORARIO_TEMPO2").html(data.part_five.schedule_winter)
-      $(".HORARIO_TEMPO_TXT2").html(data.part_five.schedule_winter_txt)
-      $(".CONTATOS_TXT").html(data.part_six.contact_txt)
-
-      $(".NAME").attr("placeholder",data.part_seven.name).text(data.part_seven.name)
-      $(".ADDRESS").attr("placeholder",data.part_seven.address).text(data.part_seven.address)
-      $(".ADULT").attr("placeholder",data.part_seven.adult).text(data.part_seven.adult)
-      $(".CHILDREN").attr("placeholder",data.part_seven.children).text(data.part_seven.children)
-      $(".BABY").attr("placeholder",data.part_seven.baby).text(data.part_seven.baby)
-      $(".DATE").attr("placeholder",data.part_seven.date).text(data.part_seven.date)
-      $(".MESSAGE").attr("placeholder",data.part_seven.message)
-      $(".EMAIL").attr("placeholder",data.part_seven.email).text(data.part_seven.email)
-      $(".TELEPHONE").attr("placeholder",data.part_seven.telephone).text(data.part_seven.telephone)
-      $(".SUBMIT").text(data.part_seven.submit)
-      $(".HOUR_TXT0, .HOUR_TXT, .HOUR").text(data.part_seven.hour)
-      $(".TOUR").html(data.part_seven.tour)
-      $(".RGPD").text(data.part_seven.rgpd)
-      $(".RGPD_TXT").html(data.part_seven.rgpd_txt)
-      $(".BOOKING").text(data.part_seven.booking)
-      $(".SPAM_TXT").text(data.part_seven.spam_txt)
-      $(".BOOK_EMAIL").text(data.part_seven.book_email)
-      $(".BOOK_PHONE").text(data.part_seven.book_phone)
-      $(".BOOK_AFTER").text(data.part_seven.book_after)
-      $(".EMAIL_INVALID").text(data.part_seven.email_invalid)
-      $(".ZERO").text(data.part_seven.zero)
-      $(".OTHER_BUY_IT").text(data.part_seven.other_buy_it)
-      $(".GET_AVAILABLE").text(data.part_seven.get_available)
-
-      $(".NO_WEB_STORAGE").text(data.info.no_webstorage)
-      $(".CREDIT_CARD_NR").attr("placeholder",data.info.credit_card_nr).text(data.info.credit_card_nr)
-      $(".CREDIT_CARD_NAME").attr("placeholder",data.info.name_credit_card).text(data.info.name_credit_card)
-      $(".CREDIT_CARD_DATE").attr("placeholder",data.info.date_credit_card).text(data.info.date_credit_card)
-      $(".TOUR_DATA").text(data.info.tour_data)
-      $(".PERSONAL_DATA").text(data.info.personal_data)
-      $(".CREDIT_CARD_DATA").text(data.info.credit_card_data)
-      $(".WP_SET_NO_CC_DATA").text(data.info.wp_set_no_cc_data)
-      $(".DOUBTS").text(data.info.doubts)
-      $(".HOME").text(data.info.home)
-      $(".USEFULL_INFO").text(data.info.usefull_info)
-      $(".GALLERY").text(data.info.gallery)
-
-      $(".CONFIRM").text(data.info.confirm)
-
-      $(".FILL_ALL").text(data.info.fill_all)
-
-      $(".CVV_INVALID").text(data.part_seven.cvv_invalid)
-      $(".NO_MATCH_NAMES").text(data.part_seven.no_match_names)
-      $(".CARD_NR_INVALID").text(data.part_seven.card_nr_invalid)
-      $(".TELEPHONE_INVALID").text(data.part_seven.telephone_invalid)
-      $(".NAME_INVALID").text(data.part_seven.name_invalid)
-      $(".DATE_CARD_INVALID").text(data.info.date_card_invalid)
-
-      $(".BUY_NOW").text(data.info.buy_now)
-      $(".DATE_HOUR").text(data.info.choose_date_hour)
-      $(".CHOOSE_DATE_CALENDAR").attr("placeholder",data.info.choose_date_calendar)
-      $(".CHOOSE_HOUR").text(data.info.choose_hour)
-
-      $(".CLOSE").text(data.info.close)
-      $(".SAVE").text(data.info.save)
-      $(".ERROR").text(data.error)
-      $(".WIFIERROR").text(data.wifi_error)
-      $(".SUCCESS").text(data.success)
-      $(".ORDER").text(data.order)
-      $(".THANKYOU").text(data.thank_you)
-
-      $(".SECONDS").text(data.seconds)
-      $(".TIME_LEFT").text(data.time_left)
+      data = data.data;
       
-      $(".MESSAGE_TXT").text(data.part_seven.message)
-      $(".NO_STOCK").text(data.part_seven.no_stock)
-      $(".SORRY").text(data.part_seven.sorry)
+      $(".ADULTO").html(data.part_tree.adult);
+      $(".CRIANCA").html(data.part_tree.children);
+      $(".RESERVAS").html(data.part_two.booking);
 
-      $(".ARBITRARY").html(data.arbitrary.txt)
-      $(".ARBITRARY_CENTER").text(data.arbitrary.name)
-      $(".REQUIRED").text(data.required)
+      $(".NAME").attr("placeholder",data.part_seven.name).text(data.part_seven.name);
+      $(".ADDRESS").attr("placeholder",data.part_seven.address).text(data.part_seven.address);
+      $(".ADULT").attr("placeholder",data.part_seven.adult).text(data.part_seven.adult);
+      $(".CHILDREN").attr("placeholder",data.part_seven.children).text(data.part_seven.children);
+      $(".BABY").attr("placeholder",data.part_seven.baby).text(data.part_seven.baby);
+      $(".DATE").attr("placeholder",data.part_seven.date).text(data.part_seven.date);
+      $(".MESSAGE").attr("placeholder",data.part_seven.message);
+      $(".EMAIL").attr("placeholder",data.part_seven.email).text(data.part_seven.email);
+      $(".TELEPHONE").attr("placeholder",data.part_seven.telephone).text(data.part_seven.telephone);
+      $(".SUBMIT").text(data.part_seven.submit);
+      $(".HOUR_TXT0, .HOUR_TXT, .HOUR").text(data.part_seven.hour);
+      $(".TOUR").html(data.part_seven.tour);
+      $(".RGPD").text(data.part_seven.rgpd);
+      $(".RGPD_TXT").html(data.part_seven.rgpd_txt);
+      $(".BOOKING").text(data.part_seven.booking);
+      $(".SPAM_TXT").text(data.part_seven.spam_txt);
+      $(".BOOK_EMAIL").text(data.part_seven.book_email);
+      $(".BOOK_PHONE").text(data.part_seven.book_phone);
+      $(".BOOK_AFTER").text(data.part_seven.book_after);
+      $(".EMAIL_INVALID").text(data.part_seven.email_invalid);
+      $(".ZERO").text(data.part_seven.zero);
+      $(".OTHER_BUY_IT").text(data.part_seven.other_buy_it);
+      $(".GET_AVAILABLE").text(data.part_seven.get_available);
 
-      $(".SESSION").text(data.session)
-      $(".CHECK").text(data.check)
-      $(".SESSION_INFO").text(data.session_info)
-      $(".GPDR_NOT_FOUND").text(data.gpdr_not_found)
+      $(".NO_WEB_STORAGE").text(data.info.no_webstorage);
+      $(".CREDIT_CARD_NR").attr("placeholder",data.info.credit_card_nr).text(data.info.credit_card_nr);
+      $(".CREDIT_CARD_NAME").attr("placeholder",data.info.name_credit_card).text(data.info.name_credit_card);
+      $(".CREDIT_CARD_DATE").attr("placeholder",data.info.date_credit_card).text(data.info.date_credit_card);
+      $(".TOUR_DATA").text(data.info.tour_data);
+      $(".PERSONAL_DATA").text(data.info.personal_data);
+      $(".CREDIT_CARD_DATA").text(data.info.credit_card_data);
+      $(".WP_SET_NO_CC_DATA").text(data.info.wp_set_no_cc_data);
+      $(".DOUBTS").text(data.info.doubts);
+      $(".HOME").text(data.info.home);
+      $(".USEFULL_INFO").text(data.info.usefull_info);
+      $(".GALLERY").text(data.info.gallery);
 
-      $(".cc-dismiss").text(data.cookies.btn)
-      $(".cc-message").html(data.cookies.txt+'<br><a class="cc-link" target="_blank" href="https://cookiesandyou.com/">'+data.cookies.link+'</a>')
+      $(".CONFIRM").text(data.info.confirm);
+
+      $(".FILL_ALL").text(data.info.fill_all);
+
+      $(".CVV_INVALID").text(data.part_seven.cvv_invalid);
+      $(".NO_MATCH_NAMES").text(data.part_seven.no_match_names);
+      $(".CARD_NR_INVALID").text(data.part_seven.card_nr_invalid);
+      $(".TELEPHONE_INVALID").text(data.part_seven.telephone_invalid);
+      $(".NAME_INVALID").text(data.part_seven.name_invalid);
+      $(".DATE_CARD_INVALID").text(data.info.date_card_invalid);
+
+      $(".BUY_NOW").text(data.info.buy_now);
+      $(".DATE_HOUR").text(data.info.choose_date_hour);
+      $(".CHOOSE_DATE_CALENDAR").attr("placeholder",data.info.choose_date_calendar);
+      $(".CHOOSE_HOUR").text(data.info.choose_hour);
+
+      $(".CLOSE").text(data.info.close);
+      $(".SAVE").text(data.info.save);
+      $(".ERROR").text(data.error);
+      $(".WIFIERROR").text(data.wifi_error);
+      $(".SUCCESS").text(data.success);
+      $(".ORDER").text(data.order);
+      $(".THANKYOU").text(data.thank_you);
+
+      $(".SECONDS").text(data.seconds);
+      $(".TIME_LEFT").text(data.time_left);
       
-      $('.current-locale').val(local)
+      $(".MESSAGE_TXT").text(data.part_seven.message);
+      $(".NO_STOCK").text(data.part_seven.no_stock);
+      $(".SORRY").text(data.part_seven.sorry);
+
+      $(".ARBITRARY").html(data.arbitrary.txt);
+      $(".ARBITRARY_CENTER").text(data.arbitrary.name);
+      $(".REQUIRED").text(data.required);
+
+      $(".SESSION").text(data.session);
+      $(".CHECK").text(data.check);
+      $(".SESSION_INFO").text(data.session_info);
+      $(".GPDR_NOT_FOUND").text(data.gpdr_not_found);
+
+      $(".cc-dismiss").text(data.cookies.btn);
+      $(".cc-message").html(data.cookies.txt+'<br><a class="cc-link" target="_blank" href="https://cookiesandyou.com/">'+data.cookies.link+'</a>');
+      
+      $('.current-locale').val(local);
 
       switch (local){
         case 'pt_PT':
-          $('.EN').addClass('w3-hide')
-          $('.PT').removeClass('w3-hide')
+          $('.EN').addClass('w3-hide');
+          $('.PT').removeClass('w3-hide');
         break
         case 'en_EN':
-          $('.PT').addClass('w3-hide')
-          $('.EN').removeClass('w3-hide')
+          $('.PT').addClass('w3-hide');
+          $('.EN').removeClass('w3-hide');
         break
       }
       setTimeout(function(){
-        w3_close()
-        $("#myOverlay, #loader-cont").hide()
+        w3_close();
+        $("#myOverlay, #loader-cont").hide();
       }, 250)
     },
 
     error:function(data){
       setTimeout(function(){
-        w3_close()
-        $("#myOverlay, #loader-cont").hide()
+        w3_close();
+        $("#myOverlay, #loader-cont").hide();
       }, 250)
     }
   })
 }
 
 
-mySidenav = document.getElementById("mySidenav")
-overlayBg = document.getElementById("myOverlay")
-loader = document.getElementById("loader-cont")
+mySidenav = document.getElementById("mySidenav");
+overlayBg = document.getElementById("myOverlay");
+loader = document.getElementById("loader-cont");
 
-count = 0
+count = 0;
 
-path = "https://www.google.pt/maps/@37.087802,-8.4264864,3a,75y,185.03h,76.94t/data=!3m6!1e1!3m4!1s9suOi359S8Fqb6ihifQaAQ!2e0!7i13312!8i6656"
+path = "https://www.google.pt/maps/@37.087802,-8.4264864,3a,75y,185.03h,76.94t/data=!3m6!1e1!3m4!1s9suOi359S8Fqb6ihifQaAQ!2e0!7i13312!8i6656";
 
 function w3_open() {
     if (mySidenav.style.display === "block") {
-        mySidenav.style.display = "none"
-         overlayBg.style.display = "none"
-         loader.style.display = "none"
+        mySidenav.style.display = "none";
+         overlayBg.style.display = "none";
+         loader.style.display = "none";
     } else {
-        mySidenav.style.display = "block"
-         overlayBg.style.display = "block"
-         loader.style.display = "none"
+        mySidenav.style.display = "block";
+         overlayBg.style.display = "block";
+         loader.style.display = "none";
     }
 }
 
 function w3_close() {
-    mySidenav.style.display = "none"
-    overlayBg.style.display = "none"
+    mySidenav.style.display = "none";
+    overlayBg.style.display = "none";
 }
 
 
 window.onscroll = function() {myFunction()}
 function myFunction() {
-    var topo = document.getElementById("bt-top")
+    var topo = document.getElementById("bt-top");
     document.body.scrollTop > 4000 || document.documentElement.scrollTop > 4000 ?
     topo.className = "top w3-animate-zoom w3-hide-small" : 
-    topo.className = topo.className.replace("top w3-animate-zoom w3-hide-small", "top w3-hide w3-hide-small")
+    topo.className = topo.className.replace("top w3-animate-zoom w3-hide-small", "top w3-hide w3-hide-small");
 }
 
 function onClick(element) {
-  document.getElementById("img01").src = element.src
-  document.getElementById("modal01").style.display = "block"
-  var captionText = document.getElementById("caption")
-  captionText.innerHTML = element.alt
+  document.getElementById("img01").src = element.src;
+  document.getElementById("modal01").style.display = "block";
+  var captionText = document.getElementById("caption");
+  captionText.innerHTML = element.alt;
 }
 
 
 function navigation(pos,id){
-  w3_close()
-  vl=45
-  $(".nav-space").val() ? vl = vl + parseInt($(".nav-space").val()) : vl
+  w3_close();
+  vl = 45;
+  $(".nav-space").val() ? vl = vl + parseInt($(".nav-space").val()) : vl;
   $("html, body").animate({
     scrollTop: $(pos).offset().top -vl
   }, 750)
   if (id){
-    $('select[name=category]').val(id)
-    updateTourData()
+    $('select[name=category]').val(id);
+    updateTourData();
   }
 }
 
 function updateTourData(){
-  $('.set-visible, .wp-active').addClass('w3-hide')
+  $('.set-visible, .wp-active').addClass('w3-hide');
 }
 
-stockDate=[]
+stockDate = [];
 
 function getAvailable(){
 
-  var html = ''
-  var hours = ''
+  var html = '';
+  var hours = '';
 
-  $('.at-last, .required').addClass('w3-hide')
-  $('.get-dates, #booking_date, #booking_hour').val('')
-  $('.order_available').datetimepicker()
+  $('.at-last, .required').addClass('w3-hide');
+  $('.get-dates, #booking_date, #booking_hour').val('');
+  $('.order_available').datetimepicker();
 
-  $('.removal').remove()
+  $('.removal').remove();
 
-  $('.w3-overlay, #loader-cont').show()
+  $('.w3-overlay, #loader-cont').show();
 
-  dataValue = $('#get-available').serialize()
+  dataValue = $('#get-available').serialize();
 
   setTimeout(function(){
     $.ajax({  
@@ -314,41 +323,41 @@ function getAvailable(){
       cache: false,
       success: function(data){
         //console.log(data)
-        $('.w3-overlay, #loader-cont').hide()
+        $('.w3-overlay, #loader-cont').hide();
 
         //user required fields messages 
         if (data.status == 0){
             for(k = 0; k < data.message.length; k++ )
-              $('.'+data.message[k]).removeClass('w3-hide')
-            $('#modal-info').show()
+              $('.'+data.message[k]).removeClass('w3-hide');
+            $('#modal-info').show();
           }
 
         //no stock available 
         else if (data.status == 2){
-          $('.'+data.message).removeClass('w3-hide')
-          data.max ? $('.MAX').html(data.max) : $('.MAX').empty() 
-          $('#modal-no-stock').show()
+          $('.'+data.message).removeClass('w3-hide');
+          data.max ? $('.MAX').html(data.max) : $('.MAX').empty();
+          $('#modal-no-stock').show();
         }
 
         else if (data.status == 1){
           
-          timeDecrease(data.expiration)
+          timeDecrease(data.expiration);
 
         $('input[name=wp]').val(data.wp)
-        stockDate = data.available
-        date = []
+        stockDate = data.available;
+        date = [];
 
         for (var k in data.available)
-          date.push(data.available[k].datetime)
+          date.push(data.available[k].datetime);
           
         if($('.order_available').data("DateTimePicker")) 
-          $('.order_available').data("DateTimePicker").date(null)
+          $('.order_available').data("DateTimePicker").date(null);
 
-        $('.get-dates').val('') 
-        $('#modal-available-dates').show()
-        $('.no-hours').addClass('w3-hide')
-        $('.w3-overlay').hide()
-        $('.order_available').data('DateTimePicker').destroy() 
+        $('.get-dates').val('');
+        $('#modal-available-dates').show();
+        $('.no-hours').addClass('w3-hide');
+        $('.w3-overlay').hide();
+        $('.order_available').data('DateTimePicker').destroy();
         $('.order_available').datetimepicker({
           format : 'DD/MM/YYYY',
           ignoreReadonly: true,
@@ -367,17 +376,16 @@ function getAvailable(){
           locale: data.locale,
           minDate: data.minDate
         })
-        
-        $('.order_available').data("DateTimePicker").date(null)
-        $('.get-dates').val('')
+        $('.order_available').data("DateTimePicker").date(null);
+        $('.get-dates').val('');
       }
       else{
-        $('#modal-check').show()
+        $('#modal-check').show();
       }
     },
     error:function(data){
-      $("#myOverlay, #loader-cont").hide()
-      $('#modal-error').show()
+      $("#myOverlay, #loader-cont").hide();
+      $('#modal-error').show();
     }
   })
 }, 500)
@@ -385,34 +393,34 @@ function getAvailable(){
 
 
 $('.order_available').on('dp.change', function(e){
-  var options= ''
-  var complete =''
-  $('.get-dates').val(moment(e.date).format("DD/MM/YYYY"))
-  d = new RegExp(moment(e.date).format("YYYY-MM-DD"), 'g')
+  var options= '';
+  var complete = '';
+  $('.get-dates').val(moment(e.date).format("DD/MM/YYYY"));
+  d = new RegExp(moment(e.date).format("YYYY-MM-DD"), 'g');
   
   //for (i=0 ; i<stockDate.length; i++){
     for (var k in stockDate){
-    r = stockDate[k].datetime.match(d)
+    r = stockDate[k].datetime.match(d);
     if(r){
-      complete = stockDate[k].datetime.split(" ")
-      options += '<option data-left='+stockDate[k].onlyLeft+' value="'+stockDate[k].id+'">'+complete[1]+'</option>'
+      complete = stockDate[k].datetime.split(" ");
+      options += '<option data-left='+stockDate[k].onlyLeft+' value="'+stockDate[k].id+'">'+complete[1]+'</option>';
     }
   }
-  $('.set-hours').html(options)
+  $('.set-hours').html(options);
 })
 
 
 function closeModalEvents(){
-  $('#modal-available-dates').hide()
-  $('#booking_tourtype').val('')
-  $('.at-last').addClass('w3-hide')
-  if($('.order_available').data("DateTimePicker")) $('.order_available').data('DateTimePicker').destroy()
-  $('.get-dates, .set-hours').val('').removeClass('w3-pale-red')
+  $('#modal-available-dates').hide();
+  $('#booking_tourtype').val('');
+  $('.at-last').addClass('w3-hide');
+  if($('.order_available').data("DateTimePicker")) 
+    $('.order_available').data('DateTimePicker').destroy();
+  $('.get-dates, .set-hours').val('').removeClass('w3-pale-red');
 }
 
 function changeEventGetHour(v){
   $('#booking_hour').val(v)
-  //alert($('.set-hours').data('left'))
 }
 
 //userDate=''
@@ -420,30 +428,30 @@ function changeEventGetHour(v){
 
 function saveModalEvents(){
 
-  userDate = $('#get-available-datetime input[name=date]').val()
-  userTime= $('#get-available-datetime select[name=time] option:selected').text()
-  event = $('#get-available-datetime select[name=time]').val()
+  userDate = $('#get-available-datetime input[name=date]').val();
+  userTime= $('#get-available-datetime select[name=time] option:selected').text();
+  event = $('#get-available-datetime select[name=time]').val();
 
-  $('.required').addClass('w3-hide')
+  $('.required').addClass('w3-hide');
 
-  if (!$('.get-dates').val()) $('.date').removeClass('w3-hide')
-  if (!$('.set-hours').val()) $('.hour').removeClass('w3-hide')
+  if (!$('.get-dates').val()) $('.date').removeClass('w3-hide');
+  if (!$('.set-hours').val()) $('.hour').removeClass('w3-hide');
 
   if ($('.get-dates').val() && $('.set-hours').val()) {
-    $('#booking_date').val($('.get-dates').val())
-    $('#modal-available-dates').hide()
-    $('.at-last').removeClass('w3-hide')
-    $('.order_available').data("DateTimePicker").date(null)
+    $('#booking_date').val($('.get-dates').val());
+    $('#modal-available-dates').hide();
+    $('.at-last').removeClass('w3-hide');
+    $('.order_available').data("DateTimePicker").date(null);
 
-    navigation('#is-available')
+    navigation('#is-available');
 
-    $('.client-tour-day').html(userDate)
-    $('.client-tour-time').html(userTime)
-    $('input[name=ev]').val(event)
+    $('.client-tour-day').html(userDate);
+    $('.client-tour-time').html(userTime);
+    $('input[name=ev]').val(event);
 
-    $('input[name=wp]').val() == 'true' ? $('.wp-active').removeClass('w3-hide') : $('.wp-active').addClass('w3-hide')
+    $('input[name=wp]').val() == 'true' ? $('.wp-active').removeClass('w3-hide') : $('.wp-active').addClass('w3-hide');
 
-    $('.set-visible').removeClass('w3-hide')
+    $('.set-visible').removeClass('w3-hide');
 
     userEvent = {
       'event': event,
@@ -451,8 +459,8 @@ function saveModalEvents(){
       'children': $('input[name=children]').val(),
       'baby':$('input[name=baby]').val()}
 
-      sessionStorage.setItem('userEvent', JSON.stringify(userEvent))
-      var uobject = sessionStorage.getItem('userEvent')
+      sessionStorage.setItem('userEvent', JSON.stringify(userEvent));
+      var uobject = sessionStorage.getItem('userEvent');
     //console.log('uobject: ', JSON.parse(uobject))
   }
 
@@ -460,7 +468,7 @@ function saveModalEvents(){
 
 
 function showRgpd(){
-  $("#myOverlay, #loader-cont").show()
+  $("#myOverlay, #loader-cont").show();
   setTimeout(function(){
     $.ajax({ 
       url:'{{ path('index_rgpd') }}',
@@ -469,26 +477,26 @@ function showRgpd(){
         //console.log(data)
         $("#myOverlay, #loader-cont").hide()
         if (data.status == 1){
-          $('#modal-rgpd').show()
-          $('.rgpd-title').html(data.message)
-          $('.rgpd-text').html(data.data)
+          $('#modal-rgpd').show();
+          $('.rgpd-title').html(data.message);
+          $('.rgpd-text').html(data.data);
         }        
         else {
-          $('.GDPR_NOT_FOUND').removeClass('w3-hide')       
-          $('#modal-info').show()
+          $('.GDPR_NOT_FOUND').removeClass('w3-hide');      
+          $('#modal-info').show();
         }
       },
       error:function(data){
-        $("#myOverlay, #loader-cont").hide()
-        $('#modal-error').show()
+        $("#myOverlay, #loader-cont").hide();
+        $('#modal-error').show();
       }
     })
   }, 500)
 }
 
 function checkOut(){
-  $('.required').addClass('w3-hide')
-  $("#myOverlay, #loader-cont").show()
+  $('.required').addClass('w3-hide');
+  $("#myOverlay, #loader-cont").show();
 
   //console.log($('#get-available').serialize())
 
@@ -501,51 +509,51 @@ function checkOut(){
       success: function(data){
         //console.log(data)
 
-        $("#myOverlay, #loader-cont").hide()
+        $("#myOverlay, #loader-cont").hide();
 
         //time of purchase reached 
         if (data.status == 3)
-          $('#modal-check').show()
+          $('#modal-check').show();
 
         //sucess 
         else if (data.status == 1){
-          navigation('#reservas')
-          clearInterval(timer)
-          $('#modal-success').show()
-          $('.set-order-id').html(data.data)
-          $('#get-available').trigger('reset')
-          $('.set-visible, .wp-active').addClass('w3-hide')
-          sessionStorage.clear()
-          $('.icon-unknown').removeClass('w3-hide')
+          navigation('#reservas');
+          clearInterval(timer);
+          $('#modal-success').show();
+          $('.set-order-id').html(data.data);
+          $('#get-available').trigger('reset');
+          $('.set-visible, .wp-active').addClass('w3-hide');
+          sessionStorage.clear();
+          $('.icon-unknown').removeClass('w3-hide');
         }
 
         //show what wetn wrong
         else if (data.status == 0 || data.status == 2){
           for(k = 0; k<data.data.length;k++)
-            $('.'+data.data[k]).removeClass('w3-hide')
-          $('#modal-info').show()
+            $('.'+data.data[k]).removeClass('w3-hide');
+          $('#modal-info').show();
         }
         else{
-          $('#modal-check').show()
+          $('#modal-check').show();
         }
       
       },
       error:function(data){
-        $("#myOverlay, #loader-cont").hide()
-        $('#modal-error').show()
+        $("#myOverlay, #loader-cont").hide();
+        $('#modal-error').show();
       }
     })
   }, 500)
 }
 
-typeof(Storage) !== "undefined" ? false : setTimeout(function(){$('#modal-no-storage').show()},1500)
+typeof(Storage) !== "undefined" ? false : setTimeout(function(){$('#modal-no-storage').show()},1500);
 
-'{{ id }}' != '#home' ? setTimeout(function(){navigation('{{id}}');},1000) : false
+'{{ id }}' != '#home' ? setTimeout(function(){navigation('{{id}}');},1000) : false;
 
 var tl = new Cleave('input[name=telephone]', {
     phone: true,
     phoneRegionCode: '{{locale}}'
-})
+});
 
 var dc = new Cleave('input[name=date_card]', {
     date: true,
@@ -566,30 +574,29 @@ var cc = new Cleave('input[name=card_nr]', {
       $('.icon-' + type).removeClass('w3-hide').addClass('w3-animate-zoom')
     }
   }
-})
+});
 
-var timer =''
+var timer ='';
 
 function timeDecrease(v){
 
-  if (timer) clearInterval(timer)
+  if (timer) 
+    clearInterval(timer);
 
   timer = setInterval(function() {
     
     if (v == 0){
-      $('#modal-check').show()
-      clearInterval(timer)
+      $('#modal-check').show();
+      clearInterval(timer);
     }
 
-    $('.time_left').text(v)
+    $('.time_left').text(v);
     
-    v--
+    v--;
   }, 1000)
-
 }
 
-
-
+*/
 </script>
 
 
