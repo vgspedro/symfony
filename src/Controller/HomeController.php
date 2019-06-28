@@ -248,14 +248,13 @@ class HomeController extends AbstractController
                 'message' => 'invalid fields',
                 'data' => $err,
                 'mail' => null,
-                'locale' => $this->session->get('_locale')->getName(),
+                'locale' => $locale,
                 'expiration' => 0
             );
             return new JsonResponse($response);
         }
         else{
         
-        $locale = $this->session->get('_locale')->getName() ? $this->session->get('_locale')->getName() : 'pt_PT';
         $locales = $em->getRepository(Locales::class)->findOneBy(['name' => $locale]);
         
         if(!$locales)
@@ -390,7 +389,7 @@ class HomeController extends AbstractController
             'message' => 'all valid',
             'data' =>  $booking->getId(),
             'mail' => $send,
-            'locale' => $locales->getName(),
+            'locale' => $locale,
             'expiration' => 0
             );
         
@@ -636,7 +635,6 @@ class HomeController extends AbstractController
 
     }
 
-
     private function getBrownserLocale($request) 
     { 
         $u_agent = $request->headers->get('accept-language');
@@ -646,10 +644,8 @@ class HomeController extends AbstractController
             $locale="en_EN";
         
         return $locale; 
-
     }
-
-
+    
 }
 
 
