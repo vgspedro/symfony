@@ -186,7 +186,7 @@ $('#category-form').on('submit',function(e){
   e.preventDefault()
   obj=''
   $('.w3-overlay').show()
-  console.log(new FormData($(this)))
+  //console.log(new FormData($(this)))
   $('.required').addClass('w3-hide')
   //setTimeout(function(){
     $.ajax({
@@ -197,7 +197,7 @@ $('#category-form').on('submit',function(e){
       contentType: false,
       cache: false,
       success: function(data){  
-        console.log(data)
+        //console.log(data)
         $('.w3-overlay').hide()
         if (data.message == 'success'){
           $('#datetimepicker2').data('DateTimePicker').destroy() 
