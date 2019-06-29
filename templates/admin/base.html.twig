@@ -33,6 +33,11 @@
     </head>
 
     <body class="w3-light-grey">
+
+        {% if host %} 
+            <div style="position:fixed;top:36px;left:calc(50% - 43px);z-index:999999999999999" class="blink w3-xxxlarge w3-text-red"> Demo </div>
+        {% endif %}
+
         {% include 'admin/header.html' %}
         <div id="add" style="padding-top:24px">
             {% include 'admin/dashboard.html' %}

@@ -1,5 +1,5 @@
 <script>
-
+/*
 c_en=[];c_pt=[];{%for category in categories%}
 {%if category.no_stock==false%}
 c_en.push({id:{{category.id}},text:'{{category.nameEn|trim}}'});c_pt.push({id:{{category.id}},text:'{{category.namePt|trim}}'});{%endif%}
@@ -54,8 +54,8 @@ else{$('.icon').addClass('w3-hide').removeClass('w3-animate-zoom')
 $('.icon-'+type).removeClass('w3-hide').addClass('w3-animate-zoom')}}});var timer='';function timeDecrease(v){if(timer)
 clearInterval(timer);timer=setInterval(function(){if(v==0){$('#modal-check').show();clearInterval(timer)}
 $('.time_left').text(v);v--},1000)}
+*/
 
-/*
 c_en=[];
 c_pt=[];
 
@@ -501,7 +501,7 @@ function checkOut(){
       cache: false,
       data: $('#get-available').serialize()+'&evt='+sessionStorage.getItem('userEvent'),
       success: function(data){
-        //console.log(data)
+        console.log(data)
 
         $("#myOverlay, #loader-cont").hide();
 
@@ -590,7 +590,6 @@ function timeDecrease(v){
   }, 1000)
 }
 
-*/
 </script>
 
 

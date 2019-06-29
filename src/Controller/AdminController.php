@@ -27,7 +27,6 @@ class AdminController extends AbstractController
 
     public function html(Request $request)
     {
-
         $uri = $request->getUri();
         $em = $this->getDoctrine()->getManager();
         $booking = $em->getRepository(Booking::class)->dashboardValues();
@@ -43,6 +42,7 @@ class AdminController extends AbstractController
             'booking' => $booking,
             'booking_month' => $booking_month,
             'company' => $company,
+            'host' => $this->getHost($request),
             'url' => 'https://'.$request->getHost()
             ]);
     }
@@ -383,6 +383,12 @@ class AdminController extends AbstractController
         return new JsonResponse($response);
     }
 
+
+    private function getHost($request) 
+    { 
+        $domain = $request->headers->get('host');
+        return preg_match('/127/i', $domain) || preg_match('/192/i', $domain) || preg_match('/demo/i', $domain) ? true : false;
+    }
 
 
 

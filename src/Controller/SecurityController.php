@@ -28,6 +28,7 @@ class SecurityController extends AbstractController
         'last_username' => $lastUsername,
         'error'         => $error,
         'company' => $company,
+        'host' => $this->getHost($request)
         ));
     }
    
@@ -47,8 +48,16 @@ class SecurityController extends AbstractController
         'last_username' => $lastUsername,
         'error'         => $error,
         'company' => $company,
+        'host' => $this->getHost($request)
         ));
     }
+
+    private function getHost($request) 
+    { 
+        $domain = $request->headers->get('host');
+        return preg_match('/127/i', $domain) || preg_match('/192/i', $domain) || preg_match('/demo/i', $domain) ? true : false;
+    }
+
 
 
 }

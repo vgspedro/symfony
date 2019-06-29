@@ -180,7 +180,8 @@ class HomeController extends AbstractController
                 'galleries' => $gallery,
                 'locales' => $locales,
                 'id' => '#'.$id,
-                'company' => $company
+                'company' => $company,
+                'host' => $this->getHost($request)
                 )
             );
     }
@@ -196,8 +197,16 @@ class HomeController extends AbstractController
             if($this->session->get('_locale')->getName())
                 $locale = $this->session->get('_locale')->getName();
         }
+        
         else
             $locale = $this->getBrownserLocale($request);
+
+        $locales = $em->getRepository(Locales::class)->findOneBy(['name' => $locale]);
+        
+        if(!$locales)
+             $locales = $em->getRepository(Locales::class)->findOneBy(['name' => 'pt_PT']);
+
+        $locale = $locales->getName();
 
         if($this->getExpirationTime($request) == 1){ 
             $err[] = 'SESSION_END';
@@ -259,23 +268,9 @@ class HomeController extends AbstractController
             return new JsonResponse($response);
         }
         else{
-        
-        $locales = $em->getRepository(Locales::class)->findOneBy(['name' => $locale]);
-        
-        if(!$locales)
-            #throw new Exception("Error Processing Request Locales", 1);
-            $err[] = 'OTHER_BUY_IT';
-            $response = array(
-                'status' => 0,
-                'message' => 'no_vacancy_3',
-                'data' => $err,
-                'mail' => null,
-                'locale' => $locale,
-                'expiration' => 0
-            );
-
 
         $em->getConnection()->beginTransaction();
+
         $available = $em->getRepository(Available::class)->find($userEvent->event);
           
         if(!$available){
@@ -645,7 +640,7 @@ class HomeController extends AbstractController
         $u_agent = $request->headers->get('accept-language');
         $locale = 'pt_PT';
 
-        if (!preg_match('/pt-PT/i', $u_agent))
+        if (!preg_match('/pt-/i', $u_agent))
             $locale="en_EN";
         
         return $locale; 
@@ -655,7 +650,6 @@ class HomeController extends AbstractController
     { 
         $domain = $request->headers->get('host');
         return preg_match('/127/i', $domain) || preg_match('/192/i', $domain) || preg_match('/demo/i', $domain) ? true : false;
-        
     }
 
 

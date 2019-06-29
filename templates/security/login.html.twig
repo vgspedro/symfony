@@ -12,6 +12,10 @@
         <script src="{{ asset('js/jquery-11.0.min.js') }}"></script>
     </head>
     <body>
+        {% if host %} 
+            <div style="position:fixed;top:36px;left:calc(50% - 43px);z-index:999999999999999" class="blink w3-xxxlarge w3-text-red"> Demo </div>
+        {% endif %}
+
         {% block content %}{% endblock %}
     </body>
 </html>
