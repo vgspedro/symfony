@@ -1,23 +1,21 @@
 <style type="text/css">
 .hight-light{bottom: 0;background: rgba(0, 0, 0, 0.6);width: 100%;position:sticky; margin-top:-122px}
-@media only screen and (max-width:601px){
-.hight-light { margin-top: -107px}
-}
+@media only screen and (max-width:601px){.hight-light { margin-top: -107px}}
 </style>
 
 <section id="home" style="padding-top:56px" class="w3-border-bottom">
   <div class="w3-display-container w3-center">
     <div class="w3-display-container w3-center">
-      <img class="banner-img" alt="Taruga Tours, sup, caves, Benagil, Algarve" src="images/banner.jpg">
+      <img class="banner-img" alt="visite as grutas, algarve, visit the caves, sup, caves, Benagil, Algarve" src="images/banner.jpg">
     
     {% if category %}
 
       <div class="w3-left-align w3-padding w3-text-white hight-light">
       <div class="w3-row">
         <div class="w3-col s12">
-          <p class="w3-xlarge" style="text-transform: uppercase">
-            <span class="PT">{{ category.namePt }}</span>
-            <span class="EN w3-hide">{{ category.nameEn }}</span>
+          <p class="">
+            <h2 class="PT bold" style="text-transform:uppercase">{{ category.namePt }}</h2>
+            <h2 class="EN w3-hide bold" style="text-transform:uppercase">{{ category.nameEn }}</h2>
           </p>
           <div class="w3-col l4 m4 s0 w3-left-align w3-hide-small">
              {% if category.adultAmount> 0 %}
