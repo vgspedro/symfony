@@ -43,7 +43,11 @@
 		</script>
     </head>
     <body>
-		{% include 'taruga/navbar.base.html' %}
+    {% if host %} 
+        <div style="position:fixed;top:0px;left:100px;z-index:9999" class="w3-text-red"> demo</div>
+    {% endif %}
+	
+    	{% include 'taruga/navbar.base.html' %}
 
 		{% include 'taruga/navbarmobile.base.html' %}
 		

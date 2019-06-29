@@ -42,6 +42,7 @@ class HomeController extends AbstractController
     {   
         //remove the session start_time
 
+
         $this->session->remove('start_time');
 
         $id = !$request->query->get('id') ? 'home': $request->query->get('id');
@@ -129,6 +130,9 @@ class HomeController extends AbstractController
                 'no_stock' => $flag,
             );
         }
+
+
+
         return $this->render('base.html.twig', 
             array(
                 'colors'=> $this->color(),
@@ -141,7 +145,8 @@ class HomeController extends AbstractController
                 'locales' => $locales, 
                 'id' => '#'.$id,
                 'company' => $company,
-                'about' => $about
+                'about' => $about,
+                'host' => $this->getHost($request)
                 )
             );
     }
@@ -646,6 +651,14 @@ class HomeController extends AbstractController
         return $locale; 
     }
     
+    private function getHost($request) 
+    { 
+        $domain = $request->headers->get('host');
+        return preg_match('/127/i', $domain) || preg_match('/192/i', $domain) || preg_match('/demo/i', $domain) ? true : false;
+        
+    }
+
+
 }
 
 
