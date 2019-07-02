@@ -24,7 +24,6 @@ class RgpdController extends AbstractController
         $this->session = $session; 
     }
 
-
     public function rgpd(Request $request, ValidatorInterface $validator)
 
     {
@@ -128,8 +127,7 @@ class RgpdController extends AbstractController
                         'data' => $a);
                 }
             }
-            
-            else{   
+            else{
                 $response = array(
                     'result' => 0,
                     'message' => 'fail',
@@ -170,16 +168,11 @@ class RgpdController extends AbstractController
 
         $em = $this->getDoctrine()->getManager(); 
 
-        $locale = $this->getBrownserLocale($request);
+        $local = $request->getLocale();
 
-        if ($this->session->get('_locale')){
-            if($this->session->get('_locale')->getName())
-                $locale = $this->session->get('_locale')->getName();
-        }
+        $locale = $em->getRepository(Locales::class)->findOneby(['name' => $local]);
 
-        $locales = $em->getRepository(Locales::class)->findOneby(['name' => $locale]);
-
-        $rgpd = $em->getRepository(Rgpd::class)->findOneBy(['locales' => $locales]);
+        $rgpd = $em->getRepository(Rgpd::class)->findOneBy(['locales' => $locale]);
        
         $response = !$rgpd ?
             array('status' => 0, 'message' => $translator->trans('gpdr_not_found'), 'data' => 'GPDR_NOT_FOUND')
@@ -209,9 +202,10 @@ class RgpdController extends AbstractController
     private function getBrownserLocale($request) 
     { 
         $u_agent = $request->headers->get('accept-language');
+        
         $locale = 'pt_PT';
 
-        if (!preg_match('/pt-PT/i', $u_agent))
+        if (!preg_match('/pt-/i', $u_agent))
             $locale="en_EN";
         
         return $locale; 

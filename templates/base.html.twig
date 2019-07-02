@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-{% set foo = locale |split('_') %}
+{% set foo = app.request.locale |split('_') %}
 {%set logopath = company.linkMyDomain~asset('upload/gallery/')~company.logo %}
 
 <html lang="{{ foo[0] }}" xml:lang="{{ foo[0] }}" xmlns="http://www.w3.org/1999/xhtml">
@@ -45,7 +45,7 @@
     <body>
         
     {% if host %} 
-        <div style="position:fixed;top:36px;left:calc(50% - 43px);z-index:999999999999999" class="blink w3-xxxlarge w3-text-red"> Demo </div>
+        <div style="position:fixed;top:36px;left:calc(50% - 43px);z-index:999999999999999; -ms-transform: rotate(45deg);-webkit-transform: rotate(45deg);transform: rotate(45deg)" class="blink w3-xxxlarge w3-text-red"> Demo </div>
     {% endif %}
 	
     	{% include 'taruga/navbar.base.html' %}

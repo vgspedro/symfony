@@ -1,7 +1,7 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
-    locale: 'pt'
+    locale: 'pt_PT'
 
     categories_images_directory: '%kernel.project_dir%/public_html/upload/category'
     categories_images_width: '640'
@@ -87,6 +87,9 @@ services:
             - '%gallery_images_directory%'
 
 
+    App\EventSubscriber\LocaleSubscriber:
+        arguments: ['%kernel.default_locale%']
+
 security:
     encoders:
-        App\Entity\User: bcrypt
+        App\Entity\User: auto

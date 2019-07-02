@@ -21,6 +21,10 @@ index_translate:
     path: /translate
     controller: App\Controller\TranslationController::translate
 
+index_user_translate:
+    path: /userTranslation/{lang}/{page}
+    controller: App\Controller\HomeController::userTranslation
+
 set_booking:
     path: /booking
     controller: App\Controller\HomeController::setBooking

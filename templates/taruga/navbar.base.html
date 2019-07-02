@@ -10,13 +10,16 @@
                 <a href="javascript:void(0)" class="w3-right" onclick="w3_open()">
                     <i class="fa fa-2x fa-bars w3-padding-right w3-padding-left"></i>
                 </a>
-
                 {% if locales %}
+                
                 {% for local in locales %}
+                {% set l = app.request.locale != local.name ? 'w3-opacity' : '' %}
                 
-                <img style="cursor:pointer;height:36px;width:36px;margin:7px 8px" class="w3-opacity-min lang-action pt w3-border w3-round w3-right" src='{{local.filename}}' title="{{local.name}}" onclick="languages(this.title, {{ loop.index }})">
-                
+                <a href="{{ path('index_user_translate', {lang: local.name, page: page}) }}" onclick="$('.w3-overlay').show()" class="{{l}} w3-hover-opacity w3-right" style="padding:0px">
+                    <img style="cursor:pointer;height:36px;width:36px;margin:7px 8px" class="w3-opacity-min w3-border w3-round w3-right" src='{{local.filename}}' title="{{local.name}}">
+                </a>
                 {% endfor %}
+                
                 {% endif %}
             </li>
         </ul>
@@ -27,8 +30,7 @@
     <div class="no-cave-rides">
         <p class="marquee">
             <i class="fa-ta fa-ta-exclamation-triangle w3-text-white w3-xlarge"></i>&nbsp;
-            <span class="PT">{{ warning.infoPt }}</span>
-            <span class="EN w3-hide">{{ warning.infoEn }}</span>
+            <span> {{ app.request.locale == 'pt_PT' ? warning.infoPt : warning.infoEn }}</span>
         </p>
     </div>
     

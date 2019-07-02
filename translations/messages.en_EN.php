@@ -15,12 +15,13 @@ return array(
     'time_left' => 'Time left to finish your booking:',
     'seconds' => 'seconds',
     'gdpr_not_found' => 'GPDR not Found!',
+    'not_available' => 'Nothing available!',
 
 'link' => array(
     'where_we_are'=>'Where we Are',
     'the_team'=>'The Team',
     'price'=>'Prices',
-    'kayak'=>'Kayak Rental',
+    'help_improve' => 'Help us improve',
     'schedule'=>'Schedule',
     'contact'=>'Contacts',
     'booking'=>'Booking'),
@@ -59,25 +60,6 @@ return array(
     'children'=>'Children',
 ),
 
-'part_four'=> array(
-    'kayak_txt'=>'For the more adventurous we have the option of kayak hire.',
-    'kayak_txt_i_info'=>'Important information',
-    'kayak_txt_conditions'=>'It´s a rental not a tour, that requires the fulfillment of a term of responsibility where the person who rents has to possess his <b>identification document.</b>
-<br><br>We do not keep personal property on the premises.
-<br><br>The equipment is acquired at the entrance of the beach being the <b>responsibility</b> of those who rents the delivery of the same at the end of the rental.<br>
-(You can request help from a collaborator at the moment).
-<br><br>It´s advisable only to people with <b>experience in kayaking</b> as it will be to use in the sea and inside of the caves.
-<br><br><b>Not allowed for kids</b> under 5 years.',
-    'kayak_schedules'=>'Timetable available for online booking - 10:00. 
-<br><br>More schedules available for direct booking at the beach till 17:00.',
-    'kayak_single'=>'Kayak Single - 45 Min.',
-    'kayak_double'=>'Kayak Double - 45 Min.',
-    'paddle'=>'Paddle Board - 1Hour',
-    'kayak_single_price'=>'15.00€',
-    'kayak_double_price'=>'30.00€',
-    'paddle_price'=>'20.00€'
-),
-
 'part_five'=> array(
     'schedule_txt'=>'We are open all year long with the following schedule:',
     'schedule_summer'=>'9:30 till 18:30',
@@ -101,6 +83,7 @@ return array(
     'date'=>'Date *',
     'hour'=>'Hour *',
     'tour'=>'Tour *',
+    'email' => 'Email *',
     'email_invalid'=>'Invalid Email',
     'telephone'=>'Telephone *',
     'booking_email'=>'Email *',

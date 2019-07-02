@@ -26,6 +26,8 @@ use Money\Money;
 use App\Entity\TermsConditions;
 /*https://packagist.org/packages/inacho/php-credit-card-validator*/
 use Inacho\CreditCard;
+use App\Service\RequestInfo;
+
 class HomeController extends AbstractController
 {
     /*set expiration on home page 15 minutes*/
@@ -38,27 +40,23 @@ class HomeController extends AbstractController
         $this->session = $session; 
     }
     
-    public function html(Request $request, MoneyFormatter $moneyFormatter)
+    public function html(Request $request, MoneyFormatter $moneyFormatter, RequestInfo $reqInfo)
     {   
         //remove the session start_time
-
-
         $this->session->remove('start_time');
 
         $id = !$request->query->get('id') ? 'home': $request->query->get('id');
+
         $em = $this->getDoctrine()->getManager();
-
-        $locale = $this->getBrownserLocale($request);
-
-        if ($this->session->get('_locale')){
-            if($this->session->get('_locale')->getName())
-                $locale = $this->session->get('_locale')->getName();
-
+        
+        //check the user brownser Locale
+        $local = $reqInfo->getBrownserLocale($request);
+        
+        if(!$this->session->get('_locale')){
+            $this->session->set('_locale', $local);
+            return $this->redirectToRoute('index');
         }
-
-        //$locale = $request->query->get('current-local') ? $request->query->get('current-local') : $this->getBrownserLocale($request);
-        //$locale = $locale != 'pt_PT' ? 'en_EN' : 'pt_PT';
-
+        
         $cS = array();
         $locales = $em->getRepository(Locales::class)->findAll();
         $warning = $em->getRepository(Warning::class)->find(10);
@@ -131,44 +129,33 @@ class HomeController extends AbstractController
             );
         }
 
-
-
         return $this->render('base.html.twig', 
             array(
-                'colors'=> $this->color(),
                 'warning' => $warning,
                 'categories' => $cS,
-                'browser' => null,
                 'category' => $cH,
                 'galleries' => $gallery,
-                'locale' => $locale,
                 'locales' => $locales, 
                 'id' => '#'.$id,
                 'company' => $company,
                 'about' => $about,
-                'host' => $this->getHost($request)
+                'host' => $reqInfo->getHost($request),
+                'page' => 'index'
                 )
             );
     }
 
-    public function info(Request $request, MoneyFormatter $moneyFormatter)
+    public function info(Request $request, MoneyFormatter $moneyFormatter, RequestInfo $reqInfo)
     {   
         $id = !$request->query->get('id') ? 'home': $request->query->get('id');
         
         $em = $this->getDoctrine()->getManager();
         $warning = $em->getRepository(Warning::class)->find(10);
         $company = $em->getRepository(Company::class)->find(1);
+        
+        $local = $request->getLocale();
 
-        //$locale = $request->query->get('current-local') ? $request->query->get('current-local') : $this->getBrownserLocale($request);
-        //$locale = $locale != 'pt_PT' ? 'en_EN' : 'pt_PT';
-
-        $locale = $this->getBrownserLocale($request);
-
-        if ($this->session->get('_locale')){
-            if($this->session->get('_locale')->getName())
-                $locale = $this->session->get('_locale')->getName();
-
-        }
+        !$this->session->get('_locale') ? $this->session->set('_locale', 'pt_PT') : false;
 
         $locales = $em->getRepository(Locales::class)->findAll();
         $gallery = $em->getRepository(Gallery::class)->findBy(['isActive' => 1],['namePt' => 'ASC']);
@@ -176,33 +163,27 @@ class HomeController extends AbstractController
             array(
                 'colors'=> $this->color(),
                 'warning' => $warning,
-                'locale' => $locale,
+                'locale' => null,
                 'galleries' => $gallery,
                 'locales' => $locales,
                 'id' => '#'.$id,
                 'company' => $company,
-                'host' => $this->getHost($request)
+                'host' => $reqInfo->getHost($request),
+                'page' => 'index_info'
                 )
             );
     }
 
-
-    public function setBooking(Request $request, MoneyFormatter $moneyFormatter, \Swift_Mailer $mailer){
+    public function setBooking(Request $request, MoneyFormatter $moneyFormatter, \Swift_Mailer $mailer, RequestInfo $reqInfo){
 
         $err = array();
 
         $em = $this->getDoctrine()->getManager();
 
-        if ($this->session->get('_locale')){
-            if($this->session->get('_locale')->getName())
-                $locale = $this->session->get('_locale')->getName();
-        }
-        
-        else
-            $locale = $this->getBrownserLocale($request);
+        $local = $request->getLocale();
 
-        $locales = $em->getRepository(Locales::class)->findOneBy(['name' => $locale]);
-        
+        $locales = $em->getRepository(Locales::class)->findOneBy(['name' => $local]);
+
         if(!$locales)
              $locales = $em->getRepository(Locales::class)->findOneBy(['name' => 'pt_PT']);
 
@@ -215,7 +196,7 @@ class HomeController extends AbstractController
                 'message' => 'session_end',
                 'data' => $err,
                 'mail' => null,
-                'locale' => $locale,
+                'locale' => null,
                 'expiration' => 1
             );
             return new JsonResponse($response);
@@ -243,7 +224,6 @@ class HomeController extends AbstractController
                 'message' => 'fields empty',
                 'data' => $err,
                 'mail' => null,
-                'locale' => $locale,
                 'expiration' => 0
             );
             return new JsonResponse($response);
@@ -389,7 +369,6 @@ class HomeController extends AbstractController
             'message' => 'all valid',
             'data' =>  $booking->getId(),
             'mail' => $send,
-            'locale' => $locale,
             'expiration' => 0
             );
         
@@ -397,6 +376,12 @@ class HomeController extends AbstractController
         }
     }
 
+
+    public function userTranslation($lang, $page)
+    {    
+        $this->session->set('_locale', $lang);
+        return $this->redirectToRoute($page);
+    }
 
 
     private function sendEmail(\Swift_Mailer $mailer, Booking $booking, $domain){
@@ -536,120 +521,6 @@ class HomeController extends AbstractController
         'w3-text-amber',
         'w3-text-deep-orange',
         );
-    }
-
-    private function getOS($request) { 
-        $user_agent = $request->headers->get('user-agent');
-        $os_platform    =   "Unknown OS Platform";
-        $os_array       =   array(
-                                '/windows nt 6.3/i'     =>  'Windows 8.1',
-                                '/windows nt 6.2/i'     =>  'Windows 8',
-                                '/windows nt 6.1/i'     =>  'Windows 7',
-                                '/windows nt 6.0/i'     =>  'Windows Vista',
-                                '/windows nt 5.2/i'     =>  'Windows Server 2003/XP x64',
-                                '/windows nt 5.1/i'     =>  'Windows XP',
-                                '/windows xp/i'         =>  'Windows XP',
-                                '/windows nt 5.0/i'     =>  'Windows 2000',
-                                '/windows me/i'         =>  'Windows ME',
-                                '/win98/i'              =>  'Windows 98',
-                                '/win95/i'              =>  'Windows 95',
-                                '/win16/i'              =>  'Windows 3.11',
-                                '/macintosh|mac os x/i' =>  'Mac OS X',
-                                '/mac_powerpc/i'        =>  'Mac OS 9',
-                                '/linux/i'              =>  'Linux',
-                                '/ubuntu/i'             =>  'Ubuntu',
-                                '/iphone/i'             =>  'iPhone',
-                                '/ipod/i'               =>  'iPod',
-                                '/ipad/i'               =>  'iPad',
-                                '/android/i'            =>  'Android',
-                                '/blackberry/i'         =>  'BlackBerry',
-                                '/webos/i'              =>  'Mobile'
-                            );
-        foreach ($os_array as $regex => $value) { 
-            if (preg_match($regex, $user_agent)) {
-                $os_platform    =   $value;
-            }
-        }   
-        return $os_platform;
-    }
-
-
-    private function getBrowser($request) {
-        $user_agent = $request->headers->get('user-agent');
-        $browser        =   "Unknown Browser";
-        
-        $browser_array  =   array(
-                                '/msie|trident/i'       =>  'Internet Explorer',
-                                '/firefox/i'    =>  'Firefox',
-                                '/safari/i'     =>  'Safari',
-                                '/chrome/i'     =>  'Chrome',
-                                '/opera/i'      =>  'Opera',
-                                '/netscape/i'   =>  'Netscape',
-                                '/maxthon/i'    =>  'Maxthon',
-                                '/konqueror/i'  =>  'Konqueror',
-                                '/mobile/i'     =>  'Handheld Browser'
-                            );
-        foreach ($browser_array as $regex => $value) { 
-            if (preg_match($regex, $user_agent)) {
-                $browser    =   $value;
-            }
-        }
-        return $browser;
-    }
-
-    private function getPlatform($request) 
-    { 
-        $u_agent = $request->headers->get('user-agent');
-        $platform = 'Unknown';
-        //First get the platform?
-        if (preg_match('/linux/i', $u_agent)) {
-            $platform = 'Linux';
-        }
-        elseif (preg_match('/macintosh|mac os x/i', $u_agent)) {
-            $platform = 'Mac';
-        }
-        elseif (preg_match('/windows|win32/i', $u_agent)) {
-            $platform = 'Windows';
-        }
-    
-        return $platform; 
-    }
-
-
-    private function getVersion($request) 
-    { 
-        $u_agent = $request->headers->get('user-agent');
-        $platform = 'Unknown';
-        $pf ='';
-        //First get the platform?
-        if (preg_match('/Android/i', $u_agent))
-            $pf = explode('Android ', $u_agent);
-        elseif (preg_match('/Windows/i', $u_agent))
-            $pf = explode('Windows ', $u_agent);
-        if ($pf){
-            $pf = explode(';', $pf[1]);
-            $platform = $pf[0];     
-        }
-        
-        return $platform; 
-
-    }
-
-    private function getBrownserLocale($request) 
-    { 
-        $u_agent = $request->headers->get('accept-language');
-        $locale = 'pt_PT';
-
-        if (!preg_match('/pt-/i', $u_agent))
-            $locale="en_EN";
-        
-        return $locale; 
-    }
-    
-    private function getHost($request) 
-    { 
-        $domain = $request->headers->get('host');
-        return preg_match('/127/i', $domain) || preg_match('/192/i', $domain) || preg_match('/demo/i', $domain) ? true : false;
     }
 
 

@@ -8,47 +8,52 @@
  </div>
 
 <a href="javascript:void(0)" onclick="navigation('#home')" class='w3-padding-8 nav-text-m w3-khaki w3-border-bottom'>
-  <span class='HOME w3-medium' style="text-transform:uppercase">{% trans %}info.home{% endtrans %}</span>
+  <span class='w3-medium' style="text-transform:uppercase">{% trans %}info.home{% endtrans %}</span>
  </a>
 
  <a href="javascript:void(0)" onclick="navigation('#precos')" class='w3-margin-left w3-padding-8 nav-text-m'>
-  <span class='PRECOS'>{% trans %}link.price{% endtrans %}</span>
+  <span>{% trans %}link.price{% endtrans %}</span>
  </a>
   <a href="javascript:void(0)" onclick="navigation('#reservas')" class='w3-margin-left w3-padding-8 nav-text-m'> 
-  <span class='RESERVAS'>{% trans %}link.booking{% endtrans %}</span>
+  <span>{% trans %}link.booking{% endtrans %}</span>
+ </a>
+  <a href="javascript:void(0)" onclick="navigation('#reservas')" class='w3-margin-left w3-padding-8 nav-text-m'> 
+  <span>{% trans %}link.help_improve{% endtrans %}</span>
  </a>
 
   <form action="{{ path('index_info') }}" method="get" class='w3-padding-8 w3-border-bottom w3-border-top' onclick="$(this).trigger('submit')">
     <input type="hidden" name="id" value="home">
-    <input type="hidden" name="current-locale" class="current-locale" value="{{locale}}">
-    <span class='USEFULL_INFO w3-medium nav-text-m w3-margin-left' style="text-transform:uppercase">{% trans %}info.usefull_info{% endtrans %}</span>
+    <span class='w3-medium nav-text-m w3-margin-left' style="text-transform:uppercase">{% trans %}info.usefull_info{% endtrans %}</span>
   </form>
 
   <form action="{{ path('index_info') }}" method="get" class='w3-padding-8 w3-margin-left' onclick="$(this).trigger('submit')">
     <input type="hidden" name="id" value="aequipa_iii">
-    <input type="hidden" name="current-locale" class="current-locale" value="{{locale}}">
-    <span class='DOUBTS nav-text-m w3-margin-left'>{% trans %}info.doubts{% endtrans %}</span>
+    <span class='nav-text-m w3-margin-left'>{% trans %}info.doubts{% endtrans %}</span>
  </form>
-
 
   <form action="{{ path('index_info') }}" method="get" class='w3-padding-8 w3-margin-left' onclick="$(this).trigger('submit')">
     <input type="hidden" name="id" value="aequipa_ii">
-    <input type="hidden" name="current-locale" class="current-locale" value="{{locale}}">
-    <span class='GALLERY nav-text-m w3-margin-left'>{% trans %}info.gallery{% endtrans %}</span>
+    <span class='nav-text-m w3-margin-left'>{% trans %}info.gallery{% endtrans %}</span>
  </form>
 
   <form action="{{ path('index_info') }}" method="get" class='w3-padding-8 w3-margin-left' onclick="$(this).trigger('submit')">
     <input type="hidden" name="id" value="contatos">
-    <input type="hidden" name="current-locale" class="current-locale" value="{{locale}}">
-    <span class='CONTATOS nav-text-m w3-margin-left'>{% trans %}link.contact{% endtrans %}</span>
+    <span class='nav-text-m w3-margin-left'>{% trans %}link.contact{% endtrans %}</span>
  </form>
 
 <div class="w3-border-top w3-border-bottom">
  <li class='w3-center w3-padding w3-opacity-min' style="display: inline-flex;margin-left:34px">
     {% if locales %}
+    
+
         {% for local in locales %}
-        <img style="cursor:pointer;height:36px;width:36px;margin:0px 8px" class="lang-action w3-round w3-border" src='{{local.filename}}' title="{{local.name}}" onclick="languages(this.title, {{ loop.index }})">
+         {% set l = app.request.locale != local.name ? 'w3-opacity' : '' %}
+        <a href="{{ path('index_user_translate', {lang: local.name, page: 'index'}) }}" onclick="$('.w3-overlay').show()" class="{{l}} w3-hover-opacity" style="padding:0px">
+          <img style="cursor:pointer;height:36px;width:36px;margin:7px 8px" class="w3-border w3-round w3-right" src='{{local.filename}}' title="{{local.name}}">
+        </a>
         {% endfor %}
+
+
 
     {% endif %}
  </li>

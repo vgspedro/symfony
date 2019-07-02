@@ -31,12 +31,13 @@ return array(
     'time_left' => 'Tempo restante para finalizar a reserva:',
     'seconds' => 'segundos',
     'gdpr_not_found' => 'RGPD não encontrado!',
+    'not_available' => 'Sem disponibilidade!',
 
 'link' => array(
     'where_we_are'=>'Onde Estamos',
     'the_team'=>'A Equipa',
     'price'=>'Preços',
-    'kayak'=>'Aluguer Kayak',
+    'help_improve' => 'Ajude a melhorar',
     'schedule'=>'Horário',
     'contact'=>'Contatos',
     'booking'=>'Reservas'),
@@ -71,20 +72,6 @@ return array(
     'duration'=>'Duração Passeio',
     'adult'=>'Adulto',
     'children'=>'Criança',
-),
-
-'part_four'=> array(
-    'kayak_txt'=>'Para os mais aventureiros temos a opção do aluguer do Kayak.',
-    'kayak_txt_i_info'=>'Informação importante',
-    'kayak_txt_conditions'=>'É um aluguer livre que obriga o preenchimento de um termo de responsabilidade onde a pessoa que aluga tem de possuir o seu <b>documento de identificação.</b><br><br>Não guardamos bens pessoais no local.<br><br>O equipamento é adquirido na entrada da praia ficando à <b>responsabilidade</b> de quem aluga a entrega do mesmo no final do aluguer.<br>(Pode solicitar ajuda de um colaborador no momento).<br><br>É aconselhável apenas a pessoas com <b>experiência em kayak</b> visto que será para usar em mar e interior das grutas.<br><br><b>Não permitido crianças</b> com menos de 5 anos.',
-    'kayak_schedules'=>'Horário disponível para reserva online - 10:00.
-<br><br>Mais horários disponíveis para reserva direta na praia até às 17:00.',
-    'kayak_single'=>'Kayak Single - 45 Min.',
-    'kayak_double'=>'Kayak Duplo - 45 Min.',
-    'paddle'=>'Prancha Paddle - 1Hora',
-    'kayak_single_price'=>'15.00€',
-    'kayak_double_price'=>'30.00€',
-    'paddle_price'=>'20.00€'
 ),
 
 'part_five'=> array(

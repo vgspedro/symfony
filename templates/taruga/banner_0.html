@@ -14,25 +14,24 @@
       <div class="w3-row">
         <div class="w3-col s12">
           <p class="">
-            <h2 class="PT bold" style="text-transform:uppercase">{{ category.namePt }}</h2>
-            <h2 class="EN w3-hide bold" style="text-transform:uppercase">{{ category.nameEn }}</h2>
+            <h2 class="bold" style="text-transform:uppercase">{{ app.request.locale == 'pt_PT' ? category.namePt : category.nameEn }}</h2>
           </p>
           <div class="w3-col l4 m4 s0 w3-left-align w3-hide-small">
              {% if category.adultAmount> 0 %}
-                <span class='ADULTO'>{% trans %}part_tree.adult{% endtrans %}</span>&nbsp;
+                <span>{% trans %}part_tree.adult{% endtrans %}</span>&nbsp;
                 <span>{{ category.adultAmount}}€</span>
                 <br>
               {% else %}
-                <span class='ADULTO'>{% trans %}part_tree.adult{% endtrans %}</span>&nbsp;
+                <span>{% trans %}part_tree.adult{% endtrans %}</span>&nbsp;
                 <span>-/-</span>
                 <br>
               {% endif %}
               {% if category.childrenAmount > 0 %}
-                <span class='CRIANCA'>{% trans %}part_tree.children{% endtrans %}</span>&nbsp;
+                <span>{% trans %}part_tree.children{% endtrans %}</span>&nbsp;
                 <span>{{ category.childrenAmount }}€</span>
                 <br>
               {% else %}
-                <span class='CRIANCA'>{% trans %}part_tree.children{% endtrans %}</span>&nbsp;
+                <span>{% trans %}part_tree.children{% endtrans %}</span>&nbsp;
                 <span>-/-</span>
                 <br>
               {% endif %}
@@ -40,7 +39,7 @@
           <div class="w3-col l4 m8 s12 w3-center">
             <span class="w3-btn w3-blue w3-center w3-round" onclick="navigation('#reservas', {{ category.id }})">
               <i class="fa fa-calendar"></i>&nbsp;
-              <span class="GET_AVAILABLE"> {% trans %}part_seven.get_available{% endtrans %}</span>
+              <span>{% trans %}part_seven.get_available{% endtrans %}</span>
             </span>
           </div>
         </div>
