@@ -1,6 +1,6 @@
 framework:
     secret: '%env(APP_SECRET)%'
-    default_locale: pt
+    default_locale: pt_PT
     csrf_protection: ~
     #validation: { enable_annotations: true }
     #http_method_override: true
@@ -8,7 +8,10 @@ framework:
     # Enables session support. Note that the session will ONLY be started if you read or write from it.
     # Remove or comment this section to explicitly disable session support.
     session:
-        handler_id: ~
+        #handler_id: ~
+        handler_id: session.handler.native_file
+        save_path: '%kernel.project_dir%/var/sessions/%kernel.environment%'
+        cookie_lifetime: 604800
 
     #esi: ~
     #fragments: ~
@@ -31,7 +34,7 @@ framework:
         #app: cache.adapter.apcu
     translator:
       enabled: true
-      
+
 sensio_framework_extra:
  router:
      annotations: false

@@ -92,4 +92,4 @@ services:
 
 security:
     encoders:
-        App\Entity\User: auto
+        App\Entity\User: bcrypt
