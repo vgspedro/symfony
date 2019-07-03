@@ -1,3 +1,18 @@
+<div class="w3-overlay" onclick="w3_close()" id="myOverlay">
+    <div class="w3-display-middle" id="loader-cont">
+        <span class="w3-center w3-hide-small">
+           <div class="loader"></div>
+        </span>
+        <span class="w3-center w3-hide-large w3-hide-medium">
+            <div class="loader loader-mob"></div>
+        </span>
+    </div>
+</div>
+
+{% if host %} 
+    <div style="position:fixed;top:36px;left:calc(50% - 43px);z-index:999999999999999; -ms-transform: rotate(45deg);-webkit-transform: rotate(45deg);transform: rotate(45deg)" class="blink w3-xxxlarge w3-text-red"> Demo </div>
+{% endif %}
+
 <section class="w3-top w3-card-2">
     <div class='nav-container w3-sand'>
         <ul class="w3-navbar" id="myNavbar">

@@ -25,11 +25,18 @@ index_user_translate:
     path: /userTranslation/{lang}/{page}
     controller: App\Controller\HomeController::userTranslation
 
+
+index_help_improve:
+    path: /help-improve/
+    controller: App\Controller\HelpImproveController::helpImprove
+
 set_booking:
     path: /booking
     controller: App\Controller\HomeController::setBooking
     #condition: 'request.isXmlHttpRequest()'
     #methods: [POST]
+
+
 
 ###
 # GET CATEGORY BLOCKED DATES
