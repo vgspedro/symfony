@@ -1,8 +1,5 @@
 <script src="{{ asset('js/jquery-2.1.1.min.js') }}"></script>
-<script src="{{ asset('js/jquery.nanogallery2.min.js') }}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.js"></script>
-<script type='text/javascript' src="{{ asset('js/unitegallery.min.js') }}"></script>
-<script src="{{ asset('js/ug-theme-video.js') }}" type='text/javascript'></script>
 
 <script>
 
@@ -40,23 +37,6 @@ function w3_close() {
     mySidenav.style.display = "none"
     overlayBg.style.display = "none"
 }
-
-
-window.onscroll = function() {myFunction()}
-function myFunction() {
-    var topo = document.getElementById("bt-top")
-    document.body.scrollTop > 4000 || document.documentElement.scrollTop > 4000 ?
-    topo.className = "top w3-animate-zoom w3-hide-small" : 
-    topo.className = topo.className.replace("top w3-animate-zoom w3-hide-small", "top w3-hide w3-hide-small")
-}
-
-function onClick(element) {
-  document.getElementById("img01").src = element.src
-  document.getElementById("modal01").style.display = "block"
-  var captionText = document.getElementById("caption")
-  captionText.innerHTML = element.alt
-}
-
 
 function navigation(pos,id){
   w3_close()

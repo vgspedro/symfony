@@ -16,6 +16,16 @@ return array(
     'seconds' => 'seconds',
     'gdpr_not_found' => 'GPDR not Found!',
     'not_available' => 'Nothing available!',
+    'help_improve_txt' => 'We’re always looking for ways to improve. Share your unique online experience with our team and help us keep you connected.',
+    'send_feedback' => 'Send us feedback',
+    'send_feedback_txt' => 'Let us know how we can improve your experience.',
+    'send_feedback_btn'=>'Have your say',
+    'request_feature' => 'Request a enhance',
+    'request_feature_txt' => 'Assist us in shaping and influence our products.',
+    'request_feature_btn' =>'Help us grow',
+    'enhance_experience' => 'Want to enhance your online experience?',
+    'enhance_experience_btn' => 'Go to our tours',
+
 
 'link' => array(
     'where_we_are'=>'Where we Are',
