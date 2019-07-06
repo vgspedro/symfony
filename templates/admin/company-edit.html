@@ -118,6 +118,17 @@
   </div>
 
   <div class="w3-row-padding w3-margin-top w3-border-bottom">
+    <div class="w3-col s12 l4 m5 w3-margin-bottom">
+      {{ form_label(form.stripe_pk)}}<br>
+      {{ form_widget(form.stripe_pk)}}
+    </div>
+    <div class="w3-col s12 l6 m7 w3-margin-bottom">
+      {{ form_label(form.stripe_sk)}}<br>
+      {{ form_widget(form.stripe_sk)}}
+    </div>
+  </div>
+
+  <div class="w3-row-padding w3-margin-top w3-border-bottom">
     <div class="w3-col s2 l1 m1 w3-margin-bottom" title="Ativar o link">
       {{ form_label(form.link_facebook_active)}}<br>
       {{ form_widget(form.link_facebook_active)}}

@@ -170,6 +170,9 @@
     "spipu/html2pdf": {
         "version": "v5.1.0"
     },
+    "stripe/stripe-php": {
+        "version": "v6.40.0"
+    },
     "swiftmailer/swiftmailer": {
         "version": "v6.0.2"
     },

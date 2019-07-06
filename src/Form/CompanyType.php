@@ -121,6 +121,23 @@ class CompanyType extends AbstractType
                 'label' => 'Google Maps Api Key *',
                 'attr' => ['class' => 'w3-input w3-border w3-white','placeholder'=>'Google Maps Api Key *']
             ))
+
+
+
+            ->add('stripe_pk', TextType::class, array(
+                'required' => true,
+                'label' => 'Stripe Public Key *',
+                'attr' => ['class' => 'w3-input w3-border w3-white','placeholder'=>'Stripe Public Key *']
+            ))
+
+            ->add('stripe_sk', TextType::class, array(
+                'required' => true,
+                'label' => 'Stripe Secret Key *',
+                'attr' => ['class' => 'w3-input w3-border w3-white','placeholder'=>'Stripe Secret Key *']
+            ))
+
+
+
             ->add('logo', FileType::class, array(
                 'label' => 'Logo',
                 'required' => false,

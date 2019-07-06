@@ -136,6 +136,30 @@ class Company
     /** @ORM\Column(type="boolean", name="link_snapchat_active",nullable=true)*/
     private $link_snapchat_active = false;
 
+    /** @ORM\Column(type="string", name="stripe_pk",nullable=true)*/
+    private $stripe_pk;
+        /** @ORM\Column(type="string", name="stripe_sk",nullable=true)*/
+    private $stripe_sk;
+
+    public function getStripePK()
+    {
+        return $this->stripe_pk;
+    }
+    public function setStripePK($stripe_pk)
+    {
+        $this->stripe_pk = $stripe_pk;
+    }
+
+    public function getStripeSK()
+    {
+        return $this->stripe_sk;
+    }
+    public function setStripeSK($stripe_sk)
+    {
+        $this->stripe_sk = $stripe_sk;
+    }
+
+
     public function getMetaKeywords()
     {
         return $this->meta_keywords;
