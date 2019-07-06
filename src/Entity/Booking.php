@@ -83,8 +83,7 @@ class Booking
         return $this->id;
     }
 
-
-  public function setDateEvent($dateEvent)
+    public function setDateEvent($dateEvent)
     {
         $this->dateEvent = $dateEvent;
     }

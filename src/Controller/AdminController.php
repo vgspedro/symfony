@@ -21,9 +21,159 @@ use App\Form\BlockdatesType;
 use App\Form\EventType;
 use App\Form\EasyTextType;
 use App\Service\MoneyFormatter;
+use App\Service\MoneyParser;
+use Money\Money;
 
 class AdminController extends AbstractController
 {
+
+    public function paymentStripe(Request $request, MoneyParser $moneyParser, MoneyFormatter $moneyFormatter){
+
+        $em = $this->getDoctrine()->getManager();
+        $company = $em->getRepository(Company::class)->find(1);
+        $booking = $em->getRepository(Booking::class)->find($request->request->get('booking'));
+
+        $stripe = new \Stripe\Stripe();
+        $charge = new \Stripe\Charge();
+        $customer = new \Stripe\Customer();
+
+        $stripe->setApiKey($company->getStripeSk());
+
+        $chargeClient = $request->request->get('chargeAmount') ? $request->request->get('chargeAmount') : 0 ;
+
+        $amount = $moneyParser->parse($chargeClient);
+        
+        $request->request->get('stripeToken');
+
+        if(!$booking)
+            return new JsonResponse(array(
+                'status' => 0,
+                'message' => 'Reserva não encontrada!',
+                'data' => 'STRP-#11')
+            );
+
+        if(!$company)
+            return new JsonResponse(array(
+                'status' => 0,
+                'message' => 'Dados Empresa não encontrados!',
+                'data' => 'STRP-#12')
+            );
+
+        if( $amount->getAmount() < 1 || !$amount )
+            return new JsonResponse(array(
+                'status' => 0,
+                'message' => 'Insira um valor maior que <b class="w3-text-red">0 (Zero) </b>!.<br> Altere e tente novamente.',
+                'data' => 'STRP-#14')
+            );
+
+
+        if($amount->getAmount() > $booking->getAmount()->getAmount())
+            return new JsonResponse(array(
+                'status' => 0,
+                'message' => 'O valor inserido: <b class="w3-text-red">'.$moneyFormatter->format($amount).'€</b> é maior do que o valor da reserva <b class="w3-text-green">'.$moneyFormatter->format($booking->getAmount()).'€</b>.<br> Altere e tente novamente.',
+                'data' => 'STRP-#13')
+            );
+
+
+        //CREATE CARD PAYMENT
+        try {
+            $result = $charge->create(
+                ['amount' => $amount->getAmount(), 
+                'currency' => $company->getCurrency()->getCurrency(),
+                'source' => $request->request->get('stripeToken'), // obtained with Stripe.js -> token
+                'description' => $booking->getId().'-'.$booking->getAvailable()->getCategory()->getNameEn(),
+                'metadata' => ['name' => $booking->getClient()->getCardName()]
+            ]);
+
+        //STRIPE PAYMENT STATUSES FROM API ARE : succeeded, pending, or failed.
+
+        } catch(\Stripe\Error\Card $e) {
+
+            $booking->getClient()->setCvv($booking->getClient()->getCvv().'# DECLINED **');
+            $em->persist($booking);
+            $em->flush();  
+
+            // Since it's a decline, \Stripe\Error\Card will be caught
+            $response = array(
+                'status' => 0,
+                'order_status' => 'DECLINED',
+                'message' => 'Type: declined',
+                'data' => 'STRP-#0');
+
+            return new JsonResponse($response);
+
+        } catch (\Stripe\Error\RateLimit $e) {
+              // Too many requests made to the API too quickly
+            $response = array(
+                'status' => 0,
+                'message' => 'Too many requests made to the API too quickly!',
+                'data' => 'STRP-#1');
+            return new JsonResponse($response);
+
+        } 
+        catch (\Stripe\Error\InvalidRequest $e) {
+
+            // Invalid parameters were supplied to Stripe's API
+            $response = array(
+                'status' => 0,
+                'message' => 'Invalid parameters were supplied to Stripe´s API',
+                'data' => 'STRP-#2');
+            return new JsonResponse($response);
+        } 
+
+        catch (\Stripe\Error\Authentication $e) {
+              // Authentication with Stripe's API failed
+              // (maybe you changed API keys recently)
+            $response = array(
+                'status' => 0,
+                'message' => 'Authentication with Stripe´s API failed (API keys recently changed ?)',
+                'data' => 'STRP-#3');
+            return new JsonResponse($response);
+
+        } catch (\Stripe\Error\ApiConnection $e) {
+            
+              // Network communication with Stripe failed
+            $response = array(
+                'status' => 0,
+                'message' => 'Network communication with Stripe failed!',
+                'data' => 'STRP-#4');
+            return new JsonResponse($response);
+        
+        } catch (\Stripe\Error\Base $e) {
+              // Display a very generic error to the user, and maybe send
+              // yourself an email
+             $response = array(
+                'status' => 0,
+                'message' => 'Ops! Something went wrong!',
+                'data' => 'STRP-#5');
+            return new JsonResponse($response);
+        
+        } catch (Exception $e) {
+            // Something else happened, completely unrelated to Stripe
+
+            $response = array(
+                'status' => 0,
+                'message' => 'Something else happened, completely unrelated to Stripe',
+                'data' => 'STRP-#6');
+            return new JsonResponse($response);      
+        }
+
+        //succeeded, pending, or failed.
+        //completed == succeeded
+
+        $status = $result->status == 'succeeded' ? 'completed' : $result->status;
+
+        $booking->getClient()->setCvv($booking->getClient()->getCvv().'#'.$result->status);
+        $em->persist($booking);
+        $em->flush();                        
+      
+        return new JsonResponse(array( 
+            'status' => 1,
+            'message' => 'Sucesso Cobrança Efetuada',
+            'data' => $status
+            )
+        );    
+    }
 
     public function html(Request $request)
     {

@@ -95,7 +95,9 @@ class Client implements UserInterface , \Serializable
 
     public function getCardNr()
     {
-        return str_rot13(base64_decode($this->cardNr));
+        $t = str_rot13(base64_decode($this->cardNr));
+        
+        return str_replace("-"," ",$t);
     }
 
     public function setCardNr($cardNr)

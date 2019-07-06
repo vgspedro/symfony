@@ -36,8 +36,6 @@ set_booking:
     #condition: 'request.isXmlHttpRequest()'
     #methods: [POST]
 
-
-
 ###
 # GET CATEGORY BLOCKED DATES
 ###
@@ -154,6 +152,12 @@ admin_booking_send_status:
 admin_booking_validate_user:
     path: /admin/booking/validate-user/
     controller: App\Controller\AdminController::bookingValidateUser
+    condition: 'request.isXmlHttpRequest()'
+    methods: [POST]
+
+charge_payment:
+    path: /charge-payment
+    controller: App\Controller\AdminController::paymentStripe
     condition: 'request.isXmlHttpRequest()'
     methods: [POST]
 
