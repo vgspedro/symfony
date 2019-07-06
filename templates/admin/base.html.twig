@@ -30,10 +30,11 @@
         <script src="{{ asset('js/summernote-lite.js') }}"></script>
         <script src="{{ asset('js/dataTables.rowReorder.min.js') }}"></script>
         <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+        <script src="https://js.stripe.com/v3/"></script>
     </head>
 
     <body class="w3-light-grey">
-
+        <input type='hidden' name='stripe-pk' value='{{company.stripePk}}'>
         {% if host %} 
             <div style="position:fixed;top:36px;left:calc(50% - 43px);z-index:999999999999999" class="blink w3-xxxlarge w3-text-red"> Demo </div>
         {% endif %}
@@ -46,4 +47,5 @@
         {% include 'admin/javascript.html' %}
         {% include 'admin/modals.html' %}
     </body>
+
 </html>
