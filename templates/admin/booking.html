@@ -9,10 +9,9 @@ input, select, textarea {color: #000!important}
 div.dataTables_length select {height: 50px}
 .StripeElement {
   box-sizing: border-box;
-  height: 40px;
-  padding: 10px 12px;
+  height: 45px;
+  padding: 11px 12px;
   border: 1px solid transparent;
-  border-radius: 4px;
   background-color: white;
   box-shadow: 0 1px 3px 0 #e6ebf1;
   -webkit-transition: box-shadow 150ms ease;
@@ -159,38 +158,33 @@ div.dataTables_length select {height: 50px}
         </div>
       </form>
     </div>
-    
 
-<!-- STRIPE -->
 
-<form action="/charge" method="post" id="payment-form">
-  <div class="form-row">
-    <label for="card-element">
-      Cartão crédito
-    </label>
-    <div id="card-element">
-      <!-- A Stripe Element will be inserted here. -->
+    <div class="w3-container w3-padding">
+      <!-- STRIPE -->
+      <p class="w3-center w3-large">Cobrar montante ao cliente</p>
+      <form action="/charge" method="post" id="payment-form">
+        <div class="form-row">
+          <label for="card-element">Cartão crédito</label>
+          <div id="card-element" class="w3-border w3-input">
+          <!-- A Stripe Element will be inserted here. -->
+          </div>
+          <!-- Used to display form errors. -->
+          <div id="card-errors" role="alert"></div>
+        </div>
+        <label>Valor a cobrar <span class="charge-amount w3-small w3-text-red"></span></label>
+        <input class="w3-input w3-border w3-right-align" step="any" type="number" name="charge-amount" placeholder="">
+          <button class="w3-margin-top w3-btn-block w3-margin-left w3-right w3-button w3-border w3-orange"><i class="fa fa-euro"></i> Cobrar</button>
+      </form>
     </div>
-    <!-- Used to display form errors. -->
-    <div id="card-errors" role="alert"></div>
-  </div>
-
-  <button>Pagar</button>
-</form>
 
 <!--STRIPE-->
-
-
-
-
-
-
 
 
     <div class="w3-row-padding w3-border-top">
       <div class="w3-col s12 w3-margin-top w3-margin-bottom">
         <span class="w3-btn-block w3-margin-left w3-right w3-button w3-border w3-green" onclick="getCardData()">
-          <i class="fa fa-check"></i> Enviar
+          <i class="fa fa-check"></i>
         </span>
         <span class="w3-btn-block w3-button w3-left w3-border w3-white" onclick="$('#modal-data-validate').hide(); $('.show-user-info').empty()">
           <i class="fa fa-times"></i> Fechar
@@ -267,11 +261,13 @@ var index = 0
 */
 
 /*MODAL TO USER GET CREDIT CARD INFO */
-function modalToCardData(id){
+function modalToCardData(id, amount){
   $('.required').addClass('w3-hide')
   $("#get-card-data").trigger('reset')
   $('#modal-data-validate').show()
   $('input[name="booking"]').val(id)
+  $('input[name="charge-amount"]').attr('placeholder',amount)
+  $('.charge-amount').html('(Máx:'+amount+')')
 }
 
 function getCardData(){
@@ -378,7 +374,7 @@ function getCardData(){
         else if (data == 'CANCELED') color = 'w3-blue'
         else if (data == 'CONFIRMED') color = 'w3-green'
         
-        wp = row.wp ? '<button class="w3-btn w3-border w3-indigo" style="margin-left:4px" onclick="modalToCardData('+row.id+')"><i class="far fa-credit-card"></i></button>'
+        wp = row.wp ? '<button class="w3-btn w3-border w3-indigo" style="margin-left:4px" onclick="modalToCardData('+row.id+',\''+row.total+'\')"><i class="far fa-credit-card"></i></button>'
       : '<button disabled class="w3-btn w3-border w3-indigo" style="margin-left:4px"><i class="far fa-credit-card"></i></button>'
 
         return '<div style="width:190px;max-width:190px" class="w3-small"><button id="'+row.id+'" style="padding:8px!important" class="'+color+' w3-btn w3-border" onclick="modalBookingSetStatus('+row.id+')">#'+row.id+' '+data+'</button>'+wp+'</div>'
