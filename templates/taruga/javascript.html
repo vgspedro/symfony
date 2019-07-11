@@ -1,16 +1,19 @@
 <script>
+
+/*
 c_en=[];
 c_pt=[];
-
 {% for category in categories %}
 
-  {% if category.no_stock == false %}
+  {% if category.no_stock == 0 %}
     c_en.push({id:{{category.id}},text:'{{category.nameEn|trim}}' });
     c_pt.push({id:{{category.id}},text:'{{category.namePt|trim}}' });
   {% endif %} 
 
 {% endfor %}
 
+console.log(c_en)
+*/
 window.addEventListener("load", function(){
   window.cookieconsent.initialise({
     "palette": {
@@ -79,9 +82,11 @@ function navigation(pos,id){
   }
 }
 
+
 function updateTourData(){
   $('.set-visible, .wp-active').addClass('w3-hide');
 }
+
 
 stockDate = [];
 
@@ -105,8 +110,11 @@ function getAvailable(){
       url: '{{ path('index_available') }}',
       type: "POST",
       data: dataValue,
+      
       cache: false,
+      
       success: function(data){
+        //console.log(data)
         $('.w3-overlay, #loader-cont').hide();
         //user required fields messages 
         if (data.status == 0){
@@ -114,6 +122,7 @@ function getAvailable(){
               $('.'+data.message[k]).removeClass('w3-hide');
             $('#modal-info').show();
           }
+
         //no stock available 
         else if (data.status == 2){
           $('.'+data.message).removeClass('w3-hide');
@@ -204,7 +213,7 @@ function changeEventGetHour(v){
 function saveModalEvents(){
 
   userDate = $('#get-available-datetime input[name=date]').val();
-  userTime= $('#get-available-datetime select[name=time] option:selected').text();
+  userTime = $('#get-available-datetime select[name=time] option:selected').text();
   event = $('#get-available-datetime select[name=time]').val();
 
   $('.required').addClass('w3-hide');
@@ -227,19 +236,11 @@ function saveModalEvents(){
     $('input[name=wp]').val() == 'true' ? $('.wp-active').removeClass('w3-hide') : $('.wp-active').addClass('w3-hide');
 
     $('.set-visible').removeClass('w3-hide');
-
-    userEvent = {
-      'event': event,
-      'adult': $('input[name=adult]').val(),
-      'children': $('input[name=children]').val(),
-      'baby':$('input[name=baby]').val()}
-
-      sessionStorage.setItem('userEvent', JSON.stringify(userEvent));
-      var uobject = sessionStorage.getItem('userEvent');
-    //console.log('uobject: ', JSON.parse(uobject))
   }
 
 }
+
+
 
 
 function showRgpd(){
@@ -280,9 +281,9 @@ function checkOut(){
       url: '{{ path('set_booking') }}',
       type: "POST",
       cache: false,
-      data: $('#get-available').serialize()+'&evt='+sessionStorage.getItem('userEvent'),
+      data: $('#get-available').serialize(),
       success: function(data){
-        console.log(data)
+        //console.log(data)
 
         $("#myOverlay, #loader-cont").hide();
 

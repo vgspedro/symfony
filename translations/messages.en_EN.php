@@ -25,6 +25,8 @@ return array(
     'request_feature_btn' =>'Help us grow',
     'enhance_experience' => 'Want to enhance your online experience?',
     'enhance_experience_btn' => 'Go to our tours',
+    'opps_something_wrong' => 'Opps something wrong happened! Please click on link ´Help Us Improve´ and report the issue. Sorry for the inconvenience.',
+    'event_not_found' => 'The Hour of the Tour selected, wasn´t found, please select another Hour and try again.',
 
 
 'link' => array(

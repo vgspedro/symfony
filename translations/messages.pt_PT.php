@@ -41,6 +41,8 @@ return array(
     'request_feature_btn' =>'Ajude-nos a crescer',
     'enhance_experience' => 'Quer melhorar sua experiência online?',
     'enhance_experience_btn' => 'Veja os nossos passeios',
+    'opps_something_wrong' => 'Opps algo errado aconteceu! Por favor clique no link ´Ajude a melhorar´ e reporte o sucedido. Lamentamos o inconveniente.',
+    'event_not_found' => 'A Hora do passeio seleccionado, não foi encontrada, por favor seleccione outra Hora, e tente novamente.',
 
 'link' => array(
     'where_we_are'=>'Onde Estamos',

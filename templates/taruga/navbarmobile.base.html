@@ -17,9 +17,9 @@
   <a href="javascript:void(0)" onclick="navigation('#reservas')" class='w3-margin-left w3-padding-8 nav-text-m'> 
   <span>{% trans %}link.booking{% endtrans %}</span>
  </a>
-  <a href="javascript:void(0)" onclick="navigation('#reservas')" class='w3-margin-left w3-padding-8 nav-text-m'> 
+  <!--a href="javascript:void(0)" onclick="navigation('#reservas')" class='w3-margin-left w3-padding-8 nav-text-m'> 
   <span>{% trans %}link.help_improve{% endtrans %}</span>
- </a>
+ </a-->
 
   <form action="{{ path('index_info') }}" method="get" class='w3-padding-8 w3-border-bottom w3-khaki w3-border-top' onclick="$(this).trigger('submit')">
     <input type="hidden" name="id" value="home">
@@ -41,9 +41,9 @@
     <span class='nav-text-m w3-margin-left'>{% trans %}link.contact{% endtrans %}</span>
  </form>
 
-<a href="{{ path('index_help_improve') }}" class='w3-padding-8 nav-text-m w3-khaki w3-border-top'>
+<!--a href="{{ path('index_help_improve') }}" class='w3-padding-8 nav-text-m w3-khaki w3-border-top'>
   <span class='w3-medium' style="text-transform:uppercase">{% trans %}link.help_improve{% endtrans %}</span>
-</a>
+</a-->
 
 
 <div class="w3-border-top w3-border-bottom">

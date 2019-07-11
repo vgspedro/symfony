@@ -62,6 +62,7 @@ class HomeController extends AbstractController
         $warning = $em->getRepository(Warning::class)->find(10);
         $company = $em->getRepository(Company::class)->find(1);
         $about = $em->getRepository(AboutUs::class)->findAll();
+        //must
         $category = $em->getRepository(Category::class)->findBy(['isActive' => 1],['orderBy' => 'ASC']);
         
         $categoryHl = $em->getRepository(Category::class)->findOneBy(['highlight' => 1],['orderBy' => 'ASC']);
@@ -155,7 +156,7 @@ class HomeController extends AbstractController
         
         $local = $request->getLocale();
 
-        !$this->session->get('_locale') ? $this->session->set('_locale', 'pt_PT') : false;
+        !$this->session->get('_locale') ? $this->session->set('_locale', $local) : false;
 
         $locales = $em->getRepository(Locales::class)->findAll();
         $gallery = $em->getRepository(Gallery::class)->findBy(['isActive' => 1],['namePt' => 'ASC']);
@@ -208,9 +209,18 @@ class HomeController extends AbstractController
         $request->request->get('address') ? $address = $request->request->get('address') : $err[] = 'ADDRESS';
         $request->request->get('telephone') ? $telephone = $request->request->get('telephone') : $err[] = 'TELEPHONE';
         $request->request->get('check_rgpd') && $request->request->get('check_rgpd') !== null  ? $rgpd = true : $err[] = 'RGPD';
-        $request->request->get('evt') ? $userEvent = json_decode($request->request->get('evt')) : $err[] = 'event';
+
+        $request->request->get('ev') ? $event = $request->request->get('ev') : $err[] = 'EVENT';
+        
+        $request->request->get('adult') ? $adult = $request->request->get('adult') : $err[] = 'ADULT';
+
+        $children = $request->request->get('children') ? $request->request->get('children') : '0';
+
+        $baby = $request->request->get('baby') ? (int)$request->request->get('baby') : '0';
+
         $wp = $request->request->get('wp') == 'true' ? $request->request->get('wp') : false;
         
+
         if($wp){
             $request->request->get('name_card') ? $name_card = $request->request->get('name_card') : $err[] = 'CREDIT_CARD_NAME';
             $request->request->get('cvv') ? $cvv = $request->request->get('cvv') : $err[] = 'CVV';
@@ -251,14 +261,14 @@ class HomeController extends AbstractController
 
         $em->getConnection()->beginTransaction();
 
-        $available = $em->getRepository(Available::class)->find($userEvent->event);
-          
+        $available = $em->getRepository(Available::class)->find($event);
+
         if(!$available){
-        //    throw new Exception("Error Processing Request Available", 1);     
-            $err[] = 'OTHER_BUY_IT';
+        //    throw new Exception("Error Processing Request Available", 1);
+            $err[] = 'EVENT_NOT_FOUND';
             $response = array(
                 'status' => 0,
-                'message' => 'no_vacancy_1',
+                'message' => 'event_not_found',
                 'data' => $err,
                 'mail' => null,
                 'locale' => $locale,
@@ -267,20 +277,21 @@ class HomeController extends AbstractController
             return new JsonResponse($response);
         }
 
+
         try {           
             $em->lock($available, LockMode::PESSIMISTIC_WRITE);
     
-             //Get the total number of Pax.
-            $paxCount = $userEvent->adult + $userEvent->children + $userEvent->baby; 
-        //total amount of booking
-        $amountA = Money::EUR(0);
-        $amountC = Money::EUR(0);
-        $total = Money::EUR(0);
-        $amountA = $available->getCategory()->getAdultPrice();
-        $amountA = $amountA->multiply($userEvent->adult);
-        $amountC = $available->getCategory()->getChildrenPrice();
-        $amountC = $amountC->multiply($userEvent->children);
-        $total = $amountA->add($amountC);   
+            //Get the total number of Pax.
+            $paxCount = $adult + $children + $baby; 
+            //total amount of booking
+            $amountA = Money::EUR(0);
+            $amountC = Money::EUR(0);
+            $total = Money::EUR(0);
+            $amountA = $available->getCategory()->getAdultPrice();
+            $amountA = $amountA->multiply($adult);
+            $amountC = $available->getCategory()->getChildrenPrice();
+            $amountC = $amountC->multiply($children);
+            $total = $amountA->add($amountC);   
             // When there is no availability for the number of Pax...
             if ($available->getStock() < $paxCount) {
                 // Abort and inform user.
@@ -327,9 +338,9 @@ class HomeController extends AbstractController
             // Create Booking.
             $booking = new Booking();
             $booking->setAvailable($available);
-            $booking->setAdult($userEvent->adult);
-            $booking->setChildren($userEvent->children);
-            $booking->setBaby($userEvent->baby);
+            $booking->setAdult($adult);
+            $booking->setChildren($children);
+            $booking->setBaby($baby);
             $booking->setPostedAt(new \DateTime());
             $booking->setAmount($total);
             $booking->setClient($client);
@@ -348,14 +359,14 @@ class HomeController extends AbstractController
             $em->getConnection()->rollBack();
             
             //throw $e;
-              $err[] = 'OTHER_BUY_IT';
+              $err[] = 'OPPS_SOMETHING_WRONG';
                 $response = array(
                     'status' => 0,
-                    'message' => 'no_vacancy_2',
+                    'message' => 'opps_something_wrong',
                     'data' => $err,
                     'mail' => null,
                     'locale' => $locale,
-                    'expiration' => 0
+                    'expiration' => 0,
                 );
                 return new JsonResponse($response);
         }

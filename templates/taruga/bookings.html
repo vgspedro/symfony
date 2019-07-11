@@ -23,7 +23,12 @@
         <select class="w3-select w3-input" name="category" onchange="updateTourData()">
           <option class="w3-opacity" value="">{% trans %}part_seven.tour{% endtrans %}</option>
           {% for category in categories %}
+            {% if category.no_stock == 0 %}
+
           <option value="{{category.id}}">{{ app.request.locale == 'pt_PT' ? category.namePt : category.nameEn }}
+          
+          {% endif%}
+         
          {% endfor %}
         </select>
       </div>

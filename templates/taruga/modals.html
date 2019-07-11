@@ -141,13 +141,14 @@
           <div class="DATE_CARD_INVALID w3-hide required">{% trans %}info.date_card_invalid{% endtrans %}</div>
           <div class="DATE_CARD_INVALID w3-hide required">{% trans %}info.date_card_invalid{% endtrans %}</div>
           <div class="GDPR_NOT_FOUND w3-hide required">{% trans %}gdpr_not_found{% endtrans %}</div>
+          <div class="EVENT_NOT_FOUND w3-hide required">{% trans %}event_not_found{% endtrans %}</div>
+          <div class="OPPS_SOMETHING_WRONG w3-hide required">{% trans %}opps_something_wrong{% endtrans %}</div>
           <div class="w3-margin-bottom"></div>
         </div>
       </div>
     </div>
   </div>
 </div>
-
 
 <div id="modal-no-stock" class="w3-modal" style="z-index:9999;padding-top:60px; padding-bottom: 32px">
   <div class="w3-modal-content w3-animate-zoom" style="max-width:400px">
@@ -161,7 +162,7 @@
             <i class="fa fa-warning"></i>
             <span>{% trans %}part_seven.sorry{% endtrans %}</span>
           </h2>
-          <div class="w3-hide required">{% trans %}part_seven.no_stock{% endtrans %}</div>
+          <div>{% trans %}part_seven.no_stock{% endtrans %}</div>
           <div class="MAX w3-center"></div>
           <div class="w3-margin-bottom"></div>
         </div>
@@ -169,7 +170,6 @@
     </div>
   </div>
 </div>
-
 
 <!--SESSION END MODAL -->
 <div id="modal-check" class="w3-modal" style="z-index:9999;padding-top:60px; padding-bottom: 32px">
