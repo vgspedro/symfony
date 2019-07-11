@@ -1,19 +1,4 @@
 <script>
-
-/*
-c_en=[];
-c_pt=[];
-{% for category in categories %}
-
-  {% if category.no_stock == 0 %}
-    c_en.push({id:{{category.id}},text:'{{category.nameEn|trim}}' });
-    c_pt.push({id:{{category.id}},text:'{{category.namePt|trim}}' });
-  {% endif %} 
-
-{% endfor %}
-
-console.log(c_en)
-*/
 window.addEventListener("load", function(){
   window.cookieconsent.initialise({
     "palette": {
@@ -162,7 +147,8 @@ function getAvailable(){
           keepOpen: true,
           enabledDates: date,
           locale: '{{app.request.locale}}',
-          minDate: data.minDate
+          minDate: data.minDate,
+          maxDate: date[date.length -1]
         })
         $('.order_available').data("DateTimePicker").date(null);
         $('.get-dates').val('');
@@ -187,7 +173,7 @@ $('.order_available').on('dp.change', function(e){
   
   //for (i=0 ; i<stockDate.length; i++){
     for (var k in stockDate){
-    r = stockDate[k].datetime.match(d);
+      r = stockDate[k].datetime.match(d);
     if(r){
       complete = stockDate[k].datetime.split(" ");
       options += '<option data-left='+stockDate[k].onlyLeft+' value="'+stockDate[k].id+'">'+complete[1]+'</option>';
