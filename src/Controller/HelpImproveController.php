@@ -5,27 +5,16 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\Validator\Constraints as Assert;
-use Doctrine\DBAL\LockMode;
-use Doctrine\ORM\PessimisticLockException;
-//LockMode::PESSIMISTIC_WRITE
-use App\Entity\Booking;
-use App\Entity\Category;
+use Symfony\Component\Translation\TranslatorInterface;
 use App\Entity\Company;
+use App\Entity\Feedback;
 use App\Entity\Warning;
-use App\Entity\Client;
-use App\Entity\Gallery;
-use App\Entity\User;
 use App\Entity\Locales;
-use App\Entity\AboutUs;
-use App\Entity\Available;
+use App\Entity\Booking;
+use App\Form\ReportIssueType;
+use App\Form\FeedbackType;
 /*https://github.com/nojacko/email-validator*/
 use EmailValidator\EmailValidator;
-use App\Service\MoneyFormatter;
-use Money\Money;
-use App\Entity\TermsConditions;
-/*https://packagist.org/packages/inacho/php-credit-card-validator*/
-use Inacho\CreditCard;
 use App\Service\RequestInfo;
 
 class HelpImproveController extends AbstractController
@@ -46,10 +35,12 @@ class HelpImproveController extends AbstractController
             return $this->redirectToRoute('index_help_improve');
         }
         
-        $cS = array();
         $locales = $em->getRepository(Locales::class)->findAll();
         $warning = $em->getRepository(Warning::class)->find(10);
         $company = $em->getRepository(Company::class)->find(1);
+        
+        $reportIssueForm = $this->createForm(ReportIssueType::class);
+        $feedbackForm = $this->createForm(FeedbackType::class);
 
         return $this->render('help_improve.html.twig', 
             array(
@@ -57,214 +48,232 @@ class HelpImproveController extends AbstractController
                 'warning' => $warning,
                 'company' => $company,
                 'host' => $reqInfo->getHost($request),
-                'page' => 'index_help_improve'
+                'page' => 'index_help_improve',
+                'reportIssueForm' => $reportIssueForm->createView(),
+                'feedbackForm' => $feedbackForm->createView()
                 )
             );
     }
 
 
+    public function sendReportIssue(Request $request, \Swift_Mailer $mailer, TranslatorInterface $translator)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $locale = $request->getLocale();
+        $domain = $request->getHttpHost();
+        $company = $em->getRepository(Company::class)->find(1);
+        $form = $this->createForm(ReportIssueType::class);
 
-    public function setBooking(Request $request, MoneyFormatter $moneyFormatter, \Swift_Mailer $mailer, RequestInfo $reqInfo){
+        $form->handleRequest($request);
+        # check if form is submitted and Recaptcha response is success
+        $err = array();
+        if($form->isSubmitted() && $form->isValid() ){
+            //IF FIELDS IS NULL PUT IN ARRAY AND SEND BACK TO USER
+            $form['name']->getData() ? $name = $form['name']->getData() : $err[] = 'name';
+            $form['email']->getData() ? $email = $form['email']->getData() : $err[] = 'email';
+            $observations = $form['observations']->getData();
+            $attach = $form['image']->getData() ? $attach = $form['image']->getData() : null;
+             
+            if($err){
+                $response = array(
+                    'status' => 0,
+                    'message' => 'fields empty',
+                    'data' => $err,
+                    'mail' => null,
+                );
+                return new JsonResponse($response);
+            }
+            //NO FAKE DATA
+            if($attach)
+            $attach->guessExtension() == 'jpg' || $attach->guessExtension() == '.jpeg' || $attach->guessExtension() == 'png' ? $err[] = 'invalid_file' : false;
+            $this->noFakeEmails($email) == 1 ? $err[] = 'invalid_email' : false;
 
+            if($err){
+                $response = array(
+                    'status' => 2,
+                    'message' => 'invalid fields',
+                    'data' => $err,
+                    'mail' => 'null',
+                );
+                return new JsonResponse($response);
+            }
+            else
+            {
+
+                $transport = (new \Swift_SmtpTransport($company->getEmailSmtp(), $company->getEmailPort(), $company->getEmailCertificade()))
+                    ->setUsername($company->getEmail())
+                    ->setPassword($company->getEmailPass());            
+                
+                $mailer = new \Swift_Mailer($transport);
+                $subject = $translator->trans('report_issue');
+
+                $message = (new \Swift_Message($subject))
+                    ->setFrom([$company->getEmail() => $company->getName()])
+                    ->setTo([$company->getEmail() => $company->getName(), $email => $name])
+                    ->addPart($subject, 'text/plain')
+                    ->setBody(
+                
+                $this->renderView(
+                        'emails/report-issue-'.$locale.'.html.twig',
+                        array(
+                            'name' => $name,
+                            'email' => $email,
+                            'observations' => $observations,
+                            'logo' => 'https://'.$request->getHost().'/upload/gallery/'.$company->getLogo(),
+                        )
+                    ),
+                    'text/html'
+                );
+                
+                if($attach){
+                    $attachment = \Swift_Attachment::fromPath($attach)
+                    ->setFilename($attach->getClientOriginalName())
+                    ->setContentType('application/'.$attach->guessExtension());
+                    ;
+                    $message->attach($attachment);
+                }
+                
+                $send = $mailer->send($message);
+            }
+            
+            $response = array(
+                'status' => 1,
+                'message' => 'all valid',
+                'data' =>  'success',
+                'mail' => $send,
+                'locale' => $locale
+            );
+               return new JsonResponse($response);   
+          } 
+        $response = array(
+                'status' => 0,
+                'message' => 'fail_submit',
+                'data' =>  'fail',
+                'mail' => null,
+                'locale' => null);
+        return new JsonResponse($response);      
+    }
+
+    public function sendFeedback(Request $request, \Swift_Mailer $mailer, TranslatorInterface $translator)
+    {
+        $locale = $request->getLocale();
+        $em = $this->getDoctrine()->getManager();
+        $company = $em->getRepository(Company::class)->find(1);
+        $form = $this->createForm(FeedbackType::class);
+        
+        $form->handleRequest($request);
+        # check if form is submitted and Recaptcha response is success
         $err = array();
 
-        $em = $this->getDoctrine()->getManager();
+        if($form->isSubmitted() && $form->isValid() ){
 
-        $local = $request->getLocale();
+            //IF FIELDS IS NULL PUT IN ARRAY AND SEND BACK TO USER
 
-        $locales = $em->getRepository(Locales::class)->findOneBy(['name' => $local]);
-
-        if(!$locales)
-             $locales = $em->getRepository(Locales::class)->findOneBy(['name' => 'pt_PT']);
-
-        $locale = $locales->getName();
-
-        if($this->getExpirationTime($request) == 1){ 
-            $err[] = 'SESSION_END';
-            $response = array(
-                'status' => 3,
-                'message' => 'session_end',
-                'data' => $err,
-                'mail' => null,
-                'locale' => null,
-                'expiration' => 1
-            );
-            return new JsonResponse($response);
-        }
-        
-        //IF FIELDS IS NULL PUT IN ARRAY AND SEND BACK TO USER
-        $request->request->get('name') ? $name = $request->request->get('name') : $err[] = 'NAME';
-        $request->request->get('email') ? $email = $request->request->get('email') : $err[] = 'EMAIL';
-        $request->request->get('address') ? $address = $request->request->get('address') : $err[] = 'ADDRESS';
-        $request->request->get('telephone') ? $telephone = $request->request->get('telephone') : $err[] = 'TELEPHONE';
-        $request->request->get('check_rgpd') && $request->request->get('check_rgpd') !== null  ? $rgpd = true : $err[] = 'RGPD';
-        $request->request->get('evt') ? $userEvent = json_decode($request->request->get('evt')) : $err[] = 'event';
-        $wp = $request->request->get('wp') == 'true' ? $request->request->get('wp') : false;
-        
-        if($wp){
-            $request->request->get('name_card') ? $name_card = $request->request->get('name_card') : $err[] = 'CREDIT_CARD_NAME';
-            $request->request->get('cvv') ? $cvv = $request->request->get('cvv') : $err[] = 'CVV';
-            $request->request->get('date_card') ? $date_card = $request->request->get('date_card') : $err[] = 'CREDIT_CARD_DATE';
-            $request->request->get('card_nr') ? $card_nr = $request->request->get('card_nr') : $err[] = 'CREDIT_CARD_NR';
-        }
-
-        if($err){
-            $response = array(
-                'status' => 0,
-                'message' => 'fields empty',
-                'data' => $err,
-                'mail' => null,
-                'expiration' => 0
-            );
-            return new JsonResponse($response);
-        }
-        if($wp){
-            $name != $name_card ? $err[] = 'NO_MATCH_NAMES' : false;
-            $this->noFakeCcard($date_card,$cvv, $card_nr) ? $err[] = $this->noFakeCcard($date_card,$cvv, $card_nr) : false; 
-        }
-        //NO FAKE DATA
-        $this->noFakeEmails($email) == 1 ? $err[] = 'EMAIL_INVALID' : false;
-        $this->noFakeTelephone($telephone) == 1 ? $err[] = 'TELEPHONE_INVALID' : false;
-        $this->noFakeName($name) == 1 ? $err[] = 'NAME_INVALID' : false;
-        if($err){
-            $response = array(
-                'status' => 2,
-                'message' => 'invalid fields',
-                'data' => $err,
-                'mail' => null,
-                'locale' => $locale,
-                'expiration' => 0
-            );
-            return new JsonResponse($response);
-        }
-        else{
-
-        $em->getConnection()->beginTransaction();
-
-        $available = $em->getRepository(Available::class)->find($userEvent->event);
-          
-        if(!$available){
-        //    throw new Exception("Error Processing Request Available", 1);     
-            $err[] = 'OTHER_BUY_IT';
-            $response = array(
-                'status' => 0,
-                'message' => 'no_vacancy_1',
-                'data' => $err,
-                'mail' => null,
-                'locale' => $locale,
-                'expiration' => 0
-            );
-            return new JsonResponse($response);
-        }
-
-        try {           
-            $em->lock($available, LockMode::PESSIMISTIC_WRITE);
-    
-             //Get the total number of Pax.
-            $paxCount = $userEvent->adult + $userEvent->children + $userEvent->baby; 
-        //total amount of booking
-        $amountA = Money::EUR(0);
-        $amountC = Money::EUR(0);
-        $total = Money::EUR(0);
-        $amountA = $available->getCategory()->getAdultPrice();
-        $amountA = $amountA->multiply($userEvent->adult);
-        $amountC = $available->getCategory()->getChildrenPrice();
-        $amountC = $amountC->multiply($userEvent->children);
-        $total = $amountA->add($amountC);   
-            // When there is no availability for the number of Pax...
-            if ($available->getStock() < $paxCount) {
-                // Abort and inform user.
-                $err[] = 'OTHER_BUY_IT';
+            $form['name']->getData() ? $name = $form['name']->getData() : $err[] = 'name';
+            $form['email']->getData() ? $email = $form['email']->getData() : $err[] = 'email';
+            $form['booking']->getData() ? $booking_nr = $form['booking']->getData() : $err[] = 'booking_nr';
+            $form['rate']->getData() ? $rate = $form['rate']->getData() : $err[] = 'rate';
+            $observations = $form['observations']->getData();
+             
+            if($err){
                 $response = array(
                     'status' => 0,
-                    'message' => 'no_vacancy_1',
+                    'message' => 'fields empty',
                     'data' => $err,
                     'mail' => null,
-                    'locale' => $locale,
-                    'expiration' => 0
+                    'locale' => $locale
                 );
                 return new JsonResponse($response);
             }
-           
-            // Create Client
-            $client = new Client();
-            $client->setEmail($email);
-            $client->setUsername($name);
-            $client->setAddress($address);
-            $client->setTelephone($telephone);
-            $client->setRgpd($rgpd);
-            $client->setLocale($locales);
-            //wp is set check if data from client isset
-            if($available->getCategory()->getWarrantyPayment() && $wp){
-                $client->setCardName($name_card);
-                $client->setCvv($cvv);
-                $client->setCardDate($date_card);
-                $client->setCardNr($card_nr);
-            }
-            else if($available->getCategory()->getWarrantyPayment() && !$wp){
-                $err[] = 'WP_SET_NO_CC_DATA';
-                $response = array(
-                    'status' => 0,
-                    'message' => 'warranty payment set but no data to db',
-                    'data' => $err,
-                    'mail' => null,
-                    'locale' => $locale,
-                    'expiration' => 0
-                );
-                return new JsonResponse($response);
-            }
-            
-            // Create Booking.
-            $booking = new Booking();
-            $booking->setAvailable($available);
-            $booking->setAdult($userEvent->adult);
-            $booking->setChildren($userEvent->children);
-            $booking->setBaby($userEvent->baby);
-            $booking->setPostedAt(new \DateTime());
-            $booking->setAmount($total);
-            $booking->setClient($client);
-            $booking->setDateEvent($available->getDatetimeStart());
-            $booking->setTimeEvent($available->getDatetimeStart());
-            $available->setStock($available->getStock() - $paxCount);
-            $em->persist($available);
-            $em->persist($client);
-            $em->persist($booking);
-            
-            $em->flush();
-            $em->getConnection()->commit();
-            
-        } catch (\Exception $e) {
-            //echo $e->getMessage();
-            $em->getConnection()->rollBack();
-            
-            //throw $e;
-              $err[] = 'OTHER_BUY_IT';
-                $response = array(
-                    'status' => 0,
-                    'message' => 'no_vacancy_2',
-                    'data' => $err,
-                    'mail' => null,
-                    'locale' => $locale,
-                    'expiration' => 0
-                );
-                return new JsonResponse($response);
-        }
-        $send = $this->sendEmail($mailer, $booking, $request->getHost());
 
-        //remove the session start_time
-        $this->session->remove('start_time');
-        
+            $booking = $em->getRepository(Booking::class)->find($booking_nr);
+            
+            if(!$booking)
+                $err[] = 'booking_not_valid';
+            else{
+                if($booking->getClient()->getEmail() != $email)
+                    $err[] = 'booking_email_invalid';
+            }
+
+            $this->noFakeName($name) == 1 ? $err[] = 'invalid_name' : false;
+            $this->noFakeEmails($email) == 1 ? $err[] = 'invalid_email' : false;
+            
+            $feedback = $em->getRepository(Feedback::class)->findOneBy(['booking' => $booking]);
+             
+            if($feedback)
+                $err[] = 'already_left_feedback';
+
+            if($err){
+                $response = array(
+                    'status' => 2,
+                    'message' => 'invalid fields',
+                    'data' => $err,
+                    'mail' => 'null',
+                );
+                return new JsonResponse($response);
+            }
+            else
+            {
+
+                $rate = $rate >= 5 ? 5 : $rate;
+                $feedback = new Feedback();
+                $feedback->setBooking($booking);
+                $feedback->setRate($rate);
+                $feedback->setActive(0);
+                $feedback->setVisible(0);
+                $feedback->setObservations($observations);
+                $em->persist($feedback);
+                $em->flush();
+
+                $transport = (new \Swift_SmtpTransport($company->getEmailSmtp(), $company->getEmailPort(), $company->getEmailCertificade()))
+                    ->setUsername($company->getEmail())
+                    ->setPassword($company->getEmailPass());            
+                
+                $mailer = new \Swift_Mailer($transport);
+                $subject = $translator->trans('send_feedback');
+
+                $message = (new \Swift_Message($subject))
+                    ->setFrom([$company->getEmail() => $company->getName()])
+                    ->setTo([$company->getEmail() => $company->getName()])
+                    ->addPart($subject, 'text/plain')
+                    ->setBody(
+                
+                $this->renderView(
+                    'emails/feedback-'.$locale.'.html.twig',
+                    array(
+                        'id' => $feedback->getBooking()->getId(),
+                        'name' => $name,
+                        'email' => $email,
+                        'rate' =>  $feedback->getRate(),
+                        'logo' => 'https://'.$request->getHost().'/upload/gallery/'.$company->getLogo(),
+                        'observations' => $feedback->getObservations()
+                    )
+                ),
+                'text/html'
+            );
+                
+                $send = $mailer->send($message);
+            }
+            
+            $response = array(
+                'status' => 1,
+                'message' => 'all valid',
+                'data' =>  'success',
+                'mail' => $send,
+                'locale' => $locale
+            );
+               return new JsonResponse($response);   
+          } 
         $response = array(
-            'status' => 1,
-            'message' => 'all valid',
-            'data' =>  $booking->getId(),
-            'mail' => $send,
-            'expiration' => 0
-            );
-        
-        return new JsonResponse($response);
-        }
+                'status' => 0,
+                'message' => 'fail_submit',
+                'data' =>  'fail',
+                'mail' => null,
+                'locale' => null);
+        return new JsonResponse($response);      
     }
+
+
 
 
     public function userTranslation($lang, $page)
@@ -272,7 +281,6 @@ class HelpImproveController extends AbstractController
         $this->session->set('_locale', $lang);
         return $this->redirectToRoute($page);
     }
-
 
     private function sendEmail(\Swift_Mailer $mailer, Booking $booking, $domain){
         $em = $this->getDoctrine()->getManager();
@@ -333,86 +341,12 @@ class HelpImproveController extends AbstractController
         return $invalid;
     }
 
-
-    private function noFakeCCard($date_card, $cvv, $card_nr) {
-        $err = [];
-        $card = CreditCard::validCreditCard($card_nr);
-        if ($card['valid'] == 1) {
-            $date = explode('/',$date_card);
-            $validCvc = CreditCard::validCvc($cvv, $card['type']) == true ? false : $err[] = 'CVV_INVALID';
-            $validDate = CreditCard::validDate($date[1], $date[0])  == true ? false : $err[] = 'DATE_CARD_INVALID';
-        }
-        
-        else
-            $err[] = 'CARD_NR_INVALID';
-        return $err;
-    }
     private function noFakeName($a){
         $invalid = 0;        
         if($a)
             $invalid = preg_replace("/[^!@#\$%\^&\*\(\)\[\]:;]/", "", $a);
         return $invalid;
     }
-
-    private function noFakeTelephone($a) {
-        $invalid = 0;        
-        if($a)
-            $invalid = preg_replace("/[0-9|\+?]{0,2}[0-9]{5,12}/", "", $a);
-        return $invalid;
-    }
-
-    //CHECK IF USER IS ON INTERVAL OF SUBMIT BOOKING ORDER 
-    private function getExpirationTime($request) {
-
-        $expired = 0;
-
-        if(!$this->session->get('start_time'))
-            $this->session->set('start_time', $request->server->get('REQUEST_TIME'));
-
-        if($request->server->get('REQUEST_TIME') > $this->session->get('start_time') + $this->expiration)
-            $expired = 1;
-
-        return $expired;
-    }
-
-    private function translateStatus($status, $language){
-        if ($language == 'pt_PT'){
-            switch ($status) {
-                case 'PENDING': 
-                    $status = 'PENDENTE';
-                break;
-                case 'CANCELED': 
-                    $status = 'CANCELADA';
-                break;
-                case 'CONFIRMED': 
-                    $status = 'CONFIRMADA';
-                break;
-            
-            }
-        }
-    
-        return $status;
-    }
-
-    private function color(){
-        return array(
-        'w3-text-black',
-        'w3-t-tour',
-        'w3-text-cyan',
-        'w3-text-indigo',
-        'w3-text-green',
-        'w3-text-light-blue',
-        'w3-text-deep-purple',
-        'w3-text-light-blue',
-        'w3-text-teal',
-        'w3-text-blue-gray',
-        'w3-text-aqua',
-        'w3-text-brown',
-        'w3-text-amber',
-        'w3-text-deep-orange',
-        );
-    }
-
 
 }
 

@@ -7,7 +7,7 @@
  <span>
  </div>
 
-  <a href="{{ path('index') }}" class='w3-padding-8 nav-text-m w3-khaki w3-border-bottom'>
+  <a href="{{ path('index') }}" class='w3-padding-8 nav-text-m w3-border-bottom'>
     <span class='w3-medium' style="text-transform:uppercase">{% trans %}info.home{% endtrans %}</span>
   </a>
   <form action="{{ path('index') }}" method="get" class='w3-padding-8 w3-margin-left' onclick="$(this).trigger('submit')">
@@ -20,7 +20,7 @@
     <span class='nav-text-m w3-margin-left'>{% trans %}link.booking{% endtrans %}</span>
   </form>
 
-  <form action="{{ path('index_info') }}" method="get" class='w3-padding-8 w3-border-bottom w3-khaki w3-border-top' onclick="$(this).trigger('submit')">
+  <form action="{{ path('index_info') }}" method="get" class='w3-padding-8 w3-border-bottom w3-border-top' onclick="$(this).trigger('submit')">
     <input type="hidden" name="id" value="home">
     <span class='w3-medium nav-text-m w3-margin-left' style="text-transform:uppercase">{% trans %}info.usefull_info{% endtrans %}</span>
   </form>
@@ -40,7 +40,7 @@
     <span class='nav-text-m w3-margin-left'>{% trans %}link.contact{% endtrans %}</span>
  </form>
 
- <a href="{{ path('index_help_improve') }}" class='w3-padding-8 nav-text-m w3-border-top'>
+ <a href="{{ path('index_help_improve') }}" class='w3-padding-8 w3-khaki nav-text-m w3-border-top'>
   <span class='w3-medium' style="text-transform:uppercase">{% trans %}link.help_improve{% endtrans %}</span>
 </a>
 

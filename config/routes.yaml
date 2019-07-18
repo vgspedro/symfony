@@ -36,6 +36,18 @@ set_booking:
     #condition: 'request.isXmlHttpRequest()'
     #methods: [POST]
 
+send_feedback:
+    path: /send-feedback/
+    controller: App\Controller\HelpImproveController::sendFeedback
+    methods: [POST]
+    condition: 'request.isXmlHttpRequest()'
+
+send_report_issue:
+    path: /send-report-issue/
+    controller: App\Controller\HelpImproveController::sendReportIssue
+    methods: [POST]
+    condition: 'request.isXmlHttpRequest()'
+
 ###
 # GET CATEGORY BLOCKED DATES
 ###
@@ -55,9 +67,6 @@ index_admin:
 admin_dashboard:
     path: /admin-dashboard/
     controller: App\Controller\AdminController::adminDashboard
-
-
-
 
 
 ##

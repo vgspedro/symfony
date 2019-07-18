@@ -190,7 +190,6 @@ class BookingRepository extends ServiceEntityRepository
 
     }
 
-
     public function findDeleteCategory($category){
 
         $query = $this->getEntityManager()->createQuery(
@@ -202,8 +201,6 @@ class BookingRepository extends ServiceEntityRepository
         return $query->getResult();
 
     }
-
-
 
     private function objectToArray( $object )
     {
@@ -217,5 +214,7 @@ class BookingRepository extends ServiceEntityRepository
         }
         return array_map( array($this, 'objectToArray'), $object );
     }
+
+
 
 }
