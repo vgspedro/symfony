@@ -11,7 +11,6 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class CreditCardClearDataCommand extends Command
 {
-
     private $entityManager;
 
     public function __construct(EntityManagerInterface $entityManager)
@@ -25,7 +24,7 @@ class CreditCardClearDataCommand extends Command
     {
         $this->setName('app:clear-card-info')
         ->setDescription('Execute to clear credit card data from user after 15 days of the event taken place.')
-        ->setHelp("Clear the Client fields");
+        ->setHelp("Clear the Ccard field");
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -33,12 +32,12 @@ class CreditCardClearDataCommand extends Command
 
         $hour = 3600;
         $day = 86400;
-        $totalDays = 1;
+        $totalDays = 15;
 
         // outputs multiple lines to the console (adding "\n" at the end of each line)
         $output->writeln([
-            'Execute query',
-            '============',
+            'Execute Clear Query (c.card field)',
+            '==================================',
             '',
         ]);
 
@@ -54,19 +53,18 @@ class CreditCardClearDataCommand extends Command
         //ON BOOKINGS WITH WARRANTY PAYMENT WE MUST DELETE THE CREDIT CARD NR
         if ($bookings){
             foreach ($bookings as $booking){
-                $booking->getClient()->setCardNr('');
+            //    $booking->getClient()->setCardNr('');
 
-                $this->entityManager->persist($booking);
+            //    $this->entityManager->persist($booking);
                 
-                $this->entityManager->flush();
+            //    $this->entityManager->flush();
             }
         }
         // outputs a message followed by a "\n"
         $dates =''; 
         foreach ($bookings as $booking)
-          $dates .= '-->'.$booking->getClient()->getId();
-
-        $output->writeln('Total credit cards found from '.$deadline->format('d/m/Y H:i').'='.$dates);
+            $client.= '-->'.$booking->getId();
+            $output->writeln('Deleted ('.count($bookings).') credit cards, where the event is older than: '.$deadline->format('d/m/Y H:i').' ('.$client.')');
     }
 
 }
