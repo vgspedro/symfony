@@ -129,7 +129,8 @@ return array(
     'observations' => 'Observations',
     'rating' => 'Rating *',
     'booking_nr' => 'Booking Nr. *',
-    'image' => 'Attach Image'
+    'image' => 'Attach Image',
+    'spam_txt' => 'Didn’t received our email? Please check your spam box or call +351969617828',
 ),
 
 

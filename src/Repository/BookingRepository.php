@@ -37,10 +37,12 @@ class BookingRepository extends ServiceEntityRepository
         $dql = 'SELECT c, b
             FROM App\Entity\Booking b
             JOIN b.client c
-            WHERE b.dateEvent = :tomorrow';
-        
+            WHERE b.dateEvent = :tomorrow
+            AND b.status = :status';
+
         $query = $this->getEntityManager()->createQuery($dql)
-          ->setParameter('tomorrow', $tomorrow);
+            ->setParameter('tomorrow', $tomorrow)
+            ->setParameter('status', 'confirmed');
           
         return $query->getResult();
     }
