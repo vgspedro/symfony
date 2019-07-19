@@ -33,6 +33,18 @@ class BookingRepository extends ServiceEntityRepository
         return $query->getResult();
     }
 
+    public function getBookings24HoursReminder($tomorrow){
+        $dql = 'SELECT c, b
+            FROM App\Entity\Booking b
+            JOIN b.client c
+            WHERE b.dateEvent = :tomorrow';
+        
+        $query = $this->getEntityManager()->createQuery($dql)
+          ->setParameter('tomorrow', $tomorrow);
+          
+        return $query->getResult();
+    }
+
 
 
     public function dashboardValues()

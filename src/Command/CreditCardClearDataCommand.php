@@ -53,11 +53,11 @@ class CreditCardClearDataCommand extends Command
         //ON BOOKINGS WITH WARRANTY PAYMENT WE MUST DELETE THE CREDIT CARD NR
         if ($bookings){
             foreach ($bookings as $booking){
-            //    $booking->getClient()->setCardNr('');
+                $booking->getClient()->setCardNr('');
 
-            //    $this->entityManager->persist($booking);
+                $this->entityManager->persist($booking);
                 
-            //    $this->entityManager->flush();
+                $this->entityManager->flush();
             }
         }
         // outputs a message followed by a "\n"

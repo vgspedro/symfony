@@ -238,19 +238,19 @@ class HelpImproveController extends AbstractController
                     ->addPart($subject, 'text/plain')
                     ->setBody(
                 
-                $this->renderView(
-                    'emails/feedback-'.$locale.'.html.twig',
-                    array(
-                        'id' => $feedback->getBooking()->getId(),
-                        'name' => $name,
-                        'email' => $email,
-                        'rate' =>  $feedback->getRate(),
-                        'logo' => 'https://'.$request->getHost().'/upload/gallery/'.$company->getLogo(),
-                        'observations' => $feedback->getObservations()
-                    )
-                ),
-                'text/html'
-            );
+                    $this->renderView(
+                        'emails/feedback-'.$locale.'.html.twig',
+                        array(
+                            'id' => $feedback->getBooking()->getId(),
+                            'name' => $name,
+                            'email' => $email,
+                            'rate' =>  $feedback->getRate(),
+                            'logo' => 'https://'.$request->getHost().'/upload/gallery/'.$company->getLogo(),
+                            'observations' => $feedback->getObservations()
+                        )
+                    ),
+                    'text/html'
+                );
                 
                 $send = $mailer->send($message);
             }
