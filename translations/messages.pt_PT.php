@@ -34,7 +34,7 @@ return array(
     'not_available' => 'Sem disponibilidade!',
     'help_improve_txt' => 'Estamos sempre procurando maneiras de melhorar. Partilhe a sua experiência única com a nossa equipa.',
     'send_feedback' => 'O seu feedback',
-    'send_feedback_txt' => 'Deixe-nos saber como podemos melhorar a sua experiência',
+    'send_feedback_txt' => 'Deixe-nos saber como correu a sua experiência',
     'send_feedback_btn'=>'A sua opinião',
     'report_issue' => 'Reporte um problema',
     'report_issue_txt' => 'Ajude-nos a afinar os nossos serviços.',

@@ -18,7 +18,7 @@ return array(
     'not_available' => 'Nothing available!',
     'help_improve_txt' => 'We’re always looking for ways to improve. Share your unique experience with our team.',
     'send_feedback' => 'Send us feedback',
-    'send_feedback_txt' => 'Let us know how we can improve your experience.',
+    'send_feedback_txt' => 'Let us know how it run your experience.',
     'send_feedback_btn'=>'Have your say',
     'report_issue' => 'Report Issue',
     'report_issue_txt' => 'Assist us in shaping and influence our products.',

@@ -57,9 +57,8 @@ class Booking24HoursReminderCommand extends Command
             $this->sendEmail($booking, $company);
             $id.= $booking->getId().', ';
         }
-
         // outputs a message followed by a "\n"
-        $output->writeln(count($bookings). 'Bookings reminder send to bookings ('.$id.'), to warn them that tomorrow they have a booking: '.$tomorrow->format('d/m/Y'));
+        $output->writeln(count($bookings).' Bookings reminder send to bookings ('.$id.'), to warn them that tomorrow they have a booking: '.$tomorrow->format('d/m/Y'));
     }
 
     protected function sendEmail(Booking $booking, Company $company){
