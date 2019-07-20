@@ -54,6 +54,8 @@ return array(
     'no_file_input_found' => 'A imagem não foi encontrada ', 
     'no_file_support' =>'O navegador não suporta ficheiros',
     'invalid_image_size' => 'Tamanho da imagem é inválido',
+    'complain_book' => 'Livro Reclamações',
+    
 
 'link' => array(
     'where_we_are'=>'Onde Estamos',

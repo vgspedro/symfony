@@ -3,12 +3,23 @@
     <i class="fa fa-arrow-up"></i>
   </button>
 </div>
-<div class="w3-center w3-tiny" style="margin-top: -18px">
-	<a href="https://demo.darioviegas.com" target="_blank">D&P 2019</a>
-</div>
-<div style="margin-top:-60px;margin-left:13px;width:45px;position:absolute" class="w3-tooltip">
-	<span style="position:absolute;left:-4px;bottom:54px" class="w3-text totop w3-tag w3-animate-zoom w3-text-white w3-round ARBITRARY_CENTER">{% trans %}arbitrary.name{% endtrans %}
+
+<section class="w3-black w3-padding" style="height:57px">
+
+<div class="w3-tooltip w3-right">
+	<span style="position:absolute;left:-4px;bottom:58px" class="w3-text totop w3-tag w3-animate-zoom w3-text-white w3-round">{% trans %}complain_book{% endtrans %}
 	</span>
-	<img style="cursor:pointer;height:36px;width:36px;margin:7px 8px" onclick="$('#modal-resolution-center').show()" class="w3-border w3-round" src="{{ asset('images/center.png') }}">
+		<img style="cursor:pointer;height:41px"class="w3-border w3-round w3-blue" onclick="window.open('https://www.livroreclamacoes.pt/inicio','_blank')" src="{{ asset('images/complain_book.png') }}">
 </div>
 
+<div class="w3-tooltip w3-left">
+	<span style="position:absolute;left:-4px;bottom:58px" class="w3-text totop w3-tag w3-animate-zoom w3-text-white w3-round">{% trans %}arbitrary.name{% endtrans %}
+	</span>
+	<img style="cursor:pointer;height:41px" onclick="$('#modal-resolution-center').show()" class="w3-border w3-round" src="{{ asset('images/center.png') }}">
+</div>
+
+<div class="w3-center w3-tiny" style="margin-top: 28px">
+	<a href="https://demo.darioviegas.com" target="_blank">D&P 2019</a>
+</div>
+
+</section>

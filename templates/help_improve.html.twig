@@ -114,16 +114,19 @@
     </section>
 
     <section>
-        <div class="w3-row">
-            <div class="w3-col l6 s12 w3-padding-32 w3-center">
+        <div class="w3-row w3-light-grey">
+            <div class="w3-col l6 s12 m12 w3-padding-32 w3-center">
                 <h3 class="">{% trans %}enhance_experience{% endtrans %}</h3>
                 <a href="{{ path('index') }}"  class="w3-btn w3-border w3-sand w3-round">{% trans %}enhance_experience_btn{% endtrans %}</a>
             </div>
-            <div class="w3-col l6 s12 w3-hide-small">
-                <img src="https://www.adaware.com/sites/default/files/2016-09/hubcta-helpus_1.jpg">
+            <div class="w3-col l6 s12 w3-hide-medium w3-hide-small">
+                <!--img src="https://www.adaware.com/sites/default/files/2016-09/hubcta-helpus_1.jpg"-->
+                <img class="w3-image" src="{{asset('images/help.jpg')}}">
             </div>
         </div>
     </section>
+
+ 
 
     <!--section class="request w3-padding-16" style="max-width:1024px;margin:0 auto"><div class="w3-border-bottom"></div></section-->
 
@@ -311,6 +314,7 @@
     </div>
   </div>
 </div>
+    {% include 'taruga/footer.html' %}
 
 		{% include 'taruga/navbarmobile.help_improve.html' %}
 		

@@ -39,6 +39,7 @@ return array(
     'no_file_input_found' => 'File not found', 
     'no_file_support' =>'Brownser doesn’t support files',
     'invalid_image_size' => 'Invalid image size',
+    'complain_book' => 'Livro Reclamações',
 
 
 'link' => array(
