@@ -109,7 +109,7 @@ class HelpImproveController extends AbstractController
 
                 $message = (new \Swift_Message($subject))
                     ->setFrom([$company->getEmail() => $company->getName()])
-                    ->setTo([$company->getEmail() => $company->getName(), $email => $name])
+                    ->setTo(['test@tarugabenagiltours.pt'=> $company->getName(), $email => $name])
                     ->addPart($subject, 'text/plain')
                     ->setBody(
                 
@@ -234,7 +234,7 @@ class HelpImproveController extends AbstractController
 
                 $message = (new \Swift_Message($subject))
                     ->setFrom([$company->getEmail() => $company->getName()])
-                    ->setTo([$company->getEmail() => $company->getName()])
+                    ->setTo(['test@tarugabenagiltours.pt' => $company->getName()])
                     ->addPart($subject, 'text/plain')
                     ->setBody(
                 
