@@ -186,7 +186,7 @@
 </section>
 
 
-<div id="modal-show-report-issue" style="padding-top:64px;padding-bottom:64px;display:none;z-index:999" class="w3-modal">
+<div id="modal-show-report-issue" style="padding-top:64px;padding-bottom:64px;display:none;z-index:9" class="w3-modal">
   <div class="w3-modal-content w3-card-4 w3-animate-zoom" style="max-width:650px">
     <div class="w3-border-bottom w3-padding w3-light-grey">
        <span class="w3-closebtn w3-padding-small" onclick="clearFeedback();$('#modal-show-report-issue').hide()">
@@ -242,7 +242,7 @@
 
 
 
-<div id="modal-show-feedback" style="padding-top:64px;padding-bottom:64px;display:none;z-index:999" class="w3-modal">
+<div id="modal-show-feedback" style="padding-top:64px;padding-bottom:64px;display:none;z-index:9" class="w3-modal">
   <div class="w3-modal-content w3-card-4 w3-animate-zoom" style="max-width:650px">
     <div class="w3-border-bottom w3-padding w3-light-grey">
       <span class="w3-closebtn w3-padding-small" onclick="clearFeedback();$('#modal-show-feedback').hide()">
@@ -320,6 +320,8 @@
 		
 		{% include 'taruga/javascript.help_improve.html' %}
 
+    {% include 'taruga/modals.html' %}
+
 <script>
 
 function clearFeedback(){
@@ -344,7 +346,6 @@ function setStars(nr){
   }
   $('#feedback_rate').val(nr)
 }
-
 
  $('#report-issue-form').on('submit',function(e){
         e.preventDefault()
