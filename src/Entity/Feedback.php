@@ -14,7 +14,7 @@ class Feedback
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
-    /** @ORM\ManyToOne(targetEntity="Booking", inversedBy="feedback") */
+    /** @ORM\ManyToOne(targetEntity="Booking") */
     private $booking;
     /**
     * @ORM\Column(type="integer", name="rate")
@@ -90,13 +90,6 @@ class Feedback
     }
 
     public function getCategory(){
-        $category = null;
-        if($this->getBooking())
-            $category = $this->getBooking()->getAvailable()->getId();
-        return $category;
-    }
-
-    public function getCategoryScore(){
         $category = null;
         if($this->getBooking())
             $category = $this->getBooking()->getAvailable()->getId();
