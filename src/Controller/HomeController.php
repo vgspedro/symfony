@@ -18,6 +18,7 @@ use App\Entity\Gallery;
 use App\Entity\User;
 use App\Entity\Locales;
 use App\Entity\AboutUs;
+use App\Entity\Feedback;
 use App\Entity\Available;
 /*https://github.com/nojacko/email-validator*/
 use EmailValidator\EmailValidator;
@@ -62,6 +63,7 @@ class HomeController extends AbstractController
         $warning = $em->getRepository(Warning::class)->find(10);
         $company = $em->getRepository(Company::class)->find(1);
         $about = $em->getRepository(AboutUs::class)->findAll();
+        $feedback = $em->getRepository(Feedback::class)->getCategoryScore();
         //must
         $category = $em->getRepository(Category::class)->findBy(['isActive' => 1],['orderBy' => 'ASC']);
         
@@ -141,7 +143,8 @@ class HomeController extends AbstractController
                 'company' => $company,
                 'about' => $about,
                 'host' => $reqInfo->getHost($request),
-                'page' => 'index'
+                'page' => 'index',
+                'feedback' => $feedback
                 )
             );
     }

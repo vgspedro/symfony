@@ -14,25 +14,17 @@ class FeedbackRepository extends ServiceEntityRepository
         parent::__construct($registry, Feedback::class);
     }
 
-    public function getCategoryScore(Category $category)
+    public function getCategoryScore()
     {
 
-
-/*SELECT SUM(f.rate), count(f.id), c.id FROM feedback AS f 
-JOIN booking as b ON b.id = f.booking_id
-JOIN available as a ON a.id = b.available_id
-JOIN category as c ON c.id = a.category_id
-WHERE c.id = 16
-*/
-
-
-        $dql = ' SELECT SUM(f.rate), COUNT(f.rate)
-            FROM feedback AS f
-            JOIN f.booking_id AS b
-            JOIN b.available_id AS c
-            WHERE c_id = :cat';
-        $query = $this->getEntityManager()->createQuery($dql)
-          ->setParameter('cat', $category->getId());
+        $dql = ' SELECT AVG(f.rate) AS average, COUNT(f.id) AS reviews, c.id, c.namePt
+            FROM App\Entity\Feedback f
+            JOIN f.booking AS b
+            JOIN b.available AS a
+            JOIN a.category AS c
+            WHERE f.active = 1
+            GROUP BY c.id';
+        $query = $this->getEntityManager()->createQuery($dql);
 
         return $query->getResult();
     }
