@@ -186,7 +186,7 @@ class HelpImproveController extends AbstractController
                 return new JsonResponse($response);
             }
 
-            $booking = $em->getRepository(Booking::class)->find($booking_nr);
+            $booking = $em->getRepository(Booking::class)->findOneBy(['id' => $booking_nr, 'status'=> 'confirmed']);
             
             if(!$booking)
                 $err[] = 'booking_not_valid';

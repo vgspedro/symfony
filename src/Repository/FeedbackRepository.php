@@ -23,8 +23,10 @@ class FeedbackRepository extends ServiceEntityRepository
             JOIN b.available AS a
             JOIN a.category AS c
             WHERE f.active = 1
+            AND b.status = :confirmed
             GROUP BY c.id';
-        $query = $this->getEntityManager()->createQuery($dql);
+        $query = $this->getEntityManager()->createQuery($dql)
+        ->setParameter('confirmed','confirmed');
 
         return $query->getResult();
     }
