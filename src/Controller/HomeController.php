@@ -197,7 +197,7 @@ class HomeController extends AbstractController
             $err[] = 'SESSION_END';
             $response = array(
                 'status' => 3,
-                'message' => 'session_end',
+                'message' => 'session end',
                 'data' => $err,
                 'mail' => null,
                 'locale' => null,
@@ -271,7 +271,7 @@ class HomeController extends AbstractController
             $err[] = 'EVENT_NOT_FOUND';
             $response = array(
                 'status' => 0,
-                'message' => 'event_not_found',
+                'message' => 'event not found',
                 'data' => $err,
                 'mail' => null,
                 'locale' => $locale,
@@ -279,7 +279,6 @@ class HomeController extends AbstractController
             );
             return new JsonResponse($response);
         }
-
 
         try {           
             $em->lock($available, LockMode::PESSIMISTIC_WRITE);
@@ -301,7 +300,7 @@ class HomeController extends AbstractController
                 $err[] = 'OTHER_BUY_IT';
                 $response = array(
                     'status' => 0,
-                    'message' => 'no_vacancy_1',
+                    'message' => 'other buy it',
                     'data' => $err,
                     'mail' => null,
                     'locale' => $locale,
@@ -365,7 +364,7 @@ class HomeController extends AbstractController
               $err[] = 'OPPS_SOMETHING_WRONG';
                 $response = array(
                     'status' => 0,
-                    'message' => 'opps_something_wrong',
+                    'message' => $e->getMessage(),
                     'data' => $err,
                     'mail' => null,
                     'locale' => $locale,
@@ -389,6 +388,8 @@ class HomeController extends AbstractController
         return new JsonResponse($response);
         }
     }
+
+
 
 
     public function userTranslation($lang, $page)

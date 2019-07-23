@@ -258,6 +258,7 @@ function showRgpd(){
 
 function checkOut(){
   $('.required').addClass('w3-hide');
+  $('.debugger').empty()
   $("#myOverlay, #loader-cont").show();
 
   //console.log($('#get-available').serialize())
@@ -285,14 +286,16 @@ function checkOut(){
           $('.set-order-id').html(data.data);
           $('#get-available').trigger('reset');
           $('.set-visible, .wp-active').addClass('w3-hide');
-          sessionStorage.clear();
+          //sessionStorage.clear();
           $('.icon-unknown').removeClass('w3-hide');
         }
 
-        //show what wetn wrong
+        //show what went wrong
         else if (data.status == 0 || data.status == 2){
           for(k = 0; k<data.data.length;k++)
             $('.'+data.data[k]).removeClass('w3-hide');
+          
+          $('.debugger').html(data.message)
           $('#modal-info').show();
         }
         else{
