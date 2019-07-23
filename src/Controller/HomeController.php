@@ -390,8 +390,6 @@ class HomeController extends AbstractController
     }
 
 
-
-
     public function userTranslation($lang, $page)
     {    
         $this->session->set('_locale', $lang);
@@ -482,7 +480,7 @@ class HomeController extends AbstractController
     private function noFakeTelephone($a) {
         $invalid = 0;        
         if($a)
-            $invalid = preg_replace("/[0-9|\+?]{0,2}[0-9]{5,12}/", "", $a);
+            $invalid = preg_replace("/[0-9|\+?]{0,2}[0-9]{9,14}/", "", $a);
         return $invalid;
     }
 

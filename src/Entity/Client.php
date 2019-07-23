@@ -171,9 +171,12 @@ class Client implements UserInterface , \Serializable
         return str_rot13(base64_decode($this->telephone));
     }
 
-    public function setTelephone($telephone)
-    {
+    public function setTelephone($telephone){
+
+        $telephone = str_replace(' ', '', $telephone);
+        $telephone = str_replace('+', '00', $telephone);
         $this->telephone = base64_encode(str_rot13($telephone));
+    
     }
 
     public function getRgpd()
