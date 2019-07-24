@@ -37,7 +37,6 @@ class Booking24HoursReminderCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
 
-
         // outputs multiple lines to the console (adding "\n" at the end of each line)
         $output->writeln([
             'Execute Client Booking 24h Reminder',
@@ -63,7 +62,7 @@ class Booking24HoursReminderCommand extends Command
 
     protected function sendEmail(Booking $booking, Company $company){
 
-        $transport = (new \Swift_SmtpTransport($company->getEmailSmtp(), $company->getEmailPort(), $company->getEmailCertificade()))
+        $transport = (new \Swift_SmtpTransport($company->getEmailSmtp(), /*$company->getEmailPort()*/587, $company->getEmailCertificade()))
             ->setUsername($company->getEmail())
             ->setPassword($company->getEmailPass());            
                 
