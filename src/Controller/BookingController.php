@@ -31,7 +31,7 @@ class BookingController extends AbstractController
         
         $totalPax = 0;
         
-        !$this->session->get('_locale') ? $this->session->set('_locale', 'pt_PT') : false;
+        //!$this->session->get('_locale') ? $this->session->set('_locale', 'pt_PT') : false;
 
         $locale = $reqInfo->getBrownserLocale($request);
 
@@ -63,7 +63,11 @@ class BookingController extends AbstractController
         $category = $em->getRepository(Category::class)->find($categoryId);
 
         //min date we start the search is tomorrow, so has the min date available in datepicker
-        $startDt = new \DateTime('tomorrow');
+        $tomorrow = new \DateTime('tomorrow');
+
+        $interval = 3600;
+
+        $startDt = \DateTime::createFromFormat('U', ($tomorrow->format('U') + $interval));
         
         //prevent if category not found, return back info
         if(!$category){
