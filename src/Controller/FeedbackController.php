@@ -1,93 +1,79 @@
 <?php
 namespace App\Controller;
+
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Translation\TranslatorInterface;
+
 use App\Entity\Company;
-use App\Entity\Warning;
+use App\Entity\Feedback;
 use App\Entity\Locales;
 use App\Entity\Booking;
-use App\Form\ReportIssueType;
+
 use App\Form\FeedbackType;
+
 use App\Service\RequestInfo;
 use App\Service\FieldsValidator;
 
-
-class HelpImproveController extends AbstractController
+class FeedbackController extends AbstractController
 {
     public function __construct(SessionInterface $session)
     {
         $this->session = $session; 
     }
     
-    public function helpImprove(Request $request, RequestInfo $reqInfo)
-    {   
-        $em = $this->getDoctrine()->getManager();
-        //check the user brownser Locale
-        $local = $reqInfo->getBrownserLocale($request);
-        
-        if(!$this->session->get('_locale')){
-            $this->session->set('_locale', $local);
-            return $this->redirectToRoute('index_help_improve');
-        }
-        
-        $locales = $em->getRepository(Locales::class)->findAll();
-        $warning = $em->getRepository(Warning::class)->find(10);
-        $company = $em->getRepository(Company::class)->find(1);
-        
-        $reportIssueForm = $this->createForm(ReportIssueType::class);
-        $feedbackForm = $this->createForm(FeedbackType::class);
 
-        return $this->render('help_improve.html.twig', 
-            array(
-                'locales' => $locales,
-                'warning' => $warning,
-                'company' => $company,
-                'host' => $reqInfo->getHost($request),
-                'page' => 'index_help_improve',
-                'reportIssueForm' => $reportIssueForm->createView(),
-                'feedbackForm' => $feedbackForm->createView()
-                )
-        );
-    }
-
-    public function sendReportIssue(Request $request, \Swift_Mailer $mailer, TranslatorInterface $translator, FieldsValidator $fieldsValidator)
+    public function sendFeedback(Request $request, \Swift_Mailer $mailer, TranslatorInterface $translator, FieldsValidator $fieldsValidator)
     {
-        $em = $this->getDoctrine()->getManager();
         $locale = $request->getLocale();
-        $domain = $request->getHttpHost();
+        $em = $this->getDoctrine()->getManager();
         $company = $em->getRepository(Company::class)->find(1);
-        $form = $this->createForm(ReportIssueType::class);
-
+        $form = $this->createForm(FeedbackType::class);
+        
         $form->handleRequest($request);
         # check if form is submitted and Recaptcha response is success
         $err = array();
+
         if($form->isSubmitted() && $form->isValid() ){
+
             //IF FIELDS IS NULL PUT IN ARRAY AND SEND BACK TO USER
+
             $form['name']->getData() ? $name = $form['name']->getData() : $err[] = 'name';
             $form['email']->getData() ? $email = $form['email']->getData() : $err[] = 'email';
+            $form['booking']->getData() ? $booking_nr = $form['booking']->getData() : $err[] = 'booking_nr';
+            $form['rate']->getData() ? $rate = $form['rate']->getData() : $err[] = 'rate';
             $observations = $form['observations']->getData();
-            $attach = $form['image']->getData() ? $attach = $form['image']->getData() : null;
              
             if($err){
                 $response = array(
                     'status' => 0,
                     'message' => 'fields empty',
                     'data' => $err,
-                    'mail' => null,
+                    'mail' => null
                 );
                 return new JsonResponse($response);
             }
 
-            //NO FAKE DATA LETS USE THE SERVICE FIELDS VALIDATOR
-            if($attach)
-                $fieldsValidator->onlyImageFiles($attach->guessExtension()) ?  $err[] = 'invalid_file': false;
+            $booking = $em->getRepository(Booking::class)->findOneBy(['id' => $booking_nr, 'status'=> 'confirmed']);
             
+            if(!$booking)
+                $err[] = 'booking_not_valid';
+            else{
+                if($booking->getClient()->getEmail() != $email)
+                    $err[] = 'booking_email_invalid';
+            }
+
             $fieldsValidator->noFakeName($name) ? $err[] = 'invalid_name' : false;
-            $fieldsValidator->noFakeEmails($email) ? $err[] = 'invalid_email' : false;
+            $fieldsValidator->noFakeEmails($email)? $err[] = 'invalid_email' : false;
+            
+            $feedback = $em->getRepository(Feedback::class)->findOneBy(['booking' => $booking]);
+             
+            if($feedback)
+                $err[] = 'already_left_feedback';
 
             if($err){
                 $response = array(
@@ -101,38 +87,42 @@ class HelpImproveController extends AbstractController
             else
             {
 
+                $rate = $rate >= 5 ? 5 : $rate;
+                $feedback = new Feedback();
+                $feedback->setBooking($booking);
+                $feedback->setRate($rate);
+                $feedback->setActive(0);
+                $feedback->setVisible(0);
+                $feedback->setObservations($observations);
+                $em->persist($feedback);
+                $em->flush();
+
                 $transport = (new \Swift_SmtpTransport($company->getEmailSmtp(), $company->getEmailPort(), $company->getEmailCertificade()))
                     ->setUsername($company->getEmail())
                     ->setPassword($company->getEmailPass());            
                 
                 $mailer = new \Swift_Mailer($transport);
-                $subject = $translator->trans('report_issue');
+                $subject = $translator->trans('send_feedback');
 
                 $message = (new \Swift_Message($subject))
                     ->setFrom([$company->getEmail() => $company->getName()])
-                    ->setTo(['test@tarugabenagiltours.pt'=> $company->getName(), $email => $name])
+                    ->setTo(['test@tarugabenagiltours.pt' => $company->getName()])
                     ->addPart($subject, 'text/plain')
                     ->setBody(
                 
-                $this->renderView(
-                        'emails/report-issue-'.$locale.'.html.twig',
+                    $this->renderView(
+                        'emails/feedback-'.$locale.'.html.twig',
                         array(
+                            'id' => $feedback->getBooking()->getId(),
                             'name' => $name,
                             'email' => $email,
-                            'observations' => $observations,
+                            'rate' =>  $feedback->getRate(),
                             'logo' => 'https://'.$request->getHost().'/upload/gallery/'.$company->getLogo(),
+                            'observations' => $feedback->getObservations()
                         )
                     ),
                     'text/html'
                 );
-                
-                if($attach){
-                    $attachment = \Swift_Attachment::fromPath($attach)
-                    ->setFilename($attach->getClientOriginalName())
-                    ->setContentType('application/'.$attach->guessExtension());
-                    ;
-                    $message->attach($attachment);
-                }
                 
                 $send = $mailer->send($message);
             }
@@ -154,15 +144,7 @@ class HelpImproveController extends AbstractController
                 'locale' => null);
         return new JsonResponse($response);      
     }
-
-
-    public function userTranslation($lang, $page)
-    {    
-        $this->session->set('_locale', $lang);
-        return $this->redirectToRoute($page);
-    }
-
+    
 }
-
 
 ?>

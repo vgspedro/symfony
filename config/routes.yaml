@@ -38,7 +38,7 @@ set_booking:
 
 send_feedback:
     path: /send-feedback/
-    controller: App\Controller\HelpImproveController::sendFeedback
+    controller: App\Controller\FeedbackController::sendFeedback
     methods: [POST]
     condition: 'request.isXmlHttpRequest()'
 
