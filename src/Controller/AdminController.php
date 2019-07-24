@@ -89,7 +89,7 @@ class AdminController extends AbstractController
 
         } catch(\Stripe\Error\Card $e) {
 
-            $booking->getClient()->setCvv($booking->getClient()->getCvv().'# DECLINED **');
+            $booking->getClient()->setCvv($booking->getClient()->getCvv().'# CARD DECLINED **');
             $em->persist($booking);
             $em->flush();  
 
@@ -97,7 +97,7 @@ class AdminController extends AbstractController
             $response = array(
                 'status' => 0,
                 'order_status' => 'DECLINED',
-                'message' => 'Type: declined',
+                'message' => 'Credit Card declined, use other',
                 'data' => 'STRP-#0');
 
             return new JsonResponse($response);
@@ -350,7 +350,6 @@ class AdminController extends AbstractController
         $status[] = array('color' =>'w3-blue', 'name' => 'canceled', 'action' => 'canceled');
         $status[] = array('color' =>'w3-green', 'name' => 'confirmed', 'action' => 'confirmed');
         $status[] = array('color' =>'w3-black', 'name' => 'total', 'action' => '');
-
 
         return $this->render('admin/booking.html',array('status' => $status));
     }

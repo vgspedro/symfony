@@ -317,13 +317,19 @@ typeof(Storage) !== "undefined" ? false : setTimeout(function(){$('#modal-no-sto
 
 var tl = new Cleave('input[name=telephone]', {
     phone: true,
-    phoneRegionCode: '{{app.request.locale}}'
+    phoneRegionCode: ''
 });
 
 var dc = new Cleave('input[name=date_card]', {
     date: true,
     datePattern: ['m', 'Y']
 });
+
+var cvv = new Cleave('input[name=cvv]', {
+    numeral: true,
+    numeralThousandsGroupStyle: 'thousand'
+});
+
 
 var cc = new Cleave('input[name=card_nr]', {
   creditCard: true,
