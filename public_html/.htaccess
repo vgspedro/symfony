@@ -17,6 +17,8 @@ DirectoryIndex index.php
     Options -MultiViews
 </IfModule>
 
+php_value date.timezone 'Europe/Lisbon'
+
 <IfModule mod_rewrite.c>
     RewriteEngine On
 
