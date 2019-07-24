@@ -82,7 +82,7 @@ class BookingController extends AbstractController
             return new JsonResponse($response);
         }
 
-        $available = $em->getRepository(Available::class)->findByCategoryDateTomorrow($category, $startDt->format('Y-m-d H:i:s'), $totalPax);
+        $available = $em->getRepository(Available::class)->findByCategoryDateTomorrow($category, $startDt->format('Y-m-d 23:59:59'), $totalPax);
 
         $stockAvailable = array();
 
