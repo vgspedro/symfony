@@ -62,7 +62,7 @@ class Booking24HoursReminderCommand extends Command
 
     protected function sendEmail(Booking $booking, Company $company){
 
-        $transport = (new \Swift_SmtpTransport($company->getEmailSmtp(), /*$company->getEmailPort()*/587, $company->getEmailCertificade()))
+        $transport = (new \Swift_SmtpTransport($company->getEmailSmtp(), $company->getEmailPort(), $company->getEmailCertificade()))
             ->setUsername($company->getEmail())
             ->setPassword($company->getEmailPass());            
                 
