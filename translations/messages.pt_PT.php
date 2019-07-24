@@ -55,7 +55,10 @@ return array(
     'no_file_support' =>'O navegador não suporta ficheiros',
     'invalid_image_size' => 'Tamanho da imagem é inválido',
     'complain_book' => 'Livro Reclamações',
-    
+    'pending' => 'Pendente',
+    'canceled' => 'Cancelada',
+    'confirmed' => 'Confirmada',
+    'booking' => 'Reserva',
 
 'link' => array(
     'where_we_are'=>'Onde Estamos',

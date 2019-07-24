@@ -40,6 +40,10 @@ return array(
     'no_file_support' =>'Brownser doesn’t support files',
     'invalid_image_size' => 'Invalid image size',
     'complain_book' => 'Livro Reclamações',
+    'pending' => 'Pending',
+    'canceled' => 'Canceled',
+    'confirmed' => 'Confirmed',
+    'booking' => 'Booking',
 
 
 'link' => array(

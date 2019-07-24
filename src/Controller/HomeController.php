@@ -2,13 +2,17 @@
 namespace App\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Translation\TranslatorInterface;
+
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+
 use Doctrine\DBAL\LockMode;
 use Doctrine\ORM\PessimisticLockException;
 //LockMode::PESSIMISTIC_WRITE
+
 use App\Entity\Booking;
 use App\Entity\Category;
 use App\Entity\Company;
@@ -20,14 +24,13 @@ use App\Entity\Locales;
 use App\Entity\AboutUs;
 use App\Entity\Feedback;
 use App\Entity\Available;
-/*https://github.com/nojacko/email-validator*/
-use EmailValidator\EmailValidator;
-use App\Service\MoneyFormatter;
-use Money\Money;
 use App\Entity\TermsConditions;
-/*https://packagist.org/packages/inacho/php-credit-card-validator*/
-use Inacho\CreditCard;
+
+use App\Service\MoneyFormatter;
 use App\Service\RequestInfo;
+use App\Service\FieldsValidator;
+
+use Money\Money;
 
 class HomeController extends AbstractController
 {
@@ -178,7 +181,7 @@ class HomeController extends AbstractController
             );
     }
 
-    public function setBooking(Request $request, MoneyFormatter $moneyFormatter, \Swift_Mailer $mailer, RequestInfo $reqInfo){
+    public function setBooking(Request $request, MoneyFormatter $moneyFormatter, \Swift_Mailer $mailer, RequestInfo $reqInfo, FieldsValidator $fieldsValidator, TranslatorInterface $translator){
 
         $err = array();
 
@@ -200,7 +203,6 @@ class HomeController extends AbstractController
                 'message' => 'session end',
                 'data' => $err,
                 'mail' => null,
-                'locale' => null,
                 'expiration' => 1
             );
             return new JsonResponse($response);
@@ -223,9 +225,7 @@ class HomeController extends AbstractController
 
         $wp = $request->request->get('wp') == 'true' ? $request->request->get('wp') : false;
         
-
         if($wp){
-            $request->request->get('name_card') ? $name_card = $request->request->get('name_card') : $err[] = 'CREDIT_CARD_NAME';
             $request->request->get('cvv') ? $cvv = $request->request->get('cvv') : $err[] = 'CVV';
             $request->request->get('date_card') ? $date_card = $request->request->get('date_card') : $err[] = 'CREDIT_CARD_DATE';
             $request->request->get('card_nr') ? $card_nr = $request->request->get('card_nr') : $err[] = 'CREDIT_CARD_NR';
@@ -243,19 +243,18 @@ class HomeController extends AbstractController
         }
         if($wp){
             $name != $name_card ? $err[] = 'NO_MATCH_NAMES' : false;
-            $this->noFakeCcard($date_card,$cvv, $card_nr) ? $err[] = $this->noFakeCcard($date_card,$cvv, $card_nr) : false; 
+            $fieldsValidator->noFakeCcard($date_card,$cvv, $card_nr) ? $err[] = $this->noFakeCcard($date_card,$cvv, $card_nr) : false; 
         }
         //NO FAKE DATA
-        $this->noFakeEmails($email) == 1 ? $err[] = 'EMAIL_INVALID' : false;
-        $this->noFakeTelephone($telephone) == 1 ? $err[] = 'TELEPHONE_INVALID' : false;
-        $this->noFakeName($name) == 1 ? $err[] = 'NAME_INVALID' : false;
+        $fieldsValidator->noFakeEmails($email) == 1 ? $err[] = 'EMAIL_INVALID' : false;
+        $fieldsValidator->noFakeTelephone($telephone) == 1 ? $err[] = 'TELEPHONE_INVALID' : false;
+        $fieldsValidator->noFakeName($name) == 1 ? $err[] = 'NAME_INVALID' : false;
         if($err){
             $response = array(
                 'status' => 2,
                 'message' => 'invalid fields',
                 'data' => $err,
                 'mail' => null,
-                'locale' => $locale,
                 'expiration' => 0
             );
             return new JsonResponse($response);
@@ -274,7 +273,6 @@ class HomeController extends AbstractController
                 'message' => 'event not found',
                 'data' => $err,
                 'mail' => null,
-                'locale' => $locale,
                 'expiration' => 0
             );
             return new JsonResponse($response);
@@ -303,7 +301,6 @@ class HomeController extends AbstractController
                     'message' => 'other buy it',
                     'data' => $err,
                     'mail' => null,
-                    'locale' => $locale,
                     'expiration' => 0
                 );
                 return new JsonResponse($response);
@@ -319,7 +316,7 @@ class HomeController extends AbstractController
             $client->setLocale($locales);
             //wp is set check if data from client isset
             if($available->getCategory()->getWarrantyPayment() && $wp){
-                $client->setCardName($name_card);
+                $client->setCardName($name);
                 $client->setCvv($cvv);
                 $client->setCardDate($date_card);
                 $client->setCardNr($card_nr);
@@ -331,7 +328,6 @@ class HomeController extends AbstractController
                     'message' => 'warranty payment set but no data to db',
                     'data' => $err,
                     'mail' => null,
-                    'locale' => $locale,
                     'expiration' => 0
                 );
                 return new JsonResponse($response);
@@ -367,12 +363,11 @@ class HomeController extends AbstractController
                     'message' => $e->getMessage(),
                     'data' => $err,
                     'mail' => null,
-                    'locale' => $locale,
                     'expiration' => 0,
                 );
                 return new JsonResponse($response);
         }
-        $send = $this->sendEmail($mailer, $booking, $request->getHost());
+        $send = $this->sendEmail($mailer, $booking, $request->getHost(), $translator);
 
         //remove the session start_time
         $this->session->remove('start_time');
@@ -397,7 +392,7 @@ class HomeController extends AbstractController
     }
 
 
-    private function sendEmail(\Swift_Mailer $mailer, Booking $booking, $domain){
+    private function sendEmail(\Swift_Mailer $mailer, Booking $booking, $domain, TranslatorInterface $translator){
         $em = $this->getDoctrine()->getManager();
         $category = $booking->getAvailable()->getCategory();
         $company = $em->getRepository(Company::class)->find(1);
@@ -411,7 +406,7 @@ class HomeController extends AbstractController
         $locale->getName() == 'pt_PT' ? $category->getNamePt() : $category->getNameEn();
         $mailer = new \Swift_Mailer($transport);
                     
-        $subject ='Reserva / Order #'.$booking->getId().' ('.$this->translateStatus('PENDING', $locale->getName()).')';
+        $subject =  $translator->trans('booking').' #'.$booking->getId().' ('.$translator->trans('pending').')';
                     
         $message = (new \Swift_Message($subject))
             ->setFrom([$company->getEmail() => $company->getName()])
@@ -424,7 +419,7 @@ class HomeController extends AbstractController
                         'id' => $booking->getId(),
                         'username' => $client->getUsername(),
                         'email' => $client->getEmail(),
-                        'status' => $this->translateStatus('PENDING', $locale->getName()),
+                        'status' => $translator->trans('pending'),
                         'tour' => $locale->getName() == 'pt_PT' ? $category->getNamePt() : $category->getNameEn(),
                         'date' => $booking->getAvailable()->getDatetimeStart()->format('d/m/Y'),
                         'hour' =>  $booking->getAvailable()->getDatetimeStart()->format('H:i'),
@@ -442,47 +437,7 @@ class HomeController extends AbstractController
             );
             $send = $mailer->send($message);
     }
-    
-    private function noFakeEmails($email) {
-        $invalid = 0;        
-        if($email){
-            $validator = new \EmailValidator\Validator();
-            $validator->isEmail($email) ? false : $invalid = 1;
-            $validator->isSendable($email) ? false : $invalid = 1;
-            $validator->hasMx($email) ? false : $invalid = 1;
-            $validator->hasMx($email) != null ? false : $invalid = 1;
-            $validator->isValid($email) ? false : $invalid = 1;
-        }
-        return $invalid;
-    }
 
-
-    private function noFakeCCard($date_card, $cvv, $card_nr) {
-        $err = [];
-        $card = CreditCard::validCreditCard($card_nr);
-        if ($card['valid'] == 1) {
-            $date = explode('/',$date_card);
-            $validCvc = CreditCard::validCvc($cvv, $card['type']) == true ? false : $err[] = 'CVV_INVALID';
-            $validDate = CreditCard::validDate($date[1], $date[0])  == true ? false : $err[] = 'DATE_CARD_INVALID';
-        }
-        
-        else
-            $err[] = 'CARD_NR_INVALID';
-        return $err;
-    }
-    private function noFakeName($a){
-        $invalid = 0;        
-        if($a)
-            $invalid = preg_replace("/[^!@#\$%\^&\*\(\)\[\]:;]/", "", $a);
-        return $invalid;
-    }
-
-    private function noFakeTelephone($a) {
-        $invalid = 0;        
-        if($a)
-            $invalid = preg_replace("/[0-9|\+?]{0,2}[0-9]{9,14}/", "", $a);
-        return $invalid;
-    }
 
     //CHECK IF USER IS ON INTERVAL OF SUBMIT BOOKING ORDER 
     private function getExpirationTime($request) {
@@ -498,24 +453,6 @@ class HomeController extends AbstractController
         return $expired;
     }
 
-    private function translateStatus($status, $language){
-        if ($language == 'pt_PT'){
-            switch ($status) {
-                case 'PENDING': 
-                    $status = 'PENDENTE';
-                break;
-                case 'CANCELED': 
-                    $status = 'CANCELADA';
-                break;
-                case 'CONFIRMED': 
-                    $status = 'CONFIRMADA';
-                break;
-            
-            }
-        }
-    
-        return $status;
-    }
 
     private function color(){
         return array(
