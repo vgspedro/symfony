@@ -65,7 +65,7 @@ class BookingController extends AbstractController
         //min date we start the search is tomorrow, so has the min date available in datepicker
         $tomorrow = new \DateTime('tomorrow');
 
-        $interval = 3600;
+        $interval = 7200;
 
         $startDt = \DateTime::createFromFormat('U', ($tomorrow->format('U') + $interval));
         
