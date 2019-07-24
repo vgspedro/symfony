@@ -17,8 +17,6 @@ DirectoryIndex index.php
     Options -MultiViews
 </IfModule>
 
-SetEnv TZ 'Europe/Lisbon'
-
 <IfModule mod_rewrite.c>
     RewriteEngine On
 
