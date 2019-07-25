@@ -242,7 +242,10 @@ class HomeController extends AbstractController
             return new JsonResponse($response);
         }
         if($wp){
-            $fieldsValidator->noFakeCcard($date_card,$cvv, $card_nr) ? $err[] = $this->noFakeCcard($date_card,$cvv, $card_nr) : false; 
+            $fieldsValidator->noFakeCcard($date_card,$cvv, $card_nr) ? $err[] =  $fieldsValidator->noFakeCcard($date_card,$cvv, $card_nr) : false; 
+        
+$err[] ='ss';
+
         }
         //NO FAKE DATA
         $fieldsValidator->noFakeEmails($email) == 1 ? $err[] = 'EMAIL_INVALID' : false;

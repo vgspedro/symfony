@@ -128,7 +128,7 @@ return array(
     'sorry' => 'Sorry but...',
     'cvv_invalid' => 'CVV (3 digits)',
     'no_match_names' => 'Name and Owner Credit Card must be the same',
-    'card_nr_invalid' => 'Credit Card Nº (16 digits)',
+    'card_nr_invalid' => 'Credit Card Nº Invalid',
     'telephone_invalid' => 'Telephone (Min: 9 digits)',
     'name_invalid' => 'Name (Only Letters)',
     'observations' => 'Observations',
