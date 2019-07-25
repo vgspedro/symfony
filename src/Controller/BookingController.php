@@ -63,11 +63,7 @@ class BookingController extends AbstractController
         $category = $em->getRepository(Category::class)->find($categoryId);
 
         //min date we start the search is tomorrow, so has the min date available in datepicker
-        $tomorrow = new \DateTime('tomorrow');
-
-        $interval = 7200;
-
-        $startDt = \DateTime::createFromFormat('U', ($tomorrow->format('U') + $interval));
+        $startDt = new \DateTime('tomorrow');
         
         //prevent if category not found, return back info
         if(!$category){
@@ -82,7 +78,7 @@ class BookingController extends AbstractController
             return new JsonResponse($response);
         }
 
-        $available = $em->getRepository(Available::class)->findByCategoryDateTomorrow($category, $startDt->format('Y-m-d 23:59:59'), $totalPax);
+        $available = $em->getRepository(Available::class)->findByCategoryDateTomorrow($category, $startDt->format('Y-m-d H:i:s'), $totalPax);
 
         $stockAvailable = array();
 
