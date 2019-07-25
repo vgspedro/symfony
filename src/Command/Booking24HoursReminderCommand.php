@@ -44,7 +44,7 @@ class Booking24HoursReminderCommand extends Command
             '',
         ]);
 
-        $tomorrow = new \DateTime('tomorrow');
+        $tomorrow = new \DateTime('tomorrow', new \DateTimeZone('Europe/Lisbon'));
         $bookings = $this->entityManager->getRepository(Booking::class)->getBookings24HoursReminder($tomorrow->format('Y-m-d'));
         $company = $this->entityManager->getRepository(Company::class)->find(1);
         //CHECK IF THE EVENT IS FOR TOMORROW IF SO SEND EMAIL TO CLIENT
@@ -55,16 +55,21 @@ class Booking24HoursReminderCommand extends Command
         
             $this->sendEmail($booking, $company);
             $id.= $booking->getId().', ';
+            
         }
         // outputs a message followed by a "\n"
         $output->writeln(count($bookings).' Bookings reminder send to bookings ('.$id.'), to warn them that tomorrow they have a booking: '.$tomorrow->format('d/m/Y'));
     }
 
-    protected function sendEmail(Booking $booking, Company $company){
+    public function sendEmail(Booking $booking, Company $company){
+
+        $https['ssl']['verify_peer'] = FALSE;
+        $https['ssl']['verify_peer_name'] = FALSE;
 
         $transport = (new \Swift_SmtpTransport($company->getEmailSmtp(), $company->getEmailPort(), $company->getEmailCertificade()))
             ->setUsername($company->getEmail())
-            ->setPassword($company->getEmailPass());            
+            ->setPassword($company->getEmailPass())
+            ->setStreamOptions($https);            
                 
         $mailer = new \Swift_Mailer($transport);
         
@@ -74,7 +79,6 @@ class Booking24HoursReminderCommand extends Command
             $tour = $booking->getAvailable()->getCategory()->getNamePt();
         }
         else{
-         
             $subject =  'Hello, don´t forget that ...';
             $tour = $booking->getAvailable()->getCategory()->getNameEn();
         }

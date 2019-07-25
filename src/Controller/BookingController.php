@@ -11,8 +11,7 @@ use App\Entity\Event;
 use App\Entity\Category;
 use App\Entity\Available;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use App\Entity\Locales;
-use App\Service\RequestInfo;
+
 
 class BookingController extends AbstractController
 {
@@ -24,16 +23,15 @@ class BookingController extends AbstractController
         $this->session = $session; 
     }
 
-    public function getAvailable(Request $request, RequestInfo $reqInfo)
+
+    public function getAvailable(Request $request)
     {
 
         $err = array();
         
         $totalPax = 0;
         
-        //!$this->session->get('_locale') ? $this->session->set('_locale', 'pt_PT') : false;
-
-        $locale = $reqInfo->getBrownserLocale($request);
+        //$locale = $reqInfo->getBrownserLocale($request);
 
         $categoryId = $request->request->get('category') ? $request->request->get('category') : $err[] = 'TOUR';
         
@@ -48,6 +46,7 @@ class BookingController extends AbstractController
         if ((int)$adult < 1) $err[] = 'ZERO';
 
         //user didnt fill the necessary fields send back info
+
         if ($err) {
             $response = array(
                 'status' => 0,
@@ -63,8 +62,8 @@ class BookingController extends AbstractController
         $category = $em->getRepository(Category::class)->find($categoryId);
 
         //min date we start the search is tomorrow, so has the min date available in datepicker
-        $startDt = new \DateTime('tomorrow');
-        
+        $startDt = new \DateTime('tomorrow', new \DateTimeZone('Europe/Lisbon'));
+        $now = new \DateTime('now', new \DateTimeZone('Europe/Lisbon'));
         //prevent if category not found, return back info
         if(!$category){
             $response = array(
@@ -123,6 +122,8 @@ class BookingController extends AbstractController
             'expiration' => 900,
             'minDate' => $minDate,
             'available' => $stockAvailable,
+            'minDateTime' =>  $startDt->format('Y-m-d H:i:s'),
+            'nowDateTime' => $now->format('Y-m-d H:i:s')
             );
         }
 

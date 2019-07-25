@@ -6,7 +6,7 @@ use App\Entity\Available;
 use App\Entity\Category;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
-use Doctrine\DBAL\LockMode;
+
 
 class AvailableRepository extends ServiceEntityRepository
 {
