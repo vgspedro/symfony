@@ -26,19 +26,19 @@ class Client implements UserInterface , \Serializable
      * The below length depends on the "algorithm" you use for encoding
      * the password, but this works well with bcrypt.
      *
-     * @ORM\Column(type="string", length=64)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $password;
     /**
-     * @ORM\Column(type="string", length=100)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $username;
     /**
-     * @ORM\Column(type="string", length=100)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $address;
     /**
-     * @ORM\Column(type="string", length=100)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $telephone;
     /**
