@@ -1,0 +1,153 @@
+
+{% extends "admin/p-base.html.twig" %}
+
+{% block content %}
+
+<script src="https://js.stripe.com/v3/"></script>
+
+<style>
+.StripeElement{box-sizing: border-box;height: 45px;padding: 11px 12px;border: 1px solid transparent;background-color: white;box-shadow: 0 1px 3px 0 #e6ebf1;-webkit-transition: box-shadow 150ms ease;transition: box-shadow 150ms ease}
+.StripeElement--focus{box-shadow: 0 1px 3px 0 #cfd7df}
+.StripeElement--invalid{border-color: #fa755a}
+.StripeElement--webkit-autofill{background-color: #fefde5 !important}
+</style>
+
+<div class="w3-container">
+
+<div class="w3-xxlarge w3-row w3-xlarge w3-padding w3-margin-top">
+  <i class="fa fa-reply"></i> Devolução
+</div>
+
+  <div class="w3-row-padding w3-card-2 w3-sand w3-padding w3-large" style="max-width:600px; margin: 0 auto">
+     <div class="w3-col l12 w3-xlarge">
+      <label>Dados da compra:</label>
+    </div>
+
+    <div class="w3-col s12">
+      <label>Tour:</label>
+      <span class="">Volta ao mundo a pé</span>
+    </div>
+    <div class="w3-col s12">
+      <label>Estado:</label>
+      <span class="">{{booking.status}}</span>
+    </div>
+    <div class="w3-col s12">
+      <label>Pagamento:</label>
+      <span class="">
+        {%if (paylog) %}
+          {{paylog.getLogObj.status}}
+        {% else %}
+          pending
+        {% endif %}
+      </span>
+    </div>
+
+    <div class="w3-col s12">
+      <label>Data:</label>
+      <span class="">{{booking.available.datetimestart|date('d/m/Y H:i')}}</span>
+    </div>
+    <div class="w3-col s12">
+      <label>Nome:</label>
+      <span class="u-name">{{booking.client.username}}</span>
+    </div>
+    
+    <div class="w3-col s12">
+      <label>Email:</label>
+      <span class="u-email">{{booking.client.email}}</span>
+    </div>
+    <div class="w3-col s12">
+      <label>Adultos:</label>
+      <span class="">{{booking.adult}}</span>
+    </div>
+
+    <div class="w3-col s12">
+      <label>Crianças:</label>
+      <span class="">{{booking.children}}</span>
+    </div>
+
+    <div class="w3-col s12 w3-margin-bottom">
+      <label>Bébes:</label>
+      <span class="">{{booking.baby}}</span>
+    </div>
+
+  <form id="refund-form">
+  <div class="w3-row-padding">                   
+    <div class="w3-col l6 m6 s12">
+      <label>Montante</label>
+      <input type="hidden" value="{{booking.id}}" name="b_id">
+      <input class="w3-input w3-border" name='amount' value="{{(booking.amount.amount/100)|number_format(2)}}">
+    </div>
+    <div class="w3-col l6 m6 s12">
+      <label>Motivo</label>
+      <select name='reason' class="w3-input w3-border">
+      {% for reason in reasons %}
+        <option value="{{reason.value}}">{{reason.text}}</option>
+      {% endfor %}
+      <select>
+    </div>
+    <div class="w3-col s12">
+      <span class="w3-button w3-orange w3-border w3-right w3-margin-bottom w3-margin-top" onclick="paymentRefund()">
+      <i class="fa fa-reply"></i> 
+        Confirmar
+      </span>
+    </div>
+  </div>
+  </form>
+  </div>
+
+</div>
+
+<!-- MODAL -->
+
+<div id="info-client" class="w3-modal" style="z-index:99999999">
+  <div class="w3-modal-content w3-animate-zoom" style="max-width:450px">
+    <div class="w3-container w3-green w3-padding" id="info-client-head">
+      <span onclick="$('#info-client').hide()" class="w3-button w3-display-topright w3-large"><i class="fa fa-times"></i></span>
+    </div>
+    <div class="w3-border-bottom w3-container w3-padding">
+      <p id="client-txt"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+
+function modalConditions(i, text){
+  a=[]
+
+  a.push(['w3-blue w3-red w3-amber', 'w3-green', 'Sucesso', 'fa-check'])
+  a.push(['w3-green w3-red w3-amber', 'w3-blue', 'Verifique', 'fa-info-circle'])
+  a.push(['w3-blue w3-green w3-amber', 'w3-red', 'Erro', 'fa-exclamation-triangle'])
+  
+  $('#info-client').show()
+  $('#info-client-head').removeClass(a[i][0]).addClass(a[i][1]).html('<span onclick="$(\'#info-client\').hide()" class="w3-button w3-display-topright w3-large"><i class="fa fa-times"></i></span><h1><i class="fa '+a[i][3]+'"></i> '+a[i][2]+'</h1>')  
+  $('#client-txt').html(text)
+}
+
+//make refund
+function paymentRefund(){
+  $('.w3-overlay').show()
+  setTimeout(function(){
+    $.ajax({  
+      url :'{{ path('online_payment_refund')}}',
+      type: "POST",
+      data:$('#refund-form').serialize(),
+      cache: false,
+      success: function(data){
+        $('.w3-overlay').hide()
+        if (data.status == 1)
+          modalConditions(0, data.data)
+        else
+          modalConditions(1, data.message) 
+      },
+      error:function(){
+        $('.w3-overlay').hide()
+        modalConditions(2, 'wifi_connection')
+      }
+    })
+  }, 500)
+}
+
+</script>
+
+{% endblock %}
