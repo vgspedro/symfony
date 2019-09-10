@@ -382,7 +382,7 @@ function getCardData(){
         wp = row.wp ? '<button class="w3-btn w3-border w3-indigo" style="margin-left:4px" onclick="modalToCardData('+row.id+',\''+row.total+'\')"><i class="far fa-credit-card"></i></button>'
       : '<button disabled class="w3-btn w3-border w3-indigo" style="margin-left:4px"><i class="far fa-credit-card"></i></button>'
 
-        return '<div style="width:258px;max-width:258px" class="w3-small"><button id="'+row.id+'" style="padding:8px!important" class="'+color+' w3-btn w3-border" onclick="modalBookingSetStatus('+row.id+')">#'+row.id+' '+data+'</button>'+payment+''+refund+''+wp+'</div>'
+        return '<div style="width:290px;max-width:290px" class="w3-small"><button id="'+row.id+'" style="padding:8px!important" class="'+color+' w3-btn w3-border" onclick="modalBookingSetStatus('+row.id+')">#'+row.id+' '+data+'</button>'+payment+''+refund+''+wp+'</div>'
       }},
       { data: "tour"},
       { data: "date"},
