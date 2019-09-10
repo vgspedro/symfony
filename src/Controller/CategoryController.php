@@ -148,6 +148,7 @@ class CategoryController extends AbstractController
                 'isActive' => $c->getIsActive(),
                 'availability' => $c->getAvailability(),
                 'duration' => $c->getDuration(),
+                'deposit' => $c->getDeposit()*100,
                 'event' => $ev,
                 'order' => $c->getOrderBy()
              );

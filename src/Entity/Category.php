@@ -93,14 +93,29 @@ class Category
     /** @ORM\Column(type="integer", name="order_by", nullable=true)*/
     private $orderBy;
 
+    /** 
+     * @ORM\Column( name="deposit", type="decimal", precision=2, scale=2, options={"default":"0.00"}) 
+     */
+    private $deposit;
+
+
     public function __construct()
     {   
-        
         $this->available = new ArrayCollection();
         $this->event = new ArrayCollection();
-        $this->blockdate = new ArrayCollection();      
+        $this->blockdate = new ArrayCollection();
+        $this->deposit = "0.00";
+
     }
 
+    public function getDeposit() {
+        return $this->deposit;
+    }
+
+    public function setDeposit($deposit) {
+        $this->deposit = $deposit;
+    }
+    
     public function getWarrantyPayment()
     {
         return $this->warrantyPayment;

@@ -21,8 +21,15 @@
   {{ form_start(form, {'attr': {'id': 'category-form'}})  }}
 
     <input type="hidden" name="id" value="{{ category.id }}">
-  
+
+
     <div class="w3-padding-16 w3-row-padding w3-border w3-sand">
+  
+    <div class="w3-col l3 m4 s6" title="Depósito %">
+      {{ form_label(form.deposit) }}
+      {{ form_widget(form.deposit) }}
+    </div>
+
     <div class="w3-col s6 l2 m3" title="Em destaque no banner">
       {{ form_label(form.highlight)}}<br>
       {{ form_widget(form.highlight)}}

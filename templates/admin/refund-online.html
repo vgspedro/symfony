@@ -3,13 +3,7 @@
 
 {% block content %}
 
-<script src="https://js.stripe.com/v3/"></script>
-
 <style>
-.StripeElement{box-sizing: border-box;height: 45px;padding: 11px 12px;border: 1px solid transparent;background-color: white;box-shadow: 0 1px 3px 0 #e6ebf1;-webkit-transition: box-shadow 150ms ease;transition: box-shadow 150ms ease}
-.StripeElement--focus{box-shadow: 0 1px 3px 0 #cfd7df}
-.StripeElement--invalid{border-color: #fa755a}
-.StripeElement--webkit-autofill{background-color: #fefde5 !important}
 .w3-bar{display:none}
 </style>
 
@@ -23,7 +17,7 @@
 
   <div class="w3-row-padding w3-card-2 w3-sand w3-padding w3-large" style="max-width:600px; margin: 0 auto">
      <div class="w3-col l12 w3-xlarge">
-      <label>Dados da compra:</label>
+      <label>Dados da compra: #{{booking.id}}</label>
     </div>
 
     <div class="w3-col s12">
@@ -43,17 +37,13 @@
     <div class="w3-col s12">
       <label>Pagamento:</label>
       <span class="">
-        {%if (paylog) %}
-          {{paylog.getLogObj.status}}
-        {% else %}
-          pending
-        {% endif %}
+        {{booking.paymentStatus}}
       </span>
     </div>
 
     <div class="w3-col s12">
       <label>Data:</label>
-      <span class="">{{booking.available.datetimestart|date('d/m/Y H:i')}}</span>
+      <span class="">{{booking.available.datetimestart|date('d/m/Y @ H:i')}}</span>
     </div>
     <div class="w3-col s12">
       <label>Nome:</label>

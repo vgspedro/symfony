@@ -17,12 +17,12 @@
 <div class="w3-container">
 
 <div class="w3-xxlarge w3-row w3-xlarge w3-padding w3-margin-top">
-  <i class="far fa-cc-stripe"></i> Pagamento
+  <i class="fa fa-cc-stripe"></i> Pagamento
 </div>
 
-  <div class="w3-row-padding w3-card-2 w3-sand w3-padding w3-large" style="max-width:600px;margin: 0 auto">
+  <div class="w3-row-padding w3-card-2 w3-sand w3-padding w3-large" style="max-width:600px;margin:0 auto">
      <div class="w3-col l12 w3-xlarge">
-      <label>Dados da compra:</label>
+      <label>Dados da compra: #{{booking.id}}</label>
     </div>
 
     <div class="w3-col s12">
@@ -42,11 +42,7 @@
     <div class="w3-col s12">
       <label>Pagamento:</label>
       <span class="">
-        {%if (paylog) %}
-          {{paylog.getLogObj.status}}
-        {% else %}
-          pending
-        {% endif %}
+      {{booking.paymentStatus}}
       </span>
     </div>
 

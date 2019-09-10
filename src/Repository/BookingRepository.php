@@ -15,6 +15,28 @@ class BookingRepository extends ServiceEntityRepository
         parent::__construct($registry, Booking::class);
     }
 
+    /**
+     * Get query for Bookings from today that are proccessing 5 minutes sooner from current time
+     * @param $operator
+     * @param int $agentId     
+     */
+    public function getBookingPaymentsEntityProcessing($startDate){
+
+        $dql = 'SELECT b, a
+            FROM App\Entity\Booking b
+            JOIN b.available a
+            WHERE b.postedAt < :start AND b.paymentStatus = :status';
+    
+        $query = $this->getEntityManager()->createQuery($dql);
+
+        $query->setParameter('start', $startDate)
+            ->setParameter('status', 'processing');
+
+        return $query->getResult();
+    } 
+
+
+
     /*
     get the clients with credit card that pass 15 days after the event
     */

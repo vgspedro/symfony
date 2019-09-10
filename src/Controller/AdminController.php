@@ -175,6 +175,7 @@ class AdminController extends AbstractController
         );    
     }
 
+
     public function html(Request $request)
     {
         $uri = $request->getUri();
@@ -329,31 +330,28 @@ class AdminController extends AbstractController
                 'text/html'
             );
                         
-            $send = $mailer->send($message);
-
-            $response = array(
-                'status' => 1,
-                'message' => 'Sucesso',
-                'data' => array('id' => $booking->getId(), 'index' => (int)$index, 'status' => strtoupper($booking->getStatus())),
-                'mail' => $send,
-                'stock_it' => $stockIt
-             );
+        $send = $mailer->send($message);
         
-        return new JsonResponse($response);
+        return new JsonResponse([
+            'status' => 1,
+            'message' => 'Sucesso',
+            'data' => array('id' => $booking->getId(), 'index' => (int)$index, 'status' => strtoupper($booking->getStatus())),
+            'mail' => $send,
+            'stock_it' => $stockIt]);
     }
-
 
 
     public function adminBooking(Request $request)
     {
-        $status[] = array('color' =>'w3-red', 'name' => 'pending', 'action' => 'pending');
-        $status[] = array('color' =>'w3-blue', 'name' => 'canceled', 'action' => 'canceled');
-        $status[] = array('color' =>'w3-green', 'name' => 'confirmed', 'action' => 'confirmed');
-        $status[] = array('color' =>'w3-black', 'name' => 'total', 'action' => '');
+        $status[] = ['color' =>'w3-red', 'name' => 'pending', 'action' => 'pending'];
+        $status[] = ['color' =>'w3-blue', 'name' => 'canceled', 'action' => 'canceled'];
+        $status[] = ['color' =>'w3-green', 'name' => 'confirmed', 'action' => 'confirmed'];
+        $status[] = ['color' =>'w3-black', 'name' => 'total', 'action' => ''];
 
-        return $this->render('admin/booking.html',array('status' => $status));
+        $table=['Reserva','Acções','Tour','Data','Hora','Adulto','Criança','Bébé','Total','Depósito','Pagamento','Notas','Cliente','Email','Morada','Telefone','Compra','W.P.'];
+
+        return $this->render('admin/booking.html', ['status' => $status, 'table' => $table]);
     }
-
 
     public function adminBookingSearch(Request $request, MoneyFormatter $moneyFormatter)
     {
@@ -371,41 +369,43 @@ class AdminController extends AbstractController
         $pending = 0;
         $confirmed = 0;
 
-        $booking = $this->getDoctrine()->getManager()->getRepository(Booking::class)->bookingFilter($start, $end);
+        $bookings = $this->getDoctrine()->getManager()->getRepository(Booking::class)->bookingFilter($start, $end);
 
-        if ($booking){
+        if ($bookings){
 
-            foreach ($booking as $bookings) {
+            foreach ($bookings as $booking) {
 
-                if ($bookings->getStatus() ==='canceled')
+                if ($booking->getStatus() ==='canceled')
                     $canceled = $canceled+1;
-                else if ($bookings->getStatus() ==='pending')
+                else if ($booking->getStatus() ==='pending')
                     $pending = $pending+1;
-                else if ($bookings->getStatus() ==='confirmed')
+                else if ($booking->getStatus() ==='confirmed')
                     $confirmed = $confirmed+1;
                 
-                $client = $bookings->getClient();
+                $client = $booking->getClient();
 
                 $seeBookings[] =
-                    array(
-                    'id' => $bookings->getId(),
-                    'adult' => $bookings->getAdult(),
-                    'children' => $bookings->getChildren(),
-                    'baby' => $bookings->getBaby(),
-                    'status' => strtoupper($bookings->getStatus()),
-                    'date' => $bookings->getDateEvent()->format('d/m/Y'),
-                    'hour' => $bookings->getTimeEvent()->format('H:i'),
-                    'tour' => $bookings->getAvailable()->getCategory()->getNamePt(),
-                    'notes' => $bookings->getNotes(),
-                    'user_id' => $client->getId(),   
+                    [
+                    'id' => $booking->getId(),
+                    'adult' => $booking->getAdult(),
+                    'children' => $booking->getChildren(),
+                    'baby' => $booking->getBaby(),
+                    'status' => strtoupper($booking->getStatus()),
+                    'date' => $booking->getDateEvent()->format('d/m/Y'),
+                    'hour' => $booking->getTimeEvent()->format('H:i'),
+                    'tour' => $booking->getAvailable()->getCategory()->getNamePt(),
+                    'notes' => $booking->getNotes(),
+                    'user_id' => $client->getId(),
+                    'deposit' => $moneyFormatter->format($booking->getDepositAmount()),
+                    'payment_status' => $booking->getPaymentStatus(),
                     'username' => $client->getUsername(),
                     'address' => $client->getAddress(),
                     'email' => $client->getEmail(),          
                     'telephone' => $client->getTelephone(),
-                    'total' => $moneyFormatter->format($bookings->getAmount()).'€',
+                    'total' => $moneyFormatter->format($booking->getAmount()),
                     'wp' => $client->getCvv() ? 1 : 0,
-                    'posted_at' => $bookings->getPostedAt()->format('d/m/Y'),
-                    );
+                    'posted_at' => $booking->getPostedAt()->format('d/m/Y'),
+                    ];
             }
 
 

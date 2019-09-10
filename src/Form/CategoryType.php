@@ -11,6 +11,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\PercentType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -38,6 +39,15 @@ class CategoryType extends AbstractType
                 'required' => true,
                 'label' => 'Lotação *',
                 'attr' => ['class' => 'w3-input w3-border w3-white','placeholder'=>'Lotação *',]
+            ))
+            ->add('deposit', PercentType::class,
+            array(
+                'scale' => 0,
+                'required' => true,
+                'symbol' => false,
+                'type' => 'fractional',
+                'label' => 'Depósito (% sobre montante a pagar no ato compra)',
+                'attr' => ['class' => 'w3-input w3-border w3-white','placeholder'=>'Depósito']
             ))
             ->add('duration', TextType::class,
             array(
@@ -120,11 +130,4 @@ class CategoryType extends AbstractType
             ))
         ;
     }
-    /*
-    public function configureOptions(OptionsResolver $resolver)
-    {
-        $resolver->setDefaults(array(
-            'data_class' => Category::class,
-        ));
-    }*/
 }

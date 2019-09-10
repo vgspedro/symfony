@@ -70,49 +70,25 @@ div.dataTables_length select {height: 50px}
 
 </div>
 
+
+
 <div class="w3-row-padding w3-margin-top" style="min-height:40vh">
   <div class="w3-col s12">
-  <table id="dataTables" class="w3-border table table-striped centered hover table-bordered w3-hide" style="width:100%">
+  <table id="dataTables" class="w3-border table table-striped hover table-bordered w3-hide" style="width:100%">
     <thead class="w3-sand">
       <tr>
-      <th>Reserva</th>    
-      <th style="min-width:250px!important">Estado</th>    
-      <th>Tour</th>    
-      <th>Data</th>    
-      <th>Hora</th>    
-      <th>Adulto</th>    
-      <th>Criança</th>    
-      <th>Bébé</th>
-      <th>Total</th>   
-      <th>Notas</th>    
-      <th>Cliente</th>    
-      <th>Email</th>    
-      <th>Morada</th>    
-      <th>Telefone</th>
-      <th>Compra</th>
-      <th>W.P.</th>    
+        {% for t in table %}
+        <th class="w3-center">{{ t }}</th>
+        {% endfor %}
       </tr>
     </thead>
     <tbody>
     </tbody>
     <tfoot class="w3-sand">
       <tr>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
+        {% for t in table %}
+        <td class="w3-center"></td>
+        {% endfor %}
       </tr>
     </tfoot>
   </table>
@@ -197,7 +173,7 @@ div.dataTables_length select {height: 50px}
 <script src="{{ asset('js/ui.datepicker-pt-BR.js') }}"></script>
 <script>
 
-tablebooking = [0, 9, 11, 12, 14, 15]
+tablebooking = [0, 11, 13, 14, 16, 17]
 
 var table = ''
 var index = 0
@@ -375,14 +351,16 @@ function getCardData(){
         else if (data == 'CANCELED') color = 'w3-blue'
         else if (data == 'CONFIRMED') color = 'w3-green'
         
+        o_status = '<button id="'+row.id+'" style="padding:8px 4px!important" class="'+color+' w3-btn w3-border w3-left" onclick="modalBookingSetStatus('+row.id+')">#'+row.id+' '+data.substring(0, 3)+'</button>' 
+
        payment ='<form action="{{ path('payment_index_stripe') }}" title="Pagamento" target="_blank" method="post" class="w3-right" style="width:50px"><input type="hidden" name="id" value='+row.id+'><button class="w3-btn w3-border"><i class="fa fa-cc-stripe"></i></button></form>' 
 
        refund = '<form action="{{ path('refund_index_stripe') }}" title="Reembolso" target="_blank" method="post" class="w3-right" style="width:50px"><input type="hidden" name="id" value='+row.id+'><button class="w3-btn w3-border w3-orange"><i class="fa fa-reply"></i></button></form>'  
 
-        wp = row.wp ? '<button class="w3-btn w3-border w3-indigo" style="margin-left:4px" onclick="modalToCardData('+row.id+',\''+row.total+'\')"><i class="far fa-credit-card"></i></button>'
-      : '<button disabled class="w3-btn w3-border w3-indigo" style="margin-left:4px"><i class="far fa-credit-card"></i></button>'
+        wp = row.wp ? '<button class="w3-btn w3-border w3-indigo w3-right" style="margin-left:4px" onclick="modalToCardData('+row.id+',\''+row.total+'\')"><i class="far fa-credit-card"></i></button>'
+      : ''
 
-        return '<div style="width:290px;max-width:290px" class="w3-small"><button id="'+row.id+'" style="padding:8px!important" class="'+color+' w3-btn w3-border" onclick="modalBookingSetStatus('+row.id+')">#'+row.id+' '+data+'</button>'+payment+''+refund+''+wp+'</div>'
+        return '<div class="w3-small">'+payment+''+refund+''+wp+''+o_status+'</div>'
       }},
       { data: "tour"},
       { data: "date"},
@@ -390,7 +368,9 @@ function getCardData(){
       { data: "adult"},
       { data: "children"},
       { data: "baby"},
+      { data: "deposit"},
       { data: "total"},
+      { data: "payment_status"},
       { data: "notes"},
       { data: "username"},
       { data: "email"},
@@ -442,7 +422,7 @@ function getCardData(){
       }
     ],
     columnDefs: [
-      //{ className:"my_class", "targets": [4] },
+        { className:"w3-center", targets: "_all" },
     //  { "orderData":[ 1 ],   "targets": [ 2 ] },
         {
           "targets": tablebooking,
@@ -472,7 +452,7 @@ function getCardData(){
           }
           // Total over all pages
         
-        for (k = 5; k<9;k++){
+        for (k = 5; k<10;k++){
           total = api
             .column( k )
             .data()
@@ -487,7 +467,7 @@ function getCardData(){
                   return intVal(a) + intVal(b);
               }, 0 )
             // Update footer
-            k == 8 ? 
+            k == 8 || k == 9 ? 
             $( api.column( k ).footer() ).html(parseFloat(pageTotal).toFixed(2)+'€ ('+parseFloat(total).toFixed(2)+'€)')
             : 
             $( api.column( k ).footer() ).html(pageTotal+' ('+total+')')
@@ -512,7 +492,7 @@ function getCardData(){
 }
 
 function setStatusTable(v){
-  $('input.form-control.input-sm').val(v).trigger("keyup")
+  $('input.form-control.input-sm').val(v.substring(0,3)).trigger("keyup")
 }
 
 $('#dataTables').on( 'click', 'tr', function () { index = table.row( this ).index()})

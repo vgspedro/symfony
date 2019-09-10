@@ -13,9 +13,28 @@ use Money\Money;
 
 class Booking
 {
-    const STATUS_PENDING = 'pending';
-    const STATUS_CANCELED = 'canceled';
     const STATUS_CONFIRMED = 'confirmed';
+
+    const STATUS_INCOMPLETE = 'incomplete';
+    const STATUS_CANCELED = 'canceled';
+    const STATUS_CLEARED = 'cleared';
+    const STATUS_COMPLETED = 'completed';
+    const STATUS_DENIED = 'denied';
+    const STATUS_FAILED = 'failed';
+    const STATUS_HELD = 'held';
+    const STATUS_PAID = 'paid';
+    const STATUS_PLACED = 'placed';
+    const STATUS_PROCESSING = 'processing';
+    const STATUS_REFUNDED = 'refunded';
+    const STATUS_REFUSED = 'refused';
+    const STATUS_REMOVED = 'removed';
+    const STATUS_RETURNED = 'returned';
+    const STATUS_REVERSED = 'reversed';
+    const STATUS_UNCLAIMED = 'unclaimed';
+    const STATUS_APPROVED = 'approved';
+    const STATUS_CANCELED_BY_USER = 'canceled by user';
+    const STATUS_PENDING = 'pending';
+    const STATUS_SUCCEEDED = 'succeeded';
 
     /**
      * @ORM\Id
@@ -65,8 +84,17 @@ class Booking
      */
     private $status = self::STATUS_PENDING;
 
+    /**
+     * @Assert\Choice({"incomplete", "canceled", "cleared", "completed", "denied", "failed", "held", "paid", "placed", "processing", "refunded", "refused", "removed", "returned", "reversed", "unclaimed", "approved", "canceled by user", "pending", "succeeded"})
+     * @ORM\Column(type="string", name="payment_status", columnDefinition="ENUM('incomplete', 'canceled', 'cleared', 'completed', 'denied', 'failed', 'held', 'paid', 'placed', 'processing', 'refunded', 'refused', 'removed', 'returned', 'reversed', 'unclaimed', 'approved', 'canceled by user', 'pending', 'succeeded')" )
+     */
+    private $paymentStatus = self::STATUS_PENDING;
+
     /** @ORM\Column(type="money", name="amount", options={"unsigned"=true}) */
     private $amount;
+
+    /** @ORM\Column(type="money", name="deposit_amount", options={"unsigned"=true}) */
+    private $depositAmount;
 
     public function setAmount(Money $amount) {
         $this->amount = $amount;
@@ -76,6 +104,16 @@ class Booking
      */
     public function getAmount() {
         return $this->amount;
+    }
+
+    public function setDepositAmount(Money $despositAmount) {
+        $this->depositAmount = $depositAmount;
+    }
+    /** 
+     * @return \Money\Money
+     */
+    public function getDepositAmount() {
+        return $this->depositAmount;
     }
 
  	public function getId()
@@ -143,6 +181,16 @@ class Booking
         $this->status = $status;
     }
 
+    public function getPaymentStatus()
+    {
+        return $this->paymentStatus;
+    }
+
+    public function setPaymentStatus($paymentStatus)
+    {
+        $this->paymentStatus = $paymentStatus;
+    }
+
     public function getAdult()
     {
         return $this->adult;
@@ -160,7 +208,6 @@ class Booking
         $total = (int)$this->getAdult() + (int)$this->getChildren() + (int)$this->getBaby();
         return $total;
     }
-
 
     public function getChildren()
     {
