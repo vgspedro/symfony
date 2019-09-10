@@ -15,8 +15,10 @@
 <div class="w3-container">
 
 <div class="w3-xxlarge w3-row w3-xlarge w3-padding w3-margin-top">
-  <i class="fa fa-reply"></i> Devolução
+  <i class="fa fa-reply"></i> Reembolso
 </div>
+
+  <form id="refund-form">
 
   <div class="w3-row-padding w3-card-2 w3-sand w3-padding w3-large" style="max-width:600px; margin: 0 auto">
      <div class="w3-col l12 w3-xlarge">
@@ -25,7 +27,13 @@
 
     <div class="w3-col s12">
       <label>Tour:</label>
-      <span class="">Volta ao mundo a pé</span>
+          <span class="">
+        {% if booking.client.locale.name == 'pt_PT' %}
+          {{booking.available.category.namePt}}
+        {% else %}
+          {{booking.available.category.nameEn}}
+        {% endif %}
+      </span>
     </div>
     <div class="w3-col s12">
       <label>Estado:</label>
@@ -65,36 +73,33 @@
       <span class="">{{booking.children}}</span>
     </div>
 
-    <div class="w3-col s12 w3-margin-bottom">
+    <div class="w3-col s12 w3-margin-bottom w3-border-bottom">
       <label>Bébes:</label>
       <span class="">{{booking.baby}}</span>
     </div>
 
-  <form id="refund-form">
-  <div class="w3-row-padding">                   
+             
     <div class="w3-col l6 m6 s12">
       <label>Montante</label>
       <input type="hidden" value="{{booking.id}}" name="b_id">
-      <input class="w3-input w3-border" name='amount' value="{{(booking.amount.amount/100)|number_format(2)}}">
+      <input class="w3-input w3-border" name='amount' style="height:45px" value="{{(booking.amount.amount/100)|number_format(2)}}">
     </div>
     <div class="w3-col l6 m6 s12">
       <label>Motivo</label>
-      <select name='reason' class="w3-input w3-border">
+      <select name='reason' class="w3-select w3-border" style="height:45px">
       {% for reason in reasons %}
         <option value="{{reason.value}}">{{reason.text}}</option>
       {% endfor %}
       <select>
     </div>
-    <div class="w3-col s12">
-      <span class="w3-button w3-orange w3-border w3-right w3-margin-bottom w3-margin-top" onclick="paymentRefund()">
-      <i class="fa fa-reply"></i> 
-        Confirmar
+    <div class="w3-col s12 w3-margin-top">
+      <span class="w3-button w3-orange w3-border w3-right w3-margin-bottom w3-block" onclick="paymentRefund()">
+      <i class="fa fa-reply"></i> Efetuar Reembolso
       </span>
     </div>
+
   </div>
   </form>
-  </div>
-
 </div>
 
 <!-- MODAL -->

@@ -81,11 +81,9 @@
       <label>Montante:</label>
        <div class="w3-right">{{(booking.amount.amount/100)|number_format(2)}}{{company.currency.currency}}</div>
     </div>
-  </div>
 
 {% if paylog is null %}
   
-  <div class="w3-row-padding w3-padding w3-large" style="max-width:600px;margin: 0 auto">
     <div class="w3-col s12 w3-margin-top">
       <form id="payment-form">
         <label>Insira nº Cartão</label>
@@ -94,14 +92,19 @@
         <div class="set-token"></div>
       </form>
     </div>
-    <div class="w3-col s12 w3-right">
-      <label>&nbsp;</label>
-      <span class="w3-button w3-green w3-border w3-right w3-margin-bottom w3-margin-top" id="card-button" data-secret="{{payment_intent.data.client_secret}}" onclick="buyNow()">
-      <i class="fa fa-check"></i> Pagar
+    <div class="w3-col s12 w3-right w3-margin-top">
+      <span class="w3-button w3-block w3-green w3-border w3-right w3-margin-bottom" id="card-button" data-secret="{{payment_intent.data.client_secret}}" onclick="buyNow()">
+      <i class="fa fa-check"></i> Efetuar Pagamento
         </span>
     </div>
-  </div>
 {% endif %}
+
+
+
+
+  </div>
+
+
 
 </div>
 

@@ -18,9 +18,10 @@ class OnlineController extends AbstractController
 
     public function index(Stripe $stripe, Request $request, TranslatorInterface $translator, RequestInfo $reqInfo)
     {
+        $id = $request->request->get('id');
         $em = $this->getDoctrine()->getManager();
         $company = $em->getRepository(Company::class)->find(1);
-        $booking = $em->getRepository(Booking::class)->find(100);
+        $booking = $em->getRepository(Booking::class)->find($id);
 
         $paylog = $em->getRepository(StripePaymentLogs::class)->findOneBy(['booking' => $booking]); 
 
@@ -96,11 +97,10 @@ class OnlineController extends AbstractController
     public function refund(Stripe $stripe, Request $request, TranslatorInterface $translator, RequestInfo $reqInfo)
     {
         
+        $id = $request->request->get('id');
         $em = $this->getDoctrine()->getManager();
-
         $company = $em->getRepository(Company::class)->find(1);
-
-        $booking = $em->getRepository(Booking::class)->find(100);
+        $booking = $em->getRepository(Booking::class)->find($id);
 
         $paylog = $em->getRepository(StripePaymentLogs::class)->findOneBy(['booking' => $booking]); 
 

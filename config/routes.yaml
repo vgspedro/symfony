@@ -383,19 +383,24 @@ user_create:
 payment_index_stripe:
     path: /payment-index-stripe
     controller: App\Controller\OnlineController::index
+    methods: [POST]
 
 online_charge_credit_card:
     path: /online-charge-credit-card
     controller: App\Controller\OnlineController::chargeCreditCard
+    methods: [POST]
 
 online_get_charge:
     path: /online-get-charge
     controller: App\Controller\OnlineController::onlineGetCharge
+    methods: [POST]
 
 online_payment_refund:
     path: /online-payment-refund
     controller: App\Controller\OnlineController::onlinePaymentRefund
+    methods: [POST]
 
 refund_index_stripe:
     path: /refund-index-stripe
     controller: App\Controller\OnlineController::refund
+    methods: [POST]
