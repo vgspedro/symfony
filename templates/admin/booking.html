@@ -71,28 +71,30 @@ div.dataTables_length select {height: 50px}
 </div>
 
 
-
+<!-- TABLE  -->
 <div class="w3-row-padding w3-margin-top" style="min-height:40vh">
   <div class="w3-col s12">
-  <table id="dataTables" class="w3-border table table-striped hover table-bordered w3-hide" style="width:100%">
-    <thead class="w3-sand">
-      <tr>
-        {% for t in table %}
-        <th class="w3-center">{{ t }}</th>
-        {% endfor %}
-      </tr>
-    </thead>
-    <tbody>
-    </tbody>
-    <tfoot class="w3-sand">
-      <tr>
-        {% for t in table %}
-        <td class="w3-center"></td>
-        {% endfor %}
-      </tr>
-    </tfoot>
-  </table>
-</div>
+    <div style="overflow-x:auto">
+      <table id="dataTables" class="w3-border table table-striped hover table-bordered w3-hide" style="width:100%">
+        <thead class="w3-sand">
+          <tr>
+          {% for t in table %}
+            <th class="w3-center">{{ t }}</th>
+          {% endfor %}
+          </tr>
+        </thead>
+        <tbody>
+        </tbody>
+        <tfoot class="w3-sand">
+          <tr>
+            {% for t in table %}
+            <td class="w3-center"></td>
+            {% endfor %}
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
 </div>
 
 <div id="modal-data-validate" class="w3-modal" style="z-index: 99999;padding-bottom:32px">
@@ -351,16 +353,18 @@ function getCardData(){
         else if (data == 'CANCELED') color = 'w3-blue'
         else if (data == 'CONFIRMED') color = 'w3-green'
         
+        paylogs = '<button title="Logs Pagamentos/Reembolsos" class="w3-btn w3-blue w3-border" onclick="getStripeLogs('+row.id+')"><i class="fa fa-cogs"></i></button>'
+
         o_status = '<button id="'+row.id+'" style="padding:8px 4px!important" class="'+color+' w3-btn w3-border w3-left" onclick="modalBookingSetStatus('+row.id+')">#'+row.id+' '+data.substring(0, 3)+'</button>' 
 
        payment ='<form action="{{ path('payment_index_stripe') }}" title="Pagamento" target="_blank" method="post" class="w3-right" style="width:50px"><input type="hidden" name="id" value='+row.id+'><button class="w3-btn w3-border"><i class="fa fa-cc-stripe"></i></button></form>' 
 
        refund = '<form action="{{ path('refund_index_stripe') }}" title="Reembolso" target="_blank" method="post" class="w3-right" style="width:50px"><input type="hidden" name="id" value='+row.id+'><button class="w3-btn w3-border w3-orange"><i class="fa fa-reply"></i></button></form>'  
 
-        wp = row.wp ? '<button class="w3-btn w3-border w3-indigo w3-right" style="margin-left:4px" onclick="modalToCardData('+row.id+',\''+row.total+'\')"><i class="far fa-credit-card"></i></button>'
+        wp = row.wp ? '<button title="Mudar estado reserva" class="w3-btn w3-border w3-indigo w3-right" style="margin-left:4px" onclick="modalToCardData('+row.id+',\''+row.total+'\')"><i class="far fa-credit-card"></i></button>'
       : ''
 
-        return '<div class="w3-small">'+payment+''+refund+''+wp+''+o_status+'</div>'
+        return '<div class="w3-small" style="width:254px;min-width:254px">'+paylogs+' '+payment+''+refund+''+wp+''+o_status+'</div>'
       }},
       { data: "tour"},
       { data: "date"},
@@ -474,7 +478,7 @@ function getCardData(){
           }
         },
     "destroy": true,
-    responsive: true
+    responsive: false
   })
   .on( 'error.dt', function ( e, settings, techNote, message ) {
     $('.w3-overlay').hide()
@@ -490,6 +494,15 @@ function getCardData(){
   $('#dataTables_filter').addClass('w3-col s8 m12 l4 w3-center w3-section')
   }, 750)
 }
+
+
+function getStripeLogs(id){
+  alert(id)
+}
+
+
+
+
 
 function setStatusTable(v){
   $('input.form-control.input-sm').val(v.substring(0,3)).trigger("keyup")

@@ -198,8 +198,9 @@ class OnlineController extends AbstractController
 
         $rfd = $stripe->createRefund($company, $request, $paylog->getlogObj()->id);
 
+        dump($rfd);
+exit;
         $reflog = new StripeRefundLogs();
-
 
         if ($rfd['status'] == 0) {
 

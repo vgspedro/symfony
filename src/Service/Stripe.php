@@ -169,6 +169,51 @@ class Stripe
         }    
     }
 
+
+/**
+    *Create refund to client
+    *@param OnlinePayments Obj, $charge_id String
+    *@return Charge Obj
+    **/
+    public function retrieveCharge(OnlinePayments $oPayment, $charge_id){
+
+        $stripe = new \Stripe\Stripe(); 
+        $charge = new \Stripe\Charge();
+        $stripe->setApiKey($oPayment->getSecretKey());
+        
+        try{ 
+        
+            $chargeObj = $charge->retrieve($charge_id);
+
+            return [
+                'status' => 1,
+                'message' => 'success',
+                'data' => $chargeObj,
+            ];
+        }
+        catch (\Stripe\Error\Authentication $e) {
+            $body = $e->getJsonBody();
+            $err  = $body['error'];
+            return [
+                'status' => 2,
+                'message' => $err,
+                'data' => $err['message']
+            ];
+        }
+        catch (\Stripe\Error\InvalidRequest $e) {
+
+            $body = $e->getJsonBody();
+            $err  = $body['error'];
+
+            return [
+                'status' => 2,
+                'message' => $err,
+                'data' => $err['message']
+            ];
+        } 
+    }
+
+
     public function refundReasons(TranslatorInterface $translator){
         $reasons = array();
 
