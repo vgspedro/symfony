@@ -19,22 +19,50 @@ class OnlineController extends AbstractController
     public function index(Stripe $stripe, Request $request, TranslatorInterface $translator, RequestInfo $reqInfo)
     {
         $id = $request->request->get('id');
-        $em = $this->getDoctrine()->getManager();
-        $company = $em->getRepository(Company::class)->find(1);
-        $booking = $em->getRepository(Booking::class)->find($id);
 
-        $paylog = $em->getRepository(StripePaymentLogs::class)->findOneBy(['booking' => $booking]); 
+        if($id){
 
-        return $this->render('admin/pay-online.html',
-            [
-                'booking' => $booking,
-                'company' => $company,
-                'menus' => [],//$menu->adminMenu(),
-                'paylog' => $paylog,
-                'payment_intent' => $stripe->createUpdatePaymentIntent($company, $request, $booking),
-                'reasons' => $stripe->refundReasons($translator),
-                'host' => $reqInfo->getHost($request)
-            ]);
+            $em = $this->getDoctrine()->getManager();
+            $company = $em->getRepository(Company::class)->find(1);
+            $booking = $em->getRepository(Booking::class)->find($id);
+
+            $paylog = $em->getRepository(StripePaymentLogs::class)->findOneBy(['booking' => $booking]);
+
+            $text = [
+                'payment' => $translator->trans('payment', array(), 'messages', $booking->getClient()->getLocale()->getName()),
+                'purchase_data' => $translator->trans('purchase_data', array(), 'messages', $booking->getClient()->getLocale()->getName()),
+                'tour' => $translator->trans('tour', array(), 'messages', $booking->getClient()->getLocale()->getName()),
+                'status' => $translator->trans('status', array(), 'messages', $booking->getClient()->getLocale()->getName()),
+                'date' => $translator->trans('date', array(), 'messages', $booking->getClient()->getLocale()->getName()),
+                'name' => $translator->trans('name', array(), 'messages', $booking->getClient()->getLocale()->getName()),
+                'adults' => $translator->trans('adults', array(), 'messages', $booking->getClient()->getLocale()->getName()),
+                'childrens' => $translator->trans('childrens', array(), 'messages', $booking->getClient()->getLocale()->getName()),
+                'babies' => $translator->trans('babies', array(), 'messages', $booking->getClient()->getLocale()->getName()),
+                'amount' => $translator->trans('amount', array(), 'messages', $booking->getClient()->getLocale()->getName()),
+                'insert_card_n' => $translator->trans('insert_card_n', array(), 'messages', $booking->getClient()->getLocale()->getName()),
+                'pay_now' => $translator->trans('pay_now', array(), 'messages', $booking->getClient()->getLocale()->getName()),
+                'booking_status' => $translator->trans($booking->getStatus(), array(), 'messages', $booking->getClient()->getLocale()->getName()),
+                'payment_status' => $translator->trans($booking->getPaymentStatus(), array(), 'messages', $booking->getClient()->getLocale()->getName()),
+                'error' => $translator->trans('error', array(), 'messages', $booking->getClient()->getLocale()->getName()),
+                'check' => $translator->trans('check', array(), 'messages', $booking->getClient()->getLocale()->getName()),
+                'success' => $translator->trans('success', array(), 'messages', $booking->getClient()->getLocale()->getName()),
+                'wifi_error' => $translator->trans('wifi_error', array(), 'messages', $booking->getClient()->getLocale()->getName()),
+                'receipt' => $translator->trans('receipt', array(), 'messages', $booking->getClient()->getLocale()->getName()),
+            ];
+
+            return $this->render('admin/pay-online.html',
+                [
+                    'booking' => $booking,
+                    'company' => $company,
+                    'paylog' => $paylog,
+                    'translator' => $text,
+                    'payment_intent' => $stripe->createUpdatePaymentIntent($company, $request, $booking),
+                    'reasons' => $stripe->refundReasons($translator),
+                    'host' => $reqInfo->getHost($request)
+                ]);
+        }
+        else
+            return $this->redirectToRoute('index');
     }
 
     /**
@@ -42,22 +70,28 @@ class OnlineController extends AbstractController
     *@param $request
     *@return json response of Request
     **/
-    public function chargeCreditCard(Request $request, Stripe $stripe)
+    public function chargeCreditCard(Request $request, Stripe $stripe, TranslatorInterface $translator)
     {
         //$this->denyAccessUnlessGranted('ROLE_ADMIN', null, 'Unable to access this page!');
 
+        $id = $request->request->get('id');
+        
         $em = $this->getDoctrine()->getManager();
         
         $company = $em->getRepository(Company::class)->find(1);
         
-        $booking = $em->getRepository(Booking::class)->find(1);
+        $booking = $em->getRepository(Booking::class)->find($id);
 
         $i = $stripe->createUpdatePaymentIntent($company, $request, $booking);
+
+            $text = [
+                'receipt' => $translator->trans('receipt', array(), 'messages', $booking->getClient()->getLocale()->getName()),
+            ];
 
         return new JsonResponse([
             'status' => 1,
             'message' => 'success',
-            'data' => $i
+            'data' => $i,
         ]);
     }
 
@@ -66,7 +100,7 @@ class OnlineController extends AbstractController
     *@param $request
     *@return json response of Request
     **/
-    public function onlineGetCharge(Request $request, Stripe $stripe)
+    public function onlineGetCharge(Request $request, Stripe $stripe, TranslatorInterface $translator)
     {
         //$this->denyAccessUnlessGranted('ROLE_ADMIN', null, 'Unable to access this page!');
         
@@ -83,14 +117,22 @@ class OnlineController extends AbstractController
         $paylog = new StripePaymentLogs();
 
         $paylog->setLog(json_encode($ch['data']->data[0]));
+
+        $booking->setPaymentStatus(Booking::STATUS_SUCCEEDED);
+        
         $paylog->setBooking($booking);
+        
         $em->persist($paylog);
+        
         $em->flush();
 
         return new JsonResponse([
             'status' => 1,
-            'message' => 'success',
-            'data' => $ch]);
+            'message' => [
+                'text' => $translator->trans('payment_txt', array(), 'messages', $booking->getClient()->getLocale()->getName()), 
+                'status' => $translator->trans( $booking->getPaymentStatus(), array(), 'messages', $booking->getClient()->getLocale()->getName())
+            ],
+            'data' => $ch] );
     }
 
 
@@ -100,7 +142,30 @@ class OnlineController extends AbstractController
         $id = $request->request->get('id');
         $em = $this->getDoctrine()->getManager();
         $company = $em->getRepository(Company::class)->find(1);
+
         $booking = $em->getRepository(Booking::class)->find($id);
+
+        $text = [
+            'payment' => $translator->trans('payment', array(), 'messages', $booking->getClient()->getLocale()->getName()),
+            'purchase_data' => $translator->trans('purchase_data', array(), 'messages', $booking->getClient()->getLocale()->getName()),
+            'tour' => $translator->trans('tour', array(), 'messages', $booking->getClient()->getLocale()->getName()),
+            'status' =>  $translator->trans('status', array(), 'messages', $booking->getClient()->getLocale()->getName()),
+            'date' =>  $translator->trans('date', array(), 'messages', $booking->getClient()->getLocale()->getName()),
+            'name' =>  $translator->trans('name', array(), 'messages', $booking->getClient()->getLocale()->getName()),
+            'adults' =>  $translator->trans('adults', array(), 'messages', $booking->getClient()->getLocale()->getName()),
+            'childrens' =>  $translator->trans('children', array(), 'messages', $booking->getClient()->getLocale()->getName()),
+            'babies' =>  $translator->trans('babies', array(), 'messages', $booking->getClient()->getLocale()->getName()),
+            'amount' =>  $translator->trans('amount', array(), 'messages', $booking->getClient()->getLocale()->getName()),
+            'refund' =>  $translator->trans('refund', array(), 'messages', $booking->getClient()->getLocale()->getName()),
+            'motive' => $translator->trans('motive', array(), 'messages', $booking->getClient()->getLocale()->getName()),
+            'booking_status' => $translator->trans($booking->getStatus(), array(), 'messages', $booking->getClient()->getLocale()->getName()),
+            'payment_status' => $translator->trans($booking->getPaymentStatus(), array(), 'messages', $booking->getClient()->getLocale()->getName()),
+            'error' => $translator->trans('error', array(), 'messages', $booking->getClient()->getLocale()->getName()),
+            'check' => $translator->trans('check', array(), 'messages', $booking->getClient()->getLocale()->getName()),
+            'success' => $translator->trans('success', array(), 'messages', $booking->getClient()->getLocale()->getName()),
+            'wifi_error' => $translator->trans('wifi_error', array(), 'messages', $booking->getClient()->getLocale()->getName()),
+            'receipt' => $translator->trans('receipt', array(), 'messages', $booking->getClient()->getLocale()->getName()),
+        ];
 
         $paylog = $em->getRepository(StripePaymentLogs::class)->findOneBy(['booking' => $booking]); 
 
@@ -108,8 +173,8 @@ class OnlineController extends AbstractController
             [
                 'booking' => $booking,
                 'company' => $company,
-                'menus' => [],//$menu->adminMenu(),
                 'paylog' => $paylog,
+                'translator' => $text,
                 'reasons' => $stripe->refundReasons($translator),
                 'host' => $reqInfo->getHost($request)
             ]);

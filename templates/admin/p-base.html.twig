@@ -8,38 +8,48 @@
         <link rel="stylesheet" href="{{ asset('css/w3-4.css') }}">
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"/>
-        <style>html,body,h1,h2,h3,h4,h5,p,a {font-family: "Raleway", sans-serif}</style>
+        <style>
+            html,body,h1,h2,h3,h4,h5,p,a {font-family: "Raleway", sans-serif}
+            .pending{color: #fff!important;background-color: #f44336!important;opacity: .75;padding:4px;}
+            .canceled, .parcial_refund, .refunded{color: #fff!important;background-color: #2196F3!important;opacity: .75;padding:4px;}
+            .confirmed, .succeeded{color: #fff!important;background-color: #4CAF50!important;opacity: .75;padding:4px;}
+        </style>
         <script src="{{ asset('js/jquery-2.1.1.min.js') }}"></script>
     </head>
 
     <body class="w3-light-grey">
-        <input type='hidden' name='stripe-pk' value='{{company.stripePk}}'>
         {% if host %} 
             <div style="position:fixed;top:36px;left:calc(50% - 43px);z-index:999999999999999" class="blink w3-xxxlarge w3-text-red"> Demo </div>
         {% endif %}
-
-        {% include 'admin/header.html' %}
-
         <div id="content">{% block content %}{% endblock %}</div>
-        
-        <div id="modal-error" class="w3-modal" style="z-index: 9999999;padding-top:100px; padding-bottom: 32px">
-          <div class="w3-modal-content w3-animate-zoom" style="max-width:400px">
-            <div class="w3-container w3-red w3-padding">
-              <span onclick="$('#modal-error').hide()" class="w3-padding w3-button w3-display-topright">
-                <i class="w3-xlarge fa fa-times"></i>
-              </span>
-              <h2>
-                <i class="fa fa-exclamation-triangle"></i>
-                <span>Erro</span>
-              </h2>
-            </div>
-            <div class="w3-container w3-text-black w3-large w3-padding">Verifique ligação internet e tente novamente!
-            </div>
-          </div>
-        </div>
     </body>
+    <div class="w3-overlay w3-animate-opacity" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay">
+        <div class="w3-display-container" style="height:100vh">
+            <div class="w3-display-middle">
+                <i class="w3-text-white fa fa-4x fa-spinner fa-pulse"></i>
+            </div>
+        </div>
+    </div>
 
-</html>
+<div id="modal-info" class="w3-modal" style="z-index:9999;padding-top:60px; padding-bottom: 32px">
+    <div class="w3-modal-content w3-animate-zoom" style="max-width:400px">
+    <div class="w3-col s12">
+      <div class="w3-row">
+        <div class="modal-head w3-panel w3-leftbar w3-col s12 w3-left-align">
+          <span class="w3-closebtn w3-padding-small w3-right" onclick="$('#modal-info').hide()" style="cursor:pointer">
+            <i class="fa fa-times"></i>
+          </span>
+          <h2>
+            <span class="icon"></span>
+            <span class="modal-head-text"></span>
+          </h2>
+          <p class="modal-text w3-xlarge w3-padding-small"></p>
+          <div class="w3-margin-bottom"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
     <script>
         function w3_open() {
@@ -50,4 +60,25 @@
             $("html, body").animate({
                 scrollTop: $('#form').offset().top -125 }, 750)
         }
+
+        //0 = Success
+        //1 = Check
+        //2 = Error
+
+        function modalConditions(i, text, head){
+            a=[]
+            a.push(['w3-pale-yellow w3-border-amber w3-pale-green w3-border-green w3-pale-red w3-border-red', 'w3-pale-green w3-border-green', 'fa-check'])
+            a.push(['w3-pale-yellow w3-border-amber w3-pale-green w3-border-green w3-pale-red w3-border-red', 'w3-pale-yellow w3-border-amber', 'fa-info-circle'])
+            a.push(['w3-pale-yellow w3-border-amber w3-pale-green w3-border-green w3-pale-red w3-border-red', 'w3-pale-red w3-border-red', 'fa-exclamation-triangle'])
+          
+            $('#modal-info').show()
+            $('.modal-head').removeClass(a[i][0]).addClass(a[i][1])
+            $('.icon').html('<i class="fa '+a[i][2]+'"></i>')
+            $('.modal-head-text').text(head)  
+            $('.modal-text').html(text)
+        }
+
+//modalConditions (2, 'data.message', 'data.head')
+
     </script>
+</html>

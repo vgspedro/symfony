@@ -46,7 +46,7 @@ class CategoryType extends AbstractType
                 'required' => true,
                 'symbol' => false,
                 'type' => 'fractional',
-                'label' => 'Depósito (% sobre montante a pagar no ato compra)',
+                'label' => 'Depósito (% sobre montante a pagar no ato compra, se 0 (zero) é 100% ) ',
                 'attr' => ['class' => 'w3-input w3-border w3-white','placeholder'=>'Depósito']
             ))
             ->add('duration', TextType::class,

@@ -17,7 +17,8 @@ class Stripe
     **/
     public function createUpdatePaymentIntent(Company $company, Request $request, Booking $booking){
 
-        $product = '#'.$booking->getId().'-Volta ao mundo a pé';
+        $product = '#'.$booking->getId().'-'.$booking->getAvailable()->getCategory()->getNamePt();
+
         $stripe = new \Stripe\Stripe();
         $intent = new \Stripe\PaymentIntent();
         $stripe->setApiKey($company->getStripeSK());
@@ -76,7 +77,7 @@ class Stripe
 
 
     /**
-    *Get the receipt url to put on cleint email
+    *Get the receipt url to put on client email
     *@param Company, Request Obj
     *@return Charge Obj
     **/
@@ -86,7 +87,7 @@ class Stripe
         $stripe = new \Stripe\Stripe();
         $charge = new \Stripe\Charge();
 
-        $stripe->setApiKey($company->getStripeSKey());
+        $stripe->setApiKey($company->getStripeSK());
         
         try{
             $c = $charge->all(['payment_intent' => $paymentIntentId]);
@@ -125,10 +126,9 @@ class Stripe
 
     public function createRefund(Company $company, Request $request, $paylog){
 
-
         $stripe = new \Stripe\Stripe();
         $refund = new \Stripe\Refund();
-        $stripe->setApiKey($company->getStripeSKey());
+        $stripe->setApiKey($company->getStripeSK());
 
         //LETS DO THE REFUND
         try{            
@@ -169,12 +169,13 @@ class Stripe
         }    
     }
 
-
     public function refundReasons(TranslatorInterface $translator){
-        $reasons = array();        
+        $reasons = array();
+
         $reasons[] = ['value' => 'duplicate', 'text' => $translator->trans('duplicate')];
         $reasons[] = ['value' => 'fraudulent', 'text' => $translator->trans('fraudulent')];
-        $reasons[] = ['value' => 'requested_by_customer', 'text' => $translator->trans('request_by_customer')];
+        $reasons[] = ['value' => 'requested_by_customer', 'text' => $translator->trans('requested_by_customer')];
+
         return $reasons;
     }
 

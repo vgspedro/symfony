@@ -10,23 +10,21 @@
 .StripeElement--focus{box-shadow: 0 1px 3px 0 #cfd7df}
 .StripeElement--invalid{border-color: #fa755a}
 .StripeElement--webkit-autofill{background-color: #fefde5 !important}
-.w3-bar{display:none}
 </style>
-
 
 <div class="w3-container">
 
 <div class="w3-xxlarge w3-row w3-xlarge w3-padding w3-margin-top">
-  <i class="fa fa-cc-stripe"></i> Pagamento
+  <i class="fa fa-cc-stripe"></i> {{translator.payment}}
 </div>
 
   <div class="w3-row-padding w3-card-2 w3-sand w3-padding w3-large" style="max-width:600px;margin:0 auto">
      <div class="w3-col l12 w3-xlarge">
-      <label>Dados da compra: #{{booking.id}}</label>
+      <label>{{translator.purchase_data}} #{{booking.id}}</label>
     </div>
 
     <div class="w3-col s12">
-      <label>Tour:</label>
+      <label>{{translator.tour}}:</label>
       <span class="">
         {% if booking.client.locale.name == 'pt_PT' %}
           {{booking.available.category.namePt}}
@@ -36,22 +34,19 @@
       </span>
     </div>
     <div class="w3-col s12">
-      <label>Estado:</label>
-      <span class="">{{booking.status}}</span>
+      <label>{{translator.status}}:</label>
+        <span class="{{booking.status}}">{{translator.booking_status|upper}}</span>
     </div>
     <div class="w3-col s12">
-      <label>Pagamento:</label>
-      <span class="">
-      {{booking.paymentStatus}}
-      </span>
+      <label>{{translator.payment}}:</label>
+     <span class="bps {{booking.paymentStatus}}">{{translator.payment_status|upper}}</span>
     </div>
-
     <div class="w3-col s12">
-      <label>Data:</label>
+      <label>{{translator.date}}:</label>
       <span class="">{{booking.available.datetimestart|date('d/m/Y @ H:i')}}</span>
     </div>
     <div class="w3-col s12">
-      <label>Nome:</label>
+      <label>{{translator.name}}:</label>
       <span class="u-name">{{booking.client.username}}</span>
     </div>
     
@@ -60,63 +55,47 @@
       <span class="u-email">{{booking.client.email}}</span>
     </div>
     <div class="w3-col s12">
-      <label>Adultos:</label>
+      <label>{{translator.adults}}:</label>
       <span class="">{{booking.adult}}</span>
     </div>
 
     <div class="w3-col s12">
-      <label>Crianças:</label>
+      <label>{{translator.childrens}}:</label>
       <span class="">{{booking.children}}</span>
     </div>
 
     <div class="w3-col s12">
-      <label>Bébes:</label>
+      <label>{{translator.babies}}:</label>
       <span class="">{{booking.baby}}</span>
     </div>
 
     <div class="w3-col s12 w3-xlarge w3-border-top">
-      <label>Montante:</label>
+      <label>{{translator.amount}}:</label>
        <div class="w3-right">{{(booking.amount.amount/100)|number_format(2)}}{{company.currency.currency}}</div>
     </div>
 
-{% if paylog is null %}
+    {% if paylog is null %}
   
-    <div class="w3-col s12 w3-margin-top">
+    <div class="paylog w3-col s12 w3-margin-top">
       <form id="payment-form">
-        <label>Insira nº Cartão</label>
+        <label>{{translator.insert_card_n}}</label>
         <div id="card-element" class="w3-input w3-border" style="padding: 10px 8px"></div>
         <div id="card-errors" class="w3-text-red w3-small" role="alert"></div>
         <div class="set-token"></div>
+        <input type="hidden" name="id" value="{{booking.id}}">
       </form>
     </div>
-    <div class="w3-col s12 w3-right w3-margin-top">
+    <div class="paylog w3-col s12 w3-right w3-margin-top">
       <span class="w3-button w3-block w3-green w3-border w3-right w3-margin-bottom" id="card-button" data-secret="{{payment_intent.data.client_secret}}" onclick="buyNow()">
-      <i class="fa fa-check"></i> Efetuar Pagamento
+      <i class="fa fa-check"></i> {{translator.pay_now}}
         </span>
     </div>
-{% endif %}
-
-
-
+  {% endif %}
 
   </div>
 
-
-
 </div>
 
-<!-- MODAL -->
-
-<div id="info-client" class="w3-modal" style="z-index:99999999">
-  <div class="w3-modal-content w3-animate-zoom" style="max-width:450px">
-    <div class="w3-container w3-green w3-padding" id="info-client-head">
-      <span onclick="$('#info-client').hide()" class="w3-button w3-display-topright w3-large"><i class="fa fa-times"></i></span>
-    </div>
-    <div class="w3-border-bottom w3-container w3-padding">
-      <p id="client-txt"></p>
-    </div>
-  </div>
-</div>
 
 <script>
 
@@ -137,10 +116,8 @@ $(document).ready(function(){
 
   function buildStripe(k){
     
-    f = `Stripe('`+k+`')`  
-    
     if (k){
-      stripe = eval(f)
+      stripe = Stripe(k)
       elements = stripe.elements()
       style = {
         base: {
@@ -179,12 +156,13 @@ $(document).ready(function(){
     ).then(function(result) {
       if (result.error) {
         $('.w3-overlay').hide()
-        modalConditions (1, result.error.message)
+        modalConditions(1, result.error.message, '{{translator.check}}') 
       } 
       else
         getUrlReceipt(result.paymentIntent.id)   
     })
   }
+
 
   //pi_id = payment_intent_id
   function getUrlReceipt(pi_id){
@@ -197,17 +175,19 @@ $(document).ready(function(){
         $('.w3-overlay').hide()
         if (data.status == 1){
           info = data.data.data.data[0]
+          console.log(data)
           $('#payment-form').trigger('reset')
-          buildStripe(key)
-          modalConditions (0, info.status+'<br><a target="_blank" href='+info.receipt_url+'>Stripe</a>')
+          modalConditions (0, data.message.text+' '+data.message.status+'<br><div class="w3-center w3-large"><a class="w3-button w3-border w3-blue w3-round" target="_blank" href='+info.receipt_url+'>{{translator.receipt}}</a></div>', '{{translator.success}}')
+          $('.bps').addClass(info.status).text(data.message.status)
+          $('.paylog').remove()
         }
         else{
-          modalConditions (1, data.message)
+          modalConditions(1, data.message, '{{translator.check}}') 
         }
       },
       error:function(data){
         $('.w3-overlay').hide()
-        modalConditions (2, 'wi_fi connection')
+        modalConditions(2, '{{translator.wifi_error}}', '{{translator.error}}')
       }
     })
   }
@@ -229,45 +209,28 @@ $(document).ready(function(){
           data: $('#payment-form').serialize()+'&secret='+$('#card-button').data('secret'),
           cache: false,
           success: function(data){
-
             if(data.data != 'succeeded'){
               handleCard()
             return
             }
             else if (data.status == 1){
               $('.w3-overlay').hide()
-              buildStripe(key)
+              //buildStripe(key)
               $('#payment-form').trigger('reset')
-              modalConditions (0, data.message)
+              modalConditions(0, data.message, '{{translator.success}}')
             }
             else{
               $('.w3-overlay').hide()
-              modalConditions (1, data.message)
+              modalConditions(1, data.message, '{{translator.check}}') 
             }
           },
           error:function(data){
-            modalConditions (2, 'wi_fi connection')
+            modalConditions(2, '{{translator.wifi_error}}', '{{translator.error}}')
           }
         })
       });
     }, 500)
   }
-
-//0 = Success
-//1 = Check
-//2 = Error
-
-function modalConditions(i, text){
-  a=[]
-
-  a.push(['w3-blue w3-red w3-amber', 'w3-green', 'Sucesso', 'fa-check'])
-  a.push(['w3-green w3-red w3-amber', 'w3-blue', 'Verifique', 'fa-info-circle'])
-  a.push(['w3-blue w3-green w3-amber', 'w3-red', 'Erro', 'fa-exclamation-triangle'])
-  
-  $('#info-client').show()
-  $('#info-client-head').removeClass(a[i][0]).addClass(a[i][1]).html('<span onclick="$(\'#info-client\').hide()" class="w3-button w3-display-topright w3-large"><i class="fa fa-times"></i></span><h1><i class="fa '+a[i][3]+'"></i> '+a[i][2]+'</h1>')  
-  $('#client-txt').html(text)
-}
 
 </script>
 

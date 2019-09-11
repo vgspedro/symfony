@@ -35,6 +35,7 @@ class Booking
     const STATUS_CANCELED_BY_USER = 'canceled by user';
     const STATUS_PENDING = 'pending';
     const STATUS_SUCCEEDED = 'succeeded';
+    const STATUS_PARCIAL_REFUND = 'parcial_refund';
 
     /**
      * @ORM\Id
@@ -72,7 +73,6 @@ class Booking
 
     /** @ORM\Column(name="time_event", type="time") */
     private $timeEvent;
-
      /** @ORM\Column(name="posted_at", type="date") */
     private $postedAt;
 
@@ -83,10 +83,9 @@ class Booking
      * @ORM\Column(type="string", name="status", columnDefinition="ENUM('pending', 'canceled', 'confirmed')" )
      */
     private $status = self::STATUS_PENDING;
-
     /**
-     * @Assert\Choice({"incomplete", "canceled", "cleared", "completed", "denied", "failed", "held", "paid", "placed", "processing", "refunded", "refused", "removed", "returned", "reversed", "unclaimed", "approved", "canceled by user", "pending", "succeeded"})
-     * @ORM\Column(type="string", name="payment_status", columnDefinition="ENUM('incomplete', 'canceled', 'cleared', 'completed', 'denied', 'failed', 'held', 'paid', 'placed', 'processing', 'refunded', 'refused', 'removed', 'returned', 'reversed', 'unclaimed', 'approved', 'canceled by user', 'pending', 'succeeded')" )
+     * @Assert\Choice({"incomplete", "canceled", "cleared", "completed", "denied", "failed", "held", "paid", "placed", "processing", "refunded", "refused", "removed", "returned", "reversed", "unclaimed", "approved", "canceled by user", "pending", "succeeded", "parcial_refund"})
+     * @ORM\Column(type="string", name="payment_status", columnDefinition="ENUM('incomplete', 'canceled', 'cleared', 'completed', 'denied', 'failed', 'held', 'paid', 'placed', 'processing', 'refunded', 'refused', 'removed', 'returned', 'reversed', 'unclaimed', 'approved', 'canceled by user', 'pending', 'succeeded', 'parcial_refund')" )
      */
     private $paymentStatus = self::STATUS_PENDING;
 
