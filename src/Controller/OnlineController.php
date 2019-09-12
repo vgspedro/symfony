@@ -153,7 +153,7 @@ class OnlineController extends AbstractController
             'date' =>  $translator->trans('date', array(), 'messages', $booking->getClient()->getLocale()->getName()),
             'name' =>  $translator->trans('name', array(), 'messages', $booking->getClient()->getLocale()->getName()),
             'adults' =>  $translator->trans('adults', array(), 'messages', $booking->getClient()->getLocale()->getName()),
-            'childrens' =>  $translator->trans('children', array(), 'messages', $booking->getClient()->getLocale()->getName()),
+            'childrens' =>  $translator->trans('childrens', array(), 'messages', $booking->getClient()->getLocale()->getName()),
             'babies' =>  $translator->trans('babies', array(), 'messages', $booking->getClient()->getLocale()->getName()),
             'amount' =>  $translator->trans('amount', array(), 'messages', $booking->getClient()->getLocale()->getName()),
             'refund' =>  $translator->trans('refund', array(), 'messages', $booking->getClient()->getLocale()->getName()),

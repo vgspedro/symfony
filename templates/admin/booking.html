@@ -138,6 +138,8 @@ div.dataTables_length select {height: 50px}
     </div>
 
 
+
+<!-- DEPRECATED 14 09 2019 --> 
     <div class="w3-container w3-padding w3-pale-red w3-hide stripe-container">
       <!-- STRIPE -->
       <p class="w3-center w3-large">Cobrar montante ao cliente</p>
@@ -170,10 +172,43 @@ div.dataTables_length select {height: 50px}
     </div>
   </div>
 </div>
+<!-- DEPRECATED 14 09 2019 --> 
+
+
+<div id="modal-refund" class="w3-modal" style="z-index:999;background-color: rgba(255,255,255,.9)">
+  <span onclick="$('#modal-refund').hide()" class="w3-button w3-display-topright w3-large">
+    <i class="fa fa-times"></i>
+  </span>
+  <div class="w3-modal-content w3-animate-zoom">
+    <div class="w3-container w3-padding" id="refund"></div>
+  </div>
+</div>
 
 <script src="{{ asset('js/bootstrap-datepicker.min.js') }}"></script>
 <script src="{{ asset('js/ui.datepicker-pt-BR.js') }}"></script>
 <script>
+
+function modalRefund(id){
+  $('.w3-overlay').show() 
+  setTimeout(function(){
+    $.ajax({
+      url: '{{ path("refund_index_stripe") }}' ,
+      type: "POST",
+      async: true,
+      cache: false,
+      data: 'id='+id,
+      success: function (data){
+        $('.w3-overlay').hide()
+        $('#refund').html(data)
+        $('#modal-refund').show()
+      },
+      error: function (data){
+        $('.w3-overlay').hide() 
+        $('#modal-error').show()
+      }
+    })
+  }, 500)
+}
 
 tablebooking = [0, 11, 13, 14, 16, 17]
 
@@ -359,7 +394,7 @@ function getCardData(){
 
        payment ='<form action="{{ path('payment_index_stripe') }}" title="Pagamento" target="_blank" method="post" class="w3-right" style="width:50px"><input type="hidden" name="id" value='+row.id+'><button class="w3-btn w3-border"><i class="fa fa-cc-stripe"></i></button></form>' 
 
-       refund = '<form action="{{ path('refund_index_stripe') }}" title="Reembolso" target="_blank" method="post" class="w3-right" style="width:50px"><input type="hidden" name="id" value='+row.id+'><button class="w3-btn w3-border w3-orange"><i class="fa fa-reply"></i></button></form>'  
+       refund = '<button onclick="modalRefund('+row.id+')" class="w3-btn w3-border w3-orange"><i class="fa fa-reply"></i></button>'  
 
         wp = row.wp ? '<button title="Mudar estado reserva" class="w3-btn w3-border w3-indigo w3-right" style="margin-left:4px" onclick="modalToCardData('+row.id+',\''+row.total+'\')"><i class="far fa-credit-card"></i></button>'
       : ''

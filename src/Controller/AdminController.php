@@ -247,7 +247,7 @@ class AdminController extends AbstractController
     }
 
 
-    public function adminBookingSendStatus(Request $request, \Swift_Mailer $mailer){
+    public function adminBookingSendStatus(Request $request){
 
         $em = $this->getDoctrine()->getManager();
                 
@@ -341,6 +341,7 @@ class AdminController extends AbstractController
     }
 
 
+
     public function adminBooking(Request $request)
     {
         $status[] = ['color' =>'w3-red', 'name' => 'pending', 'action' => 'pending'];
@@ -352,6 +353,7 @@ class AdminController extends AbstractController
 
         return $this->render('admin/booking.html', ['status' => $status, 'table' => $table]);
     }
+
 
     public function adminBookingSearch(Request $request, MoneyFormatter $moneyFormatter)
     {

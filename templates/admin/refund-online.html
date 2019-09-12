@@ -1,17 +1,19 @@
 
-{% extends "admin/p-base.html.twig" %}
-
 {% block content %}
 
-<div class="w3-container">
+<style>
+  .pending{color: #fff!important;background-color: #f44336!important;opacity: .75;padding:4px;}
+  .canceled, .parcial_refund, .refunded{color: #fff!important;background-color: #2196F3!important;opacity: .75;padding:4px;}
+  .confirmed, .succeeded{color: #fff!important;background-color: #4CAF50!important;opacity: .75;padding:4px;}
+</style>
 
-<div class="w3-xxlarge w3-row w3-xlarge w3-padding w3-margin-top">
+<div class="w3-row w3-xlarge w3-padding" style="margin-top:-50px">
   <i class="fa fa-reply"></i> {{translator.refund}}
 </div>
 
   <form id="refund-form">
   <input type="hidden" name='id' value="{{booking.id}}">
-  <div class="w3-row-padding w3-card-2 w3-sand w3-padding w3-large" style="max-width:600px;margin: 0 auto">
+  <div class="w3-row-padding w3-card-2 w3-sand w3-padding w3-large" style="max-width:600px;margin:0 auto">
      <div class="w3-col l12 w3-xlarge">
       <label>{{translator.purchase_data}} #{{booking.id}}</label>
     </div>
@@ -70,7 +72,7 @@
     </div>
     <div class="w3-col l6 m6 s12">
       <label>{{translator.motive}}</label>
-      <select name='reason' class="w3-select w3-border" style="height:45px">
+      <select name='reason' class="w3-border w3-block" style="height:45px">
       {% for reason in reasons %}
         <option value="{{reason.value}}">{{reason.text}}</option>
       {% endfor %}
@@ -84,34 +86,72 @@
 
   </div>
   </form>
+
+
+
+<div id="modal-info" class="w3-modal" style="z-index:9999;padding-top:60px; padding-bottom: 32px">
+    <div class="w3-modal-content w3-animate-zoom" style="max-width:400px">
+    <div class="w3-col s12">
+      <div class="w3-row">
+        <div class="modal-head w3-panel w3-leftbar w3-col s12 w3-left-align">
+          <span class="w3-closebtn w3-padding-small w3-right" onclick="$('#modal-info').hide()" style="cursor:pointer">
+            <i class="fa fa-times"></i>
+          </span>
+          <h2>
+            <span class="icon"></span>
+            <span class="modal-head-text"></span>
+          </h2>
+          <p class="modal-text w3-xlarge w3-padding-small"></p>
+          <div class="w3-margin-bottom"></div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script>
 
-//make refund
-function paymentRefund(){
-  $('.w3-overlay').show()
-  setTimeout(function(){
-    $.ajax({  
-      url :'{{ path('online_payment_refund')}}',
-      type: "POST",
-      data:$('#refund-form').serialize(),
-      cache: false,
-      success: function(data){
-        $('.w3-overlay').hide()
-        console.log(data)
-        if (data.status == 1)
-          modalConditions(0, data.message, '{{translator.success}}')
-        else
-          modalConditions(1, data.message, '{{translator.check}}') 
-      },
-      error:function(){
-        $('.w3-overlay').hide()
-        modalConditions(2, '{{translator.wifi_error}}', '{{translator.error}}')
-      }
-    })
-  }, 500)
-}
+  //make refund
+  function paymentRefund(){
+    $('.w3-overlay').show()
+    setTimeout(function(){
+      $.ajax({  
+        url :'{{ path('online_payment_refund')}}',
+        type: "POST",
+        data:$('#refund-form').serialize(),
+        cache: false,
+        success: function(data){
+          $('.w3-overlay').hide()
+          console.log(data)
+          if (data.status == 1)
+            modalConditions(0, data.message, '{{translator.success}}')
+          else
+            modalConditions(1, data.message, '{{translator.check}}') 
+        },
+        error:function(){
+          $('.w3-overlay').hide()
+          modalConditions(2, '{{translator.wifi_error}}', '{{translator.error}}')
+        }
+      })
+    }, 500)
+  }
+
+  //0 = Success
+  //1 = Check
+  //2 = Error
+
+  function modalConditions(i, text, head){
+    a=[]
+    a.push(['w3-pale-yellow w3-border-amber w3-pale-green w3-border-green w3-pale-red w3-border-red', 'w3-pale-green w3-border-green', 'fa-check'])
+    a.push(['w3-pale-yellow w3-border-amber w3-pale-green w3-border-green w3-pale-red w3-border-red', 'w3-pale-yellow w3-border-amber', 'fa-info-circle'])
+    a.push(['w3-pale-yellow w3-border-amber w3-pale-green w3-border-green w3-pale-red w3-border-red', 'w3-pale-red w3-border-red', 'fa-exclamation-triangle'])
+           
+    $('#modal-info').show()
+    $('.modal-head').removeClass(a[i][0]).addClass(a[i][1])
+    $('.icon').html('<i class="fa '+a[i][2]+'"></i>')
+    $('.modal-head-text').text(head)  
+    $('.modal-text').html(text)
+  }
 
 </script>
 
