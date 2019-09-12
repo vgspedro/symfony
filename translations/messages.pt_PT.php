@@ -102,6 +102,7 @@ return array(
     'duplicate' => 'Duplicado',
     'fraudulent' => 'Fraude',
     'requested_by_customer' => 'Requisitado pelo Cliente',
+    'phone' => 'Telefone',
 
 'link' => array(
     'where_we_are'=>'Onde Estamos',

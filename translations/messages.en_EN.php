@@ -86,6 +86,7 @@ return array(
     'duplicate' => 'Duplicate',
     'fraudulent' => 'Fraudulent',
     'requested_by_customer' => 'Requested by Customer',
+    'phone' => 'Phone',
 
 'link' => array(
     'where_we_are'=>'Where we Are',

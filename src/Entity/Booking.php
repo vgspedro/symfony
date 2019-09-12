@@ -35,7 +35,8 @@ class Booking
     const STATUS_CANCELED_BY_USER = 'canceled by user';
     const STATUS_PENDING = 'pending';
     const STATUS_SUCCEEDED = 'succeeded';
-    const STATUS_PARCIAL_REFUND = 'parcial_refund';
+    const STATUS_PARTIAL_REFUND = 'partial_refund';
+    const STATUS_UNCAPTURED = 'uncaptured';
 
     /**
      * @ORM\Id
@@ -68,6 +69,9 @@ class Booking
      */
     private $available;
 
+    /** @ORM\ManyToOne(targetEntity="StripePaymentLogs", cascade={"persist"}) */
+    private $stripePaymentLogs;
+
     /** @ORM\Column(name="date_event", type="date") */
     private $dateEvent;
 
@@ -84,8 +88,8 @@ class Booking
      */
     private $status = self::STATUS_PENDING;
     /**
-     * @Assert\Choice({"incomplete", "canceled", "cleared", "completed", "denied", "failed", "held", "paid", "placed", "processing", "refunded", "refused", "removed", "returned", "reversed", "unclaimed", "approved", "canceled by user", "pending", "succeeded", "parcial_refund"})
-     * @ORM\Column(type="string", name="payment_status", columnDefinition="ENUM('incomplete', 'canceled', 'cleared', 'completed', 'denied', 'failed', 'held', 'paid', 'placed', 'processing', 'refunded', 'refused', 'removed', 'returned', 'reversed', 'unclaimed', 'approved', 'canceled by user', 'pending', 'succeeded', 'parcial_refund')" )
+     * @Assert\Choice({"incomplete", "canceled", "cleared", "completed", "denied", "failed", "held", "paid", "placed", "processing", "refunded", "refused", "removed", "returned", "reversed", "unclaimed", "approved", "canceled by user", "pending", "succeeded", "partial_refund", "uncaptured"})
+     * @ORM\Column(type="string", name="payment_status", columnDefinition="ENUM('incomplete', 'canceled', 'cleared', 'completed', 'denied', 'failed', 'held', 'paid', 'placed', 'processing', 'refunded', 'refused', 'removed', 'returned', 'reversed', 'unclaimed', 'approved', 'canceled by user', 'pending', 'succeeded', 'partial_refund', 'uncaptured')" )
      */
     private $paymentStatus = self::STATUS_PENDING;
 
@@ -105,7 +109,7 @@ class Booking
         return $this->amount;
     }
 
-    public function setDepositAmount(Money $despositAmount) {
+    public function setDepositAmount(Money $depositAmount) {
         $this->depositAmount = $depositAmount;
     }
     /** 
@@ -138,6 +142,16 @@ class Booking
     public function getTimeEvent()
     {
         return $this->timeEvent;
+    }
+
+    public function setStripePaymentLogs(StripePaymentLogs $stripePaymentLogs)
+    {
+        $this->stripePaymentLogs = $stripePaymentLogs;
+    }
+
+    public function getStripePaymentLogs()
+    {
+        return $this->stripePaymentLogs;
     }
 
     public function setClient(Client $client)

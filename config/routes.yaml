@@ -404,3 +404,8 @@ refund_index_stripe:
     path: /refund-index-stripe
     controller: App\Controller\OnlineController::refund
     methods: [POST]
+
+logs_stripe:
+    path: /payment-logs
+    controller: App\Controller\OnlineController::paymentLogs
+    methods: [POST]

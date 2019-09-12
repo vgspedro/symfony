@@ -55,6 +55,10 @@
       <span class="u-email">{{booking.client.email}}</span>
     </div>
     <div class="w3-col s12">
+      <label>{{translator.phone}}:</label>
+      <span class="u-phone">{{booking.client.telephone}}</span>
+    </div>
+    <div class="w3-col s12">
       <label>{{translator.adults}}:</label>
       <span class="">{{booking.adult}}</span>
     </div>
@@ -148,7 +152,9 @@ $(document).ready(function(){
     stripe.handleCardPayment($('#card-button').data('secret'), card,{
       payment_method_data: {
         billing_details: {
-          name: $('.u-name').text()
+          name: $('.u-name').text(),
+          email: $('.u-email').text(),
+          phone: $('.u-phone').text()
         }
       },
       receipt_email: $('.u-email').text()

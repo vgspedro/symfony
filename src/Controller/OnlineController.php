@@ -12,6 +12,8 @@ use App\Entity\Booking;
 use App\Entity\StripePaymentLogs;
 use App\Entity\StripeRefundLogs;
 use App\Service\RequestInfo;
+use Money\Money;
+
 
 class OnlineController extends AbstractController
 {
@@ -30,6 +32,7 @@ class OnlineController extends AbstractController
 
             $text = [
                 'payment' => $translator->trans('payment', array(), 'messages', $booking->getClient()->getLocale()->getName()),
+                'phone' => $translator->trans('phone', array(), 'messages', $booking->getClient()->getLocale()->getName()),
                 'purchase_data' => $translator->trans('purchase_data', array(), 'messages', $booking->getClient()->getLocale()->getName()),
                 'tour' => $translator->trans('tour', array(), 'messages', $booking->getClient()->getLocale()->getName()),
                 'status' => $translator->trans('status', array(), 'messages', $booking->getClient()->getLocale()->getName()),
@@ -79,20 +82,20 @@ class OnlineController extends AbstractController
         $em = $this->getDoctrine()->getManager();
         
         $company = $em->getRepository(Company::class)->find(1);
-        
         $booking = $em->getRepository(Booking::class)->find($id);
 
         $i = $stripe->createUpdatePaymentIntent($company, $request, $booking);
 
-            $text = [
-                'receipt' => $translator->trans('receipt', array(), 'messages', $booking->getClient()->getLocale()->getName()),
-            ];
-
-        return new JsonResponse([
-            'status' => 1,
-            'message' => 'success',
-            'data' => $i,
-        ]);
+        return $i['status'] == 1 ? 
+            new JsonResponse([
+                'status' => 1,
+                'message' => 'success',
+                'data' => $i,
+            ]) :
+            new JsonResponse([
+                'status' => 0,
+                'message' => 'Unable to Charge Credit Card',
+                'data' => null]);
     }
 
     /**
@@ -110,29 +113,37 @@ class OnlineController extends AbstractController
 
         $ch = $stripe->getPaymentCharge($company, $request);
 
-        $b_id = explode('-', $ch['data']->data[0]->description);
-        
-        $booking = $em->getRepository(Booking::class)->find(str_replace('#','',$b_id[0]));
+        if($ch['status'] == 1){
 
-        $paylog = new StripePaymentLogs();
+            $b_id = explode('-', $ch['data']->data[0]->description);
 
-        $paylog->setLog(json_encode($ch['data']->data[0]));
+            $booking = $em->getRepository(Booking::class)->find(str_replace('#','',$b_id[0]));
+            $payLogs = new StripePaymentLogs();
 
-        $booking->setPaymentStatus(Booking::STATUS_SUCCEEDED);
-        
-        $paylog->setBooking($booking);
-        
-        $em->persist($paylog);
-        
-        $em->flush();
+            $payLogs->setLog(json_encode($ch['data']->data[0]));
+            $deposit = Money::EUR($ch['data']->data[0]->amount);
+            $payLogs->setBooking($booking);
+            $booking->setPaymentStatus($ch['data']->data[0]->status);
+            $payLogs->setBooking($booking);
+            $booking->setStripePaymentLogs($payLogs);
+            $booking->setDepositAmount($deposit);
+            $em->persist($booking);
+            $em->flush();
 
-        return new JsonResponse([
-            'status' => 1,
-            'message' => [
-                'text' => $translator->trans('payment_txt', array(), 'messages', $booking->getClient()->getLocale()->getName()), 
-                'status' => $translator->trans( $booking->getPaymentStatus(), array(), 'messages', $booking->getClient()->getLocale()->getName())
-            ],
-            'data' => $ch] );
+            return new JsonResponse([
+                'status' => 1,
+                'message' => [
+                    'text' => $translator->trans('payment_txt', array(), 'messages', $booking->getClient()->getLocale()->getName()), 
+                    'status' => $translator->trans( $booking->getPaymentStatus(), array(), 'messages', $booking->getClient()->getLocale()->getName())
+                ],
+                'data' => $ch]);
+            }
+
+        else
+            return new JsonResponse([
+                'status' => 0,
+                'message' =>'Unable to get Charge',
+                'data' => null]);
     }
 
 
@@ -192,14 +203,29 @@ class OnlineController extends AbstractController
 
         $company = $em->getRepository(Company::class)->find(1);
 
-        $booking = $em->getRepository(Booking::class)->find($request->request->get('b_id'));
+        $booking = $em->getRepository(Booking::class)->find($request->request->get('id'));
+
+        if(!$booking)
+            return new JsonResponse([
+                'status' => 0,
+                'message' => 'Reserva #'.$request->request->get('id'),
+                'data' => null
+        ]);  
+
 
         $paylog = $em->getRepository(StripePaymentLogs::class)->findOneBy( ['booking' => $booking ] ); 
 
+        if(!$booking)
+
+            return new JsonResponse([
+                'status' => 0,
+                'message' => 'Pagamento daReserva #'.$request->request->get('id'),
+                'data' => null
+            ]);  
+
+
         $rfd = $stripe->createRefund($company, $request, $paylog->getlogObj()->id);
 
-        dump($rfd);
-exit;
         $reflog = new StripeRefundLogs();
 
         if ($rfd['status'] == 0) {
@@ -229,4 +255,50 @@ exit;
     }
 
 
+    /**
+     * @param Request $request operator data  
+     */
+    public function paymentLogs(Request $request, TranslatorInterface $translator, Stripe $stripe){
+
+        $id = $request->request->get('id');
+
+        $em = $this->getDoctrine()->getManager();
+        $company = $em->getRepository(Company::class)->find(1);
+
+        if(!$company){
+            return new JsonResponse([
+                    'status' => 0,
+                    'message' => 'fail',
+                    'data' => 'Stripe Credencials not found.'// $translator->trans('operator_online_payments_not_found')
+                ]);
+        }
+
+        $booking = $em->getRepository(Booking::class)->find($id);
+        
+        //INFORM THE USER BOOKING NOT FOUND 
+        if(!$booking){
+          return new JsonResponse([
+            'status' => 0,
+            'message' => 'fail',
+            'data' => 'Booking # '.$id.' not found']);
+        }
+
+        if($booking->getStripePaymentLogs()->getLogObj() != null){
+
+            $charge_id = $booking->getStripePaymentLogs()->getLogObj()->id;
+
+            $logs = $stripe->retrieveCharge($company, $charge_id);
+
+            if ($logs['status'] == 1 )
+                return new JsonResponse([
+                    'status' => 1, 
+                    'message' => 'success',
+                    'data' => $logs,
+                    ]
+                );
+
+            else
+                return new JsonResponse($logs);
+        }
+    }
 }

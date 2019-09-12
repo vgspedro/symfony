@@ -15,7 +15,7 @@ class StripePaymentLogs
      */
     private $id;     
     /** 
-     * @ORM\ManyToOne(targetEntity="App\Entity\Booking", inversedBy="stripe_payment_logs") 
+     * @ORM\ManyToOne(targetEntity="Booking", inversedBy="stripe_payment_logs") 
      */
     private $booking;
     /**
@@ -45,8 +45,7 @@ class StripePaymentLogs
 
     public function getLogObj() {
         $obj = null;
-
-        if ($this->log){
+        if ($this->getLog()){
             //TEXT TO OBJECT
             $obj = json_decode($this->log);
         }

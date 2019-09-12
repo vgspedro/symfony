@@ -97,6 +97,7 @@ div.dataTables_length select {height: 50px}
   </div>
 </div>
 
+
 <div id="modal-data-validate" class="w3-modal" style="z-index: 99999;padding-bottom:32px">
   <div class="w3-modal-content w3-animate-zoom" style="max-width:450px">
     <div class="w3-container w3-blue w3-padding">
@@ -137,8 +138,6 @@ div.dataTables_length select {height: 50px}
       </form>
     </div>
 
-
-
 <!-- DEPRECATED 14 09 2019 --> 
     <div class="w3-container w3-padding w3-pale-red w3-hide stripe-container">
       <!-- STRIPE -->
@@ -174,15 +173,25 @@ div.dataTables_length select {height: 50px}
 </div>
 <!-- DEPRECATED 14 09 2019 --> 
 
-
 <div id="modal-refund" class="w3-modal" style="z-index:999;background-color: rgba(255,255,255,.9)">
   <span onclick="$('#modal-refund').hide()" class="w3-button w3-display-topright w3-large">
     <i class="fa fa-times"></i>
   </span>
-  <div class="w3-modal-content w3-animate-zoom">
+  <div class="w3-modal-content w3-animate-zoom w3-transparent">
     <div class="w3-container w3-padding" id="refund"></div>
   </div>
 </div>
+
+
+<div id="modal-logs" class="w3-modal" style="z-index:999;background-color: rgba(255,255,255,.9)">
+  <span onclick="$('#modal-logs').hide()" class="w3-button w3-display-topright w3-large">
+    <i class="fa fa-times"></i>
+  </span>
+  <div class="w3-modal-content w3-animate-zoom w3-transparent">
+    <div class="w3-container w3-padding" id="logs"></div>
+  </div>
+</div>
+
 
 <script src="{{ asset('js/bootstrap-datepicker.min.js') }}"></script>
 <script src="{{ asset('js/ui.datepicker-pt-BR.js') }}"></script>
@@ -247,29 +256,8 @@ var index = 0
      $('#startDate').datepicker("setEndDate", e.date)
     })
 
-/*
-    $(document).on('click','.buttons-columnVisibility',function(){
-      tablebooking = []
-      $('.buttons-columnVisibility').each(function( index ){
-        if(!$(this).hasClass('active'))
-          tablebooking.push(index)
-      })
-      localStorage.setItem("tablebooking", JSON.stringify(tablebooking))
-      bookingstored = tablebooking
-    })
-  */
-
   })
 
-/*
-  if(!localStorage.getItem("tablebooking") ){
-    localStorage.setItem("tablebooking", JSON.stringify(tablebooking))
-    bookingstored = JSON.parse(localStorage.getItem("tablebooking"))
-  }
-  else{
-    bookingstored = JSON.parse(localStorage.getItem("tablebooking"))
-}
-*/
 
 /*MODAL TO USER GET CREDIT CARD INFO */
 function modalToCardData(id, amount){
@@ -388,18 +376,18 @@ function getCardData(){
         else if (data == 'CANCELED') color = 'w3-blue'
         else if (data == 'CONFIRMED') color = 'w3-green'
         
-        paylogs = '<button title="Logs Pagamentos/Reembolsos" class="w3-btn w3-blue w3-border" onclick="getStripeLogs('+row.id+')"><i class="fa fa-cogs"></i></button>'
+        paylogs = row.payment_status ? '<button title="Logs Pagamentos/Reembolsos" class="w3-btn w3-blue w3-border" onclick="getStripeLogs('+row.id+')"><i class="fa fa-cogs"></i></button>' : '';
 
         o_status = '<button id="'+row.id+'" style="padding:8px 4px!important" class="'+color+' w3-btn w3-border w3-left" onclick="modalBookingSetStatus('+row.id+')">#'+row.id+' '+data.substring(0, 3)+'</button>' 
 
-       payment ='<form action="{{ path('payment_index_stripe') }}" title="Pagamento" target="_blank" method="post" class="w3-right" style="width:50px"><input type="hidden" name="id" value='+row.id+'><button class="w3-btn w3-border"><i class="fa fa-cc-stripe"></i></button></form>' 
+       payment = !row.payment_status ? '<form action="{{ path('payment_index_stripe') }}" title="Pagamento" target="_blank" method="post" class="w3-right" style="width:50px"><input type="hidden" name="id" value='+row.id+'><button class="w3-btn w3-border"><i class="fa fa-cc-stripe"></i></button></form>' : ''
 
-       refund = '<button onclick="modalRefund('+row.id+')" class="w3-btn w3-border w3-orange"><i class="fa fa-reply"></i></button>'  
+       refund =  row.payment_status ? '<button onclick="modalRefund('+row.id+')" class="w3-btn w3-border w3-orange"><i class="fa fa-reply"></i></button>'  : ''
 
         wp = row.wp ? '<button title="Mudar estado reserva" class="w3-btn w3-border w3-indigo w3-right" style="margin-left:4px" onclick="modalToCardData('+row.id+',\''+row.total+'\')"><i class="far fa-credit-card"></i></button>'
       : ''
 
-        return '<div class="w3-small" style="width:254px;min-width:254px">'+paylogs+' '+payment+''+refund+''+wp+''+o_status+'</div>'
+        return '<div class="w3-small" style="">'+paylogs+' '+payment+''+refund+''+wp+''+o_status+'</div>'
       }},
       { data: "tour"},
       { data: "date"},
@@ -531,10 +519,38 @@ function getCardData(){
 }
 
 
-function getStripeLogs(id){
-  alert(id)
-}
 
+function getStripeLogs(id){
+
+  $('.w3-overlay').show()
+  setTimeout(function(){
+    $.ajax({  
+      url:'{{ path('logs_stripe') }}',
+      type: "POST",
+      data:'id='+id,
+      success: function(data){
+
+        console.log(data)
+
+        $('.w3-overlay').hide()
+        if(data.status == 1){
+          $('#modal-logs').show()                
+          $('#logs').html(JSON.stringify(data))
+        }
+
+        else{
+          $('#set-booking').html(data)
+          $('#booking-id').text(bookingId)
+          $('#modal-booking-set-status').show()
+        }
+      },
+      error:function(data){
+        $('.w3-overlay').hide()
+        $('#modal-error').show()
+      }
+    })
+  }, 500)
+}
 
 
 
@@ -676,13 +692,6 @@ function stripeTokenHandler(token) {
   }, 500)
 }
 
-
-
 /*STRIPE*/
-
-
-
-
-
 
 </script>

@@ -170,19 +170,19 @@ class Stripe
     }
 
 
-/**
+
+ /**
     *Create refund to client
     *@param OnlinePayments Obj, $charge_id String
     *@return Charge Obj
     **/
-    public function retrieveCharge(OnlinePayments $oPayment, $charge_id){
+    public function retrieveCharge(Company $company, $charge_id){
 
         $stripe = new \Stripe\Stripe(); 
         $charge = new \Stripe\Charge();
-        $stripe->setApiKey($oPayment->getSecretKey());
+        $stripe->setApiKey($company->getStripeSK());
         
         try{ 
-        
             $chargeObj = $charge->retrieve($charge_id);
 
             return [
