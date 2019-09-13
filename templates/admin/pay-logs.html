@@ -1,0 +1,43 @@
+<div class="w3-row w3-xlarge w3-padding" style="margin-top:-50px">
+  <i class="fa fa-cogs"></i> Logs
+</div>
+
+  <div class="w3-row-padding w3-card-2 w3-sand w3-padding w3-large" style="max-width:600px;margin:0 auto">
+     <div class="w3-col l12 w3-xlarge">
+      <label>Reserva: {{logs.description}}</label>
+    </div>
+    <div class="w3-col s12">
+      <label>Data Pagamento:</label>
+      <span class="">{{logs.created|date('d/m/Y @ H:i:s')}}</span>
+    </div>
+    <div class="w3-col s12">
+      <label>Pagamento #:</label>
+      <span class="">{{logs.id}}</span>
+    </div>
+    <div class="w3-col s12">
+      <label>Estado Pagamento:</label>
+      <span class="{{booking.status}}" style="text-transform: uppercase">{{booking.txt}}</span>
+    </div>
+    <div class="w3-col s12">
+      <label>Montante:</label>
+      <span class="">{{(logs.amount/100)|number_format(2)}}{{logs.currency|upper}}</span>
+    </div>
+    <div class="w3-col s12">
+      <label>Reembolso:</label>
+      <span class=""> {{(logs.amount_refunded/100)|number_format(2)}}{{logs.currency|upper}}</span>
+    </div>
+
+    <div class="w3-col s12">
+      <label>Nome:</label>
+      <span class="">{{logs.billing_details.name}}</span>
+    </div>
+    <div class="w3-col s12">
+      <label>Email:</label>
+      <span class="">{{logs.receipt_email}}</span>
+    </div>
+
+    <div class="w3-col s12 w3-medium w3-right-align">
+      <a href="{{logs.receipt_url}}" target="_blank" class=" w3-button w3-blue w3-border w3-round">Ver Recibo</a>
+    </div>
+
+  </div>

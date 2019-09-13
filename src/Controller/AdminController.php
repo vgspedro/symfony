@@ -15,9 +15,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 use App\Form\CategoryType;
 use App\Form\GalleryType;
-use App\Form\BlockdatesType;
+//use App\Form\BlockdatesType;
 use App\Form\EventType;
 use App\Form\EasyTextType;
 use App\Service\MoneyFormatter;
@@ -247,7 +248,7 @@ class AdminController extends AbstractController
     }
 
 
-    public function adminBookingSendStatus(Request $request){
+    public function adminBookingSendStatus(Request $request, TranslatorInterface $translator){
 
         $em = $this->getDoctrine()->getManager();
                 
@@ -301,7 +302,7 @@ class AdminController extends AbstractController
                 'adult' => $booking->getAdult(),
                 'children' => $booking->getChildren(),
                 'baby' => $booking->getBaby(),
-                'status' => $this->translateStatus($booking->getStatus(),  $client->getLocale()->getName()),
+                'status' => strtoupper($translator->trans($booking->getStatus(), array(), 'messages', $booking->getClient()->getLocale()->getName())),
                 'date' => $booking->getDateEvent()->format('d/m/Y'),
                 'hour' => $booking->getTimeEvent()->format('H:i'),
                 'tour' => $categoryName,
@@ -318,7 +319,7 @@ class AdminController extends AbstractController
 
         $mailer = new \Swift_Mailer($transport);
 
-        $subject ='Reserva / Order #'.$booking->getId().' ('.$this->translateStatus($booking->getStatus(), $client->getLocale()->getName()).')';
+        $subject =  $translator->trans('booking', array(), 'messages', $booking->getClient()->getLocale()->getName()).'#'.$booking->getId().' ('.strtoupper($translator->trans($booking->getStatus(), array(), 'messages', $booking->getClient()->getLocale()->getName())).')';
 
         $message = (new \Swift_Message($subject))
             ->setFrom([$company->getEmail() => $company->getName()])
@@ -341,12 +342,11 @@ class AdminController extends AbstractController
     }
 
 
-
-    public function adminBooking(Request $request)
+    public function adminBooking(Request $request, TranslatorInterface $translator)
     {
-        $status[] = ['color' =>'w3-red', 'name' => 'pending', 'action' => 'pending'];
-        $status[] = ['color' =>'w3-blue', 'name' => 'canceled', 'action' => 'canceled'];
-        $status[] = ['color' =>'w3-green', 'name' => 'confirmed', 'action' => 'confirmed'];
+        $status[] = ['color' =>'w3-red', 'name' => 'pending', 'action' => strtoupper($translator->trans('pending'))];
+        $status[] = ['color' =>'w3-blue', 'name' => 'canceled', 'action' => strtoupper($translator->trans('canceled'))];
+        $status[] = ['color' =>'w3-green', 'name' => 'confirmed', 'action' => strtoupper($translator->trans('confirmed'))];
         $status[] = ['color' =>'w3-black', 'name' => 'total', 'action' => ''];
 
         $table=['Reserva','Acções','Tour','Data','Hora','Adulto','Criança','Bébé','Depósito', 'Total' ,'Pagamento','Notas','Cliente','Email','Morada','Telefone','Compra','W.P.'];
@@ -355,7 +355,7 @@ class AdminController extends AbstractController
     }
 
 
-    public function adminBookingSearch(Request $request, MoneyFormatter $moneyFormatter)
+    public function adminBookingSearch(Request $request, MoneyFormatter $moneyFormatter, TranslatorInterface $translator)
     {
         $em = $this->getDoctrine()->getManager();
 
@@ -384,6 +384,9 @@ class AdminController extends AbstractController
                 else if ($booking->getStatus() ==='confirmed')
                     $confirmed = $confirmed+1;
                 
+
+
+
                 $client = $booking->getClient();
 
                 $seeBookings[] =
@@ -392,7 +395,9 @@ class AdminController extends AbstractController
                     'adult' => $booking->getAdult(),
                     'children' => $booking->getChildren(),
                     'baby' => $booking->getBaby(),
-                    'status' => strtoupper($booking->getStatus()),
+                    'status' => $booking->getStatus(),
+                    'row_color' => $this->setRowColors($booking->getPaymentStatus()),
+                    'status_txt' => strtoupper($translator->trans($booking->getStatus())),
                     'date' => $booking->getDateEvent()->format('d/m/Y'),
                     'hour' => $booking->getTimeEvent()->format('H:i'),
                     'tour' => $booking->getAvailable()->getCategory()->getNamePt(),
@@ -400,16 +405,16 @@ class AdminController extends AbstractController
                     'user_id' => $client->getId(),
                     'deposit' => $moneyFormatter->format($booking->getDepositAmount()),
                     'payment_status' => $booking->getPaymentStatus(),
+                    'payment_status_txt' => strtoupper($translator->trans($booking->getPaymentStatus())),
                     'username' => $client->getUsername(),
                     'address' => $client->getAddress(),
-                    'email' => $client->getEmail(),          
+                    'email' => $client->getEmail(),
                     'telephone' => $client->getTelephone(),
                     'total' => $moneyFormatter->format($booking->getAmount()),
                     'wp' => $client->getCvv() ? 1 : 0,
                     'posted_at' => $booking->getPostedAt()->format('d/m/Y'),
                     ];
             }
-
 
             $counter = count($seeBookings);
             
@@ -428,7 +433,6 @@ class AdminController extends AbstractController
                     'pending' => '', 
                     'confirmed' => '', 
                     'canceled' => '');
-
         }
         else 
             $response = array(
@@ -465,23 +469,32 @@ class AdminController extends AbstractController
     }
 
 
-    private function translateStatus($status, $language){
-        if ($language == 'pt-pt'){
-            switch ($status) {
-                case 'pending': 
-                    $status = 'PENDENTE';
-                break;
-                case 'canceled': 
-                    $status = 'CANCELADA';
-                break;
-                case 'confirmed': 
-                    $status = 'CONFIRMADA';
-                break;
-            
-            }
-        }
 
-        return $status;
+    private function setRowColors($status){
+
+    $green = ['completed', 'paid', 'paid', 'succeeded', 'approved'];
+
+    $red = ['denied', 'failed', 'incomplete', 'canceled','refused','removed', 'uncaptured', 'canceled by user'];
+    
+    $yellow = ['held', 'placed', 'processing', 'pending', 'returned', 'cleared'];
+
+    $blue = ['partial_refund', 'refunded', 'reversed', 'unclaimed'];
+
+    if (in_array($status, $green))
+        return 'w3-pale-green';
+
+    else if (in_array($status, $blue))
+        return 'w3-pale-blue';
+    
+    else if (in_array($status, $red))
+        return 'w3-pale-red';
+    
+    else if (in_array($status, $yellow))
+
+        return 'w3-pale-yellow';
+    else
+        return '';
+
     }
 
     public function bookingValidateUser(Request $request){

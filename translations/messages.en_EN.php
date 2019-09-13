@@ -74,7 +74,7 @@ return array(
     'placed' => 'Placed',
     'processing' => 'Processing',
     'refunded' => 'Redunded',
-    'parcial_refund' => 'Parcial Refund',
+    'partial_refund' => 'Parcial Refund',
     'refused' => 'Refused',
     'removed' => 'Removed',
     'returned' => 'Returned',

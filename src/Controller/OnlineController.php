@@ -14,20 +14,52 @@ use App\Entity\StripeRefundLogs;
 use App\Service\RequestInfo;
 use Money\Money;
 
-
 class OnlineController extends AbstractController
+
 {
 
-    public function index(Stripe $stripe, Request $request, TranslatorInterface $translator, RequestInfo $reqInfo)
+    public function index(Request $request, TranslatorInterface $translator)
     {
+        $id = $request->request->get('id');
+        $index = $request->request->get('index');
+
+        $em = $this->getDoctrine()->getManager();
+
+        $booking = $em->getRepository(Booking::class)->find($id);
+
+        if(!$booking)
+            return new JsonResponse([
+                'status' => 0,
+                'message' => 'A Reserva #'.$id.' não foi encontrada!',
+                'data' => null
+            ]);
+
+        $paylog = $em->getRepository(StripePaymentLogs::class)->findOneBy(['booking' => $booking]);
+
+        if($paylog)
+            return new JsonResponse([
+                'status' => 0,
+                'message' => 'Pagamento já foi efetuado, clique em "Procurar"',
+                'data' => [ 'status' => $paylog->getLogObj()->status, 'index' => $index ]
+            ]);
+            
+        return new JsonResponse([
+            'status' => 1,
+            'message' => 'redirect to Payment.',
+            'data' => null
+        ]);    
+    }
+
+    public function setPayment(Stripe $stripe, Request $request, TranslatorInterface $translator, RequestInfo $reqInfo)
+    {
+
         $id = $request->request->get('id');
 
         if($id){
-
+        
             $em = $this->getDoctrine()->getManager();
-            $company = $em->getRepository(Company::class)->find(1);
             $booking = $em->getRepository(Booking::class)->find($id);
-
+            $company = $em->getRepository(Company::class)->find(1);
             $paylog = $em->getRepository(StripePaymentLogs::class)->findOneBy(['booking' => $booking]);
 
             $text = [
@@ -67,6 +99,7 @@ class OnlineController extends AbstractController
         else
             return $this->redirectToRoute('index');
     }
+
 
     /**
     *Create Charge
@@ -196,44 +229,39 @@ class OnlineController extends AbstractController
     *@param 
     *@return json response of Request
     **/
-    public function onlinePaymentRefund(Request $request, Stripe $stripe)
+    public function onlinePaymentRefund(Request $request, Stripe $stripe, TranslatorInterface $translator)
     {
         
         $em = $this->getDoctrine()->getManager();
 
         $company = $em->getRepository(Company::class)->find(1);
 
-        $booking = $em->getRepository(Booking::class)->find($request->request->get('id'));
+        $id = $request->request->get('id');
+
+
+        $booking = $em->getRepository(Booking::class)->find($id);
 
         if(!$booking)
             return new JsonResponse([
                 'status' => 0,
-                'message' => 'Reserva #'.$request->request->get('id'),
+                'message' => 'Reserva #'.$id,
                 'data' => null
         ]);  
 
 
         $paylog = $em->getRepository(StripePaymentLogs::class)->findOneBy( ['booking' => $booking ] ); 
 
-        if(!$booking)
+        if(!$paylog)
 
             return new JsonResponse([
                 'status' => 0,
-                'message' => 'Pagamento daReserva #'.$request->request->get('id'),
+                'message' => 'Pagamento da Reserva #'.$id.' não encontrado',
                 'data' => null
             ]);  
 
-
         $rfd = $stripe->createRefund($company, $request, $paylog->getlogObj()->id);
 
-        $reflog = new StripeRefundLogs();
-
         if ($rfd['status'] == 0) {
-
-            $reflog->setLog(json_encode($rfd['message']));
-            $reflog->setBooking($booking);
-            $em->persist($reflog);
-            $em->flush();
             
             return new JsonResponse([
                 'status' => 0,
@@ -242,15 +270,26 @@ class OnlineController extends AbstractController
             ]);  
         }
 
-        $reflog->setLog(json_encode($rfd['data']));
-        $reflog->setBooking($booking);
-        $em->persist($reflog);
+        $c_update= $stripe->retrieveCharge($company, $paylog->getlogObj()->id);
+
+        $booking->getStripePaymentLogs()->setLog(json_encode($c_update['data']));
+
+        if($c_update['data']->amount_refunded > 0){
+            $status = $c_update['data']->amount != $c_update['data']->amount_refunded ? Booking::STATUS_PARTIAL_REFUND: Booking::STATUS_REFUNDED; 
+            $booking->setPaymentStatus($status);
+        }
+
+        $em->persist($booking);
         $em->flush();
         
         return new JsonResponse([
             'status' => 1,
-            'message' => 'success',
-            'data' => $rfd['data']->data->status
+            'message' => 'Reembolso efetuado',
+            'data' => [
+                'txt' =>$translator->trans($booking->getPaymentStatus()),
+                'status' => $booking->getPaymentStatus()
+            ]
+
         ]);
     }
 
@@ -289,13 +328,22 @@ class OnlineController extends AbstractController
 
             $logs = $stripe->retrieveCharge($company, $charge_id);
 
-            if ($logs['status'] == 1 )
-                return new JsonResponse([
-                    'status' => 1, 
-                    'message' => 'success',
-                    'data' => $logs,
+            $booking->getStripePaymentLogs()->setLog(json_encode($logs['data']));
+            
+            if($logs['data']->amount_refunded > 0){
+                $status = $logs['data']->amount != $logs['data']->amount_refunded ? Booking::STATUS_PARTIAL_REFUND: Booking::STATUS_REFUNDED; 
+                $booking->setPaymentStatus($status);
+            }
+
+            $em->persist($booking);
+            $em->flush();
+
+            if ($logs['status'] == 1)
+                return $this->render('admin/pay-logs.html',['logs' => $logs['data'], 'booking' => [
+                    'txt' =>$translator->trans($booking->getPaymentStatus()),
+                    'status' => $booking->getPaymentStatus()
                     ]
-                );
+                ]);
 
             else
                 return new JsonResponse($logs);

@@ -1,6 +1,6 @@
 <style>
   .pending{color: #fff!important;background-color: #f44336!important;opacity: .75;padding:4px;}
-  .canceled, .parcial_refund, .refunded{color: #fff!important;background-color: #2196F3!important;opacity: .75;padding:4px;}
+  .canceled, .partial_refund, .refunded{color: #fff!important;background-color: #2196F3!important;opacity: .75;padding:4px;}
   .confirmed, .succeeded{color: #fff!important;background-color: #4CAF50!important;opacity: .75;padding:4px;}
 </style>
 
@@ -8,7 +8,7 @@
   <i class="fa fa-reply"></i> {{translator.refund}}
 </div>
 
-  <form id="refund-form">
+<form id="refund-form">
   <input type="hidden" name='id' value="{{booking.id}}">
   <div class="w3-row-padding w3-card-2 w3-sand w3-padding w3-large" style="max-width:600px;margin:0 auto">
      <div class="w3-col l12 w3-xlarge">
@@ -31,7 +31,7 @@
     </div>
     <div class="w3-col s12">
       <label>{{translator.payment}}:</label>
-      <span class="{{booking.paymentStatus}}" style="text-transform: uppercase">{{translator.payment_status}}</span>
+      <span id="status" class="{{booking.paymentStatus}}" style="text-transform: uppercase">{{translator.payment_status}}</span>
     </div>
 
     <div class="w3-col s12">
@@ -63,7 +63,7 @@
     </div>
 
     <div class="w3-col l6 m6 s12">
-      <label>{{translator.amount}}</label>
+      <label>{{translator.amount}} {{company.currency.currency}}</label>
       <input type="hidden" value="{{booking.id}}" name="b_id">
       <input class="w3-input w3-border" name='amount' style="height:45px" value="{{(booking.amount.amount/100)|number_format(2)}}">
     </div>
@@ -80,9 +80,8 @@
       <i class="fa fa-reply"></i> {{translator.refund}}
       </span>
     </div>
-
   </div>
-  </form>
+</form>
 
 <div id="modal-info" class="w3-modal" style="z-index:9999;padding-top:60px; padding-bottom: 32px">
     <div class="w3-modal-content w3-animate-zoom" style="max-width:400px">
@@ -117,9 +116,13 @@
         cache: false,
         success: function(data){
           $('.w3-overlay').hide()
+          
           console.log(data)
-          if (data.status == 1)
+          
+          if (data.status == 1){
+            $('#status').removeClass().addClass(data.data.status).html(data.data.txt)
             modalConditions(0, data.message, '{{translator.success}}')
+          }
           else
             modalConditions(1, data.message, '{{translator.check}}') 
         },

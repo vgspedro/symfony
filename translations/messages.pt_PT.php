@@ -90,7 +90,7 @@ return array(
     'placed' => 'Colocado',
     'processing' => 'Processamento',
     'refunded' => 'Reembolsado',
-    'parcial_refund' => 'Reembolso Parcial',
+    'partial_refund' => 'Reembolso Parcial',
     'refused' => 'Recusado',
     'removed' => 'Removido',
     'returned' => 'Devolvido',

@@ -409,3 +409,8 @@ logs_stripe:
     path: /payment-logs
     controller: App\Controller\OnlineController::paymentLogs
     methods: [POST]
+
+set_payment:
+    path: /set-stripe
+    controller: App\Controller\OnlineController::setPayment
+    methods: [POST]

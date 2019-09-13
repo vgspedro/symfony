@@ -7,24 +7,17 @@
 input, select, textarea {color: #000!important}
 .form-control{ border: 1px solid #ccc!important;height: 50px;padding: 0px 0px 0px 4px;padding-bottom: 0px}
 div.dataTables_length select {height: 50px}
-.StripeElement {
-  box-sizing: border-box;
+.StripeElement {box-sizing: border-box;
   height: 45px;
   padding: 11px 12px;
   border: 1px solid transparent;
   background-color: white;
   box-shadow: 0 1px 3px 0 #e6ebf1;
   -webkit-transition: box-shadow 150ms ease;
-  transition: box-shadow 150ms ease;
-}
-.StripeElement--focus {
-  box-shadow: 0 1px 3px 0 #cfd7df;
-}
-.StripeElement--invalid {
-  border-color: #fa755a;
-}
-.StripeElement--webkit-autofill {
-  background-color: #fefde5 !important;}</style>
+  transition: box-shadow 150ms ease;}.StripeElement--focus {box-shadow: 0 1px 3px 0 #cfd7df;}
+  .StripeElement--invalid {border-color: #fa755a}
+  .StripeElement--webkit-autofill {background-color: #fefde5 !important;}
+</style>
 
 <div id="results" class="w3-hide" style="top:66px;right:16px;position: fixed;z-index: 9999999">
   <span class="w3-center w3-padding w3-light-blue w3-large w3-animate-right" id="results_txt"></span>
@@ -69,7 +62,6 @@ div.dataTables_length select {height: 50px}
   </div>
 
 </div>
-
 
 <!-- TABLE  -->
 <div class="w3-row-padding w3-margin-top" style="min-height:40vh">
@@ -191,6 +183,7 @@ div.dataTables_length select {height: 50px}
     <div class="w3-container w3-padding" id="logs"></div>
   </div>
 </div>
+<div id="form-container"></div>
 
 
 <script src="{{ asset('js/bootstrap-datepicker.min.js') }}"></script>
@@ -255,9 +248,7 @@ var index = 0
     }).on("changeDate",function (e) {
      $('#startDate').datepicker("setEndDate", e.date)
     })
-
   })
-
 
 /*MODAL TO USER GET CREDIT CARD INFO */
 function modalToCardData(id, amount){
@@ -317,12 +308,11 @@ function getCardData(){
   }, 500)
 }
 
-  function clearBookSearch(){
-    $('#startDate, #endDate').datepicker('clearDates')
-  }
+function clearBookSearch(){
+  $('#startDate, #endDate').datepicker('clearDates')
+}
 
-
-  function searchValue(){
+function searchValue(){
   my_total = 0
   id_table = []
   $('.show-results, #results').addClass('w3-hide')
@@ -371,23 +361,25 @@ function getCardData(){
       order:[],
       columns: [
       { data: "id"},
-      { data: "status", render: function(data, type,row){
-        if (data == 'PENDING') color = 'w3-red'
-        else if (data == 'CANCELED') color = 'w3-blue'
-        else if (data == 'CONFIRMED') color = 'w3-green'
+      { data: "status_txt", render: function(data, type,row){
+
+
+        if (row.status == 'pending') color = 'w3-red'
+        else if (row.status == 'canceled') color = 'w3-blue'
+        else if (row.status == 'confirmed') color = 'w3-green'
         
         paylogs = row.payment_status ? '<button title="Logs Pagamentos/Reembolsos" class="w3-btn w3-blue w3-border" onclick="getStripeLogs('+row.id+')"><i class="fa fa-cogs"></i></button>' : '';
 
-        o_status = '<button id="'+row.id+'" style="padding:8px 4px!important" class="'+color+' w3-btn w3-border w3-left" onclick="modalBookingSetStatus('+row.id+')">#'+row.id+' '+data.substring(0, 3)+'</button>' 
+        o_status = '<button id="'+row.id+'" title="Estado da Reserva" style="padding:8px 4px!important" class="'+color+' w3-btn w3-border" onclick="modalBookingSetStatus('+row.id+')">#'+row.id+' '+data.substring(0, 3)+'</button>' 
 
-       payment = !row.payment_status ? '<form action="{{ path('payment_index_stripe') }}" title="Pagamento" target="_blank" method="post" class="w3-right" style="width:50px"><input type="hidden" name="id" value='+row.id+'><button class="w3-btn w3-border"><i class="fa fa-cc-stripe"></i></button></form>' : ''
+       payment = !row.payment_status ? ' <button title="Pagamento" onclick="setPayment('+row.id+')" class="w3-btn w3-border"><i class="fa fa-cc-stripe"></i></button>' : ''
 
-       refund =  row.payment_status ? '<button onclick="modalRefund('+row.id+')" class="w3-btn w3-border w3-orange"><i class="fa fa-reply"></i></button>'  : ''
+       refund =  row.payment_status ? '<button title="Reembolso" onclick="modalRefund('+row.id+')" class="w3-btn w3-border w3-orange"><i class="fa fa-reply"></i></button>'  : ''
 
-        wp = row.wp ? '<button title="Mudar estado reserva" class="w3-btn w3-border w3-indigo w3-right" style="margin-left:4px" onclick="modalToCardData('+row.id+',\''+row.total+'\')"><i class="far fa-credit-card"></i></button>'
+        wp = row.wp ? '<button title="Ver Dados Cartão Cliente" class="w3-btn w3-border w3-indigo" onclick="modalToCardData('+row.id+',\''+row.total+'\')"><i class="far fa-credit-card"></i></button>'
       : ''
 
-        return '<div class="w3-small" style="">'+paylogs+' '+payment+''+refund+''+wp+''+o_status+'</div>'
+        return '<div class="w3-small" style="display:flex">'+o_status+''+paylogs+''+payment+''+refund+''+wp+'</div>'
       }},
       { data: "tour"},
       { data: "date"},
@@ -397,7 +389,7 @@ function getCardData(){
       { data: "baby"},
       { data: "deposit"},
       { data: "total"},
-      { data: "payment_status"},
+      { data: "payment_status_txt"},
       { data: "notes"},
       { data: "username"},
       { data: "email"},
@@ -500,7 +492,10 @@ function getCardData(){
             $( api.column( k ).footer() ).html(pageTotal+' ('+total+')')
           }
         },
-    "destroy": true,
+      destroy: true,
+      rowCallback: function( row, data, index ) {  
+      $(row).addClass(data.row_color)
+    },
     responsive: false
   })
   .on( 'error.dt', function ( e, settings, techNote, message ) {
@@ -518,10 +513,7 @@ function getCardData(){
   }, 750)
 }
 
-
-
 function getStripeLogs(id){
-
   $('.w3-overlay').show()
   setTimeout(function(){
     $.ajax({  
@@ -529,19 +521,16 @@ function getStripeLogs(id){
       type: "POST",
       data:'id='+id,
       success: function(data){
-
         console.log(data)
-
         $('.w3-overlay').hide()
-        if(data.status == 1){
-          $('#modal-logs').show()                
-          $('#logs').html(JSON.stringify(data))
+        if(data.status == 0){
+          $('#info-client').show()                
+          $('#info-client-head').removeClass('w3-green w3-red w3-amber').addClass('w3-blue').html('<span onclick="$(\'#info-client\').hide()" class="w3-button w3-display-topright w3-large"><i class="fa fa-times"></i></span><h1><i class="fa fa-info-circle"></i> Verifique</h1>')
+          $('#client-txt').addClass('w3-center').html(data.message)     
         }
-
         else{
-          $('#set-booking').html(data)
-          $('#booking-id').text(bookingId)
-          $('#modal-booking-set-status').show()
+          $('#logs').html(data)
+          $('#modal-logs').show()
         }
       },
       error:function(data){
@@ -552,6 +541,34 @@ function getStripeLogs(id){
   }, 500)
 }
 
+
+function setPayment(id){
+  $('.w3-overlay').show()
+  setTimeout(function(){
+    $.ajax({  
+      url:'{{ path('payment_index_stripe') }}',
+      type: "POST",
+      data:'id='+id+'&index='+index,
+      success: function(data){
+        console.log(data)
+        $('.w3-overlay').hide()
+        if(data.status == 0){
+          $('#info-client').show()                
+          $('#info-client-head').removeClass('w3-green w3-red w3-amber').addClass('w3-blue').html('<span onclick="$(\'#info-client\').hide()" class="w3-button w3-display-topright w3-large"><i class="fa fa-times"></i></span><h1><i class="fa fa-info-circle"></i> Verifique</h1>')
+          $('#client-txt').addClass('w3-center').html(data.message)        
+        }
+        else{
+          $('#form-container').html('<form action="{{ path('set_payment') }}" id="set-payment" target="_blank" method="post"><input type="hidden" name="id" value='+id+'></form>')
+          $('#set-payment').trigger('submit')
+        }
+      },
+      error:function(data){
+        $('.w3-overlay').hide()
+        $('#modal-error').show()
+      }
+    })
+  }, 500)
+}
 
 
 
