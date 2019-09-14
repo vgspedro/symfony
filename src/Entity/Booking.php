@@ -91,7 +91,7 @@ class Booking
      * @Assert\Choice({"incomplete", "canceled", "cleared", "completed", "denied", "failed", "held", "paid", "placed", "processing", "refunded", "refused", "removed", "returned", "reversed", "unclaimed", "approved", "canceled by user", "pending", "succeeded", "partial_refund", "uncaptured"})
      * @ORM\Column(type="string", name="payment_status", columnDefinition="ENUM('incomplete', 'canceled', 'cleared', 'completed', 'denied', 'failed', 'held', 'paid', 'placed', 'processing', 'refunded', 'refused', 'removed', 'returned', 'reversed', 'unclaimed', 'approved', 'canceled by user', 'pending', 'succeeded', 'partial_refund', 'uncaptured')" )
      */
-    private $paymentStatus = self::STATUS_PENDING;
+    private $paymentStatus = null;
 
     /** @ORM\Column(type="money", name="amount", options={"unsigned"=true}) */
     private $amount;

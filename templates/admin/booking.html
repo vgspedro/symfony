@@ -368,9 +368,11 @@ function searchValue(){
         else if (row.status == 'canceled') color = 'w3-blue'
         else if (row.status == 'confirmed') color = 'w3-green'
         
-        paylogs = row.payment_status ? '<button title="Logs Pagamentos/Reembolsos" class="w3-btn w3-blue w3-border" onclick="getStripeLogs('+row.id+')"><i class="fa fa-cogs"></i></button>' : '';
 
-        o_status = '<button id="'+row.id+'" title="Estado da Reserva" style="padding:8px 4px!important" class="'+color+' w3-btn w3-border" onclick="modalBookingSetStatus('+row.id+')">#'+row.id+' '+data.substring(0, 3)+'</button>' 
+        o_status = '<button id="'+row.id+'" title="Estado da Reserva" style="padding:8px 4px!important; margin-right:4px" class="'+color+' w3-btn w3-border" onclick="modalBookingSetStatus('+row.id+')">#'+row.id+' '+data.substring(0, 3)+'</button>' 
+
+        paylogs = row.payment_status ? '<button style="margin-right:4px" title="Logs Pagamentos/Reembolsos" class="w3-btn w3-blue w3-border" onclick="getStripeLogs('+row.id+')"><i class="fa fa-cogs"></i></button>' : '';
+
 
        payment = !row.payment_status ? ' <button title="Pagamento" onclick="setPayment('+row.id+')" class="w3-btn w3-border"><i class="fa fa-cc-stripe"></i></button>' : ''
 

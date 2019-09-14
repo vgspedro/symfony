@@ -42,10 +42,10 @@ table.dataTable thead > tr > th {padding-left: 8px!important}
       <th class="w3-center">Horas</th>    
       <th class="w3-center">Activo</th>
       <th class="w3-center">Destaque</th>
+      <th class="w3-center">Pagamento</th>
       <th class="w3-center">Depósito</th>
       <th class="w3-center">Lotação</th>
       <th class="w3-center">Duração</th>
-      <th class="w3-center">Gart.Pag.</th>
       <th class="w3-center">Gart.Pag.PT</th>
       <th class="w3-center">Gart.Pag.EN</th>
       </tr>
@@ -98,9 +98,6 @@ table.dataTable thead > tr > th {padding-left: 8px!important}
             <i class="w3-text-red w3-xlarge fas fa-times-circle"></i>
           {% endif %}
         </td>
-        <td class="w3-right-align">{{ category.deposit }}%</td>
-        <td class="w3-right-align">{{ category.availability }}</td>
-        <td class="w3-right-align">{{ category.duration }}</td>
         <td class="w3-center">
           {% if category.warrantyPayment == 1 %}
             <i class="w3-text-green w3-xlarge fas fa-check-circle"></i>
@@ -108,6 +105,9 @@ table.dataTable thead > tr > th {padding-left: 8px!important}
             <i class="w3-text-red w3-xlarge fas fa-times-circle"></i>
           {% endif %}
         </td>
+        <td class="w3-right-align">{{ category.deposit }}%</td>
+        <td class="w3-right-align">{{ category.availability }}</td>
+        <td class="w3-right-align">{{ category.duration }}</td>
         <td>{{ category.warrantyPaymentPt }}</td>
         <td>{{ category.warrantyPaymentEn }}</td>
       </tr>
@@ -175,7 +175,7 @@ function addAvailable(id,name){
   }, 500)
 }
 
-stored = tablecategory = [1, 4, 7, 8, 15, 16,17]
+stored = tablecategory = [1, 4, 7, 8, 16,17]
 
 function editCategory(id, name){
   $('.w3-overlay').show()
