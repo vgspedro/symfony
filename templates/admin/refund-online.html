@@ -116,12 +116,10 @@
         cache: false,
         success: function(data){
           $('.w3-overlay').hide()
-          
-          console.log(data)
-          
           if (data.status == 1){
             $('#status').removeClass().addClass(data.data.status).html(data.data.txt)
             modalConditions(0, data.message, '{{translator.success}}')
+            searchValue()
           }
           else
             modalConditions(1, data.message, '{{translator.check}}') 
