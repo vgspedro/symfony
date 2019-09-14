@@ -384,10 +384,8 @@ class AdminController extends AbstractController
                 else if ($booking->getStatus() ==='confirmed')
                     $confirmed = $confirmed+1;
                 
-
-
-
                 $client = $booking->getClient();
+                $sp = strtolower($booking->getPaymentStatus());
 
                 $seeBookings[] =
                     [
@@ -404,8 +402,8 @@ class AdminController extends AbstractController
                     'notes' => $booking->getNotes(),
                     'user_id' => $client->getId(),
                     'deposit' => $moneyFormatter->format($booking->getDepositAmount()),
-                    'payment_status' => $booking->getPaymentStatus(),
-                    'payment_status_txt' => strtoupper($translator->trans($booking->getPaymentStatus())),
+                    'payment_status' => $sp,
+                    'payment_status_txt' => strtoupper($translator->trans($sp)),
                     'username' => $client->getUsername(),
                     'address' => $client->getAddress(),
                     'email' => $client->getEmail(),

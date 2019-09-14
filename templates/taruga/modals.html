@@ -9,12 +9,14 @@
   </div>
 </div>
 
-<div id="modal-available-dates" class="w3-modal" style="z-index:9999;padding-top:12px;padding-bottom:32px">
-  <div class="w3-modal-content w3-animate-zoom" style="max-width:450px">
-    <div class="w3-container w3-blue w3-padding">
-      <span onclick="closeModalEvents()" class="w3-padding w3-button w3-display-topright">
-        <i class="w3-xlarge fa fa-times"></i>
-      </span>
+<div id="modal-available-dates" class="w3-modal" style="z-index:9999;padding-top:12px;padding-bottom:32px; background-color: rgba(255,255,255,.9)">
+  <span onclick="closeModalEvents()" class="w3-padding w3-right" style="cursor:pointer">
+    <i class="w3-xxlarge fa fa-times"></i>
+  </span>
+
+  <div class="w3-modal-content w3-animate-zoom w3-transparent">
+    <div class="w3-container w3-padding w3-text-black" style="margin-top:32px">
+
       <h2>
         <i class="fa fa-calendar"></i>
         <span> {% trans %}info.choose_date_hour{% endtrans %}</span>
@@ -29,8 +31,8 @@
           <input class="w3-input w3-padding-16 get-dates" name="date" readonly placeholder="{% trans %}info.choose_date_calendar{% endtrans %} *" type="text">
           <span class="w3-large w3-hide date required w3-text-red w3-animate-zoom">{% trans %}required{% endtrans %} </span>
         </div>
-        <div class="w3-col s12 w3-large">
-          <div style="position:relative;min-height:224px" class="w3-border w3-sand">
+        <div class="w3-col s12 w3-large" style="height:360px!important">
+          <div style="position:relative" style="height:360px!important">
             <input class="w3-input w3-border order_available" readonly type="hidden">
           </div>
         </div>
@@ -43,7 +45,7 @@
     </div>
 
     </form>
-    <div class="w3-row-padding w3-medium w3-padding-large">
+    <div class="w3-row-padding w3-medium w3-padding-large w3-xlarge">
       <span class="w3-border w3-round w3-btn w3-white" onclick="closeModalEvents()">
         <i class="fa fa-times"></i>
       </span>
