@@ -219,7 +219,21 @@ function saveModalEvents(){
     $('.client-tour-time').html(userTime);
     $('input[name=ev]').val(event);
 
+    //lets check if the category has payment required
+    //then build payment
+
+    categoryId = $('select[name=category]').val();
+
+
+
+
+
+
+
     $('input[name=wp]').val() == 'true' ? $('.wp-active').removeClass('w3-hide') : $('.wp-active').addClass('w3-hide');
+
+
+
 
     $('.set-visible').removeClass('w3-hide');
   }
@@ -236,7 +250,6 @@ function showRgpd(){
       url:'{{ path('index_rgpd') }}',
       type: "POST",
       success: function(data){  
-        //console.log(data)
         $("#myOverlay, #loader-cont").hide()
         if (data.status == 1){
           $('#modal-rgpd').show();
@@ -320,6 +333,8 @@ var tl = new Cleave('input[name=telephone]', {
     phoneRegionCode: ''
 });
 
+
+/*
 var dc = new Cleave('input[name=date_card]', {
     date: true,
     datePattern: ['m', 'Y']
@@ -346,6 +361,8 @@ var cc = new Cleave('input[name=card_nr]', {
     }
   }
 });
+*/
+
 
 var timer ='';
 

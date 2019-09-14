@@ -1,7 +1,7 @@
 <?php
 namespace App\Service;
 
-use \Eventviva\ImageResize;
+use \Gumlet\ImageResize;
 
 class ImageResizer
 {
