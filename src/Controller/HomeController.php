@@ -89,13 +89,13 @@ class HomeController extends AbstractController
                     $flag = true;
             }
         }    
-        
+    
+
         $flag == true ? 
             $cH = array(
                 'adultAmount' => $moneyFormatter->format($categoryHl->getAdultPrice()),
                 'childrenAmount'  => $moneyFormatter->format($categoryHl->getChildrenPrice()),
-                'namePt' => $categoryHl->getNamePt(),
-                'nameEn' => $categoryHl->getNameEn(),
+                'name' => $this->session->get('_locale') == 'pt_PT' ? $categoryHl->getNamePt() : $categoryHl->getNameEn(),
                 'id' => $categoryHl->getId())
                 :
                 $cH = array();
@@ -117,19 +117,16 @@ class HomeController extends AbstractController
             }
             $s = explode(":",$categories->getDuration());
             $minutes = (int)$s[0]*60 + (int)$s[1];
-            
+
             $cS[]= array(
                 'adultAmount' => $moneyFormatter->format($categories->getAdultPrice()),
                 'childrenAmount' => $moneyFormatter->format($categories->getChildrenPrice()),
-                'namePt' => $categories->getNamePt(),
-                'nameEn' => $categories->getNameEn(),
-                'descriptionPt' => $categories->getDescriptionPt(),
-                'descriptionEn' => $categories->getDescriptionEn(),
+                'name' => $this->session->get('_locale') == 'pt_PT' ?  $categories->getNamePt() : $categories->getNameEn(),
+                'description' => $this->session->get('_locale') == 'pt_PT' ? $categories->getDescriptionPt() : $categories->getDescriptionEn(),
                 'image' => $categories->getImage(),
                 'id' => $categories->getId(),
                 'warrantyPayment' => $categories->getwarrantyPayment(),
-                'warrantyPaymentPt' => $categories->getwarrantyPaymentPt(),
-                'warrantyPaymentEn' => $categories->getwarrantyPaymentEn(),
+                'warrantyPaymentTxt' => $this->session->get('_locale') == 'pt_PT' ? $categories->getwarrantyPaymentPt() :  $categories->getwarrantyPaymentEn(),
                 'duration' => $minutes,
                 'no_stock' => $flag,
             );

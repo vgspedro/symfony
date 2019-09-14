@@ -24,7 +24,7 @@
 
           <div class="w3-display-topleft w3-center w3-padding" style="background: rgba(0, 0, 0, 0.6)">
             <h2 class="bold w3-text-white w3-large" style="text-transform: uppercase;margin:0">
-              {{ app.request.locale == 'pt_PT' ? category.namePt : category.nameEn }}
+              {{ category.name}}
 
               {% for review in feedback %}
                   {% if review.id == category.id %}
@@ -38,16 +38,22 @@
             </h2>
           </div>
 
-
-          
-          <img alt=" {{ app.request.locale == 'pt_PT' ? category.namePt : category.nameEn }}" class="w3-card-4" src="/upload/category/{{ category.image }}" onerror="this.src='/upload/category/no-image.png'" style="width:100%">
+          <img alt="{{category.name}}" class="w3-card-4" src="/upload/category/{{ category.image }}" onerror="this.src='/upload/category/no-image.png'" style="width:100%">
           <div class="w3-display-bottomright w3-center" style="margin:11px 8px">
             <span class="w3-tag w3-padding-small w3-white" style="text-transform: uppercase">Aprox: {{ category.duration}} Min.</span>
 
 
           </div> 
           </div>
-            <h3 class="PT description-txt"> {{ app.request.locale == 'pt_PT' ? category.descriptionPt  : category.descriptionEn }}</h3>
+            <h3 class="description-txt"> {{ category.description }}</h3>
+
+          {% if category.warrantyPayment %}
+            <div class="w3-border-top w3-pale-blue w3-padding-small">  
+              <i class=" w3-text-blue fa fa-info-circle w3-xlarge"></i>&nbsp;
+              {{category.warrantyPaymentTxt}}
+            </div>
+          {% endif %}
+
           <div class="w3-padding-8 w3-border-top">
           {% if category.no_stock %} 
             <span class="w3-right w3-margin-right w3-large">
@@ -57,6 +63,7 @@
               </span>
             </span>
           {% else %}
+
 
             <span class="w3-btn w3-blue w3-right w3-round w3-border" style="margin-top:10px" onclick="navigation('#reservas', {{ category.id }})">
               <i class="fa fa-calendar"></i>&nbsp;

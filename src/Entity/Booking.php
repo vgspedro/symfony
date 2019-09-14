@@ -97,7 +97,7 @@ class Booking
     private $amount;
 
     /** @ORM\Column(type="money", name="deposit_amount", options={"unsigned"=true}) */
-    private $depositAmount;
+    private $depositAmount = 0;
 
     public function setAmount(Money $amount) {
         $this->amount = $amount;

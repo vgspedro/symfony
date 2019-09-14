@@ -25,7 +25,7 @@
           {% for category in categories %}
             {% if category.no_stock == 0 %}
 
-          <option value="{{category.id}}">{{ app.request.locale == 'pt_PT' ? category.namePt : category.nameEn }}
+          <option value="{{category.id}}">{{category.name}}
           
           {% endif%}
          
