@@ -19,7 +19,7 @@
           <div class="w3-col l4 m4 s0 w3-left-align w3-hide-small">
              {% if category.adultAmount> 0 %}
                 <span>{% trans %}part_tree.adult{% endtrans %}</span>&nbsp;
-                <span>{{ category.adultAmount}}€</span>
+                <span>{{ category.adultAmount}}<span class="w3-small">{{company.currency.currency}}</span></span>
                 <br>
               {% else %}
                 <span>{% trans %}part_tree.adult{% endtrans %}</span>&nbsp;
@@ -28,7 +28,7 @@
               {% endif %}
               {% if category.childrenAmount > 0 %}
                 <span>{% trans %}part_tree.children{% endtrans %}</span>&nbsp;
-                <span>{{ category.childrenAmount }}€</span>
+                <span>{{ category.childrenAmount }}<span class="w3-small">{{company.currency.currency}}</span></span>
                 <br>
               {% else %}
                 <span>{% trans %}part_tree.children{% endtrans %}</span>&nbsp;

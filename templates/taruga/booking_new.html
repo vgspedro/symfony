@@ -138,7 +138,7 @@
 
   <section class="w3-padding-64">
     {% for c in about %}
-      {{ app.request.locale ==  c.locales.name ? c.rgpdHtml|raw : false}}
+      {{ app.request.locale == c.locales.name ? c.rgpdHtml|raw : false}}
     {% endfor %}
   </section>
   {% endif %}

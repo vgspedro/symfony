@@ -18,14 +18,14 @@
     {% for ticket in tickets%}
       {% set total = total + ticket.total%}
       <label class="">{{ticket.quantity}}x {{ticket.type}}:</label> 
-      <span class="w3-right">{{(ticket.subtotal/100)|number_format(2)}}{{company.currency.currency}}</span><br>
+      <span class="w3-right">{{(ticket.subtotal/100)|number_format(2)}}<span class="w3-small">{{company.currency.currency}}</span></span><br>
     {% endfor %}
 
       <label class="">{% trans %}deposit{% endtrans %}:</label> 
       {% set deposit = category.deposit == 0 ? 100 : category.deposit*100 %}
       <span class="w3-right">{{deposit}}%</span><br>
       <label class="w3-xlarge">{% trans %}total_to_pay{% endtrans %}:</label> 
-      <span class="w3-xlarge w3-right">{{(total/100)|number_format(2)}}{{company.currency.currency}}</span>
+      <span class="w3-xlarge w3-right">{{(total/100)|number_format(2)}}<span class="w3-small">{{company.currency.currency}}</span></span>
     </div>
   </div>
 
