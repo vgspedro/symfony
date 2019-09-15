@@ -68,8 +68,14 @@ function navigation(pos,id){
 }
 
 
-function updateTourData(){
-  $('.set-visible, .wp-active').addClass('w3-hide');
+
+
+function updateTourData(id){
+  
+  //$('#get-available').trigger('reset')
+  $('.set-visible, .wp-active, .wp-btn').addClass('w3-hide');
+  $('.wp-active').empty()
+
 }
 
 
@@ -232,6 +238,9 @@ function saveModalEvents(){
           $('.wp-active').empty().addClass('w3-hide')
           $('.wp-btn').addClass('w3-hide')
           console.log(data)
+        }
+        if (data.status == 1){
+          console.log(data.data)
         }        
         else {
           $('.wp-active').html(data).removeClass('w3-hide')
@@ -278,13 +287,19 @@ function showRgpd(){
   }, 500)
 }
 
+
 function checkOut(){
   $('.required').addClass('w3-hide');
   $('.debugger').empty()
   $("#myOverlay, #loader-cont").show();
 
   //console.log($('#get-available').serialize())
-
+  if($('#card-button').length){
+    console.log('entrou')
+    buyNow()
+  }
+  else{
+  
   setTimeout(function(){
     $.ajax({ 
       url: '{{ path('set_booking') }}',
@@ -307,8 +322,8 @@ function checkOut(){
           $('#modal-success').show();
           $('.set-order-id').html(data.data);
           $('#get-available').trigger('reset');
-          $('.set-visible, .wp-active').addClass('w3-hide');
-          //sessionStorage.clear();
+          $('.set-visible, .wp-active, .wp-btn').addClass('w3-hide');
+          $('.wp-active').empty();
           $('.icon-unknown').removeClass('w3-hide');
         }
 
@@ -332,6 +347,8 @@ function checkOut(){
     })
   }, 500)
 }
+}
+
 
 typeof(Storage) !== "undefined" ? false : setTimeout(function(){$('#modal-no-storage').show()},1500);
 
@@ -341,37 +358,6 @@ var tl = new Cleave('input[name=telephone]', {
     phone: true,
     phoneRegionCode: ''
 });
-
-
-/*
-var dc = new Cleave('input[name=date_card]', {
-    date: true,
-    datePattern: ['m', 'Y']
-});
-
-var cvv = new Cleave('input[name=cvv]', {
-    numeral: true,
-    numeralThousandsGroupStyle: 'thousand'
-});
-
-
-var cc = new Cleave('input[name=card_nr]', {
-  creditCard: true,
-  delimiter: '-',
-  onCreditCardTypeChanged: function (type) {
-    type = type.split('15')[0]
-    if(type == "unknown"){
-      $('.icon').addClass('w3-hide').removeClass('w3-animate-zoom')
-      $('.icon-unknown').removeClass('w3-hide')
-    }
-    else{
-      $('.icon').addClass('w3-hide').removeClass('w3-animate-zoom')
-      $('.icon-' + type).removeClass('w3-hide').addClass('w3-animate-zoom')
-    }
-  }
-});
-*/
-
 
 var timer ='';
 

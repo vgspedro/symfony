@@ -22,6 +22,7 @@ use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 use Doctrine\DBAL\DBALException;
 use App\Service\MoneyFormatter;
 use Money\Money;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use App\Service\Stripe;
 
 class CategoryController extends AbstractController
@@ -35,7 +36,7 @@ class CategoryController extends AbstractController
     }
     
 
-    public function categoryPayment(Request $request, Stripe $stripe)
+    public function categoryPayment(Request $request, Stripe $stripe,TranslatorInterface $translator)
     {
 
         $em = $this->getDoctrine()->getManager();
@@ -52,29 +53,49 @@ class CategoryController extends AbstractController
 
             ]);
 
-        $company = $em->getRepository(Company::class)->find(1);
-        
-        /*
-        if(!$category->get)
+        if(!$category->getWarrantyPayment())
             return new JsonResponse([
-                'status' => 0,
-                'message' => 'fail',
-                'data' => 'Some other reasons ??'
-
+                'status' => 1,
+                'message' => 'success',
+                'data' => 'No payment Required'
             ]);
-        */        
 
-        $request->request->get('adult');
-        $request->request->get('children');
-        $request->request->get('baby');
+        $company = $em->getRepository(Company::class)->find(1);
+    
+        $tickets = [];
+
+        if($request->request->get('adult') > 0)
+            $tickets[] = $this->calculatePrice($translator->trans('adults'), $category->getDeposit(), $category->getAdultPrice()->getAmount(), $request->request->get('adult'));
+        
+        if($request->request->get('children') > 0)
+            $this->calculatePrice($translator->trans('childrens'), $category->getDeposit(), $category->getChildrenPrice()->getAmount(), $request->request->get('children'));
+        
+        if($request->request->get('baby') > 0)
+            $tickets[] = ['type' => $translator->trans('babies'), 'quantity' => $request->request->get('baby'), 'subtotal' => 0, 'total' => 0 ];
 
         return $this->render('taruga/category-payment.html',[
-            'amount' => [],
+            'tickets' => $tickets,
             'category' => $category,
             'company' => $company,
             'payment_intent' => $stripe->createUpdatePaymentIntent($company, $request, null)
             ]);
     }
+
+
+    private function calculatePrice($type, $deposit, $price, $quantity){
+
+        $subTotal = $price * $quantity;
+        
+        $total = $deposit != 0 ? 
+            (int) ($subTotal * (float)$deposit)
+            :
+            $subtotal;
+        
+        return ['type' => $type,'quantity' => $quantity, 'subtotal' => $subTotal, 'total' => $total];
+    }
+
+
+
 
 
     public function categoryNew(Request $request)
