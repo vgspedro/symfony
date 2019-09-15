@@ -60,7 +60,7 @@ return array(
     'confirmed' => 'Confirmada',
     'booking' => 'Reserva',
     
-
+    'deposit' => 'Depósito', 
     'payment_txt' => 'Estado do pagamento:',
     'check' => 'Verifique',
     'error' => 'Erro',

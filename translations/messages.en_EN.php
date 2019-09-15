@@ -45,6 +45,7 @@ return array(
     'confirmed' => 'Confirmed',
     'booking' => 'Booking',
 
+    'deposit' => 'Deposit', 
     'payment_txt' => 'Payment status:',
     'check' => 'Check',
     'error' => 'Error',

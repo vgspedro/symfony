@@ -15,10 +15,11 @@ class Stripe
     *@param Company, Request Obj
     *@return PaymentIntent Obj
     **/
-    public function createUpdatePaymentIntent(Company $company, Request $request, Booking $booking){
+    public function createUpdatePaymentIntent(Company $company, Request $request, Booking $booking = null){
 
-        $product = '#'.$booking->getId().'-'.$booking->getAvailable()->getCategory()->getNamePt();
-
+        if($booking)
+            $product = '#'.$booking->getId().'-'.$booking->getAvailable()->getCategory()->getNamePt();
+        
         $stripe = new \Stripe\Stripe();
         $intent = new \Stripe\PaymentIntent();
         $stripe->setApiKey($company->getStripeSK());
@@ -37,9 +38,9 @@ class Stripe
             }
             else{
                 $p_i = $intent->create([
-                    'amount' => $booking->getAmount()->getAmount(),
+                    'amount' => 50,//$booking->getAmount()->getAmount(),
                     'currency' => $company->getCurrency()->getCurrency(),
-                    'description' => $product,
+                    'description' => 'try_to_buy',
                     'payment_method_types' => ['card']
                 ]);
             }

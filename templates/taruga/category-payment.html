@@ -1,0 +1,192 @@
+<script src="https://js.stripe.com/v3/"></script>
+
+<style>
+.StripeElement{box-sizing: border-box;height: 45px;padding: 11px 12px;border: 1px solid transparent;background-color: white;box-shadow: 0 1px 3px 0 #e6ebf1;-webkit-transition: box-shadow 150ms ease;transition: box-shadow 150ms ease; border-bottom: 3px solid #3f51b5}
+.StripeElement--focus{box-shadow: 0 1px 3px 0 #cfd7df}
+.StripeElement--invalid{border-color: #fa755a}
+.StripeElement--webkit-autofill{background-color: #fefde5 !important}
+</style>
+
+
+  <div class="w3-col l12">
+    <div class="w3-col l4 m1 w3-hide-small">&nbsp;</div>
+    <div class="w3-col l4 m10 s12 w3-medium">
+
+      <label class="">{% trans %}adults{% endtrans %}:</label> 
+      <span class="w3-right">{{(category.adultPrice.amount/100)|number_format(2)}}{{company.currency.currency}}</span><br>
+
+      <label class="">{% trans %}childrens{% endtrans %}:</label>
+      <span class="w3-right">{{(category.childrenPrice.amount/100)|number_format(2)}}{{company.currency.currency}}</span><br>
+
+      <label class="">{% trans %}babies{% endtrans %}:</label> 
+      <span class="w3-right">0.00{{company.currency.currency}}</span><br>
+
+      <label class="">{% trans %}deposit{% endtrans %}:</label> 
+      {% set deposit = category.deposit == 0 ? 100 : category.deposit*100 %}
+      <span class="w3-right">{{deposit}}%</span><br>
+      <label class="">{% trans %}amount{% endtrans %}:</label> 
+      <span class="w3-right">{{company.currency.currency}}</span>
+    </div>
+  </div>
+
+  <div class="paylog w3-col l12">
+    <form id="payment-form">
+      <label>{% trans %}insert_card_n{% endtrans %}:</label>
+      <div id="card-element" class="w3-input" style="padding: 10px 8px"></div>
+      <div id="card-errors" class="w3-text-red w3-small" role="alert"></div>
+      <div class="set-token"></div>
+    </form>
+  </div>
+    <!--div class="paylog w3-col s12 w3-right w3-margin-top">
+      <span class="w3-button w3-block w3-green w3-border w3-right w3-margin-bottom" id="card-button" data-secret="{{payment_intent.data.client_secret}}" onclick="buyNow()">
+      <i class="fa fa-check"></i> {% trans %}pay_now{% endtrans %}:
+        </span>
+    </div-->
+
+
+<script>
+
+  var key = '{{company.stripePK}}'
+  var stripe = ''
+  var elements = ''
+  var style = ''
+  var card = ''
+  var displayError = ''
+
+  function buildStripe(k){
+    //alert('build')
+    if (k){
+      stripe = Stripe(k)
+      elements = stripe.elements()
+      style = {
+        base: {
+          color: '#3f51b5',
+          fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
+          fontSmoothing: 'antialiased',
+          fontWeight: 600,
+          fontSize: '24px',
+          '::placeholder': {
+            color: '#C8BFE7'
+          }
+        },
+        invalid: {
+          color: '#fa755a',
+          iconColor: '#fa755a'
+        }
+      }
+      $('#card-errors').empty()
+      card = elements.create('card', {style: style})
+      card.mount('#card-element');
+      card.addEventListener('change', function(event) {
+        displayError = document.getElementById('card-errors')
+        displayError.textContent = event.error ? event.error.message: ''
+      })
+    }
+  }
+
+  function handleCard(){
+    stripe.handleCardPayment($('#card-button').data('secret'), card,{
+      payment_method_data: {
+        billing_details: {
+          name: $('input[name=name]').val(),
+          email: $('input[name=email]').val(),
+          phone: $('input[name=telephone]').val()
+        }
+      },
+      receipt_email: $('input[name=email]').val()
+    }
+    ).then(function(result) {
+      if (result.error) {
+        $('.w3-overlay').hide()
+        modalConditions(1, result.error.message, '{% trans %}check{% endtrans %}') 
+      } 
+      else
+        getUrlReceipt(result.paymentIntent.id)   
+    })
+  }
+
+  //pi_id = payment_intent_id
+  function getUrlReceipt(pi_id){
+      $.ajax({  
+      url :'{{ path('online_get_charge')}}',
+      type: "POST",
+      cache: false,
+      data: 'pi_id='+pi_id,
+      success: function(data){
+        $('.w3-overlay').hide()
+        if (data.status == 1){
+          info = data.data.data.data[0]
+          console.log(data)
+          $('#payment-form').trigger('reset')
+          modalConditions (0, data.message.text+' '+data.message.status+'<br><div class="w3-center w3-large"><a class="w3-button w3-border w3-blue w3-round" target="_blank" href='+info.receipt_url+'> {% trans %}receipt{% endtrans %}</a></div>', '{% trans %}success{% endtrans %}')
+          $('.bps').addClass(info.status).text(data.message.status)
+          $('.paylog').remove()
+        }
+        else{
+          modalConditions(1, data.message, '{% trans %}check{% endtrans %}') 
+        }
+      },
+      error:function(data){
+        $('.w3-overlay').hide()
+        modalConditions(2, '{% trans %}wifi_error{% endtrans %}', '{% trans %}error{% endtrans %}')
+      }
+    })
+  }
+
+  function buyNow(){
+    $('#card-errors').empty()
+    $('.w3-overlay').show()
+    setTimeout(function(){
+      stripe.createToken(card).then(function(result) {
+        if (result.error) {
+          var errorElement = document.getElementById('card-errors')
+          errorElement.textContent = result.error.message
+          $('.w3-overlay').hide()
+          return
+        }
+        $.ajax({
+          url :'{{ path('online_charge_credit_card')}}',
+          type: "POST",
+          data: $('#payment-form').serialize()+'&secret='+$('#card-button').data('secret'),
+          cache: false,
+          success: function(data){
+            if(data.data != 'succeeded'){
+              handleCard()
+            return
+            }
+            else if (data.status == 1){
+              $('.w3-overlay').hide()
+              //buildStripe(key)
+              $('#payment-form').trigger('reset')
+              modalConditions(0, data.message, '{% trans %}success{% endtrans %}') 
+            }
+            else{
+              $('.w3-overlay').hide()
+              modalConditions(1, data.message, '{% trans %}check{% endtrans %}')  
+            }
+          },
+          error:function(data){
+            modalConditions(2, '{% trans %}wifi_error{% endtrans %}', '{% trans %}error{% endtrans %}')
+          }
+        })
+      });
+    }, 500)
+  }
+
+  function modalConditions(i, text, head){
+    a=[]
+    a.push(['w3-pale-yellow w3-border-amber w3-pale-green w3-border-green w3-pale-red w3-border-red', 'w3-pale-green w3-border-green', 'fa-check'])
+    a.push(['w3-pale-yellow w3-border-amber w3-pale-green w3-border-green w3-pale-red w3-border-red', 'w3-pale-yellow w3-border-amber', 'fa-info-circle'])
+    a.push(['w3-pale-yellow w3-border-amber w3-pale-green w3-border-green w3-pale-red w3-border-red', 'w3-pale-red w3-border-red', 'fa-exclamation-triangle'])
+          
+    $('#modal-info').show()
+    $('.modal-head').removeClass(a[i][0]).addClass(a[i][1])
+            $('.icon').html('<i class="fa '+a[i][2]+'"></i>')
+            $('.modal-head-text').text(head)  
+            $('.modal-text').html(text)
+        }
+
+  setTimeout(function(){buildStripe('{{company.stripePK}}') }, 500)
+
+</script>
+

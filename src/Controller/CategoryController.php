@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Entity\Category;
+use App\Entity\Company;
 use App\Entity\Booking;
 use App\Entity\BlockDates;
 use App\Entity\Event;
@@ -20,7 +21,8 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 use Doctrine\DBAL\DBALException;
 use App\Service\MoneyFormatter;
-
+use Money\Money;
+use App\Service\Stripe;
 
 class CategoryController extends AbstractController
 {
@@ -32,6 +34,49 @@ class CategoryController extends AbstractController
         $this->categories_images_directory = $categories_images_directory;
     }
     
+
+    public function categoryPayment(Request $request, Stripe $stripe)
+    {
+
+        $em = $this->getDoctrine()->getManager();
+        
+        $id = $request->request->get('category');
+
+        $category = $em->getRepository(Category::class)->find($id);
+
+        if(!$category)
+            return new JsonResponse([
+                'status' => 0,
+                'message' => 'fail',
+                'data' => 'Product not found??'
+
+            ]);
+
+        $company = $em->getRepository(Company::class)->find(1);
+        
+        /*
+        if(!$category->get)
+            return new JsonResponse([
+                'status' => 0,
+                'message' => 'fail',
+                'data' => 'Some other reasons ??'
+
+            ]);
+        */        
+
+        $request->request->get('adult');
+        $request->request->get('children');
+        $request->request->get('baby');
+
+        return $this->render('taruga/category-payment.html',[
+            'amount' => [],
+            'category' => $category,
+            'company' => $company,
+            'payment_intent' => $stripe->createUpdatePaymentIntent($company, $request, null)
+            ]);
+    }
+
+
     public function categoryNew(Request $request)
     {
         $category = new Category();

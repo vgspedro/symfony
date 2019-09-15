@@ -171,7 +171,6 @@ $('.order_available').on('dp.change', function(e){
   $('.get-dates').val(moment(e.date).format("DD/MM/YYYY"));
   d = new RegExp(moment(e.date).format("YYYY-MM-DD"), 'g');
   
-  //for (i=0 ; i<stockDate.length; i++){
     for (var k in stockDate){
       r = stockDate[k].datetime.match(d);
     if(r){
@@ -219,21 +218,31 @@ function saveModalEvents(){
     $('.client-tour-time').html(userTime);
     $('input[name=ev]').val(event);
 
+
+
     //lets check if the category has payment required
     //then build payment
-
-    categoryId = $('select[name=category]').val();
-
-
-
-
-
-
-
-    $('input[name=wp]').val() == 'true' ? $('.wp-active').removeClass('w3-hide') : $('.wp-active').addClass('w3-hide');
-
-
-
+    $.ajax({ 
+      url:'{{ path('category_payment') }}',
+      type: "POST",
+      data: $('#get-available').serialize(),
+      success: function(data){  
+        $("#myOverlay, #loader-cont").hide()
+        if (data.status == 0){
+          $('.wp-active').empty().addClass('w3-hide')
+          $('.wp-btn').addClass('w3-hide')
+          console.log(data)
+        }        
+        else {
+          $('.wp-active').html(data).removeClass('w3-hide')
+          $('.wp-btn').removeClass('w3-hide')
+        }
+      },
+      error:function(data){
+        $("#myOverlay, #loader-cont").hide();
+        $('#modal-error').show();
+      }
+    })
 
     $('.set-visible').removeClass('w3-hide');
   }

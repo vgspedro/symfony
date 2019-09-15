@@ -135,6 +135,12 @@ admin_category_order:
     controller: App\Controller\CategoryController::categoryOrder
     #condition: 'request.isXmlHttpRequest()'
 
+category_payment:
+    path: /category-payment
+    controller: App\Controller\CategoryController::categoryPayment
+    methods: [POST]
+    condition: 'request.isXmlHttpRequest()'
+
 ##
 # BOOKINGS ADMIN EVENTS
 ##
