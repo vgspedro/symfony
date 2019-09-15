@@ -27,17 +27,17 @@
     
     <div class="w3-container w3-padding">
       <div class="w3-row w3-padding-4">
-        <div class="w3-col s12 w3-xlarge w3-margin-bottom" style="margin-top:-32px">
-          <input class="w3-input w3-padding-16 get-dates" name="date" readonly placeholder="{% trans %}info.choose_date_calendar{% endtrans %} *" type="text">
+        <div class="w3-col s12 w3-xlarge w3-margin-bottom" style="margin-top:-28px">
+          <input class="w3-input get-dates" style="padding:0px 8px" name="date" readonly placeholder="{% trans %}info.choose_date_calendar{% endtrans %} *" type="text">
           <span class="w3-large w3-hide date required w3-text-red w3-animate-zoom">{% trans %}required{% endtrans %} </span>
         </div>
-        <div class="w3-col s12 w3-large">
-          <div style="position:relative;height:372px">
-            <input class="w3-input w3-border order_available" readonly type="hidden">
+        <div class="w3-col s12 w3-large w3-block">
+          <div style="position:relative;height:370px;zoom:95%">
+            <input class="order_available" readonly type="hidden">
           </div>
         </div>
         <div class="w3-col s12 w3-xlarge">
-          <select class="w3-input w3-padding-16 set-hours" name="time" onchange="changeEventGetHour(this.value)">
+          <select class="w3-input set-hours" name="time" onchange="changeEventGetHour(this.value)">
           </select>
           <span class="w3-large w3-hide hour required w3-text-red w3-animate-zoom">{% trans %}required{% endtrans %} </span>
         </div>
