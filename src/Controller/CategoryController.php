@@ -89,7 +89,7 @@ class CategoryController extends AbstractController
         $total = $deposit != 0 ? 
             (int) ($subTotal * (float)$deposit)
             :
-            $subtotal;
+            $subTotal;
         
         return ['type' => $type,'quantity' => $quantity, 'subtotal' => $subTotal, 'total' => $total];
     }
