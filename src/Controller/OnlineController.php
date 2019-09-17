@@ -101,6 +101,7 @@ class OnlineController extends AbstractController
     }
 
 
+
     /**
     *Create Charge
     *@param $request
@@ -131,6 +132,16 @@ class OnlineController extends AbstractController
                 'data' => null]);
     }
 
+
+
+
+
+
+
+
+
+
+
     /**
     *Get the receipt url to show on email
     *@param $request
@@ -149,6 +160,12 @@ class OnlineController extends AbstractController
         if($ch['status'] == 1){
 
             $b_id = explode('-', $ch['data']->data[0]->description);
+
+
+
+dump($b_id);
+
+exit;
 
             $booking = $em->getRepository(Booking::class)->find(str_replace('#','',$b_id[0]));
             $payLogs = new StripePaymentLogs();

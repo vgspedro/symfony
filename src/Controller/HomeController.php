@@ -29,6 +29,7 @@ use App\Entity\TermsConditions;
 use App\Service\MoneyFormatter;
 use App\Service\RequestInfo;
 use App\Service\FieldsValidator;
+use App\Service\Stripe;
 
 use Money\Money;
 
@@ -67,7 +68,6 @@ class HomeController extends AbstractController
         $company = $em->getRepository(Company::class)->find(1);
         $about = $em->getRepository(AboutUs::class)->findAll();
         $feedback = $em->getRepository(Feedback::class)->getCategoryScore();
-        //must
         $category = $em->getRepository(Category::class)->findBy(['isActive' => 1],['orderBy' => 'ASC']);
         
         $categoryHl = $em->getRepository(Category::class)->findOneBy(['highlight' => 1],['orderBy' => 'ASC']);
@@ -76,7 +76,7 @@ class HomeController extends AbstractController
         $now = new \DateTime('tomorrow');
 
         $flag = false;
-        $ord = array();
+        $ord = [];
 
         if($categoryHl->getAvailable()){
             foreach ($categoryHl->getAvailable() as $available)
@@ -92,18 +92,18 @@ class HomeController extends AbstractController
     
 
         $flag == true ? 
-            $cH = array(
+            $cH = [
                 'adultAmount' => $moneyFormatter->format($categoryHl->getAdultPrice()),
                 'childrenAmount'  => $moneyFormatter->format($categoryHl->getChildrenPrice()),
                 'name' => $this->session->get('_locale') == 'pt_PT' ? $categoryHl->getNamePt() : $categoryHl->getNameEn(),
-                'id' => $categoryHl->getId())
+                'id' => $categoryHl->getId()]
                 :
-                $cH = array();
+                $cH = [];
         
 
         foreach ($category as $categories){
             $flag = true;
-            $ord = array();
+            $ord = [];
             if($categories->getAvailable()){
                 foreach ($categories->getAvailable() as $available)
                    array_push($ord, $available->getDatetimeStart()->format('U'));
@@ -112,13 +112,14 @@ class HomeController extends AbstractController
                 
                 for($t = 0; $t<count($ord); $t++) {
                     if($ord[$t] >= $now->format('U'))
-                    $flag = false;
+                        $flag = false;
                 }
             }
+            
             $s = explode(":",$categories->getDuration());
             $minutes = (int)$s[0]*60 + (int)$s[1];
 
-            $cS[]= array(
+            $cS[]= [
                 'adultAmount' => $moneyFormatter->format($categories->getAdultPrice()),
                 'childrenAmount' => $moneyFormatter->format($categories->getChildrenPrice()),
                 'name' => $this->session->get('_locale') == 'pt_PT' ?  $categories->getNamePt() : $categories->getNameEn(),
@@ -129,11 +130,11 @@ class HomeController extends AbstractController
                 'warrantyPaymentTxt' => $this->session->get('_locale') == 'pt_PT' ? $categories->getwarrantyPaymentPt() :  $categories->getwarrantyPaymentEn(),
                 'duration' => $minutes,
                 'no_stock' => $flag,
-            );
+            ];
         }
 
         return $this->render('base.html.twig', 
-            array(
+            [
                 'warning' => $warning,
                 'categories' => $cS,
                 'category' => $cH,
@@ -145,8 +146,7 @@ class HomeController extends AbstractController
                 'host' => $reqInfo->getHost($request),
                 'page' => 'index',
                 'feedback' => $feedback
-                )
-            );
+            ]);
     }
 
     public function info(Request $request, MoneyFormatter $moneyFormatter, RequestInfo $reqInfo)
@@ -178,9 +178,9 @@ class HomeController extends AbstractController
             );
     }
 
-    public function setBooking(Request $request, MoneyFormatter $moneyFormatter, \Swift_Mailer $mailer, RequestInfo $reqInfo, FieldsValidator $fieldsValidator, TranslatorInterface $translator){
+    public function setBooking(Request $request, MoneyFormatter $moneyFormatter, RequestInfo $reqInfo, FieldsValidator $fieldsValidator, TranslatorInterface $translator, Stripe $stripe){
 
-        $err = array();
+        $err = [];
 
         $em = $this->getDoctrine()->getManager();
 
@@ -195,14 +195,13 @@ class HomeController extends AbstractController
 
         if($this->getExpirationTime($request) == 1){ 
             $err[] = 'SESSION_END';
-            $response = array(
+            return new JsonResponse([
                 'status' => 3,
                 'message' => 'session end',
                 'data' => $err,
                 'mail' => null,
                 'expiration' => 1
-            );
-            return new JsonResponse($response);
+            ]);
         }
         
         //IF FIELDS IS NULL PUT IN ARRAY AND SEND BACK TO USER
@@ -211,174 +210,186 @@ class HomeController extends AbstractController
         $request->request->get('address') ? $address = $request->request->get('address') : $err[] = 'ADDRESS';
         $request->request->get('telephone') ? $telephone = $request->request->get('telephone') : $err[] = 'TELEPHONE';
         $request->request->get('check_rgpd') && $request->request->get('check_rgpd') !== null  ? $rgpd = true : $err[] = 'RGPD';
-
         $request->request->get('ev') ? $event = $request->request->get('ev') : $err[] = 'EVENT';
-        
         $request->request->get('adult') ? $adult = $request->request->get('adult') : $err[] = 'ADULT';
-
         $children = $request->request->get('children') ? $request->request->get('children') : '0';
 
         $baby = $request->request->get('baby') ? (int)$request->request->get('baby') : '0';
 
         $wp = $request->request->get('wp') == 'true' ? $request->request->get('wp') : false;
         
-        if($wp){
-            $request->request->get('cvv') ? $cvv = $request->request->get('cvv') : $err[] = 'CVV';
-            $request->request->get('date_card') ? $date_card = $request->request->get('date_card') : $err[] = 'CREDIT_CARD_DATE';
-            $request->request->get('card_nr') ? $card_nr = $request->request->get('card_nr') : $err[] = 'CREDIT_CARD_NR';
-        }
+        //payment is required
+        if($wp)
+            $request->request->get('secret') ? $secret = $request->request->get('secret') : $err[] = 'secret';
 
-        if($err){
-            $response = array(
+        if($err)
+             return new JsonResponse([
                 'status' => 0,
                 'message' => 'fields empty',
                 'data' => $err,
                 'mail' => null,
                 'expiration' => 0
-            );
-            return new JsonResponse($response);
-        }
-        if($wp){
-            $fieldsValidator->noFakeCcard($date_card,$cvv, $card_nr) ? $err[] =  $fieldsValidator->noFakeCcard($date_card,$cvv, $card_nr) : false;
-        }
+            ]);
+
         //NO FAKE DATA
         $fieldsValidator->noFakeEmails($email) == 1 ? $err[] = 'EMAIL_INVALID' : false;
         $fieldsValidator->noFakeTelephone($telephone) == 1 ? $err[] = 'TELEPHONE_INVALID' : false;
         $fieldsValidator->noFakeName($name) == 1 ? $err[] = 'NAME_INVALID' : false;
-        if($err){
-            $response = array(
+        
+        if($err)
+             return new JsonResponse([
                 'status' => 2,
                 'message' => 'invalid fields',
                 'data' => $err,
                 'mail' => null,
                 'expiration' => 0
-            );
-            return new JsonResponse($response);
-        }
+            ]);
+
         else{
 
-        $em->getConnection()->beginTransaction();
+            $em->getConnection()->beginTransaction();
 
-        $available = $em->getRepository(Available::class)->find($event);
+            $available = $em->getRepository(Available::class)->find($event);
 
-        if(!$available){
-        //    throw new Exception("Error Processing Request Available", 1);
-            $err[] = 'EVENT_NOT_FOUND';
-            $response = array(
-                'status' => 0,
-                'message' => 'event not found',
-                'data' => $err,
-                'mail' => null,
-                'expiration' => 0
-            );
-            return new JsonResponse($response);
-        }
+            if(!$available){
+                //throw new Exception("Error Processing Request Available", 1);
+                $err[] = 'EVENT_NOT_FOUND';
+                $response = [
+                    'status' => 0,
+                    'message' => 'event not found',
+                    'data' => $err,
+                    'mail' => null,
+                    'expiration' => 0
+                ];
+                return new JsonResponse($response);
+            }
 
-        try {           
-            $em->lock($available, LockMode::PESSIMISTIC_WRITE);
+            try {           
+                $em->lock($available, LockMode::PESSIMISTIC_WRITE);
     
-            //Get the total number of Pax.
-            $paxCount = $adult + $children + $baby; 
-            //total amount of booking
-            $amountA = Money::EUR(0);
-            $amountC = Money::EUR(0);
-            $total = Money::EUR(0);
-            $amountA = $available->getCategory()->getAdultPrice();
-            $amountA = $amountA->multiply($adult);
-            $amountC = $available->getCategory()->getChildrenPrice();
-            $amountC = $amountC->multiply($children);
-            $total = $amountA->add($amountC);   
-            // When there is no availability for the number of Pax...
-            if ($available->getStock() < $paxCount) {
-                // Abort and inform user.
-                $err[] = 'OTHER_BUY_IT';
-                $response = array(
-                    'status' => 0,
-                    'message' => 'other buy it',
-                    'data' => $err,
-                    'mail' => null,
-                    'expiration' => 0
-                );
-                return new JsonResponse($response);
-            }
-           
-            // Create Client
-            $client = new Client();
-            $client->setEmail($email);
-            $client->setUsername($name);
-            $client->setAddress($address);
-            $client->setTelephone($telephone);
-            $client->setRgpd($rgpd);
-            $client->setLocale($locales);
-            //wp is set check if data from client isset
-            if($available->getCategory()->getWarrantyPayment() && $wp){
-                $client->setCardName($name);
-                $client->setCvv($cvv);
-                $client->setCardDate($date_card);
-                $client->setCardNr($card_nr);
-            }
-            else if($available->getCategory()->getWarrantyPayment() && !$wp){
-                $err[] = 'WP_SET_NO_CC_DATA';
-                $response = array(
-                    'status' => 0,
-                    'message' => 'warranty payment set but no data to db',
-                    'data' => $err,
-                    'mail' => null,
-                    'expiration' => 0
-                );
-                return new JsonResponse($response);
-            }
-            
-            // Create Booking.
-            $booking = new Booking();
-            $booking->setAvailable($available);
-            $booking->setAdult($adult);
-            $booking->setChildren($children);
-            $booking->setBaby($baby);
-            $booking->setPostedAt(new \DateTime());
-            $booking->setAmount($total);
-            $booking->setClient($client);
-            $booking->setDateEvent($available->getDatetimeStart());
-            $booking->setTimeEvent($available->getDatetimeStart());
-            $available->setStock($available->getStock() - $paxCount);
-            $em->persist($available);
-            $em->persist($client);
-            $em->persist($booking);
-            
-            $em->flush();
-            $em->getConnection()->commit();
-            
-        } catch (\Exception $e) {
-            //echo $e->getMessage();
-            $em->getConnection()->rollBack();
-            
-            //throw $e;
-              $err[] = 'OPPS_SOMETHING_WRONG';
-                $response = array(
-                    'status' => 0,
-                    'message' => $e->getMessage(),
-                    'data' => $err,
-                    'mail' => null,
-                    'expiration' => 0,
-                );
-                return new JsonResponse($response);
-        }
-        $send = $this->sendEmail($mailer, $booking, $request->getHost(), $translator);
+                //Get the total number of Pax.
+                $paxCount = $adult + $children + $baby; 
 
-        //remove the session start_time
-        $this->session->remove('start_time');
+                // When there is no availability for the number of Pax...
+                if ($available->getStock() < $paxCount) {
+                    // Abort and inform user.
+                    $err[] = 'OTHER_BUY_IT';
+                    return new JsonResponse([
+                        'status' => 0,
+                        'message' => 'other buy it',
+                        'data' => $err,
+                        'mail' => null,
+                        'expiration' => 0
+                    ]);
+                }
+           
+                // Create Client
+                $client = new Client();
+                $client->setEmail($email);
+                $client->setUsername($name);
+                $client->setAddress($address);
+                $client->setTelephone($telephone);
+                $client->setRgpd($rgpd);
+                $client->setLocale($locales);
+
+                //total amount of booking
+                $amountA = Money::EUR(0);
+                $amountC = Money::EUR(0);
+                $total = Money::EUR(0);
+
+                $amountA = $available->getCategory()->getAdultPrice();
+                $amountA = $amountA->multiply($adult);
+                $amountC = $available->getCategory()->getChildrenPrice();
+                $amountC = $amountC->multiply($children);
+                $total = $amountA->add($amountC);   
+
+            
+                // Create Booking.
+                $booking = new Booking();
+                $booking->setAvailable($available);
+                $booking->setAdult($adult);
+                $booking->setChildren($children);
+                $booking->setBaby($baby);
+                $booking->setPostedAt(new \DateTime());
+                $booking->setAmount($total);
+                $booking->setClient($client);
+                $booking->setDateEvent($available->getDatetimeStart());
+                $booking->setTimeEvent($available->getDatetimeStart());
+                $available->setStock($available->getStock() - $paxCount);
+                $em->persist($available);
+                $em->persist($client);
+                $em->persist($booking);
+            
+                $em->flush();
+
+                if($wp){
+
+                    $company = $em->getRepository(Company::class)->find(1);
+
+                    $i = $stripe->createUpdatePaymentIntent($company, $request, $booking);
+                    
+                    if($i['status'] == 1){
+
+                        return new JsonResponse([
+                            'status' => 1,
+                            'message' => 'success',
+                            'data' => $i,
+                        ]);
+                    
+                    }
+                }
+                //something happen with payment 
+                else{
+
+                    $em->getConnection()->rollBack();
+                
+                    return new JsonResponse([
+                        'status' => 0,
+                        'message' => 'Unable to Charge Credit Card',
+                        'data' => null
+                    ]);
+                }
+
+                
+                $em->getConnection()->commit();
+            
+            } 
+
+            catch (\Exception $e) {
+                //echo $e->getMessage();
+                $em->getConnection()->rollBack();
+            
+                //throw $e;
+                $err[] = 'OPPS_SOMETHING_WRONG';
+                    return new JsonResponse([
+                        'status' => 0,
+                        'message' => $e->getMessage(),
+                        'data' => $err,
+                        'mail' => null,
+                        'expiration' => 0,
+                    ]);
+
+            }
         
-        $response = array(
-            'status' => 1,
-            'message' => 'all valid',
-            'data' =>  $booking->getId(),
-            'mail' => $send,
-            'expiration' => 0
-            );
+            $send = $this->sendEmail($booking, $request->getHost(), $translator);
+
+            //remove the session start_time
+            $this->session->remove('start_time');
         
-        return new JsonResponse($response);
+            return new JsonResponse([
+                'status' => 1,
+                'message' => 'all valid',
+                'data' =>  $booking->getId(),
+                'mail' => $send,
+                'expiration' => 0
+            ]);
         }
     }
+
+
+
+
+
 
 
     public function userTranslation($lang, $page)
@@ -388,18 +399,26 @@ class HomeController extends AbstractController
     }
 
 
-    private function sendEmail(\Swift_Mailer $mailer, Booking $booking, $domain, TranslatorInterface $translator){
+    private function sendEmail(Booking $booking, $domain, TranslatorInterface $translator){
+
         $em = $this->getDoctrine()->getManager();
+
         $category = $booking->getAvailable()->getCategory();
+        
         $company = $em->getRepository(Company::class)->find(1);
+        
         $client = $booking->getClient();
+        
         $locale = $client->getLocale();
+        
         $terms = $em->getRepository(TermsConditions::class)->findOneBy(['locales' => $locale]);
 
         $transport = (new \Swift_SmtpTransport($company->getEmailSmtp(), $company->getEmailPort(), $company->getEmailCertificade()))
             ->setUsername($company->getEmail())
             ->setPassword($company->getEmailPass());       
+        
         $locale->getName() == 'pt_PT' ? $category->getNamePt() : $category->getNameEn();
+        
         $mailer = new \Swift_Mailer($transport);
                     
         $subject =  $translator->trans('booking').' #'.$booking->getId().' ('.$translator->trans('pending').')';
@@ -426,7 +445,8 @@ class HomeController extends AbstractController
                         'logo' => 'https://'.$domain.'/upload/gallery/'.$company->getLogo(),
                         'terms' => !$terms ? '' : $terms->getName(),
                         'terms_txt' => !$terms ? '' : $terms->getTermsHtml(),
-                        'company_name' => $company->getName()
+                        'company_name' => $company->getName(),
+                        'receipt' => 'recibo'
                     )
                 ),
                 'text/html'
@@ -448,7 +468,6 @@ class HomeController extends AbstractController
 
         return $expired;
     }
-
 
     private function color(){
         return array(

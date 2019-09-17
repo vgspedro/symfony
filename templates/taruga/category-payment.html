@@ -104,6 +104,7 @@
     })
   }
 
+
   //pi_id = payment_intent_id
   function getUrlReceipt(pi_id){
       $.ajax({  
@@ -113,9 +114,14 @@
       data: 'pi_id='+pi_id,
       success: function(data){
         $('.w3-overlay').hide()
+
+         console.log(data)
+        
+        return
+        alert('status --> verificar pagamento')
         if (data.status == 1){
           info = data.data.data.data[0]
-          console.log(data)
+         
           $('#get-available').trigger('reset')
           modalConditions (0, data.message.text+' '+data.message.status+'<br><div class="w3-center w3-large"><a class="w3-button w3-border w3-blue w3-round" target="_blank" href='+info.receipt_url+'> {% trans %}receipt{% endtrans %}</a></div>', '{% trans %}success{% endtrans %}')
           $('.bps').addClass(info.status).text(data.message.status)
@@ -131,6 +137,8 @@
       }
     })
   }
+
+/*
 
   function buyNow(){
     $('#card-errors').empty()
@@ -172,6 +180,7 @@
     }, 500)
   }
 
+*/
   function modalConditions(i, text, head){
     a=[]
     a.push(['w3-pale-yellow w3-border-amber w3-pale-green w3-border-green w3-pale-red w3-border-red', 'w3-pale-green w3-border-green', 'fa-check'])

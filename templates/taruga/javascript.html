@@ -296,10 +296,65 @@ function checkOut(){
   $("#myOverlay, #loader-cont").show();
 
   //console.log($('#get-available').serialize())
+
   if($('#card-button').length){
-    console.log('entrou')
-    buyNow()
+
+
+    $('#card-errors').empty()
+    setTimeout(function(){
+      stripe.createToken(card).then(function(result) {
+        if (result.error) {
+          var errorElement = document.getElementById('card-errors')
+          errorElement.textContent = result.error.message
+          $('.w3-overlay').hide()
+          return
+        }
+        $.ajax({
+          url :'{{ path('set_booking')}}',
+          type: "POST",
+          data: $('#get-available').serialize()+'&secret='+$('#card-button').data('secret'),
+          cache: false,
+          success: function(data){
+            if(data.data != 'succeeded'){
+              handleCard()
+            return
+            }
+            else if (data.status == 1){
+              $('.w3-overlay').hide()
+              //buildStripe(key)
+              $('#get-available').trigger('reset')
+              modalConditions(0, data.message, '{% trans %}success{% endtrans %}') 
+            }
+            else{
+              $('.w3-overlay').hide()
+              modalConditions(1, data.message, '{% trans %}check{% endtrans %}')  
+            }
+          },
+          error:function(data){
+            modalConditions(2, '{% trans %}wifi_error{% endtrans %}', '{% trans %}error{% endtrans %}')
+          }
+        })
+      });
+    }, 500)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   }
+
+
   else{
   
   setTimeout(function(){
