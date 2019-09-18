@@ -1,5 +1,6 @@
 <?php
 return array(
+    'secret' => 'Algo está errado com o pagamento. Por favor atualize a pagina e tente novamente.',
     'company' =>'A Empresa',
     'address' => 'Morada',
     'error' => 'Erro',

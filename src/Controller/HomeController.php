@@ -193,73 +193,61 @@ class HomeController extends AbstractController
         $locale = $locales->getName();
 
         if($this->getExpirationTime($request) == 1){ 
-            $err[] = 'SESSION_END';
+            $err[] = $translator->trans('session');
             return new JsonResponse([
-                'status' => 3,
-                'message' => 'session end',
-                'data' => $err,
-                'mail' => null,
+                'status' => 0,
+                'message' => $err,
                 'expiration' => 1
             ]);
         }
         
         //IF FIELDS IS NULL PUT IN ARRAY AND SEND BACK TO USER
-        $request->request->get('name') ? $name = $request->request->get('name') : $err[] = 'NAME';
-        $request->request->get('email') ? $email = $request->request->get('email') : $err[] = 'EMAIL';
-        $request->request->get('address') ? $address = $request->request->get('address') : $err[] = 'ADDRESS';
-        $request->request->get('telephone') ? $telephone = $request->request->get('telephone') : $err[] = 'TELEPHONE';
-        $request->request->get('check_rgpd') && $request->request->get('check_rgpd') !== null  ? $rgpd = true : $err[] = 'RGPD';
-        $request->request->get('ev') ? $event = $request->request->get('ev') : $err[] = 'EVENT';
-        $request->request->get('adult') ? $adult = $request->request->get('adult') : $err[] = 'ADULT';
-        $children = $request->request->get('children') ? $request->request->get('children') : '0';
-        $baby = $request->request->get('baby') ? (int)$request->request->get('baby') : '0';
+        $request->request->get('name') ? $name = $request->request->get('name') : $err[] = $translator->trans('part_seven.name');
+        $request->request->get('email') ? $email = $request->request->get('email') : $err[] = 'Email *';
+        $request->request->get('address') ? $address = $request->request->get('address') : $err[] = $translator->trans('part_seven.address');
+        $request->request->get('telephone') ? $telephone = $request->request->get('telephone') : $err[] = $translator->trans('part_seven.telephone');
+        $request->request->get('check_rgpd') && $request->request->get('check_rgpd') !== null  ? $rgpd = true : $err[] = $translator->trans('part_seven.rgpd');
+        $request->request->get('ev') ? $event = $request->request->get('ev') : $err[] = $translator->trans('part_seven.event');
+        $request->request->get('adult') ? $adult = $request->request->get('adult') : $err[] = $translator->trans('part_seven.adult');
+        $children = $request->request->get('children') ? $request->request->get('children') : 0;
+        $baby = $request->request->get('baby') ? (int)$request->request->get('baby') : 0;
 
         $wp = $request->request->get('wp') == 'true' ? $request->request->get('wp') : false;
         
         //payment is required
         if($wp)
-            $request->request->get('secret') ? $secret = $request->request->get('secret') : $err[] = 'secret';
-
+            $request->request->get('secret') ? $secret = $request->request->get('secret') : $err[] = $translator->trans('secret');
         if($err)
              return new JsonResponse([
                 'status' => 0,
-                'message' => 'fields empty',
-                'data' => $err,
-                'mail' => null,
+                'message' => $err,
                 'expiration' => 0
             ]);
 
         //NO FAKE DATA
-        $fieldsValidator->noFakeEmails($email) == 1 ? $err[] = 'EMAIL_INVALID' : false;
-        $fieldsValidator->noFakeTelephone($telephone) == 1 ? $err[] = 'TELEPHONE_INVALID' : false;
-        $fieldsValidator->noFakeName($name) == 1 ? $err[] = 'NAME_INVALID' : false;
+        $fieldsValidator->noFakeEmails($email) == 1 ? $err[] = $translator->trans('part_seven.email_invalid') : false;
+        $fieldsValidator->noFakeTelephone($telephone) == 1 ? $err[] = $translator->trans('part_seven.telephone_invalid') : false;
+        $fieldsValidator->noFakeName($name) == 1 ? $err[] = $translator->trans('part_seven.name_invalid') : false;
         
         if($err)
              return new JsonResponse([
                 'status' => 2,
-                'message' => 'invalid fields',
-                'data' => $err,
-                'mail' => null,
+                'message' => $err,
                 'expiration' => 0
             ]);
 
         else{
 
             $em->getConnection()->beginTransaction();
-
             $available = $em->getRepository(Available::class)->find($event);
 
             if(!$available){
                 //throw new Exception("Error Processing Request Available", 1);
-                $err[] = 'EVENT_NOT_FOUND';
-                $response = [
+               return new JsonResponse([
                     'status' => 0,
-                    'message' => 'event not found',
-                    'data' => $err,
-                    'mail' => null,
+                    'message' => $translator->trans('event_not_found'),
                     'expiration' => 0
-                ];
-                return new JsonResponse($response);
+                ]);
             }
 
             try {           
@@ -271,12 +259,9 @@ class HomeController extends AbstractController
                 // When there is no availability for the number of Pax...
                 if ($available->getStock() < $paxCount) {
                     // Abort and inform user.
-                    $err[] = 'OTHER_BUY_IT';
                     return new JsonResponse([
                         'status' => 0,
-                        'message' => 'other buy it',
-                        'data' => $err,
-                        'mail' => null,
+                        'message' => $translator->trans('part_seven.other_buy_it'),
                         'expiration' => 0
                     ]);
                 }
@@ -329,9 +314,7 @@ class HomeController extends AbstractController
                         $em->persist($booking);
                         $em->flush();
                     }
-
                 }
-
                 $em->getConnection()->commit();
             
             } 
@@ -341,11 +324,10 @@ class HomeController extends AbstractController
                 $em->getConnection()->rollBack();
             
                 //throw $e;
-                $err[] = 'OPPS_SOMETHING_WRONG';
                     return new JsonResponse([
                         'status' => 0,
-                        'message' => $e->getMessage(),
-                        'data' => $err,
+                        'message' => $translator->trans('opps_something_wrong'),
+                        'data' => $e->getMessage(),
                         'mail' => null,
                         'expiration' => 0,
                     ]);
@@ -463,7 +445,7 @@ class HomeController extends AbstractController
             ->setBody(
                 $this->renderView(
                     'emails/booking-'.$locale ->getName().'.html.twig',
-                    array(
+                    [
                         'id' => $booking->getId(),
                         'username' => $client->getUsername(),
                         'email' => $client->getEmail(),
@@ -479,8 +461,8 @@ class HomeController extends AbstractController
                         'terms' => !$terms ? '' : $terms->getName(),
                         'terms_txt' => !$terms ? '' : $terms->getTermsHtml(),
                         'company_name' => $company->getName(),
-                        'receipt' => 'recibo'
-                    )
+                        'receipt' => $translator->trans('receipt')
+                    ]
                 ),
                 'text/html'
             );

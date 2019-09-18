@@ -54,7 +54,7 @@ send_report_issue:
     condition: 'request.isXmlHttpRequest()'
 
 ###
-# GET CATEGORY BLOCKED DATES
+# AVAILABLE
 ###
 index_available:
     path: /index-available/

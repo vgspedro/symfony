@@ -1,6 +1,6 @@
 <?php
 return array(
-
+    'secret' => 'Something is wrong with the payment. Please refresh the page, and try again',
     'error' => 'Error',
     'success' => 'Success',
     'close' =>'Close',
