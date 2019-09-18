@@ -295,10 +295,10 @@ function checkOut(){
   $('.debugger').empty()
   $("#myOverlay, #loader-cont").show();
 
-  //console.log($('#get-available').serialize())
+ 
+  console.log('0--> '+$('#get-available').serialize()+'&secret='+$('#card-button').data('secret'))
 
   if($('#card-button').length){
-
 
     $('#card-errors').empty()
     setTimeout(function(){
@@ -306,7 +306,7 @@ function checkOut(){
         if (result.error) {
           var errorElement = document.getElementById('card-errors')
           errorElement.textContent = result.error.message
-          $('.w3-overlay').hide()
+          $("#myOverlay, #loader-cont").hide();
           return
         }
         $.ajax({
@@ -315,11 +315,13 @@ function checkOut(){
           data: $('#get-available').serialize()+'&secret='+$('#card-button').data('secret'),
           cache: false,
           success: function(data){
+            console.log('1--> ' + data)
             if(data.data != 'succeeded'){
               handleCard()
             return
             }
             else if (data.status == 1){
+              alert('ok')
               $('.w3-overlay').hide()
               //buildStripe(key)
               $('#get-available').trigger('reset')
@@ -337,25 +339,12 @@ function checkOut(){
       });
     }, 500)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   }
 
 
-  else{
+
+
+else{
   
   setTimeout(function(){
     $.ajax({ 
@@ -389,7 +378,7 @@ function checkOut(){
           for(k = 0; k<data.data.length;k++)
             $('.'+data.data[k]).removeClass('w3-hide');
           
-          $('.debugger').html(data.message)
+          //$('.debugger').html(data.message);
           $('#modal-info').show();
         }
         else{
@@ -405,6 +394,11 @@ function checkOut(){
   }, 500)
 }
 }
+
+
+
+
+
 
 
 typeof(Storage) !== "undefined" ? false : setTimeout(function(){$('#modal-no-storage').show()},1500);

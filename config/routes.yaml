@@ -36,6 +36,11 @@ set_booking:
     #condition: 'request.isXmlHttpRequest()'
     #methods: [POST]
 
+home_get_charge:
+    path: /home-get-charge
+    controller: App\Controller\HomeController::onlineGetCharge
+    methods: [POST]
+
 send_feedback:
     path: /send-feedback/
     controller: App\Controller\FeedbackController::sendFeedback

@@ -7,7 +7,6 @@
 .StripeElement--webkit-autofill{background-color: #fefde5 !important}
 </style>
 
-
   <div class="w3-col s12 w3-center">{% trans %}order_info{% endtrans %}</div>
 
   <div class="w3-col l12">
@@ -39,11 +38,6 @@
     <!--/form-->
   </div>
   <input type="hidden" id="card-button" data-secret="{{payment_intent.data.client_secret}}">
-    <!--div class="paylog w3-col s12 w3-right w3-margin-top">
-      <span class="w3-button w3-block w3-green w3-border w3-right w3-margin-bottom" id="card-button" data-secret="{{payment_intent.data.client_secret}}" onclick="buyNow()">
-      <i class="fa fa-check"></i> {% trans %}pay_now{% endtrans %}:
-        </span>
-    </div-->
 <script>
 
   var key = '{{company.stripePK}}'
@@ -100,7 +94,7 @@
         modalConditions(1, result.error.message, '{% trans %}check{% endtrans %}') 
       } 
       else
-        getUrlReceipt(result.paymentIntent.id)   
+        getUrlReceipt(result.paymentIntent.id)
     })
   }
 
@@ -108,22 +102,26 @@
   //pi_id = payment_intent_id
   function getUrlReceipt(pi_id){
       $.ajax({  
-      url :'{{ path('online_get_charge')}}',
+      url :'{{ path('home_get_charge')}}',
       type: "POST",
       cache: false,
       data: 'pi_id='+pi_id,
       success: function(data){
-        $('.w3-overlay').hide()
+        $("#myOverlay, #loader-cont").hide();
+        console.log('3-->' + data)
 
-         console.log(data)
-        
-        return
-        alert('status --> verificar pagamento')
         if (data.status == 1){
+        
+          alert('3 ok-->' + data.status)
+
           info = data.data.data.data[0]
-         
+ 
+ $('#modal-success').show();
+
           $('#get-available').trigger('reset')
-          modalConditions (0, data.message.text+' '+data.message.status+'<br><div class="w3-center w3-large"><a class="w3-button w3-border w3-blue w3-round" target="_blank" href='+info.receipt_url+'> {% trans %}receipt{% endtrans %}</a></div>', '{% trans %}success{% endtrans %}')
+
+          modalConditions(0, data.message.text+' '+data.message.status+'<br><div class="w3-center w3-large"><a class="w3-button w3-border w3-blue w3-round" target="_blank" href='+info.receipt_url+'> {% trans %}receipt{% endtrans %}</a></div>', '{% trans %}success{% endtrans %}')
+
           $('.bps').addClass(info.status).text(data.message.status)
           $('.paylog').remove()
         }
@@ -132,56 +130,15 @@
         }
       },
       error:function(data){
-        $('.w3-overlay').hide()
+        $("#myOverlay, #loader-cont").hide();
         modalConditions(2, '{% trans %}wifi_error{% endtrans %}', '{% trans %}error{% endtrans %}')
       }
     })
   }
 
-/*
 
-  function buyNow(){
-    $('#card-errors').empty()
-    $('.w3-overlay').show()
-    setTimeout(function(){
-      stripe.createToken(card).then(function(result) {
-        if (result.error) {
-          var errorElement = document.getElementById('card-errors')
-          errorElement.textContent = result.error.message
-          $('.w3-overlay').hide()
-          return
-        }
-        $.ajax({
-          url :'{{ path('online_charge_credit_card')}}',
-          type: "POST",
-          data: $('#get-available').serialize()+'&secret='+$('#card-button').data('secret'),
-          cache: false,
-          success: function(data){
-            if(data.data != 'succeeded'){
-              handleCard()
-            return
-            }
-            else if (data.status == 1){
-              $('.w3-overlay').hide()
-              //buildStripe(key)
-              $('#get-available').trigger('reset')
-              modalConditions(0, data.message, '{% trans %}success{% endtrans %}') 
-            }
-            else{
-              $('.w3-overlay').hide()
-              modalConditions(1, data.message, '{% trans %}check{% endtrans %}')  
-            }
-          },
-          error:function(data){
-            modalConditions(2, '{% trans %}wifi_error{% endtrans %}', '{% trans %}error{% endtrans %}')
-          }
-        })
-      });
-    }, 500)
-  }
-
-*/
   function modalConditions(i, text, head){
+    alert('entrou modal'+i +' - ' +text+ ' - ' + head)
     a=[]
     a.push(['w3-pale-yellow w3-border-amber w3-pale-green w3-border-green w3-pale-red w3-border-red', 'w3-pale-green w3-border-green', 'fa-check'])
     a.push(['w3-pale-yellow w3-border-amber w3-pale-green w3-border-green w3-pale-red w3-border-red', 'w3-pale-yellow w3-border-amber', 'fa-info-circle'])
@@ -189,10 +146,10 @@
           
     $('#modal-info').show()
     $('.modal-head').removeClass(a[i][0]).addClass(a[i][1])
-            $('.icon').html('<i class="fa '+a[i][2]+'"></i>')
-            $('.modal-head-text').text(head)  
-            $('.modal-text').html(text)
-        }
+    $('.icon').html('<i class="fa '+a[i][2]+'"></i>')
+    $('.modal-head-text').text(head)  
+    $('.modal-text').html(text)
+  }
 
   setTimeout(function(){buildStripe('{{company.stripePK}}') }, 500)
 

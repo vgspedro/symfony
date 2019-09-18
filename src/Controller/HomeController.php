@@ -25,6 +25,7 @@ use App\Entity\AboutUs;
 use App\Entity\Feedback;
 use App\Entity\Available;
 use App\Entity\TermsConditions;
+use App\Entity\StripePaymentLogs;
 
 use App\Service\MoneyFormatter;
 use App\Service\RequestInfo;
@@ -90,17 +91,15 @@ class HomeController extends AbstractController
             }
         }    
     
-
         $flag == true ? 
             $cH = [
                 'adultAmount' => $moneyFormatter->format($categoryHl->getAdultPrice()),
                 'childrenAmount'  => $moneyFormatter->format($categoryHl->getChildrenPrice()),
                 'name' => $this->session->get('_locale') == 'pt_PT' ? $categoryHl->getNamePt() : $categoryHl->getNameEn(),
                 'id' => $categoryHl->getId()]
-                :
-                $cH = [];
+            :
+            $cH = [];
         
-
         foreach ($category as $categories){
             $flag = true;
             $ord = [];
@@ -213,7 +212,6 @@ class HomeController extends AbstractController
         $request->request->get('ev') ? $event = $request->request->get('ev') : $err[] = 'EVENT';
         $request->request->get('adult') ? $adult = $request->request->get('adult') : $err[] = 'ADULT';
         $children = $request->request->get('children') ? $request->request->get('children') : '0';
-
         $baby = $request->request->get('baby') ? (int)$request->request->get('baby') : '0';
 
         $wp = $request->request->get('wp') == 'true' ? $request->request->get('wp') : false;
@@ -316,41 +314,24 @@ class HomeController extends AbstractController
                 $booking->setDateEvent($available->getDatetimeStart());
                 $booking->setTimeEvent($available->getDatetimeStart());
                 $available->setStock($available->getStock() - $paxCount);
+
                 $em->persist($available);
                 $em->persist($client);
                 $em->persist($booking);
-            
                 $em->flush();
 
+
                 if($wp){
-
                     $company = $em->getRepository(Company::class)->find(1);
-
                     $i = $stripe->createUpdatePaymentIntent($company, $request, $booking);
-                    
                     if($i['status'] == 1){
-
-                        return new JsonResponse([
-                            'status' => 1,
-                            'message' => 'success',
-                            'data' => $i,
-                        ]);
-                    
+                        $booking->setPaymentStatus(Booking::STATUS_PROCESSING);
+                        $em->persist($booking);
+                        $em->flush();
                     }
-                }
-                //something happen with payment 
-                else{
 
-                    $em->getConnection()->rollBack();
-                
-                    return new JsonResponse([
-                        'status' => 0,
-                        'message' => 'Unable to Charge Credit Card',
-                        'data' => null
-                    ]);
                 }
 
-                
                 $em->getConnection()->commit();
             
             } 
@@ -370,16 +351,23 @@ class HomeController extends AbstractController
                     ]);
 
             }
-        
-            $send = $this->sendEmail($booking, $request->getHost(), $translator);
 
+            if($wp)
+                return new JsonResponse([
+                'status' => 99,
+                'message' => 'waiting payment',
+                'data' => $booking->getId(),
+                'mail' => null,
+                'expiration' => 0
+            ]);
+            
             //remove the session start_time
             $this->session->remove('start_time');
-        
+            $send = $this->sendEmail($booking, $request->getHost(), $translator);
             return new JsonResponse([
                 'status' => 1,
                 'message' => 'all valid',
-                'data' =>  $booking->getId(),
+                'data' => $booking->getId(),
                 'mail' => $send,
                 'expiration' => 0
             ]);
@@ -387,9 +375,54 @@ class HomeController extends AbstractController
     }
 
 
+  /**
+    *Get the receipt url to show on email
+    *@param $request
+    *@return json response of Request
+    **/
+    public function onlineGetCharge(Request $request, Stripe $stripe, TranslatorInterface $translator)
+    {
+        
+        $em = $this->getDoctrine()->getManager();
 
+        $company = $em->getRepository(Company::class)->find(1);
 
+        $ch = $stripe->getPaymentCharge($company, $request);
 
+        if($ch['status'] == 1){
+
+            $b_id = explode('-', $ch['data']->data[0]->description);
+            $booking = $em->getRepository(Booking::class)->find(str_replace('#','',$b_id[0]));
+
+            $payLogs = new StripePaymentLogs();
+
+            $payLogs->setLog(json_encode($ch['data']->data[0]));
+            $deposit = Money::EUR($ch['data']->data[0]->amount);
+            $payLogs->setBooking($booking);
+            $booking->setPaymentStatus($ch['data']->data[0]->status);
+            $payLogs->setBooking($booking);
+            $booking->setStripePaymentLogs($payLogs);
+            $booking->setDepositAmount($deposit);
+            $em->persist($booking);
+            $em->flush();
+
+            $send = $this->sendEmail($booking, $request->getHost(), $translator);
+
+            return new JsonResponse([
+                'status' => 1,
+                'message' => [
+                    'text' => $translator->trans('payment_txt', array(), 'messages', $booking->getClient()->getLocale()->getName()), 
+                    'status' => $translator->trans( $booking->getPaymentStatus(), array(), 'messages', $booking->getClient()->getLocale()->getName())
+                ],
+                'data' => $ch]);
+            }
+
+        else
+            return new JsonResponse([
+                'status' => 0,
+                'message' =>'Unable to get Charge',
+                'data' => null]);
+    }
 
 
     public function userTranslation($lang, $page)

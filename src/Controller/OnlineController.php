@@ -10,7 +10,6 @@ use App\Service\Stripe;
 use App\Entity\Company;
 use App\Entity\Booking;
 use App\Entity\StripePaymentLogs;
-use App\Entity\StripeRefundLogs;
 use App\Service\RequestInfo;
 use Money\Money;
 
@@ -134,14 +133,6 @@ class OnlineController extends AbstractController
 
 
 
-
-
-
-
-
-
-
-
     /**
     *Get the receipt url to show on email
     *@param $request
@@ -160,14 +151,8 @@ class OnlineController extends AbstractController
         if($ch['status'] == 1){
 
             $b_id = explode('-', $ch['data']->data[0]->description);
-
-
-
-dump($b_id);
-
-exit;
-
             $booking = $em->getRepository(Booking::class)->find(str_replace('#','',$b_id[0]));
+
             $payLogs = new StripePaymentLogs();
 
             $payLogs->setLog(json_encode($ch['data']->data[0]));
