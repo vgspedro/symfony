@@ -20,12 +20,13 @@ return array(
     'phone' => 'Telefone',
     'save' => 'Guardar',
     'active' => 'Ativo',
+    'spam_txt' => 'Não recebeu o nosso email, por favor verifique a sua caixa de spam ou ligue para o número +351969617828',
     'sorry'=>'Lamentamos',
     'email_cert' => 'Certificado Email',
     'required' => 'Obrigatório *',
     'wifi_error' =>'Por favor verifique a ligação Wi-fi/Internet, e tente novamente!',
     'order' => 'Reserva Nº',
-    'thank_you' => 'Confirmaremos a sua reserva dentro de 12 Horas. Obrigado, Taruga Benagil Tours',
+    'thank_you' => 'Dentro de <b class="w3-xlarge">12 horas</b> confirmaremos a sua reserva.<br>Obrigado, Taruga Benagil Tours.',
     'session' => 'Sessão expirou!!',
     'check' => 'Verifique',
     'session_info' => 'Por favor, atualize a página!',
@@ -191,8 +192,7 @@ return array(
     'observations' => 'Observações',
     'rating' => 'Cotação *',
     'booking_nr' => 'Nº Reserva *',
-    'image' => 'Anexar Imagem',
-    'spam_txt' => 'Não recebeu o nosso email, por favor verifique a sua caixa de spam ou ligue para o número +351969617828',
+    'image' => 'Anexar Imagem'
 ),
 
 

@@ -8,7 +8,7 @@ return array(
     'required'=>'Required *',
     'wifi_error' =>'Please check Wi-fi/Internet connection, and try again!',
     'order' => 'Booking Nr.',
-    'thank_you' => 'In 12 hours we will confirm your booking. Thank you, Taruga Benagil Tours',
+    'thank_you' => 'In <b class="w3-xlarge">12 hours</b> we will confirm your booking.<br>Thank you, Taruga Benagil Tours.',
     'session' => 'Session timeout reached!!',
     'check' => 'Check',
     'session_info' => 'Please, refresh the page!',

@@ -6,7 +6,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use App\Entity\StripePaymentLogs;
 use App\Entity\StripeRefundLogs;
-
+use Money\Money;
 
 class Stripe
 {	
@@ -19,7 +19,8 @@ class Stripe
 
         if($booking)
             $product = '#'.$booking->getId().'-'.$booking->getAvailable()->getCategory()->getNamePt();
-        
+    
+
         $stripe = new \Stripe\Stripe();
         $intent = new \Stripe\PaymentIntent();
         $stripe->setApiKey($company->getStripeSK());
@@ -28,17 +29,21 @@ class Stripe
 
             if($request->request->get('secret')){
 
+                $depositPercent = $booking->getAvailable()->getCategory()->getDeposit() != '0.00' ? $booking->getAvailable()->getCategory()->getDeposit() : 1;
+
+                $chargeAmount = $booking->getAmount()->getAmount() * $depositPercent;
+
                 $intentId = explode("_secret_", $request->request->get('secret'));
                 
                 $p_i = $intent->update($intentId[0],[
-                    'amount' => $booking->getAmount()->getAmount(),
+                    'amount' => (int)$chargeAmount,
                     'currency' => $company->getCurrency()->getCurrency(),
                     'description' => $product
                 ]);
             }
             else{
                 $p_i = $intent->create([
-                    'amount' => 50,//$booking->getAmount()->getAmount(),
+                    'amount' => 50,
                     'currency' => $company->getCurrency()->getCurrency(),
                     'description' => 'try_to_buy',
                     'payment_method_types' => ['card']

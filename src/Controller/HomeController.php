@@ -218,7 +218,7 @@ class HomeController extends AbstractController
         if($wp)
             $request->request->get('secret') ? $secret = $request->request->get('secret') : $err[] = $translator->trans('secret');
         if($err)
-            
+
              return new JsonResponse([
                 'status' => 0,
                 'message' => $err,
@@ -232,7 +232,7 @@ class HomeController extends AbstractController
         
         if($err)
              return new JsonResponse([
-                'status' => 2,
+                'status' => 0,
                 'message' => $err,
                 'expiration' => 0
             ]);
@@ -245,7 +245,7 @@ class HomeController extends AbstractController
             if(!$available){
                 //throw new Exception("Error Processing Request Available", 1);
                return new JsonResponse([
-                    'status' => 0,
+                    'status' => 4,
                     'message' => $translator->trans('event_not_found'),
                     'expiration' => 0
                 ]);
@@ -261,7 +261,7 @@ class HomeController extends AbstractController
                 if ($available->getStock() < $paxCount) {
                     // Abort and inform user.
                     return new JsonResponse([
-                        'status' => 0,
+                        'status' => 4,
                         'message' => $translator->trans('part_seven.other_buy_it'),
                         'expiration' => 0
                     ]);
@@ -306,12 +306,11 @@ class HomeController extends AbstractController
                 $em->persist($booking);
                 $em->flush();
 
-
                 if($wp){
                     $company = $em->getRepository(Company::class)->find(1);
                     $i = $stripe->createUpdatePaymentIntent($company, $request, $booking);
                     if($i['status'] == 1){
-                        $booking->setPaymentStatus(Booking::STATUS_PROCESSING);
+                        $booking->setPaymentStatus(Booking::STATUS_CANCELED);
                         $em->persist($booking);
                         $em->flush();
                     }
@@ -325,14 +324,13 @@ class HomeController extends AbstractController
                 $em->getConnection()->rollBack();
             
                 //throw $e;
-                    return new JsonResponse([
-                        'status' => 0,
-                        'message' => $translator->trans('opps_something_wrong'),
-                        'data' => $e->getMessage(),
-                        'mail' => null,
-                        'expiration' => 0,
-                    ]);
-
+                return new JsonResponse([
+                    'status' => 4,
+                    'message' => $translator->trans('opps_something_wrong'),
+                    'data' => $e->getMessage(),
+                    'mail' => null,
+                    'expiration' => 0,
+                ]);
             }
 
             if($wp)
@@ -393,11 +391,9 @@ class HomeController extends AbstractController
 
             return new JsonResponse([
                 'status' => 1,
-                'message' => [
-                    'text' => $translator->trans('payment_txt', array(), 'messages', $booking->getClient()->getLocale()->getName()), 
-                    'status' => $translator->trans( $booking->getPaymentStatus(), array(), 'messages', $booking->getClient()->getLocale()->getName())
-                ],
-                'data' => $ch]);
+                'message' => $booking->getId(),
+                'data' => $ch
+            ]);
             }
 
         else

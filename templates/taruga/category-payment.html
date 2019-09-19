@@ -48,7 +48,6 @@
   var displayError = ''
 
   function buildStripe(k){
-    //alert('build')
     if (k){
       stripe = Stripe(k)
       elements = stripe.elements()
@@ -100,14 +99,15 @@
 
   //pi_id = payment_intent_id
   function getUrlReceipt(pi_id){
+    var html = ''
       $.ajax({  
       url :'{{ path('home_get_charge')}}',
       type: "POST",
       cache: false,
       data: 'pi_id='+pi_id,
       success: function(data){
-        $("#myOverlay, #loader-cont").hide();
-        console.log('getUrlReceipt()')
+        $(".w3-overlay, #loader-cont").hide();
+        //console.log('getUrlReceipt()')
         console.log(data)
         if (data.status == 1){
           //alert('3 ok-->' + data.status)
@@ -118,7 +118,7 @@
           $('.set-visible, .wp-active, .wp-btn').addClass('w3-hide');
           $('.wp-active').empty();
 
-          var html = '<span class="w3-center w3-padding-small">{% trans %}order{% endtrans %}</span><span>'+info.description+'</span><div class="w3-center w3-medium">'+data.message.text+' '+data.message.status+'<br><a class="w3-btn w3-border w3-blue w3-round" target="_blank" href='+info.receipt_url+'> {% trans %}receipt{% endtrans %}</a></div><p class="w3-large w3-center w3-text-deep-orange">{% trans %}part_seven.spam_txt{% endtrans %}</p><p  class="">{% trans %}thank_you{% endtrans %}</p>'
+          html ='<div style="margin-top:-8px" class="w3-right-align w3-xlarge w3-padding-small">{% trans %}order{% endtrans %} <span class="w3-xxxlarge">'+data.message+'</span></div><div class="w3-large">{% trans %}thank_you{% endtrans %}</div><div class="w3-large w3-center w3-text-deep-orange">{% trans %}spam_txt{% endtrans %}</div><div class="w3-right-align"><a class="w3-btn w3-border w3-white w3-round w3-medium" target="_blank" href='+info.receipt_url+'> {% trans %}receipt{% endtrans %}</a></div>'
 
           modalConditions(0, html, '{% trans %}success{% endtrans %}')
 
@@ -128,7 +128,7 @@
         }
       },
       error:function(data){
-        $("#myOverlay, #loader-cont").hide();
+        $(".w3-overlay, #loader-cont").hide();
         modalConditions(2, '{% trans %}wifi_error{% endtrans %}', '{% trans %}error{% endtrans %}')
       }
     })
