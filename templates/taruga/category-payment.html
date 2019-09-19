@@ -112,12 +112,16 @@
         if (data.status == 1){
           //alert('3 ok-->' + data.status)
           info = data.data.data.data[0]
-          $('#get-available').trigger('reset')
-          
-          modalConditions(0, data.message.text+' '+data.message.status+'<br><div class="w3-center w3-medium"><a class="w3-btn w3-border w3-blue w3-round" target="_blank" href='+info.receipt_url+'> {% trans %}receipt{% endtrans %}</a></div>', '{% trans %}success{% endtrans %}')
+          //console.log(info)
 
-          $('.bps').addClass(info.status).text(data.message.status)
-          $('.paylog').remove()
+          $('#get-available').trigger('reset');
+          $('.set-visible, .wp-active, .wp-btn').addClass('w3-hide');
+          $('.wp-active').empty();
+
+          var html = '<span class="w3-center w3-padding-small">{% trans %}order{% endtrans %}</span><span>'+info.description+'</span><div class="w3-center w3-medium">'+data.message.text+' '+data.message.status+'<br><a class="w3-btn w3-border w3-blue w3-round" target="_blank" href='+info.receipt_url+'> {% trans %}receipt{% endtrans %}</a></div><p class="w3-large w3-center w3-text-deep-orange">{% trans %}part_seven.spam_txt{% endtrans %}</p><p  class="">{% trans %}thank_you{% endtrans %}</p>'
+
+          modalConditions(0, html, '{% trans %}success{% endtrans %}')
+
         }
         else{
           modalConditions(1, data.message, '{% trans %}check{% endtrans %}') 

@@ -209,7 +209,7 @@ return array(
     'personal_data' => 'Info. Pessoal',
     'credit_card_data' => 'Info. Cartão Crédito',
     'confirm' => 'Confirmar',
-    'fill_all' => 'Preencha todos os seguintes campos com <b class="w3-text-red w3-xlarge">*</b>',
+    'fill_all' => 'Preencha todos os seguintes campos com <b class="w3-text-red w3-xxlarge">*</b>',
     'wp_set_no_cc_data' => 'Garantia pagamento obrigatório, mas os dados do Cartão estão em falta',
     'date_card_invalid' => 'Data Expiração Inválida',
     'doubts' => 'Dúvidas',

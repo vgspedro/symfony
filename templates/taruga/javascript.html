@@ -293,7 +293,7 @@ function checkOut(){
   $("#myOverlay, #loader-cont").show();
   var html =''
  
-  console.log('0--> '+$('#get-available').serialize()+'&secret='+$('#card-button').data('secret'))
+  //console.log('0--> '+$('#get-available').serialize()+'&secret='+$('#card-button').data('secret'))
 
   if($('#card-button').length){
     $('#card-errors').empty()
@@ -308,67 +308,7 @@ function checkOut(){
       })
     }, 500)
   }
-/*
-        $.ajax({
-          url :'{{ path('set_booking')}}',
-          type: "POST",
-          data: $('#get-available').serialize()+'&secret='+$('#card-button').data('secret'),
-          cache: false,
-          success: function(data){
-            console.log(data)
-            // 3d secure payment bot suceeded
-            if(data.data != 'succeeded'){
-              handleCard()
-              return
-            }
-            
 
-
- //time of purchase reached 
-        if (data.status == 3)
-          modalConditions(1, data.message, '{% trans %}check{% endtrans %}')
-        //sucess 
-        else if (data.status == 1){
-        
-          modalConditions(0, data.message, '{% trans %}success{% endtrans %}')  
-
-          navigation('#reservas');
-          clearInterval(timer);
-          $('#modal-success').show();
-          $('.set-order-id').html(data.data);
-          $('#get-available').trigger('reset');
-          $('.set-visible, .wp-active, .wp-btn').addClass('w3-hide');
-          $('.wp-active').empty();
-
-        }
-
-        //show what went wrong
-        else if (data.status == 0 || data.status == 2){
-          for(var k in data.data)
-            html += '<div class="required">'+data.data[k]+'</div>'
-           modalConditions(1, html, '{% trans %}check{% endtrans %}')
-
-        }
-        else{
-          modalConditions(1, data.message+'-->'+data.data, '{% trans %}check{% endtrans %}')
-        }
-          },
-          error:function(data){
-            modalConditions(2, '{% trans %}wifi_error{% endtrans %}', '{% trans %}error{% endtrans %}')
-          }
-        })
-      });
-    }, 500)
-
-  }
-
-
-
-
-else{
-
-*/
-  
   setTimeout(function(){
     $.ajax({ 
       url: '{{ path('set_booking') }}',
@@ -377,16 +317,16 @@ else{
       data: $('#get-available').serialize()+'&secret='+$('#card-button').data('secret'),
       success: function(data){
         
-        console.log(data)
-
-        $("#myOverlay, #loader-cont").hide();
-
+        //console.log(data)
         //time of purchase reached 
-        if (data.status == 3)
+        if (data.status == 3){
+          $("#myOverlay, #loader-cont").hide();
           modalConditions(1, data.message+'-->'+data.data, '{% trans %}check{% endtrans %}')
-
+        }
+        
         //sucess 
         else if (data.status == 1){
+          $("#myOverlay, #loader-cont").hide();
           modalConditions(0, data.message+'-->'+data.data, '{% trans %}sucess{% endtrans %}')
           navigation('#reservas');
           clearInterval(timer);
@@ -401,6 +341,7 @@ else{
         //show what went wrong
         
         else if (data.status == 0 || data.status == 2){
+          $("#myOverlay, #loader-cont").hide();
           for(var k in data.message)
             html += '<div class="required">'+data.message[k]+'</div>'
           modalConditions(1, html, '{% trans %}check{% endtrans %}')
@@ -422,7 +363,6 @@ else{
 
 
   function modalConditions(i, text, head){
-    alert('entrou modal'+i +' - ' +text+ ' - ' + head)
     a=[]
     a.push(['w3-pale-yellow w3-border-amber w3-pale-green w3-border-green w3-pale-red w3-border-red', 'w3-pale-green w3-border-green', 'fa-check'])
     a.push(['w3-pale-yellow w3-border-amber w3-pale-green w3-border-green w3-pale-red w3-border-red', 'w3-pale-yellow w3-border-amber', 'fa-info-circle'])
