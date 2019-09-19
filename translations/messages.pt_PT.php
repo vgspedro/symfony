@@ -1,6 +1,6 @@
 <?php
 return array(
-    'secret' => 'Algo está errado com o pagamento. Por favor atualize a pagina e tente novamente.',
+    'secret' => 'Algo está errado com o pagamento! Por favor atualize a página e tente novamente.',
     'company' =>'A Empresa',
     'address' => 'Morada',
     'error' => 'Erro',
@@ -22,7 +22,7 @@ return array(
     'active' => 'Ativo',
     'sorry'=>'Lamentamos',
     'email_cert' => 'Certificado Email',
-    'required'=>'Obrigatório *',
+    'required' => 'Obrigatório *',
     'wifi_error' =>'Por favor verifique a ligação Wi-fi/Internet, e tente novamente!',
     'order' => 'Reserva Nº',
     'thank_you' => 'Confirmaremos a sua reserva dentro de 12 Horas. Obrigado, Taruga Benagil Tours',

@@ -291,12 +291,11 @@ function checkOut(){
   $('.required').addClass('w3-hide');
   $('.debugger').empty()
   $("#myOverlay, #loader-cont").show();
-
+  var html =''
  
   console.log('0--> '+$('#get-available').serialize()+'&secret='+$('#card-button').data('secret'))
 
   if($('#card-button').length){
-
     $('#card-errors').empty()
     setTimeout(function(){
       stripe.createToken(card).then(function(result) {
@@ -306,38 +305,53 @@ function checkOut(){
           $("#myOverlay, #loader-cont").hide();
           return
         }
+      })
+    }, 500)
+  }
+/*
         $.ajax({
           url :'{{ path('set_booking')}}',
           type: "POST",
           data: $('#get-available').serialize()+'&secret='+$('#card-button').data('secret'),
           cache: false,
           success: function(data){
-            console.log('1--> ' + data)
+            console.log(data)
+            // 3d secure payment bot suceeded
             if(data.data != 'succeeded'){
               handleCard()
-            return
+              return
             }
-            else if (data.status == 1){
-             
-           navigation('#reservas');
+            
+
+
+ //time of purchase reached 
+        if (data.status == 3)
+          modalConditions(1, data.message, '{% trans %}check{% endtrans %}')
+        //sucess 
+        else if (data.status == 1){
+        
+          modalConditions(0, data.message, '{% trans %}success{% endtrans %}')  
+
+          navigation('#reservas');
           clearInterval(timer);
           $('#modal-success').show();
           $('.set-order-id').html(data.data);
           $('#get-available').trigger('reset');
           $('.set-visible, .wp-active, .wp-btn').addClass('w3-hide');
           $('.wp-active').empty();
-          $('.icon-unknown').removeClass('w3-hide');
 
-             // alert('ok')
-              //$('.w3-overlay').hide()
-              //buildStripe(key)
-              //$('#get-available').trigger('reset')
-              //modalConditions(0, data.message, '{% trans %}success{% endtrans %}') 
-            }
-            else{
-              $('.w3-overlay').hide()
-              modalConditions(1, data.message, '{% trans %}check{% endtrans %}')  
-            }
+        }
+
+        //show what went wrong
+        else if (data.status == 0 || data.status == 2){
+          for(var k in data.data)
+            html += '<div class="required">'+data.data[k]+'</div>'
+           modalConditions(1, html, '{% trans %}check{% endtrans %}')
+
+        }
+        else{
+          modalConditions(1, data.message+'-->'+data.data, '{% trans %}check{% endtrans %}')
+        }
           },
           error:function(data){
             modalConditions(2, '{% trans %}wifi_error{% endtrans %}', '{% trans %}error{% endtrans %}')
@@ -352,24 +366,28 @@ function checkOut(){
 
 
 else{
+
+*/
   
   setTimeout(function(){
     $.ajax({ 
       url: '{{ path('set_booking') }}',
       type: "POST",
       cache: false,
-      data: $('#get-available').serialize(),
+      data: $('#get-available').serialize()+'&secret='+$('#card-button').data('secret'),
       success: function(data){
-        //console.log(data)
+        
+        console.log(data)
 
         $("#myOverlay, #loader-cont").hide();
 
         //time of purchase reached 
         if (data.status == 3)
-          $('#modal-check').show();
+          modalConditions(1, data.message+'-->'+data.data, '{% trans %}check{% endtrans %}')
 
         //sucess 
         else if (data.status == 1){
+          modalConditions(0, data.message+'-->'+data.data, '{% trans %}sucess{% endtrans %}')
           navigation('#reservas');
           clearInterval(timer);
           $('#modal-success').show();
@@ -381,25 +399,25 @@ else{
         }
 
         //show what went wrong
+        
         else if (data.status == 0 || data.status == 2){
-          for(k = 0; k<data.data.length;k++)
-            $('.'+data.data[k]).removeClass('w3-hide');
-          
-          //$('.debugger').html(data.message);
-          $('#modal-info').show();
+          for(var k in data.message)
+            html += '<div class="required">'+data.message[k]+'</div>'
+          modalConditions(1, html, '{% trans %}check{% endtrans %}')
         }
-        else{
-          $('#modal-check').show();
+        else if(data.data != 'succeeded'){
+          handleCard()
+          return
         }
-      
+        else
+          modalConditions(1, data.message+'-->'+data.data, '{% trans %}check{% endtrans %}')      
       },
       error:function(data){
         $("#myOverlay, #loader-cont").hide();
-        $('#modal-error').show();
+        modalConditions(2, '{% trans %}wifi_error{% endtrans %}', '{% trans %}error{% endtrans %}')
       }
     })
   }, 500)
-}
 }
 
 

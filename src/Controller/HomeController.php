@@ -218,6 +218,7 @@ class HomeController extends AbstractController
         if($wp)
             $request->request->get('secret') ? $secret = $request->request->get('secret') : $err[] = $translator->trans('secret');
         if($err)
+            
              return new JsonResponse([
                 'status' => 0,
                 'message' => $err,

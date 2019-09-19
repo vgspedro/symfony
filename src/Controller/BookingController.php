@@ -59,8 +59,7 @@ class BookingController extends AbstractController
                 'message' => $err,
                 'minDate' => null,
                 'available' => null
-                ]);
-
+            ]);
 
         $em = $this->getDoctrine()->getManager();
 
