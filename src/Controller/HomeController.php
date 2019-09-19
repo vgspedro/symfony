@@ -434,6 +434,8 @@ class HomeController extends AbstractController
                     
         $subject =  $translator->trans('booking').' #'.$booking->getId().' ('.$translator->trans('pending').')';
         
+        $receipt_url = '';
+
         if($booking->getStripePaymentLogs())
             if($booking->getStripePaymentLogs()->getLogObj())
                 $receipt_url = $booking->getStripePaymentLogs()->getLogObj()->receipt_url;
@@ -462,7 +464,7 @@ class HomeController extends AbstractController
                         'terms_txt' => !$terms ? '' : $terms->getTermsHtml(),
                         'company_name' => $company->getName(),
                         'receipt' => $translator->trans('receipt'),
-                        'receipt_url' => $receipt_url ? $receipt_url : ''
+                        'receipt_url' => $receipt_url
                     ]
                 ),
                 'text/html'
