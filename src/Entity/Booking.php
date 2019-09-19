@@ -77,7 +77,7 @@ class Booking
 
     /** @ORM\Column(name="time_event", type="time") */
     private $timeEvent;
-     /** @ORM\Column(name="posted_at", type="date") */
+     /** @ORM\Column(name="posted_at", type="datetime") */
     private $postedAt;
 
     /** @ORM\Column(type="text", name="notes", nullable=true ) */

@@ -394,12 +394,11 @@ class HomeController extends AbstractController
                 'message' => $booking->getId(),
                 'data' => $ch
             ]);
-            }
-
+        }
         else
             return new JsonResponse([
                 'status' => 0,
-                'message' =>'Unable to get Charge',
+                'message' => 'Unable to get Charge',
                 'data' => null]);
     }
 
@@ -434,7 +433,11 @@ class HomeController extends AbstractController
         $mailer = new \Swift_Mailer($transport);
                     
         $subject =  $translator->trans('booking').' #'.$booking->getId().' ('.$translator->trans('pending').')';
-                    
+        
+        if($booking->getStripePaymentLogs())
+            if($booking->getStripePaymentLogs()->getLogObj())
+                $receipt_url = $booking->getStripePaymentLogs()->getLogObj()->receipt_url;
+
         $message = (new \Swift_Message($subject))
             ->setFrom([$company->getEmail() => $company->getName()])
             ->setTo([$client->getEmail() => $client->getUsername(), $company->getEmail() => $company->getName()])
@@ -458,12 +461,14 @@ class HomeController extends AbstractController
                         'terms' => !$terms ? '' : $terms->getName(),
                         'terms_txt' => !$terms ? '' : $terms->getTermsHtml(),
                         'company_name' => $company->getName(),
-                        'receipt' => $translator->trans('receipt')
+                        'receipt' => $translator->trans('receipt'),
+                        'receipt_url' => $receipt_url ? $receipt_url : ''
                     ]
                 ),
                 'text/html'
             );
-            $send = $mailer->send($message);
+        
+        $send = $mailer->send($message);
     }
 
 

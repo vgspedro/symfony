@@ -73,7 +73,7 @@ return array(
     'date' => 'Data',
     'payment' => 'Pagamento',
     'refund' => 'Reembolso',
-    'refund_txt' => 'Foi efetuado um reembolso, por favor clique no botão "Reembolso", para ver',
+    'refund_txt' => 'Foi-lhe efetuado um reembolso, por favor clique no botão "Reembolso", para ver',
     'name' => 'Nome',
     'adults' => 'Adultos',
     'childrens' => 'Crianças',
