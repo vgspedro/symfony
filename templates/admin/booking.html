@@ -369,19 +369,24 @@ function searchValue(){
         else if (row.status == 'confirmed') color = 'w3-green'
         
 
-        o_status = '<button id="'+row.id+'" title="Estado da Reserva" style="padding:8px 4px!important; margin-right:4px" class="'+color+' w3-btn w3-border" onclick="modalBookingSetStatus('+row.id+')">#'+row.id+' '+data.substring(0, 3)+'</button>' 
+      o_status = '<button id="'+row.id+'" title="Estado da Reserva" style="padding:8px 4px!important; margin-right:4px" class="'+color+' w3-btn w3-border" onclick="modalBookingSetStatus('+row.id+')">#'+row.id+' '+data.substring(0, 3)+'</button>' 
 
-        paylogs = row.payment_status ? '<button style="margin-right:4px" title="Logs Pagamentos/Reembolsos" class="w3-btn w3-blue w3-border" onclick="getStripeLogs('+row.id+')"><i class="fa fa-cogs"></i></button>' : '';
+      paylogs = row.payment_status ? '<button style="margin-right:4px" title="Logs Pagamentos/Reembolsos" class="w3-btn w3-blue w3-border" onclick="getStripeLogs('+row.id+')"><i class="fa fa-cogs"></i></button>' : '';
 
 
-       payment = !row.payment_status ? ' <button title="Pagamento" onclick="setPayment('+row.id+')" class="w3-btn w3-border"><i class="fa fa-cc-stripe"></i></button>' : ''
+      payment = !row.payment_status ? ' <button title="Pagamento" onclick="setPayment('+row.id+')" class="w3-btn w3-border"><i class="fa fa-cc-stripe"></i></button>' : ''
 
-       refund =  row.payment_status ? '<button title="Reembolso" onclick="modalRefund('+row.id+')" class="w3-btn w3-border w3-orange"><i class="fa fa-reply"></i></button>'  : ''
+      refund =  row.payment_status ? '<button title="Reembolso" onclick="modalRefund('+row.id+')" class="w3-btn w3-border w3-orange"><i class="fa fa-reply"></i></button>'  : ''
 
-        wp = row.wp ? '<button title="Ver Dados Cartão Cliente" class="w3-btn w3-border w3-indigo" onclick="modalToCardData('+row.id+',\''+row.total+'\')"><i class="far fa-credit-card"></i></button>'
+      wp = row.wp ? '<button title="Ver Dados Cartão Cliente" class="w3-btn w3-border w3-indigo" onclick="modalToCardData('+row.id+',\''+row.total+'\')"><i class="far fa-credit-card"></i></button>'
       : ''
 
-        return '<div class="w3-small" style="display:flex">'+o_status+''+paylogs+''+payment+''+refund+''+wp+'</div>'
+      return !row.payment_log && row.payment_status == 'canceled' 
+        ?
+          '<div class="w3-large" style="margin-top:8px">#'+row.id+'</div>'
+        :
+          '<div class="w3-small" style="display:flex">'+o_status+''+paylogs+''+payment+''+refund+''+wp+'</div>'
+       
       }},
       { data: "tour"},
       { data: "date"},

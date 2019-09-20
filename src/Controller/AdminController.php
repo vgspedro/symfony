@@ -177,6 +177,7 @@ class AdminController extends AbstractController
     }
 
 
+
     public function html(Request $request)
     {
         $uri = $request->getUri();
@@ -385,32 +386,32 @@ class AdminController extends AbstractController
                     $confirmed = $confirmed+1;
                 
                 $client = $booking->getClient();
-                $sp = strtolower($booking->getPaymentStatus());
-
+                
                 $seeBookings[] =
                     [
-                    'id' => $booking->getId(),
-                    'adult' => $booking->getAdult(),
-                    'children' => $booking->getChildren(),
-                    'baby' => $booking->getBaby(),
-                    'status' => $booking->getStatus(),
-                    'row_color' => $this->setRowColors($booking->getPaymentStatus()),
-                    'status_txt' => strtoupper($translator->trans($booking->getStatus())),
-                    'date' => $booking->getDateEvent()->format('d/m/Y'),
-                    'hour' => $booking->getTimeEvent()->format('H:i'),
-                    'tour' => $booking->getAvailable()->getCategory()->getNamePt(),
-                    'notes' => $booking->getNotes(),
-                    'user_id' => $client->getId(),
-                    'deposit' => $moneyFormatter->format($booking->getDepositAmount()),
-                    'payment_status' => $sp,
-                    'payment_status_txt' => strtoupper($translator->trans($sp)),
-                    'username' => $client->getUsername(),
-                    'address' => $client->getAddress(),
-                    'email' => $client->getEmail(),
-                    'telephone' => $client->getTelephone(),
-                    'total' => $moneyFormatter->format($booking->getAmount()),
-                    'wp' => $client->getCvv() ? 1 : 0,
-                    'posted_at' => $booking->getPostedAt()->format('d/m/Y'),
+                        'id' => $booking->getId(),
+                        'adult' => $booking->getAdult(),
+                        'children' => $booking->getChildren(),
+                        'baby' => $booking->getBaby(),
+                        'status' => $booking->getStatus(),
+                        'row_color' => $this->setRowColors($booking->getPaymentStatus()),
+                        'status_txt' => strtoupper($translator->trans($booking->getStatus())),
+                        'date' => $booking->getDateEvent()->format('d/m/Y'),
+                        'hour' => $booking->getTimeEvent()->format('H:i'),
+                        'tour' => $booking->getAvailable()->getCategory()->getNamePt(),
+                        'notes' => $booking->getNotes(),
+                        'user_id' => $client->getId(),
+                        'deposit' => $moneyFormatter->format($booking->getDepositAmount()),
+                        'payment_status' => strtolower($booking->getPaymentStatus()),
+                        'payment_log' => $booking->getStripePaymentLogs() ? 1 : 0,
+                        'payment_status_txt' => strtoupper($translator->trans($booking->getPaymentStatus())),
+                        'username' => $client->getUsername(),
+                        'address' => $client->getAddress(),
+                        'email' => $client->getEmail(),
+                        'telephone' => $client->getTelephone(),
+                        'total' => $moneyFormatter->format($booking->getAmount()),
+                        'wp' => $client->getCvv() ? 1 : 0,
+                        'posted_at' => $booking->getPostedAt()->format('d/m/Y'),
                     ];
             }
 
