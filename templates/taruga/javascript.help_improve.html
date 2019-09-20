@@ -16,7 +16,6 @@ window.addEventListener("load", function(){
   })
 })
 
-
 mySidenav = document.getElementById("mySidenav")
 overlayBg = document.getElementById("myOverlay")
 loader = document.getElementById("loader-cont")
@@ -46,5 +45,18 @@ function navigation(pos,id){
     scrollTop: $(pos).offset().top -vl
   }, 750)
   }
+
+function modalConditions(i, text, head){
+    a=[]
+    a.push(['w3-pale-yellow w3-border-amber w3-pale-green w3-border-green w3-pale-red w3-border-red', 'w3-pale-green w3-border-green', 'fa-check'])
+    a.push(['w3-pale-yellow w3-border-amber w3-pale-green w3-border-green w3-pale-red w3-border-red', 'w3-pale-yellow w3-border-amber', 'fa-info-circle'])
+    a.push(['w3-pale-yellow w3-border-amber w3-pale-green w3-border-green w3-pale-red w3-border-red', 'w3-pale-red w3-border-red', 'fa-exclamation-triangle'])
+          
+    $('#modal-info').show()
+    $('.modal-head').removeClass(a[i][0]).addClass(a[i][1])
+    $('.icon').html('<i class="fa '+a[i][2]+'"></i>')
+    $('.modal-head-text').text(head)  
+    $('.modal-text').html(text)
+}
 
 </script>

@@ -67,15 +67,9 @@ function navigation(pos,id){
   }
 }
 
-
-
-
 function updateTourData(id){
-  
-  //$('#get-available').trigger('reset')
   $('.set-visible, .wp-active, .wp-btn').addClass('w3-hide');
   $('.wp-active').empty()
-
 }
 
 stockDate = [];
@@ -112,9 +106,7 @@ function getAvailable(){
 
         //no stock available 
         else if (data.status == 2){
-
           modalConditions(1, data.message, '{% trans %}check{% endtrans %}') 
-        
         }
         
         else if (data.status == 1){
@@ -163,8 +155,8 @@ function getAvailable(){
       }
     },
     error:function(data){
-      $("#myOverlay, #loader-cont").hide();
-      $('#modal-error').show();
+      $(".w3-overlay, #loader-cont").hide();
+      modalConditions(2, '{% trans %}wifi_error{% endtrans %}', '{% trans %}error{% endtrans %}')
     }
   })
 }, 500)
@@ -247,18 +239,13 @@ function saveModalEvents(){
         }
       },
       error:function(data){
-        $("#myOverlay, #loader-cont").hide();
-        $('#modal-error').show();
+        $(".w3-overlay, #loader-cont").hide();
+        modalConditions(2, '{% trans %}wifi_error{% endtrans %}', '{% trans %}error{% endtrans %}')
       }
     })
-
     $('.set-visible').removeClass('w3-hide');
   }
-
 }
-
-
-
 
 function showRgpd(){
   $("#myOverlay, #loader-cont").show();
@@ -279,8 +266,8 @@ function showRgpd(){
         }
       },
       error:function(data){
-        $("#myOverlay, #loader-cont").hide();
-        $('#modal-error').show();
+        $(".w3-overlay, #loader-cont").hide();
+        modalConditions(2, '{% trans %}wifi_error{% endtrans %}', '{% trans %}error{% endtrans %}')
       }
     })
   }, 500)

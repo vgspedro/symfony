@@ -163,7 +163,7 @@ class HomeController extends AbstractController
         $locales = $em->getRepository(Locales::class)->findAll();
         $gallery = $em->getRepository(Gallery::class)->findBy(['isActive' => 1],['namePt' => 'ASC']);
         return $this->render('info.html.twig', 
-            array(
+            [
                 'colors'=> $this->color(),
                 'warning' => $warning,
                 'locale' => null,
@@ -173,7 +173,7 @@ class HomeController extends AbstractController
                 'company' => $company,
                 'host' => $reqInfo->getHost($request),
                 'page' => 'index_info'
-                )
+            ]
             );
     }
 
@@ -326,7 +326,7 @@ class HomeController extends AbstractController
                 //throw $e;
                 return new JsonResponse([
                     'status' => 4,
-                    'message' => $translator->trans('opps_something_wrong'),
+                    'message' => $translator->trans('opps_something_wrong').' '.$e->getMessage(),
                     'data' => $e->getMessage(),
                     'mail' => null,
                     'expiration' => 0,

@@ -28,8 +28,8 @@
     <div class="w3-container w3-padding">
       <div class="w3-row w3-padding-4">
         <div class="w3-col s12 w3-xlarge w3-margin-bottom" style="margin-top:-28px">
+          <span style="margin-top:-4px" class="w3-right w3-large w3-hide date required w3-text-red w3-animate-zoom">{% trans %}required{% endtrans %} </span>
           <input class="w3-input get-dates" style="padding:0px 8px" name="date" readonly placeholder="{% trans %}info.choose_date_calendar{% endtrans %} *" type="text">
-          <span class="w3-large w3-hide date required w3-text-red w3-animate-zoom">{% trans %}required{% endtrans %} </span>
         </div>
         <div class="w3-col s12 w3-large w3-block">
           <div style="position:relative;height:370px;zoom:95%">
@@ -37,9 +37,10 @@
           </div>
         </div>
         <div class="w3-col s12 w3-xlarge">
+          <span style="margin-top:-4px" class="w3-large w3-hide hour required w3-text-red w3-animate-zoom w3-right">{% trans %}required{% endtrans %} </span>
           <select class="w3-input set-hours" name="time" onchange="changeEventGetHour(this.value)">
           </select>
-          <span class="w3-large w3-hide hour required w3-text-red w3-animate-zoom">{% trans %}required{% endtrans %} </span>
+         
         </div>
       </div>
     </div>
@@ -55,105 +56,6 @@
     </div>
   </div>
 </div>
-
-<!-- ERROR MODAL DEPRECATED
-
-<div id="modal-error" class="w3-modal" style="z-index:9999;padding-top:60px; padding-bottom: 32px">
-  <div class="w3-modal-content w3-animate-zoom" style="max-width:400px">
-    <div class="w3-col s12">
-      <div class="w3-row">
-        <div class="w3-panel w3-leftbar w3-col s12 w3-pale-red w3-border-red w3-left-align w3-large">
-          <span class="w3-closebtn w3-padding-small" onclick="$('#modal-error').hide()">
-            <i class="fa fa-times"></i>
-          </span>
-          <h2>
-            <i class="fa fa-exclamation-triangle"></i>
-            <span>{% trans %}error{% endtrans %} </span>
-          </h2>
-          <div class="w3-large w3-padding-small WIFIERROR">{% trans %}wifi_error{% endtrans %}
-            <div class="w3-margin-bottom"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-SUCCESS MODAL DEPRECATED
-
-<div id="modal-success" class="w3-modal" style="z-index:9999;padding-top:60px; padding-bottom: 32px">
-  <div class="w3-modal-content w3-animate-zoom" style="max-width:400px">
-    <div class="w3-col s12">
-      <div class="w3-row">
-        <div class="w3-panel w3-leftbar w3-col s12 w3-white w3-border-green w3-left-align w3-large">
-          <span class="w3-closebtn w3-padding-small" onclick="$('#modal-success').hide()">
-            <i class="fa fa-times"></i>
-          </span>
-          <h2 class="w3-text-green">
-            <i class="fa fa-check"></i>
-            <span>{% trans %}success{% endtrans %}</span>
-          </h2>
-          <span class="w3-center w3-large w3-padding-small ORDER">{% trans %}order{% endtrans %}</span>
-            <span class="set-order-id w3-xlarge"></span>
-            <div class='w3-large w3-center w3-text-deep-orange'>{% trans %}part_seven.spam_txt{% endtrans %}</div>
-            <div>{% trans %}thank_you{% endtrans %}</div>
-            <div class="w3-margin-bottom"></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-REQUIRED FIELDS  MODAL DEPRECATED -->
-
-
-<!--div id="modal-info" class="w3-modal" style="z-index:9999;padding-top:60px; padding-bottom: 32px">
-  <div class="w3-modal-content w3-animate-zoom" style="max-width:400px">
-    <div class="w3-col s12">
-      <div class="w3-row">
-        <div class="w3-panel w3-leftbar w3-col s12 w3-pale-yellow w3-border-amber w3-left-align w3-large">
-          <span class="w3-closebtn w3-padding-small" onclick="$('#modal-info').hide()">
-            <i class="fa fa-times"></i>
-          </span>
-          <h2>
-            <i class="fa fa-warning"></i>
-            <span>{% trans %}part_two.check{% endtrans %}</span>
-          </h2>
-          <div class="TOUR w3-hide required">{% trans %}part_seven.tour{% endtrans %}</div>
-          <div class="ADULT w3-hide required">{% trans %}part_seven.adult{% endtrans %}</div>
-          <div class="CHILDREN w3-hide required">{% trans %}part_seven.children{% endtrans %}</div>
-          <div class="BABY w3-hide required">{% trans %}part_seven.baby{% endtrans %}</div>
-          <div class="NAME w3-hide required">{% trans %}part_seven.name{% endtrans %}</div>
-          <div class="NAME_INVALID w3-hide required">{% trans %}part_seven.name_invalid{% endtrans %}</div>
-          <div class="CVV w3-hide required">CVV *</div>
-          <div class="CVV_INVALID w3-hide required">{% trans %}part_seven.cvv_invalid{% endtrans %}</div>
-          <div class="CREDIT_CARD_NAME w3-hide required">{% trans %}info.name_credit_card{% endtrans %}</div>
-          <div class="NO_MATCH_NAMES w3-hide required">{% trans %}part_seven.no_match_names{% endtrans %}</div>
-          <div class="EMAIL w3-hide required">{% trans %}part_seven.email{% endtrans %}</div>
-          <div class="EMAIL_INVALID w3-hide required">{% trans %}part_seven.email_invalid{% endtrans %}</div>
-          <div class="CREDIT_CARD_NR w3-hide required">{% trans %}info.credit_card_nr{% endtrans %}</div>
-          <div class="CREDIT_CARD_DATE w3-hide required">{% trans %}info.date_credit_card{% endtrans %}</div>
-          <div class="CARD_NR_INVALID w3-hide required">{% trans %}part_seven.card_nr_invalid{% endtrans %}</div>
-          <div class="ZERO w3-hide required">{% trans %}part_seven.zero{% endtrans %}</div>
-          <div class="TELEPHONE w3-hide required">{% trans %}part_seven.telephone{% endtrans %}</div>
-          <div class="TELEPHONE_INVALID w3-hide required">{% trans %}part_seven.telephone_invalid{% endtrans %}</div>
-          <div class="ADDRESS w3-hide required">{% trans %}part_seven.address{% endtrans %}</div>
-          <div class="RGPD w3-hide required">{% trans %}part_seven.rgpd{% endtrans %}</div>
-          <div class="OTHER_BUY_IT w3-hide required">{% trans %}part_seven.other_buy_it{% endtrans %}</div>
-          <div class="WP_SET_NO_CC_DATA w3-hide required">{% trans %}info.wp_set_no_cc_data{% endtrans %}</div>
-          <div class="DATE_CARD_INVALID w3-hide required">{% trans %}info.date_card_invalid{% endtrans %}</div>
-          <div class="GDPR_NOT_FOUND w3-hide required">{% trans %}gdpr_not_found{% endtrans %}</div>
-          <div class="EVENT_NOT_FOUND w3-hide required">{% trans %}event_not_found{% endtrans %}</div>
-          <div class="OPPS_SOMETHING_WRONG w3-hide required">{% trans %}opps_something_wrong{% endtrans %}</div>
-          <div class="debugger"></div>
-          <div class="w3-margin-bottom"></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
--->
 
 <div id="modal-info" class="w3-modal" style="z-index:9999;padding-top:60px;padding-bottom:32px">
     <div class="w3-modal-content w3-animate-zoom" style="max-width:400px">
@@ -176,10 +78,6 @@ REQUIRED FIELDS  MODAL DEPRECATED -->
 </div>
 
 
-
-
-
-
 <div id="modal-no-stock" class="w3-modal" style="z-index:9999;padding-top:60px; padding-bottom: 32px">
   <div class="w3-modal-content w3-animate-zoom" style="max-width:400px">
     <div class="w3-col s12">
@@ -200,8 +98,6 @@ REQUIRED FIELDS  MODAL DEPRECATED -->
     </div>
   </div>
 </div>
-
-
 
 <!--SESSION END MODAL -->
 <div id="modal-check" class="w3-modal" style="z-index:9999;padding-top:60px; padding-bottom: 32px">

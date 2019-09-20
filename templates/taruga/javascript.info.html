@@ -105,13 +105,12 @@ google.maps.event.addListener(marker,"click",function() {
   map.setCenter(marker.getPosition())
   })
   var infowindow = new google.maps.InfoWindow({
-    content: "Taruga Tours"
+    content: '{{company.name}}'
   })
   infowindow.open(map,marker)
 }
 
-
-typeof(Storage) !== "undefined" ? false : setTimeout(function(){$('#modal-no-storage').show();},1500)
 '{{ id }}' != '#home' ?  setTimeout(function(){navigation('{{id}}');},1000) : false
 </script>
+
 <script src="https://maps.googleapis.com/maps/api/js?key={{company.GoogleMapsApiKey}}&callback=myMap"></script>
