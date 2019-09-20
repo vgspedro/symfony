@@ -374,7 +374,7 @@ function searchValue(){
       paylogs = row.payment_status ? '<button style="margin-right:4px" title="Logs Pagamentos/Reembolsos" class="w3-btn w3-blue w3-border" onclick="getStripeLogs('+row.id+')"><i class="fa fa-cogs"></i></button>' : '';
 
 
-      payment = !row.payment_status ? ' <button title="Pagamento" onclick="setPayment('+row.id+')" class="w3-btn w3-border"><i class="fa fa-cc-stripe"></i></button>' : ''
+      payment = !row.payment_status ? '<button title="Pagamento" onclick="setPayment('+row.id+')" class="w3-btn w3-border"><i class="fa fa-cc-stripe"></i></button>' : ''
 
       refund =  row.payment_status ? '<button title="Reembolso" onclick="modalRefund('+row.id+')" class="w3-btn w3-border w3-orange"><i class="fa fa-reply"></i></button>'  : ''
 
@@ -383,7 +383,7 @@ function searchValue(){
 
       return !row.payment_log && row.payment_status == 'canceled' 
         ?
-          '<div class="w3-large" style="margin-top:8px">#'+row.id+'</div>'
+          '<div class="w3-large">#'+row.id+'<button title="Pagamento" style="margin-left:8px" onclick="setPayment('+row.id+')" class="w3-white w3-small w3-btn w3-border"><i class="fa fa-cc-stripe"></i></button></div>'
         :
           '<div class="w3-small" style="display:flex">'+o_status+''+paylogs+''+payment+''+refund+''+wp+'</div>'
        

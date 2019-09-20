@@ -29,10 +29,14 @@ class Stripe
 
             if($request->request->get('secret')){
 
-                $depositPercent = $booking->getAvailable()->getCategory()->getDeposit() != '0.00' ? $booking->getAvailable()->getCategory()->getDeposit() : 1;
-
-                $chargeAmount = $booking->getAmount()->getAmount() * $depositPercent;
-
+                if($request->request->get('total'))
+                    $chargeAmount = $booking->getAmount()->getAmount();
+                
+                else{
+                    $depositPercent = $booking->getAvailable()->getCategory()->getDeposit() != '0.00' ? $booking->getAvailable()->getCategory()->getDeposit() : 1;
+                    $chargeAmount = $booking->getAmount()->getAmount() * $depositPercent;
+                }
+                
                 $intentId = explode("_secret_", $request->request->get('secret'));
                 
                 $p_i = $intent->update($intentId[0],[
