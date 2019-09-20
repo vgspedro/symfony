@@ -1,13 +1,17 @@
-<div id="modal-resolution-center" class="w3-modal" style="padding-top:100px" onclick="$(this).hide()">
+<div id="modal-resolution-center" class="w3-modal" style="padding-top:64px" onclick="$(this).hide()">
   <span class="w3-closebtn w3-text-white w3-opacity w3-hover-opacity-off w3-xlarge w3-container w3-display-topright">
     <i class="fa fa-remove"></i>
   </span>
   <div class="w3-modal-content w3-animate-zoom w3-center w3-white w3-padding-32 w3-padding-small">
+    
     <img style="width:31px" src="{{ asset('images/center.png') }}">&nbsp;
     <span class="w3-large"> {% trans %}arbitrary.name{% endtrans %} </span>
     <div class="w3-left-align">{% trans %}arbitrary.txt{% endtrans %}</div>
+  
   </div>
 </div>
+
+
 
 <div id="modal-available-dates" class="w3-modal" style="z-index:9999;padding-top:12px;padding-bottom:32px; background-color: rgba(255,255,255,.95)">
   <span onclick="closeModalEvents()" class="w3-padding w3-right" style="cursor:pointer">
@@ -78,28 +82,7 @@
 </div>
 
 
-<div id="modal-no-stock" class="w3-modal" style="z-index:9999;padding-top:60px; padding-bottom: 32px">
-  <div class="w3-modal-content w3-animate-zoom" style="max-width:400px">
-    <div class="w3-col s12">
-      <div class="w3-row">
-        <div class="w3-panel w3-leftbar w3-col s12 w3-pale-yellow w3-border-amber w3-left-align w3-large">
-          <span class="w3-closebtn w3-padding-small" onclick="$('#modal-no-stock').hide()">
-            <i class="fa fa-times"></i>
-          </span>
-          <h2>
-            <i class="fa fa-warning"></i>
-            <span>{% trans %}part_seven.sorry{% endtrans %}</span>
-          </h2>
-          <div>{% trans %}part_seven.no_stock{% endtrans %}</div>
-          <div class="MAX w3-center"></div>
-          <div class="w3-margin-bottom"></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!--SESSION END MODAL -->
+<!--SESSION END MODAL-->
 <div id="modal-check" class="w3-modal" style="z-index:9999;padding-top:60px; padding-bottom: 32px">
   <div class="w3-modal-content w3-animate-zoom" style="max-width:400px">
     <div class="w3-col s12">
@@ -110,6 +93,9 @@
           </span>
           <h2>
             <i class="fa fa-warning"></i>
+            
+            to remove dotnshow this one
+
             <span>{% trans %}check{% endtrans %}</span>
           </h2>
           <p class="w3-center w3-xlarge w3-padding-small">{% trans %}session{% endtrans %}</p>
@@ -121,7 +107,8 @@
   </div>
 </div>
 
-<div id="modal-rgpd" class="w3-modal" style="padding-top:100px;z-index:9999" onclick="$(this).hide()">
+
+<div id="modal-rgpd" class="w3-modal" style="padding-top:64px;z-index:9999" onclick="$(this).hide()">
   <div class="w3-modal-content w3-animate-zoom w3-white w3-padding-32 w3-padding-small w3-margin-bottom">
       <span class="w3-xlarge w3-container w3-btn w3-white w3-display-topright" onclick="$('#modal-rgpd').hide()">
     <i class="fa fa-times"></i>

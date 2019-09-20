@@ -62,7 +62,7 @@ return array(
     'confirmed' => 'Confirmada',
     'booking' => 'Reserva',
     
-    'order_info' => 'Info.Reserva',
+    'order_info' => 'Info. Reserva',
     'total_to_pay' => 'Total a pagar',
     'deposit' => 'Depósito', 
     'payment_txt' => 'Estado do pagamento:',
@@ -163,6 +163,7 @@ return array(
 
 
 'part_seven'=> array(
+    'card_n' => 'Insira nº Cartão *',
     'address'=>'Morada *',
     'name'=>'Nome *',
     'adult'=>'Nº Adultos *',
@@ -209,7 +210,7 @@ return array(
     'personal_data' => 'Info. Pessoal',
     'credit_card_data' => 'Info. Cartão Crédito',
     'confirm' => 'Confirmar',
-    'fill_all' => 'Preencha todos os seguintes campos com <b class="w3-text-red w3-xxlarge">*</b>',
+    'fill_all' => 'Preencha todos os campos com <b class="w3-text-red w3-xxlarge">*</b>',
     'wp_set_no_cc_data' => 'Garantia pagamento obrigatório, mas os dados do Cartão estão em falta',
     'date_card_invalid' => 'Data Expiração Inválida',
     'doubts' => 'Dúvidas',

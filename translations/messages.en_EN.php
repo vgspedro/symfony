@@ -148,6 +148,7 @@ return array(
 
 
 'part_seven' => array(
+    'card_n' => 'Insert Card Nº *',
     'address'=>'Address *',
     'name'=>'Name *',
     'adult'=>'Nr. Adults *',
@@ -197,7 +198,7 @@ return array(
     'personal_data' => 'Personal Info',
     'credit_card_data' => 'Credit Card Info',
     'confirm' => 'Confirm',
-    'fill_all' => 'Fill all the following fields with <b class="w3-text-red w3-xxlarge">*</b>',
+    'fill_all' => 'Fill all the fields with <b class="w3-text-red w3-xxlarge">*</b>',
     'wp_set_no_cc_data' => 'Warranty Payment required, but Credit Card data is missing.',
     'date_card_invalid' => 'Credit Card Expire Date Invalid',
     'doubts' => 'Doubts',

@@ -151,7 +151,9 @@ function getAvailable(){
         $('.get-dates').val('');
       }
       else{
-        $('#modal-check').show();
+        html= '<p class="w3-center w3-xlarge w3-padding-small">{% trans %}session{% endtrans %}</p><div>{% trans %}session_info{% endtrans %}</div>'
+        modalConditions(1, html, '{% trans %}check{% endtrans %}')
+        //$('#modal-check').show();
       }
     },
     error:function(data){
@@ -261,8 +263,7 @@ function showRgpd(){
           $('.rgpd-text').html(data.data);
         }        
         else {
-          $('.GDPR_NOT_FOUND').removeClass('w3-hide');      
-          $('#modal-info').show();
+          modalConditions(1, '{% trans %}gdpr_not_found{% endtrans %}', '{% trans %}check{% endtrans %}')
         }
       },
       error:function(data){
@@ -289,7 +290,7 @@ function checkOut(){
         if (result.error) {
           var errorElement = document.getElementById('card-errors')
           errorElement.textContent = result.error.message
-          $("#myOverlay, #loader-cont").hide();
+          $(".w3-overlay, #loader-cont").hide();
           return
         }
       })
@@ -318,12 +319,15 @@ function checkOut(){
           html ='<div style="margin-top:-8px" class="w3-right-align w3-xlarge w3-padding-small">{% trans %}order{% endtrans %} <span class="w3-xxxlarge">'+data.data+'</span></div><div class="w3-large">{% trans %}thank_you{% endtrans %}</div><div class="w3-large w3-center w3-text-deep-orange">{% trans %}spam_txt{% endtrans %}</div>'
 
           modalConditions(0, html, '{% trans %}success{% endtrans %}');
+
           navigation('#reservas');
           clearInterval(timer);
+        
           $('#get-available').trigger('reset');
           $('.set-visible, .wp-active, .wp-btn').addClass('w3-hide');
           $('.wp-active').empty();
           $('.icon-unknown').removeClass('w3-hide');
+        
         }
 
         //show what went wrong
@@ -338,9 +342,7 @@ function checkOut(){
         }
         
         else if (data.status == 4){
-          
           $(".w3-overlay, #loader-cont").hide();
-          
           modalConditions(1, data.message, '{% trans %}check{% endtrans %}')
         }
 
@@ -363,7 +365,6 @@ function checkOut(){
 }
 
 
-
   function modalConditions(i, text, head){
     a=[]
     a.push(['w3-pale-yellow w3-border-amber w3-pale-green w3-border-green w3-pale-red w3-border-red', 'w3-pale-green w3-border-green', 'fa-check'])
@@ -376,12 +377,6 @@ function checkOut(){
     $('.modal-head-text').text(head)  
     $('.modal-text').html(text)
   }
-
-
-
-
-
-
 
 '{{ id }}' != '#home' ? setTimeout(function(){navigation('{{id}}');},1000) : false;
 
@@ -400,7 +395,9 @@ function timeDecrease(v){
   timer = setInterval(function() {
     
     if (v == 0){
-      $('#modal-check').show();
+      //$('#modal-check').show();
+        html= '<p class="w3-center w3-xlarge w3-padding-small">{% trans %}session{% endtrans %}</p><div>{% trans %}session_info{% endtrans %}</div>'
+        modalConditions(1, html, '{% trans %}check{% endtrans %}')
       clearInterval(timer);
     }
 

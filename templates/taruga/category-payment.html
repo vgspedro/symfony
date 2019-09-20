@@ -31,7 +31,7 @@
   <div class="w3-col l3 m1 w3-hide-small">&nbsp;</div>
   <div class="paylog w3-col l6 m10 s12">
     <!--form id="payment-form"-->
-      <label>{% trans %}insert_card_n{% endtrans %}:</label>
+      <label class="w3-small w3-text-red">{% trans %}part_seven.card_n{% endtrans %}</label>
       <div id="card-element" style="padding: 10px 8px"></div>
       <div id="card-errors" class="w3-text-red w3-small" role="alert"></div>
       <div class="set-token"></div>
@@ -58,8 +58,12 @@
           fontSmoothing: 'antialiased',
           fontSize: '18px',
           '::placeholder': {
-            color: '#C8BFE7'
+            color: '#C8BFE7',
+            text: '{% trans %}part_seven.card_n{% endtrans %}'
           }
+        },
+        card:{
+          hidePostalCode:true
         },
         invalid: {
           color: '#fa755a',
@@ -107,19 +111,17 @@
       data: 'pi_id='+pi_id,
       success: function(data){
         $(".w3-overlay, #loader-cont").hide();
-        //console.log('getUrlReceipt()')
-        console.log(data)
+        //console.log(data)
         if (data.status == 1){
-          //alert('3 ok-->' + data.status)
-          info = data.data.data.data[0]
-          //console.log(info)
 
+          info = data.data.data.data[0]
+          card.destroy()
           $('#get-available').trigger('reset');
           $('.set-visible, .wp-active, .wp-btn').addClass('w3-hide');
           $('.wp-active').empty();
+          $('iframe').remove();
 
           html ='<div style="margin-top:-8px" class="w3-right-align w3-xlarge w3-padding-small">{% trans %}order{% endtrans %} <span class="w3-xxxlarge">'+data.message+'</span></div><div class="w3-large">{% trans %}thank_you{% endtrans %}</div><div class="w3-large w3-center w3-text-deep-orange">{% trans %}spam_txt{% endtrans %}</div><div class="w3-right-align"><a class="w3-btn w3-border w3-white w3-round w3-medium" target="_blank" href='+info.receipt_url+'> {% trans %}receipt{% endtrans %}</a></div>'
-
           modalConditions(0, html, '{% trans %}success{% endtrans %}')
 
         }
@@ -134,7 +136,7 @@
     })
   }
 
-  setTimeout(function(){buildStripe('{{company.stripePK}}') }, 500)
+  setTimeout(function(){buildStripe('{{company.stripePK}}') }, 250)
 
 </script>
 
