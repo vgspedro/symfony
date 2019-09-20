@@ -25,8 +25,8 @@ class PaymentTimeoutCommand extends Command
     protected function configure()
     {
         $this->setName('app:cancel-payment')
-        ->setDescription('Execute to check if payment interval (5 minutes) has ended.')
-        ->setHelp("Change the BookingTaxes to canceled in entity status ");
+        ->setDescription('Execute to check if payment interval (20 minutes) has ended.')
+        ->setHelp("Change the Stock back");
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -54,22 +54,20 @@ class PaymentTimeoutCommand extends Command
         //NOW WE HAVE TO CANCEL THE BOOKINGS AND SET THE STOCK BACK TO THE EVENT
         //WRITE A LOG IN EACH LOG TABLE
         //CHANGE THE STATUS OF EACH PAYMENT TO 'canceled'
-        
+        /*
         if ($bookings)
         {
             foreach($bookings as $booking){
-
                 $booking->setPaymentStatus(Booking::STATUS_CANCELED);
                 $stock = $booking->getAvailable->getStock();
                 $booking->getCountPax();
                 $booking->getAvailable->setAvailability($stock+ $booking->getCountPax());
-            
             }
 
             $em->persist($booking);
             $em->flush();
         }
-
+        */
         // outputs a message followed by a "\n"
         $output->writeln('Total bookings in PROCESSING status until '.$startDateTime->format('d/m/Y H:i').'= '.count($bookings)); 
         // retrieve the argument value using getArgument()

@@ -19,7 +19,6 @@ class Stripe
 
         if($booking)
             $product = '#'.$booking->getId().'-'.$booking->getAvailable()->getCategory()->getNamePt();
-    
 
         $stripe = new \Stripe\Stripe();
         $intent = new \Stripe\PaymentIntent();
@@ -29,9 +28,11 @@ class Stripe
 
             if($request->request->get('secret')){
 
+                //set 100% value deposit link /set-stripe 
                 if($request->request->get('total'))
                     $chargeAmount = $booking->getAmount()->getAmount();
-                
+
+                //from online booking
                 else{
                     $depositPercent = $booking->getAvailable()->getCategory()->getDeposit() != '0.00' ? $booking->getAvailable()->getCategory()->getDeposit() : 1;
                     $chargeAmount = $booking->getAmount()->getAmount() * $depositPercent;

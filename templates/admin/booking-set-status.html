@@ -95,18 +95,28 @@ $('#bookingstatus').on('submit',function(e){
         if (data.status == 1){
 
           $("#modal-booking-set-status").hide()
-          
+
+          if(data.data.status == 'CANCELED') 
+            c = 'w3-blue'
+          else if(data.data.status == 'CONFIRMED')
+            c = 'w3-green'
+          else
+            c = 'w3-red'
+
           setTimeout(function(){
             table.cell({row:data.data.index, column:1}).data(data.data.status)
             table.row(data.data.index).draw()
           }, 750)
           setTimeout(function(){
             $('tr#'+data.data.id).addClass('blink w3-pale-green')
+            $('#btn-'+data.data.id).removeClass('w3-red w3-blue w3-green').addClass('w3-white')
           }, 1000)
 
           setTimeout(function(){
             $('tr#'+data.data.id).removeClass('blink w3-pale-green')
+            $('#btn-'+data.data.id).addClass(c).removeClass('w3-white')
           }, 5000)
+
           
           if (data.stock_it == 1){
             $('#modal-success').show()
