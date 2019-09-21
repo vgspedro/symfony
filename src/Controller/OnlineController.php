@@ -34,15 +34,6 @@ class OnlineController extends AbstractController
                 'data' => null
             ]);
 
-        $paylog = $em->getRepository(StripePaymentLogs::class)->findOneBy(['booking' => $booking]);
-
-        // a payment on this boolinkg have been done already
-        if($paylog)
-            return new JsonResponse([
-                'status' => 0,
-                'message' => 'Pagamento já foi efetuado, clique em "Procurar"',
-                'data' => [ 'status' => $paylog->getLogObj()->status, 'index' => $index ]
-            ]);
 
 
         // only allow payments of bookings where payment status is canceled, from today to past events, prevent problems in stock in future bookings
@@ -56,6 +47,17 @@ class OnlineController extends AbstractController
                 'data' => null
             ]);
         }
+
+        $paylog = $em->getRepository(StripePaymentLogs::class)->findOneBy(['booking' => $booking]);
+
+        // a payment on this boolinkg have been done already
+        if($paylog)
+            return new JsonResponse([
+                'status' => 0,
+                'message' => 'Pagamento já foi efetuado, clique em "Procurar"',
+                'data' => [ 'status' => $paylog->getLogObj()->status, 'index' => $index ]
+            ]);
+
 
 
         return new JsonResponse([
