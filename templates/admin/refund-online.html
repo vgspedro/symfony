@@ -65,7 +65,7 @@
     <div class="w3-col l6 m6 s12">
       <label>{{translator.amount}} {{company.currency.currency}}</label>
       <input type="hidden" value="{{booking.id}}" name="b_id">
-      <input class="w3-input w3-border" name='amount' style="height:45px" value="{{(booking.amount.amount/100)|number_format(2)}}">
+      <input class="w3-input w3-border" name='amount' style="height:45px" value="{{(booking.deposit.amount/100)|number_format(2)}}">
     </div>
     <div class="w3-col l6 m6 s12">
       <label>{{translator.motive}}</label>
