@@ -94,7 +94,19 @@
     ).then(function(result) {
       if (result.error) {
         $('.w3-overlay').hide()
-        modalConditions(1, result.error.message, '{% trans %}check{% endtrans %}') 
+        
+        m = result.error.message
+        
+        console.log('é mesmo aqui')
+
+        console.log(result.error)
+        //msg = m == 'A processing error occurred.' ? m : 
+        if(result.error.message == 'A processing error occurred.'){
+          m = '{% trans %}secret{% endtrans %}'
+          $('.w3-closebtn').attr('onclick','location.reload(true)')
+        }
+        
+        modalConditions(1, m, '{% trans %}check{% endtrans %}') 
       } 
       else
         getUrlReceipt(result.paymentIntent.id)
