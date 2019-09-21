@@ -20,6 +20,7 @@ class OnlineController extends AbstractController
     public function index(Request $request, TranslatorInterface $translator)
     {
         $id = $request->request->get('id');
+
         $index = $request->request->get('index');
 
         $em = $this->getDoctrine()->getManager();
@@ -35,13 +36,28 @@ class OnlineController extends AbstractController
 
         $paylog = $em->getRepository(StripePaymentLogs::class)->findOneBy(['booking' => $booking]);
 
+        // a payment on this boolinkg have been done already
         if($paylog)
             return new JsonResponse([
                 'status' => 0,
                 'message' => 'Pagamento já foi efetuado, clique em "Procurar"',
                 'data' => [ 'status' => $paylog->getLogObj()->status, 'index' => $index ]
             ]);
-            
+
+
+        // only allow payments of bookings where payment status is canceled, from today to past events, prevent problems in stock in future bookings
+
+        $now = new \DateTime();
+
+         if ($booking->getPaymentStatus() == 'canceled' && $booking->getAvailable()->getDatetimeStart()->format('Y-m-d') >= $now->format('Y-m-d')){
+            return new JsonResponse([
+                'status' => 0,
+                'message' => 'Não é possivel efetuar pagamento deste reserva!<br> A Data de realização '.$booking->getAvailable()->getDatetimeStart()->format('d/m/Y').' tem que ser anterior ou igual à data actual '.$now->format('d/m/Y'),
+                'data' => null
+            ]);
+        }
+
+
         return new JsonResponse([
             'status' => 1,
             'message' => 'redirect to Payment.',

@@ -311,6 +311,7 @@ class HomeController extends AbstractController
                     $i = $stripe->createUpdatePaymentIntent($company, $request, $booking);
                     if($i['status'] == 1){
                         $booking->setPaymentStatus(Booking::STATUS_CANCELED);
+                        $booking->setStatus(Booking::STATUS_CANCELED);
                         $em->persist($booking);
                         $em->flush();
                     }

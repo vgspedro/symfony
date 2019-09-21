@@ -146,8 +146,8 @@ return array(
 'part_tree'=> array(
     'duration'=>'Duração Passeio',
     'adult'=>'Adulto',
-    'children'=>'Criança (Máx: 12anos)',
-    'baby'=>'Bébé (Máx: 23meses)',
+    'children'=>'Criança (Máx: 12Anos)',
+    'baby'=>'Bébé (Máx: 23Meses)',
 
 ),
 
@@ -169,8 +169,8 @@ return array(
     'address'=>'Morada *',
     'name'=>'Nome *',
     'adult'=>'Nº Adultos *',
-    'children'=>'Nº Crianças (Máx: 12anos)',
-    'baby'=>'Nº Bébés (Máx: 23meses)',
+    'children'=>'Nº Crianças (Máx: 12Anos)',
+    'baby'=>'Nº Bébés (Máx: 23Meses)',
     'message'=>'Mensagem',
     'date'=>'Data *',
     'hour'=>'Hora *',
