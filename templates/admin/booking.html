@@ -381,11 +381,14 @@ function searchValue(){
       wp = row.wp ? '<button title="Ver Dados Cartão Cliente" class="w3-btn w3-border w3-indigo" onclick="modalToCardData('+row.id+',\''+row.total+'\')"><i class="far fa-credit-card"></i></button>'
       : ''
 
-      return !row.payment_log && row.payment_status == 'canceled' 
-        ?
-          '<div class="w3-large">#'+row.id+'<button title="Pagamento" style="margin-left:8px" onclick="setPayment('+row.id+')" class="w3-white w3-small w3-btn w3-border"><i class="fa fa-cc-stripe"></i></button></div>'
-        :
-          '<div class="w3-small" style="display:flex">'+o_status+''+paylogs+''+payment+''+refund+''+wp+'</div>'
+      if(row.payment_status == 'processing')
+        return '<div class="w3-large">#'+row.id+'</div>'
+      
+      else if (row.payment_status == 'canceled')
+        return '<div class="w3-large">#'+row.id+'<button title="Pagamento" style="margin-left:8px" onclick="setPayment('+row.id+')" class="w3-white w3-small w3-btn w3-border"><i class="fa fa-cc-stripe"></i></button></div>'
+      
+      else
+        return '<div class="w3-small" style="display:flex">'+o_status+''+paylogs+''+payment+''+refund+''+wp+'</div>'
        
       }},
       { data: "tour"},

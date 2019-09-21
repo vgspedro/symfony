@@ -278,8 +278,6 @@ class Stripe
 
 
     public function refundReasons(TranslatorInterface $translator){
-        $reasons = array();
-
         $reasons[] = ['value' => 'duplicate', 'text' => $translator->trans('duplicate')];
         $reasons[] = ['value' => 'fraudulent', 'text' => $translator->trans('fraudulent')];
         $reasons[] = ['value' => 'requested_by_customer', 'text' => $translator->trans('requested_by_customer')];

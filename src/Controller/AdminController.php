@@ -152,11 +152,11 @@ class AdminController extends AbstractController
         } catch (Exception $e) {
             // Something else happened, completely unrelated to Stripe
 
-            $response = array(
+           return new JsonResponse([
                 'status' => 0,
                 'message' => 'Something else happened, completely unrelated to Stripe',
-                'data' => 'STRP-#6');
-            return new JsonResponse($response);      
+                'data' => 'STRP-#6'
+            ]);      
         }
 
         //succeeded, pending, or failed.
@@ -168,14 +168,12 @@ class AdminController extends AbstractController
         $em->persist($booking);
         $em->flush();                        
       
-        return new JsonResponse(array( 
+        return new JsonResponse([
             'status' => 1,
             'message' => 'Sucesso Cobrança Efetuada',
             'data' => $status
-            )
-        );    
+        ]);    
     }
-
 
 
     public function html(Request $request)
@@ -190,6 +188,7 @@ class AdminController extends AbstractController
 
         $company = $em->getRepository(Company::class)->find(1);
         $ua = $this->getBrowser();
+        
         return $this->render('admin/base.html.twig',[
             'browser' => $ua,
             'booking' => $booking,
@@ -197,7 +196,7 @@ class AdminController extends AbstractController
             'company' => $company,
             'host' => $this->getHost($request),
             'url' => 'https://'.$request->getHost()
-            ]);
+        ]);
     }
 
 	public function adminDashboard()
@@ -208,8 +207,10 @@ class AdminController extends AbstractController
         $end = new \DateTime('last day of this month');
         $booking_month = $em->getRepository(Booking::class)->dashboardCurrentMonth($start, $end);
         return $this->render('admin/dashboard.html', 
-            ['booking' => $booking,
-            'booking_month' => $booking_month]);
+            [
+                'booking' => $booking,
+                'booking_month' => $booking_month
+            ]);
     }
 
     public function adminBookingSetStatus(Request $request){
@@ -224,7 +225,7 @@ class AdminController extends AbstractController
         $client = $booking->getClient();
 
         $seeBooking =
-                array(
+            [
                 'booking' => $booking->getId(),
                 'adult' => $booking->getAdult(),
                 'children' => $booking->getChildren(),
@@ -243,7 +244,7 @@ class AdminController extends AbstractController
                 'language' => $client->getLocale()->getName(),
                 'easyText' => $easyText,
                 'index' => $index
-            );          
+            ];          
 
         return $this->render('admin/booking-set-status.html', array('seeBooking' => $seeBooking));
     }
@@ -262,14 +263,13 @@ class AdminController extends AbstractController
         $booking = $em->getRepository(Booking::class)->find($bookingId);
 
         //if booking not found send info back to user
-        if(!$booking){
-            $response = array(
+        if(!$booking)
+            return new JsonResponse([
                 'status' => 0,
                 'message' => 'Reserva não encontrada',
                 'data' => null,
                 'mail' => null
-             );
-        }
+            ]);
 
         //if order canceled and previous status is not canceled lets put the stock back in the available
         $stockIt = 0;
@@ -298,12 +298,12 @@ class AdminController extends AbstractController
             $booking->getAvailable()->getCategory()->getNamePt();
 
         $seeBooking =
-                array(
+            [
                 'id' => $booking->getId(),
                 'adult' => $booking->getAdult(),
                 'children' => $booking->getChildren(),
                 'baby' => $booking->getBaby(),
-                'status' => strtoupper($translator->trans($booking->getStatus(), array(), 'messages', $booking->getClient()->getLocale()->getName())),
+                'status' => strtoupper($translator->trans($booking->getStatus(), [], 'messages', $booking->getClient()->getLocale()->getName())),
                 'date' => $booking->getDateEvent()->format('d/m/Y'),
                 'hour' => $booking->getTimeEvent()->format('H:i'),
                 'tour' => $categoryName,
@@ -312,7 +312,7 @@ class AdminController extends AbstractController
                 'username' => $client->getUsername(),
                 'logo' => 'https://'.$request->getHost().'/upload/gallery/'.$company->getLogo(),
                 'company_name' => $company->getName()
-            );          
+            ];          
 
         $transport = (new \Swift_SmtpTransport($company->getEmailSmtp(), $company->getEmailPort(), $company->getEmailCertificade()))
             ->setUsername($company->getEmail())
@@ -320,7 +320,7 @@ class AdminController extends AbstractController
 
         $mailer = new \Swift_Mailer($transport);
 
-        $subject =  $translator->trans('booking', array(), 'messages', $booking->getClient()->getLocale()->getName()).'#'.$booking->getId().' ('.strtoupper($translator->trans($booking->getStatus(), array(), 'messages', $booking->getClient()->getLocale()->getName())).')';
+        $subject =  $translator->trans('booking', [], 'messages', $booking->getClient()->getLocale()->getName()).'#'.$booking->getId().' ('.strtoupper($translator->trans($booking->getStatus(), [], 'messages', $booking->getClient()->getLocale()->getName())).')';
 
         $message = (new \Swift_Message($subject))
             ->setFrom([$company->getEmail() => $company->getName()])
@@ -337,9 +337,10 @@ class AdminController extends AbstractController
         return new JsonResponse([
             'status' => 1,
             'message' => 'Sucesso',
-            'data' => array('id' => $booking->getId(), 'index' => (int)$index, 'status' => strtoupper($booking->getStatus())),
+            'data' => ['id' => $booking->getId(), 'index' => (int)$index, 'status' => strtoupper($booking->getStatus())],
             'mail' => $send,
-            'stock_it' => $stockIt]);
+            'stock_it' => $stockIt
+        ]);
     }
 
 
@@ -418,43 +419,46 @@ class AdminController extends AbstractController
             $counter = count($seeBookings);
             
             if ($counter > 0 && $counter <= 1500)
-            
-                $response = array(
+                return new JsonResponse([
                     'data' => $seeBookings, 
                     'options' => $counter, 
                     'pending' => $pending, 
                     'confirmed' => $confirmed, 
-                    'canceled' => $canceled);
+                    'canceled' => $canceled
+                ]);
+            
             else 
-                $response = array(
+                return new JsonResponse([
                     'data' => '', 
                     'options' => $counter, 
                     'pending' => '', 
                     'confirmed' => '', 
-                    'canceled' => '');
+                    'canceled' => ''
+                ]);
         }
         else 
-            $response = array(
+            return new JsonResponse([
                 'data' => '', 
                 'options' => 0, 
                 'pending' => '', 
                 'confirmed' => '', 
-                'canceled' => '');
+                'canceled' => ''
+            ]);
         }
-        else 
-            $response = array(
-                'data' => 'fields', 
-                'options' => 0, 
-                'pending' => '', 
-                'confirmed' => '', 
-                'canceled' => '');
 
-        return new JsonResponse($response);
+        return new JsonResponse([
+            'data' => 'fields', 
+            'options' => 0, 
+            'pending' => '', 
+            'confirmed' => '', 
+            'canceled' => ''
+        ]);
     }
+
 
     protected function getErrorMessages(\Symfony\Component\Form\Form $form) 
     {
-        $errors = array();
+        $errors = [];
         foreach ($form->getErrors() as $key => $error) {
             $errors[] = $error->getMessage();
         }
@@ -504,11 +508,11 @@ class AdminController extends AbstractController
         $response = array();
         //check if mail is equal of current user
         if($user->getUsername() != $username){
-            return new JsonResponse(
-                array(
-                    'status' => 0,
-                    'message' => 'Utilizador inválido',
-                    'data' => array('info' => null)));
+            return new JsonResponse([
+                'status' => 0,
+                'message' => 'Utilizador inválido',
+                'data' => ['info' => null]
+            ]);
         }
         else if($user->getUsername() && password_verify($pass, $user->getPassword())){
             
@@ -516,34 +520,31 @@ class AdminController extends AbstractController
             $booking = $em->getRepository(Booking::class)->find($bookingId);
 
             if(!$booking)
-                return new JsonResponse(
-                    array(
-                        'status' => 0,
-                        'message' => 'Reserva não encontrada',
-                        'data' => array('info' => null)));
+                return new JsonResponse([
+                    'status' => 0,
+                    'message' => 'Reserva não encontrada',
+                    'data' => ['info' => null]
+                ]);
 
             $client = $booking->getClient();
 
-            $response = array(
+            return new JsonResponse([
                 'status' => 1,
                 'message' => 'Sucesso',
-                'data' => array(
+                'data' => [
                     'card_nr' => $client->getCardNr() === null ? '' : '<label>Nº Cartão Crédito: </label> '. $client->getCardNr(),
                     'cvv' => $client->getCvv() === null ? '': '<label>CVV: </label> '. $client->getCvv(),
                     'card_name' => $client->getCardName() === null ? '' : '<label>Titular Cartão: </label> '. $client->getCardName(),
                     'card_date' => $client->getCardDate() === null ? '' : '<label>Data Expiração: </label> ' .$client->getCardDate()
-                    )
-                );
+                ]
+            ]);
         }
-        else
-            $response = array(
-                'status' => 0,
-                'message' => 'Password inválida',
-                'data' =>array(
-                    'info' => null)
-            );
 
-        return new JsonResponse($response);
+        return new JsonResponse([
+            'status' => 0,
+            'message' => 'Password inválida',
+            'data' =>['info' => null]
+        ]);
     }
 
 

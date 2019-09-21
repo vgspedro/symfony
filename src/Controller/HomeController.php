@@ -414,7 +414,6 @@ class HomeController extends AbstractController
                 'data' => null]);
     }
 
-
     public function userTranslation($lang, $page)
     {    
         $this->session->set('_locale', $lang);

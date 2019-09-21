@@ -12,7 +12,6 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class PaymentTimeoutCommand extends Command
 {
-
     private $em;
     private $stripe;
 
@@ -26,7 +25,7 @@ class PaymentTimeoutCommand extends Command
     protected function configure()
     {
         $this->setName('app:cancel-payment')
-        ->setDescription('Execute to check if payment interval (20 minutes) has ended.')
+        ->setDescription('Execute to check if payment interval (5 minutes cron) has ended.')
         ->setHelp("Change the Stock back");
     }
 
@@ -65,7 +64,7 @@ class PaymentTimeoutCommand extends Command
                 if($booking->getStripePaymentLogs() && $u = $booking->getStripePaymentLogs()->getLogObj()){
 
                     //delele only the payment_intent obj from Stripe, avoid user buy it after timeout.
-                    $paymentIntentId = $u->object =='payment_intent' ? $u->id : false;
+                    $paymentIntentId = $u->object == 'payment_intent' ? $u->id : false;
 
                     $id .= $booking->getId().'-->';
 
