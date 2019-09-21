@@ -148,9 +148,8 @@ class OnlineController extends AbstractController
     }
 
 
-
     /**
-    *Get the receipt url to show on email
+    *Get the receipt url to show on email, update/create StripePaymentLog Obj
     *@param $request
     *@return json response of Request
     **/
@@ -165,18 +164,26 @@ class OnlineController extends AbstractController
         $ch = $stripe->getPaymentCharge($company, $request);
 
         if($ch['status'] == 1){
-
             $b_id = explode('-', $ch['data']->data[0]->description);
+            $deposit = Money::EUR($ch['data']->data[0]->amount);
+
             $booking = $em->getRepository(Booking::class)->find(str_replace('#','',$b_id[0]));
 
-            $payLogs = new StripePaymentLogs();
+            //just create a payment for in admin zone new StripePaymentLogs 
+            if(!$booking->getStripePaymentLogs()){
 
-            $payLogs->setLog(json_encode($ch['data']->data[0]));
-            $deposit = Money::EUR($ch['data']->data[0]->amount);
-            $payLogs->setBooking($booking);
+                $payLogs = new StripePaymentLogs();
+                $payLogs->setLog(json_encode($ch['data']->data[0]));
+                $payLogs->setBooking($booking);
+                $booking->setStripePaymentLogs($payLogs);
+
+            }
+
+            //online booking the StripePaymentLogs already exists, just update the log
+            else
+                $booking->getStripePaymentLogs()->setLog(json_encode($ch['data']->data[0]));
+            
             $booking->setPaymentStatus($ch['data']->data[0]->status);
-            $payLogs->setBooking($booking);
-            $booking->setStripePaymentLogs($payLogs);
             $booking->setDepositAmount($deposit);
             $em->persist($booking);
             $em->flush();
@@ -193,7 +200,7 @@ class OnlineController extends AbstractController
         else
             return new JsonResponse([
                 'status' => 0,
-                'message' =>'Unable to get Charge',
+                'message' => 'Unable to Charge the Amount!',
                 'data' => null]);
     }
 

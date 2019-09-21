@@ -411,7 +411,7 @@ class AdminController extends AbstractController
                         'telephone' => $client->getTelephone(),
                         'total' => $moneyFormatter->format($booking->getAmount()),
                         'wp' => $client->getCvv() ? 1 : 0,
-                        'posted_at' => $booking->getPostedAt()->format('d/m/Y'),
+                        'posted_at' => $booking->getPostedAt()->format('d/m/Y H:i:s'),
                     ];
             }
 

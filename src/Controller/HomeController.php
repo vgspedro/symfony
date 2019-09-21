@@ -286,7 +286,6 @@ class HomeController extends AbstractController
                 $amountC = $available->getCategory()->getChildrenPrice();
                 $amountC = $amountC->multiply($children);
                 $total = $amountA->add($amountC);   
-
             
                 // Create Booking.
                 $booking = new Booking();
@@ -309,13 +308,27 @@ class HomeController extends AbstractController
                 if($wp){
                     $company = $em->getRepository(Company::class)->find(1);
                     $i = $stripe->createUpdatePaymentIntent($company, $request, $booking);
+                    
                     if($i['status'] == 1){
-                        $booking->setPaymentStatus(Booking::STATUS_CANCELED);
-                        $booking->setStatus(Booking::STATUS_CANCELED);
-                        $em->persist($booking);
+                        
+                        $payLogs = new StripePaymentLogs();
+                        $payLogs->setLog(json_encode($i['data']));
+                        $payLogs->setBooking($booking);
+                        $em->persist($payLogs);
+
                         $em->flush();
+                        
+                        $booking->setPaymentStatus(Booking::STATUS_PROCESSING);
+                        $booking->setStatus(Booking::STATUS_CANCELED);
+                        $booking->setStripePaymentLogs($payLogs);
+                        $em->persist($booking);
+                $em->flush();
+
                     }
                 }
+
+ //               $em->flush();
+
                 $em->getConnection()->commit();
             
             } 
@@ -374,17 +387,15 @@ class HomeController extends AbstractController
         if($ch['status'] == 1){
 
             $b_id = explode('-', $ch['data']->data[0]->description);
-            $booking = $em->getRepository(Booking::class)->find(str_replace('#','',$b_id[0]));
-
-            $payLogs = new StripePaymentLogs();
-
-            $payLogs->setLog(json_encode($ch['data']->data[0]));
             $deposit = Money::EUR($ch['data']->data[0]->amount);
-            $payLogs->setBooking($booking);
+
+            $booking = $em->getRepository(Booking::class)->find(str_replace('#','',$b_id[0]));
+            
+            $booking->getStripePaymentLogs()->setLog(json_encode($ch['data']->data[0]));
             $booking->setPaymentStatus($ch['data']->data[0]->status);
-            $payLogs->setBooking($booking);
-            $booking->setStripePaymentLogs($payLogs);
+            $booking->setStatus(Booking::STATUS_PENDING);
             $booking->setDepositAmount($deposit);
+
             $em->persist($booking);
             $em->flush();
 

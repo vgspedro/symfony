@@ -5,11 +5,63 @@ use App\Entity\Booking;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use App\Entity\StripePaymentLogs;
-use App\Entity\StripeRefundLogs;
 use Money\Money;
 
 class Stripe
 {	
+
+
+
+/**
+    *Cancel a Payment Intent, if user doesnt end the purchase in 5 min, 
+    *@param OnlinePayments Obj, $paymentIntendId String
+    *@return PaymentIntent
+    **/
+    public function cancelPaymentIntent(Company $company, $paymentIntentId){
+    
+        $stripe = new \Stripe\Stripe();
+        $stripe->setApiKey($company->getStripeSK());
+
+        /*
+        * Method that is fucking diferent
+        *
+        */
+        $intent = new \Stripe\PaymentIntent();
+        $intent = $intent->retrieve($paymentIntentId);
+
+        try{
+
+            return [
+                'status' => 1,
+                'message' => 'success',
+                'data' => $intent->cancel()
+            ];
+        }
+
+        catch (\Stripe\Error\Authentication $e) {
+            $body = $e->getJsonBody();
+            $err  = $body['error'];
+
+            return [
+                'status' => 0,
+                'message' => $err['message'],
+                'data' => $err
+            ];
+        }
+
+        catch (\Stripe\Error\InvalidRequest $e) {
+            $body = $e->getJsonBody();
+            $err  = $body['error'];
+
+            return [
+                'status' => 3,
+                'message' => $err['message'],
+                'data' => $err
+            ];
+        } 
+    }
+
+
     /**
     *Create or update a Payment Intent
     *@param Company, Request Obj

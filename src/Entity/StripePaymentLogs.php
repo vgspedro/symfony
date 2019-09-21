@@ -44,10 +44,10 @@ class StripePaymentLogs
 	}
 
     public function getLogObj() {
-        $obj = null;
+        $obj = '';
         if ($this->getLog()){
             //TEXT TO OBJECT
-            $obj = json_decode($this->log);
+            $obj = json_decode($this->getLog());
         }
         return $obj;
     }

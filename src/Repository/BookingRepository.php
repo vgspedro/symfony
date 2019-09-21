@@ -22,11 +22,13 @@ class BookingRepository extends ServiceEntityRepository
      */
     public function getBookingPaymentsEntityProcessing($startDate){
 
+
         $dql = 'SELECT b, a
             FROM App\Entity\Booking b
             JOIN b.available a
+
             WHERE b.postedAt < :start AND b.paymentStatus = :status';
-    
+        
         $query = $this->getEntityManager()->createQuery($dql);
 
         $query->setParameter('start', $startDate)
