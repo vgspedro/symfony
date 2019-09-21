@@ -132,6 +132,7 @@ return array(
     'duration'=>'Duration',
     'adult'=>'Adult',
     'children'=>'Children (Máx: 12years)',
+    'baby'=>'Baby (Máx: 23months)',
 ),
 
 'part_five'=> array(

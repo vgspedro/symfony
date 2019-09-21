@@ -147,6 +147,8 @@ return array(
     'duration'=>'Duração Passeio',
     'adult'=>'Adulto',
     'children'=>'Criança (Máx: 12anos)',
+    'baby'=>'Bébé (Máx: 23meses)',
+
 ),
 
 'part_five'=> array(
