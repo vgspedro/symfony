@@ -131,7 +131,7 @@ return array(
 'part_tree'=> array(
     'duration'=>'Duration',
     'adult'=>'Adult',
-    'children'=>'Children',
+    'children'=>'Children (Máx: 12years)',
 ),
 
 'part_five'=> array(
@@ -152,8 +152,8 @@ return array(
     'address'=>'Address *',
     'name'=>'Name *',
     'adult'=>'Nr. Adults *',
-    'children'=>'Nr. Childrens',
-    'baby'=>'Nr. Babies',
+    'children'=>'Nr. Childrens (Máx: 12years)',
+    'baby'=>'Nr. Babies (Máx: 23months)',
     'message'=>'Message',
     'date'=>'Date *',
     'hour'=>'Hour *',
