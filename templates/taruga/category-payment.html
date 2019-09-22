@@ -96,15 +96,19 @@
         $('.w3-overlay').hide()
         
         m = result.error.message
-        
-        console.log('é mesmo aqui')
 
-        console.log(result.error)
-        //msg = m == 'A processing error occurred.' ? m : 
-        if(result.error.message == 'A processing error occurred.'){
-          m = '{% trans %}secret{% endtrans %}'
+        if(result.error.code == 'payment_intent_authentication_failure')
+          m = '{% trans %}payment_intent_authentication_failure{% endtrans %}'
+        
+        else if (result.error.code == 'card_declined' && result.error.decline_code == "insufficient_funds")
+          m = '{% trans %}insufficient_funds{% endtrans %}'
+
+        else if(result.error.code == 'payment_intent_unexpected_state'){
+          m = '{% trans %}payment_intent_unexpected_state{% endtrans %}'
           $('.w3-closebtn').attr('onclick','location.reload(true)')
         }
+        
+        //console.log(result.error)
         
         modalConditions(1, m, '{% trans %}check{% endtrans %}') 
       } 

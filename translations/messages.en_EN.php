@@ -1,6 +1,9 @@
 <?php
 return array(
-    'secret' => 'Something is wrong with the payment. Please refresh the page, and try again',
+    'payment_intent_unexpected_state' => 'A processing error occurred. Please refresh the page, and try again.',
+    'insufficient_funds' => 'Your card has insufficient funds.',
+    'payment_intent_authentication_failure' => 'We are unable to authenticate your payment method.… choose a different payment method and try again.',
+    'secret' => 'Something is wrong with the payment. Please refresh the page, and try again.',
     'error' => 'Error',
     'success' => 'Success',
     'close' =>'Close',
