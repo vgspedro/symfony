@@ -54,16 +54,13 @@
       style = {
         base: {
           color: '#3f51b5',
-          fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
+          fontFamily: '"Helvetica Neue", Helvetica',
           fontSmoothing: 'antialiased',
+          fontWeight: 'bold',
           fontSize: '18px',
           '::placeholder': {
-            color: '#C8BFE7',
-            text: '{% trans %}part_seven.card_n{% endtrans %}'
-          }
-        },
-        card:{
-          hidePostalCode:true
+            color: '#C8BFE8'
+          },
         },
         invalid: {
           color: '#fa755a',
@@ -71,7 +68,11 @@
         }
       }
       $('#card-errors').empty()
-      card = elements.create('card', {style: style})
+      card = elements.create('card', {
+        hidePostalCode: true, 
+        style: style
+      })
+      
       card.mount('#card-element');
       card.addEventListener('change', function(event) {
         displayError = document.getElementById('card-errors')
