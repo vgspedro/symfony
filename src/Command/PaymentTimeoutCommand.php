@@ -89,8 +89,8 @@ class PaymentTimeoutCommand extends Command
         }
         
         $txt = $now->format('Y-m-d H:i:s').' - Booking processing payment status to canceled before '.$startDateTime->format('d/m/Y H:i').', '.count($bookings).'xBookings['.$id.']';
-        $filesystem->appendToFile('cron_logs/paytimeout.txt', $txt.PHP_EOL);
-        $filesystem->touch('cron_logs/paytimeout.txt', time());
+        $filesystem->appendToFile('../cron_logs/paytimeout.txt', $txt.PHP_EOL);
+        $filesystem->touch('../cron_logs/paytimeout.txt', time());
 
         $output->writeln($txt); 
     
