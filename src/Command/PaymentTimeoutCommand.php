@@ -34,11 +34,11 @@ class PaymentTimeoutCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         // outputs multiple lines to the console (adding "\n" at the end of each line)
-        //$output->writeln([
-        //    'Execute Cron: Cancel-payments Set Stock Back To Availability',
-        //    '======================================',
-        //    '',
-        //]);
+        $output->writeln([
+            'Execute Cron: Cancel-payments Set Stock Back To Availability',
+            '======================================',
+            '',
+        ]);
 
         $now = new \DateTime();
        
@@ -92,7 +92,7 @@ class PaymentTimeoutCommand extends Command
         $filesystem->appendToFile('cron_logs/paytimeout.txt', $txt.PHP_EOL);
         $filesystem->touch('cron_logs/paytimeout.txt', time());
 
-        //$output->writeln($txt); 
+        $output->writeln($txt); 
     
     }
 }
