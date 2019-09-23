@@ -8,20 +8,21 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 class CronController extends AbstractController
 {
 
-    public function listCron(Filesystem $filesystem) {
+    public function listCron(Filesystem $filesystem, KernelInterface $kernel) {
 
-        //$filesystem = new Filesystem();
+        $filesystem = new Filesystem();
 
         $r = [];
 
-        if($filesystem->exists('/cron_logs')){
+        if($filesystem->exists($kernel->getProjectDir().'/cron_logs')){
 
             $finder = new Finder();
-            $finder->files()->in('../cron_logs/');
+            $finder->files()->in($kernel->getProjectDir().'/cron_logs/');
             foreach ($finder as $file)
                 $r [] = [ 'title' => ucfirst(str_replace(".txt", "", $file->getFilename())), 'text' => $file->getContents()];
         }
