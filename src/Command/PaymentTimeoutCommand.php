@@ -11,16 +11,22 @@ use App\Service\Stripe;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 class PaymentTimeoutCommand extends Command
 {
     private $em;
     private $stripe;
+    private $kernel;
 
-    public function __construct(EntityManagerInterface $em, Stripe $stripe)
+    public function __construct(EntityManagerInterface $em, Stripe $stripe, KernelInterface $kernel)
     {
+        $this->kernel = $kernel;
+        
         $this->em = $em;
+        
         $this->stripe = $stripe;
+
         parent::__construct();
     }
 
@@ -70,7 +76,7 @@ class PaymentTimeoutCommand extends Command
                     //delele only the payment_intent obj from Stripe, avoid user buy it after timeout.
                     $paymentIntentId = $u->object == 'payment_intent' ? $u->id : false;
 
-                    $id .= $booking->getId().'-->';
+                    $id .= $booking->getId().', ';
 
                     if($paymentIntentId){
 
@@ -89,8 +95,8 @@ class PaymentTimeoutCommand extends Command
         }
         
         $txt = $now->format('Y-m-d H:i:s').' - Booking processing payment status to canceled before '.$startDateTime->format('d/m/Y H:i').', '.count($bookings).'xBookings['.$id.']';
-        $filesystem->appendToFile('../cron_logs/paytimeout.txt', $txt.PHP_EOL);
-        $filesystem->touch('../cron_logs/paytimeout.txt', time());
+        $filesystem->appendToFile($this->kernel->getProjectDir().'/cron_logs/paytimeout.txt', $txt.PHP_EOL);
+        $filesystem->touch($this->kernel->getProjectDir().'/cron_logs/paytimeout.txt', time());
 
         $output->writeln($txt); 
     
