@@ -22,9 +22,7 @@ class PaymentTimeoutCommand extends Command
     public function __construct(EntityManagerInterface $em, Stripe $stripe, KernelInterface $kernel)
     {
         $this->kernel = $kernel;
-        
         $this->em = $em;
-        
         $this->stripe = $stripe;
 
         parent::__construct();

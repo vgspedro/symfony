@@ -1,3 +1,0 @@
-2019-09-23 10:08:35 - Delete clients data, event older than 08/09/2019 10:08. 0xBookings[]
-2019-09-23 10:08:37 - Delete clients data, event older than 08/09/2019 10:08. 0xBookings[]
-2019-09-23 10:10:22 - Delete clients data event older than 08/09/2019 10:10, 0xBookings[]
