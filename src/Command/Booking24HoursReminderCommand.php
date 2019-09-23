@@ -12,20 +12,24 @@ use App\Entity\Client;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 class Booking24HoursReminderCommand extends Command
 {
-    private $entityManager;
+    private $em;
     private $mailer;
     private $templating;
     private $translator;
+    private $kernel;
 
-    public function __construct(EntityManagerInterface $entityManager, \Swift_Mailer $mailer, \Twig_Environment $templating, TranslatorInterface $translator)
+    public function __construct(EntityManagerInterface $em, \Swift_Mailer $mailer, \Twig_Environment $templating, TranslatorInterface $translator, KernelInterface $kernel)
     {
-        $this->entityManager = $entityManager;
+        $this->em = $em;
         $this->mailer = $mailer;
         $this->templating = $templating;
         $this->translator = $translator;
+        $this->kernel = $kernel;
+
         parent::__construct();
     }
 
@@ -48,11 +52,12 @@ class Booking24HoursReminderCommand extends Command
         
         $now = new \DateTime();
         $tomorrow = new \DateTime('tomorrow', new \DateTimeZone('Europe/Lisbon'));
-        $bookings = $this->entityManager->getRepository(Booking::class)->getBookings24HoursReminder($tomorrow->format('Y-m-d'));
-        $company = $this->entityManager->getRepository(Company::class)->find(1);
+        $bookings = $this->em->getRepository(Booking::class)->getBookings24HoursReminder($tomorrow->format('Y-m-d'));
+        $company = $this->em->getRepository(Company::class)->find(1);
         //CHECK IF THE EVENT IS FOR TOMORROW IF SO SEND EMAIL TO CLIENT
 
         $id = '';
+
         $filesystem = new Filesystem();
         
         foreach ($bookings as $booking) {
@@ -63,8 +68,9 @@ class Booking24HoursReminderCommand extends Command
         }
 
         $txt = $now->format('Y-m-d H:i:s').' - Next day booking reminder '.$tomorrow->format('d/m/Y').', '.count($bookings).'xBookings['.$id.']';
-        $filesystem->appendToFile('cron_logs/reminder.txt', $txt.PHP_EOL);
-        $filesystem->touch('cron_logs/reminder.txt', time());
+        
+        $filesystem->appendToFile($this->kernel->getProjectDir().'/cron_logs/reminder.txt', $txt.PHP_EOL);
+        $filesystem->touch($this->kernel->getProjectDir().'/cron_logs/reminder.txt', time());
 
         // outputs a message followed by a "\n"
         //$output->writeln(count($bookings).' Bookings reminder send to bookings ('.$id.'), to warn them that tomorrow they have a booking: '.$tomorrow->format('d/m/Y'));

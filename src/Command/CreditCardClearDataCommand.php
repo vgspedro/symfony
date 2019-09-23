@@ -10,14 +10,17 @@ use App\Entity\Client;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 class CreditCardClearDataCommand extends Command
 {
-    private $entityManager;
+    private $em;
+    private $kernel;
 
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(EntityManagerInterface $em, KernelInterface $kernel)
     {
-        $this->entityManager = $entityManager;
+        $this->em = $em;
+        $this->kernel = $kernel;
 
         parent::__construct();
     }
@@ -51,7 +54,7 @@ class CreditCardClearDataCommand extends Command
 
         $filesystem = new Filesystem();
         
-        $bookings = $this->entityManager->getRepository(Booking::class)->getClientCreditCardData($deadline->format('Y-m-d'));
+        $bookings = $this->em->getRepository(Booking::class)->getClientCreditCardData($deadline->format('Y-m-d'));
 
         //CHECK IF THE EVENT HAS PASS 15 DAYS THAN TODAY
         //ON BOOKINGS WITH WARRANTY PAYMENT WE MUST DELETE THE CREDIT CARD NR
@@ -66,15 +69,15 @@ class CreditCardClearDataCommand extends Command
                 
                 $booking->getClient()->setCvv('Deleted on: '.$deadline->format('d/m/Y H:i:s'));
                 
-                $this->entityManager->persist($booking);
+                $this->em->persist($booking);
                 
-                $this->entityManager->flush();
+                $this->em->flush();
             }
         }
 
         $txt = $now->format('Y-m-d H:i:s').' - Delete clients data event older than '.$deadline->format('d/m/Y H:i').', '.count($bookings).'xBookings['.$id.']';
-        $filesystem->appendToFile('cron_logs/cleardata.txt', $txt.PHP_EOL);
-        $filesystem->touch('cron_logs/cleardata.txt', time());
+        $filesystem->appendToFile($this->kernel->getProjectDir().'/cron_logs/cleardata.txt', $txt.PHP_EOL);
+        $filesystem->touch($this->kernel->getProjectDir().'/cron_logs/cleardata.txt', time());
 
 
     }

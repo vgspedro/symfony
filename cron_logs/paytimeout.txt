@@ -1,0 +1,1 @@
+2019-09-23 13:34:15 - Booking processing payment status to canceled before 23/09/2019 13:19, 0xBookings[]
