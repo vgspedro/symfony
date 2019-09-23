@@ -59,7 +59,7 @@
           fontWeight: 'bold',
           fontSize: '18px',
           '::placeholder': {
-            color: '#C8BFE8'
+            color: '#C8BFF9'
           },
         },
         invalid: {
@@ -108,9 +108,7 @@
           m = '{% trans %}payment_intent_unexpected_state{% endtrans %}'
           $('.w3-closebtn').attr('onclick','location.reload(true)')
         }
-        
-        //console.log(result.error)
-        
+                
         modalConditions(1, m, '{% trans %}check{% endtrans %}') 
       } 
       else
@@ -153,7 +151,7 @@
     })
   }
 
-  setTimeout(function(){buildStripe('{{company.stripePK}}') }, 1500)
+  setTimeout(function(){buildStripe('{{company.stripePK}}') }, 1000)
 
 </script>
 

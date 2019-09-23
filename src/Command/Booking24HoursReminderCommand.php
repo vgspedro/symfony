@@ -10,6 +10,8 @@ use App\Entity\Booking;
 use App\Entity\Company;
 use App\Entity\Client;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
+use Symfony\Component\Filesystem\Filesystem;
 
 class Booking24HoursReminderCommand extends Command
 {
@@ -38,27 +40,34 @@ class Booking24HoursReminderCommand extends Command
     {
 
         // outputs multiple lines to the console (adding "\n" at the end of each line)
-        $output->writeln([
-            'Execute Client Booking 24h Reminder',
-            '====================================',
-            '',
-        ]);
-
+        //$output->writeln([
+        //    'Execute Client Booking 24h Reminder',
+        //    '====================================',
+        //    '',
+        //]);
+        
+        $now = new \DateTime();
         $tomorrow = new \DateTime('tomorrow', new \DateTimeZone('Europe/Lisbon'));
         $bookings = $this->entityManager->getRepository(Booking::class)->getBookings24HoursReminder($tomorrow->format('Y-m-d'));
         $company = $this->entityManager->getRepository(Company::class)->find(1);
         //CHECK IF THE EVENT IS FOR TOMORROW IF SO SEND EMAIL TO CLIENT
 
         $id = '';
-
+        $filesystem = new Filesystem();
+        
         foreach ($bookings as $booking) {
         
             $this->sendEmail($booking, $company);
             $id.= $booking->getId().', ';
             
         }
+
+        $txt = $now->format('Y-m-d H:i:s').' -> Booking reminder for tomorrow '.$tomorrow->format('Y-m-d').' send to '.count($bookings).' bookings #ID['.$id.']';
+        $filesystem->appendToFile('cron_logs/reminder.txt', $txt.PHP_EOL);
+        $filesystem->touch('cron_logs/reminder.txt', time());
+
         // outputs a message followed by a "\n"
-        $output->writeln(count($bookings).' Bookings reminder send to bookings ('.$id.'), to warn them that tomorrow they have a booking: '.$tomorrow->format('d/m/Y'));
+        //$output->writeln(count($bookings).' Bookings reminder send to bookings ('.$id.'), to warn them that tomorrow they have a booking: '.$tomorrow->format('d/m/Y'));
     }
 
     public function sendEmail(Booking $booking, Company $company){

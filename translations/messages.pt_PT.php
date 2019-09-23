@@ -2,7 +2,7 @@
 return array(
     'payment_intent_unexpected_state' => 'Surgiu um erro ao processar o pagamento. Por favor atualize a página e tente novamente.',
     'insufficient_funds' => 'O cartão não tem o montante suficiente para a realizar a compra.',
-    'payment_intent_authentication_failure' => 'Não nos foi posiivel autentticar o seu modo de pagamento. Escolha um modo diferente e tente novamente.',
+    'payment_intent_authentication_failure' => 'Não nos foi possivel autenticar o modo de pagamento. Escolha um modo diferente e tente novamente.',
     'secret' => 'Algo está errado com o pagamento! Por favor atualize a página e tente novamente.',
     'company' =>'A Empresa',
     'address' => 'Morada',

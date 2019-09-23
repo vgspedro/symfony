@@ -9,6 +9,8 @@ use App\Entity\Booking;
 use App\Entity\Company;
 use App\Service\Stripe;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
+use Symfony\Component\Filesystem\Filesystem;
 
 class PaymentTimeoutCommand extends Command
 {
@@ -32,11 +34,11 @@ class PaymentTimeoutCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         // outputs multiple lines to the console (adding "\n" at the end of each line)
-        $output->writeln([
-            'Execute Cron: Cancel-payments Set Stock Back To Availability',
-            '======================================',
-            '',
-        ]);
+        //$output->writeln([
+        //    'Execute Cron: Cancel-payments Set Stock Back To Availability',
+        //    '======================================',
+        //    '',
+        //]);
 
         $now = new \DateTime();
        
@@ -55,6 +57,8 @@ class PaymentTimeoutCommand extends Command
         
         $id ='';
         
+        $filesystem = new Filesystem();
+
         if ($bookings){
 
             $company = $this->em->getRepository(Company::class)->find(1);
@@ -83,8 +87,12 @@ class PaymentTimeoutCommand extends Command
                 $this->em->flush();
             } 
         }
+        
+        $txt = $now->format('Y-m-d H:i:s').' -> processing_payment_status to canceled_payment_status before '.$startDateTime->format('d/m/Y H:i').' = '.count($bookings).' #ID['.$id.']';
+        $filesystem->appendToFile('cron_logs/paytimeout.txt', $txt.PHP_EOL);
+        $filesystem->touch('cron_logs/paytimeout.txt', time());
 
-        $output->writeln('Total bookings in processing_payment_status that went to canceled_payment_status before '.$startDateTime->format('d/m/Y H:i').' = '.count($bookings).'['.$id.']'); 
+        //$output->writeln($txt); 
     
     }
 }

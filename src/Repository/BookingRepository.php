@@ -26,7 +26,6 @@ class BookingRepository extends ServiceEntityRepository
         $dql = 'SELECT b, a
             FROM App\Entity\Booking b
             JOIN b.available a
-
             WHERE b.postedAt < :start AND b.paymentStatus = :status';
         
         $query = $this->getEntityManager()->createQuery($dql);
@@ -64,14 +63,13 @@ class BookingRepository extends ServiceEntityRepository
     /**
     * Send a reminder to clients that have a booking scheduled for tomorrow
     */
-
     public function getBookings24HoursReminder($tomorrow){
         $dql = 'SELECT c, b
             FROM App\Entity\Booking b
             JOIN b.client c
             WHERE b.dateEvent = :tomorrow
             AND b.status = :status
-            AND b.payment_status != :pay_status'; 
+            AND b.paymentStatus != :pay_status'; 
 
         $query = $this->getEntityManager()->createQuery($dql)
             ->setParameter('tomorrow', $tomorrow)

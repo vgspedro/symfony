@@ -1,0 +1,2 @@
+2019-09-23 07:22:12 -> Delete clients data where the event is older than 08/09/2019 07:22 = 4 #ID = [113, 123, 126, 129, ]
+2019-09-23 07:24:17 -> Delete clients data where the event is older than 08/09/2019 07:24 = 0 #ID[]

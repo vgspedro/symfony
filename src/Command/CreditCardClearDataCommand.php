@@ -8,6 +8,8 @@ use Symfony\Component\Console\Input\InputArgument;
 use App\Entity\Booking;
 use App\Entity\Client;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
+use Symfony\Component\Filesystem\Filesystem;
 
 class CreditCardClearDataCommand extends Command
 {
@@ -35,11 +37,11 @@ class CreditCardClearDataCommand extends Command
         $totalDays = 15;
 
         // outputs multiple lines to the console (adding "\n" at the end of each line)
-        $output->writeln([
-            'Execute Clear Query (c.card field)',
-            '==================================',
-            '',
-        ]);
+        //$output->writeln([
+        //    'Execute Clear Query (c.card field)',
+        //    '==================================',
+        //    '',
+        //]);
 
         $now = new \DateTime('now');
 
@@ -47,12 +49,19 @@ class CreditCardClearDataCommand extends Command
 
         $deadline = \DateTime::createFromFormat('U', ($now->format('U') - $interval));
 
+        $filesystem = new Filesystem();
+        
         $bookings = $this->entityManager->getRepository(Booking::class)->getClientCreditCardData($deadline->format('Y-m-d'));
 
         //CHECK IF THE EVENT HAS PASS 15 DAYS THAN TODAY
         //ON BOOKINGS WITH WARRANTY PAYMENT WE MUST DELETE THE CREDIT CARD NR
+        $id ='';
+
         if ($bookings){
             foreach ($bookings as $booking){
+                
+                $id.= $booking->getId().', ';
+
                 $booking->getClient()->setCardNr('');
                 
                 $booking->getClient()->setCvv('Deleted on: '.$deadline->format('d/m/Y H:i:s'));
@@ -62,11 +71,12 @@ class CreditCardClearDataCommand extends Command
                 $this->entityManager->flush();
             }
         }
-        // outputs a message followed by a "\n"
-        $dates =''; 
-        foreach ($bookings as $booking)
-            $client.= '-->'.$booking->getId();
-            $output->writeln('Deleted ('.count($bookings).') credit cards, where the event is older than: '.$deadline->format('d/m/Y H:i').' ('.$client.')');
+
+        $txt = $now->format('Y-m-d H:i:s').' -> Delete clients data where the event is older than '.$deadline->format('d/m/Y H:i').' = '.count($bookings).' #ID['.$id.']';
+        $filesystem->appendToFile('cron_logs/cleardata.txt', $txt.PHP_EOL);
+        $filesystem->touch('cron_logs/cleardata.txt', time());
+
+
     }
 
 }

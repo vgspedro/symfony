@@ -1,0 +1,1 @@
+2019-09-23 07:24:36 -> Booking reminder for tomorrow 2019-09-24 send to 0 bookings #ID[]
