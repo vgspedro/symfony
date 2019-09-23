@@ -54,6 +54,15 @@ send_report_issue:
     condition: 'request.isXmlHttpRequest()'
 
 ###
+# CRON LOGS
+###
+list_cron:
+    path: /list-cron/
+    controller: App\Controller\CronController::listCron
+    methods: [POST]
+    condition: 'request.isXmlHttpRequest()'
+
+###
 # AVAILABLE
 ###
 index_available:

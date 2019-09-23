@@ -59,6 +59,10 @@ function ajaxUpload(block){
         case 'about-us': 
             url = '{{ path("admin_about_us") }}' 
         break
+        case 'list-cron': 
+            url = '{{ path("list_cron") }}' 
+        break
+
     }
 
     $('.w3-overlay').show() 

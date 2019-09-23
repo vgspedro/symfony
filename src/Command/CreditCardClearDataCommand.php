@@ -72,7 +72,7 @@ class CreditCardClearDataCommand extends Command
             }
         }
 
-        $txt = $now->format('Y-m-d H:i:s').' -> Delete clients data where the event is older than '.$deadline->format('d/m/Y H:i').' = '.count($bookings).' #ID['.$id.']';
+        $txt = $now->format('Y-m-d H:i:s').' - Delete clients data event older than '.$deadline->format('d/m/Y H:i').', '.count($bookings).'xBookings['.$id.']';
         $filesystem->appendToFile('cron_logs/cleardata.txt', $txt.PHP_EOL);
         $filesystem->touch('cron_logs/cleardata.txt', time());
 

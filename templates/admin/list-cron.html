@@ -1,0 +1,12 @@
+<header class="w3-container" style="padding-top:22px">
+   <h5><b><i class="fas fa-cogs"></i> Logs Rotinas</b></h5>
+</header>
+
+<div class="w3-row-padding">
+  {% for log in logs%}
+  <div class="w3-col l12 w3-margin-bottom">
+    {{log.title}}
+    <pre class="w3-black"style="max-height:300px;overflow-y:auto">{{log.text}}</pre>
+  </div>  
+  {% endfor %}
+</div>

@@ -62,7 +62,7 @@ class Booking24HoursReminderCommand extends Command
             
         }
 
-        $txt = $now->format('Y-m-d H:i:s').' -> Booking reminder for tomorrow '.$tomorrow->format('Y-m-d').' send to '.count($bookings).' bookings #ID['.$id.']';
+        $txt = $now->format('Y-m-d H:i:s').' - Next day booking reminder '.$tomorrow->format('d/m/Y').', '.count($bookings).'xBookings['.$id.']';
         $filesystem->appendToFile('cron_logs/reminder.txt', $txt.PHP_EOL);
         $filesystem->touch('cron_logs/reminder.txt', time());
 
