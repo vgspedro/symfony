@@ -27,6 +27,18 @@ class FeedbackController extends AbstractController
     }
     
 
+    public function list(Request $request) {
+        
+        $em = $this->getDoctrine()->getManager();
+        $feedbacks = $em->getRepository(Feedback::class)->findAll();
+        return $this->render('admin/feedback-list.html', [
+            'feedbacks' => $feedbacks,
+        ]);
+    }
+
+
+
+
     public function sendFeedback(Request $request, \Swift_Mailer $mailer, TranslatorInterface $translator, FieldsValidator $fieldsValidator)
     {
         $locale = $request->getLocale();

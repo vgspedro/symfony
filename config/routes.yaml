@@ -41,11 +41,23 @@ home_get_charge:
     controller: App\Controller\HomeController::onlineGetCharge
     methods: [POST]
 
+###
+# FEEDBACK
+###
 send_feedback:
     path: /send-feedback/
     controller: App\Controller\FeedbackController::sendFeedback
     methods: [POST]
     condition: 'request.isXmlHttpRequest()'
+
+
+admin_feedback_list:
+    path: /admin-feedback-list/
+    controller: App\Controller\FeedbackController::list
+
+###
+# REPORT ISSUE
+###
 
 send_report_issue:
     path: /send-report-issue/

@@ -1,0 +1,189 @@
+
+<style>
+ .dt-button{background: #FFF;border:1px solid #ccc;
+ display: inline-block; padding: 8px 16px; vertical-align: middle;overflow: hidden;text-decoration: none; color: inherit;
+    background-color: inherit;text-align: center; cursor: pointer; white-space: nowrap;color: #000!important;background-color: #87CEEB!important;font-size:18px}
+select.input-sm, input .form-control .input-sm {height: 36px}
+table.dataTable.dtr-inline.collapsed > tbody > tr > td:first-child:before, table.dataTable.dtr-inline.collapsed > tbody > tr > th:first-child:before {
+    height: 24px;width: 24px;border-radius: 16px; text-align: center;line-height: 23px;font-size: 24px;border-radius: 0px;border: 1px solid #ddd;box-shadow: 0 0 0 #000}
+table.dataTable.dtr-inline.collapsed > tbody > tr > td:first-child, table.dataTable.dtr-inline.collapsed > tbody > tr > th:first-child {padding-left: 38px}
+.dt-button-collection{ width:100%;background: rgba(0,0,0,0.3);position: fixed;left:0px;padding: 96px 16px; z-index:99999;margin-top: 0px!important;top:0px}
+.w3-input {border-bottom: 0px solid #05788d}
+input, select, textarea {color: #000!important}
+.form-control{ border: 1px solid #ccc!important;height: 50px;padding: 0px 0px 0px 4px;padding-bottom: 0px}
+div.dataTables_length select {height: 50px}
+table.dataTable thead > tr > th {padding-left: 8px!important}
+</style>
+
+<header class="w3-container" style="padding-top:22px">
+   <h5><b><i class="fa-fw far fa-comment-dots"></i> Feedback</b></h5>
+</header>
+<div class="w3-row-padding">
+  <div class="w3-col s12">
+
+  <div style="overflow-x:auto">
+
+  <table id="dataTable" class="w3-border table table-striped centered hover table-bordered" style="width:100%">
+    <thead class="w3-sand">
+      <tr>
+      <th class="">#</th>
+      <th class="w3-center">Acções</th>    
+      <th class="w3-center">Nome PT</th>    
+      <th class="w3-center">Nome EN</th>    
+      <th class="w3-center">Preço Adulto</th>    
+      <th class="w3-center">Preço Criança</th>    
+      <th class="w3-center">Descriçao PT</th>    
+      <th class="w3-center">Descriçao EN</th>    
+      <th class="w3-center">Horas</th>    
+      <th class="w3-center">Activo</th>
+      </tr>
+    </thead>
+    <tbody>
+
+
+      {% for feedback in feedbacks %}
+       <tr>
+        <td>{{feedback.id}}</td>
+        <td>
+        <div style="width:54px;min-width:54px">
+          <span class="w3-tooltip">
+            <span style="position:absolute;left:0;bottom:32px" class="w3-round w3-text w3-tag">Activar Feedback</span>
+            <button class="w3-btn w3-border w3-indigo" onclick="activate({{feedback.id}})">
+              <i class="far fa-check"></i>
+            </button>
+          </span>
+        </div>
+        </td>
+        <td>{{ category.namePt }}</td>
+        <td class="w3-center">{{ category.adultAmount}}</td>
+        <td>{{ category.descriptionPt }}</td>
+        <td>{{ category.event }}</td>
+        <td class="w3-center">
+          {% if category.isActive == 1 %}
+            <i class="w3-text-green w3-xlarge fas fa-check-circle"></i>
+          {% else %}
+            <i class="w3-text-red w3-xlarge fas fa-times-circle"></i>
+          {% endif %}
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+    <tfoot class="w3-sand">
+      <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+    </tfoot>
+  </table>
+</div>
+</div>
+</div>
+
+<script>
+
+function editCategory(id, name){
+  $('.w3-overlay').show()
+  setTimeout(function(){
+  $.ajax({  
+    url:'{{ path('admin_category_show_edit') }}',
+    type: "POST",
+    data:'id='+id,
+    success: function(data){
+      $('.w3-overlay').hide()
+      $('#set-id').text(name)
+      $('#set-category').html(data)
+      $('#modal-edit-category').show()
+    },
+    error:function(data){
+      $('.w3-overlay').hide()
+      $('#modal-error').show()
+    }
+  })
+  }, 500)
+}
+
+$(function(){
+
+  table = $('#dataTable').DataTable({
+    dom: 'lBfrtip',
+    rowReorder: true,
+    buttons: [
+        {
+        extend:    'excelHtml5',
+        text:      '<i class="far fa-file-excel"></i>',
+        titleAttr: 'Excel',
+        exportOptions: {
+          columns: ':visible'
+          }
+        },
+        {
+        extend:    'pdfHtml5',
+        text:      '<i class="far fa-file-pdf"></i>',
+        titleAttr: 'PDF',
+        exportOptions: {
+          columns: ':visible'
+          },
+          customize: function (doc) {
+            //doc.content[1].table.widths = Array(doc.content[1].table.body[0].length + 1).join('*').split('')
+              doc['footer']=(function(page, pages) {
+                return {
+                  columns: [
+                    {
+                      alignment: 'right',
+                      text: ['']
+                    },
+                  ],
+                  margin: 20
+                }
+              })
+            }
+        },
+        {
+        extend: 'colvis',
+        columns: ':gt(0)',
+        text:      '<i class="far fa-eye-slash"></i>',
+        titleAttr: 'Colunas',
+        exportOptions: {
+          columns: ':visible' // [ 0, 1, 2, 3, 4, 5]
+        }
+      }
+    ],
+    columnDefs: [
+      //{ className:"my_class", "targets": [4] },
+      //{ "orderData":[ 2 ], "targets": [ 3 ] },
+        {
+          "targets": stored,
+          "visible": false
+          //"searchable": false
+        }
+    ],
+    "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+      responsive: false,
+      searching: true,
+      language: {
+        "lengthMenu": "Mostrar _MENU_ por pagina",
+        "zeroRecords": "0 Resultados",
+        "info": "Mostrar _PAGE_ de _PAGES_",
+        "infoEmpty": "Sem resultados",
+        "search": "Pesquisar",
+        "paginate": {
+        "previous": "Anterior",
+        "next": "Seguinte",
+      }
+    }
+  })
+  $('#dataTable_length, .dt-buttons').addClass('w3-center w3-col s12 m6 l4 w3-section')
+  $('#dataTable_filter').addClass('w3-col s8 m12 l4 w3-center w3-section')
+
+})
+
+</script>
