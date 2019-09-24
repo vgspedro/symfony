@@ -16,7 +16,7 @@ use Money\Money;
 class ExtraPaymentController extends AbstractController
 {
 
-    public function createPayment(Stripe $stripe, Request $request, TranslatorInterface $translator, RequestInfo $reqInfo)
+    public function create(Stripe $stripe, Request $request, TranslatorInterface $translator, RequestInfo $reqInfo)
     {
 
         $em = $this->getDoctrine()->getManager();
