@@ -452,7 +452,12 @@ set_payment:
     controller: App\Controller\OnlineController::setPayment
     methods: [POST]
 
-create_payment:
-    path: /online-create-payment
-    controller: App\Controller\OnlineController::createPayment
+
+####
+# EXTRA PAYMENTS
+####
+
+create_extra_payment:
+    path: /create-extra-payment
+    controller: App\Controller\ExtraPaymentController::create
     #methods: [POST]
