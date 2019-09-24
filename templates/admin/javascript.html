@@ -1,9 +1,5 @@
 <script>
 
-$(function(){
-   // ajaxUpload('dashboard')
-})
-
 function ajaxUpload(block){
     block == 'category-new' || block == 'category-list' ? false : $('#category').removeClass('w3-show')
 
@@ -65,19 +61,15 @@ function ajaxUpload(block){
         case 'feedback-list': 
             url = '{{ path("admin_feedback_list") }}' 
         break
-
     }
-
     $('.w3-overlay').show() 
     setTimeout(function(){
         $.ajax({
             url:url,
             type: "POST",
             async: true,
-            cache:false,
+            cache: false,
             success: function (data){
-                $('.nav').removeClass('w3-blue')
-                $('#'+block).addClass('w3-blue')    
                 $('#add').html(data)
                 $('.w3-overlay').hide()
                 $('.w3-sidebar').addClass('w3-hide')

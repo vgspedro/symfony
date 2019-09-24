@@ -16,92 +16,98 @@ table.dataTable thead > tr > th {padding-left: 8px!important}
 </style>
 
 <header class="w3-container" style="padding-top:22px">
-   <h5><b><i class="fa-fw far fa-comment-dots"></i> Feedback</b></h5>
+  <h5>
+    <b>
+      <i class="fa-fw far fa-comment-dots"></i> Feedback
+    </b>
+  </h5>
 </header>
+
 <div class="w3-row-padding">
   <div class="w3-col s12">
-
-  <div style="overflow-x:auto">
-
-  <table id="dataTable" class="w3-border table table-striped centered hover table-bordered" style="width:100%">
-    <thead class="w3-sand">
-      <tr>
-      <th class="">#</th>
-      <th class="w3-center">Acções</th>    
-      <th class="w3-center">Nome PT</th>    
-      <th class="w3-center">Nome EN</th>    
-      <th class="w3-center">Preço Adulto</th>    
-      <th class="w3-center">Preço Criança</th>    
-      <th class="w3-center">Descriçao PT</th>    
-      <th class="w3-center">Descriçao EN</th>    
-      <th class="w3-center">Horas</th>    
-      <th class="w3-center">Activo</th>
-      </tr>
-    </thead>
-    <tbody>
-
-
-      {% for feedback in feedbacks %}
-       <tr>
-        <td>{{feedback.id}}</td>
-        <td>
-        <div style="width:54px;min-width:54px">
-          <span class="w3-tooltip">
-            <span style="position:absolute;left:0;bottom:32px" class="w3-round w3-text w3-tag">Activar Feedback</span>
-            <button class="w3-btn w3-border w3-indigo" onclick="activate({{feedback.id}})">
-              <i class="far fa-check"></i>
-            </button>
-          </span>
-        </div>
-        </td>
-        <td>{{ category.namePt }}</td>
-        <td class="w3-center">{{ category.adultAmount}}</td>
-        <td>{{ category.descriptionPt }}</td>
-        <td>{{ category.event }}</td>
-        <td class="w3-center">
-          {% if category.isActive == 1 %}
-            <i class="w3-text-green w3-xlarge fas fa-check-circle"></i>
-          {% else %}
-            <i class="w3-text-red w3-xlarge fas fa-times-circle"></i>
-          {% endif %}
-        </td>
-      </tr>
-    {% endfor %}
-    </tbody>
-    <tfoot class="w3-sand">
-      <tr>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-      </tr>
-    </tfoot>
-  </table>
-</div>
-</div>
+    <div style="overflow-x:auto">
+      <table id="dataTable" class="w3-border table table-striped centered hover table-bordered" style="width:100%">
+        <thead class="w3-sand">
+          <tr>
+            <th class="">#</th>
+            <th class="w3-center" style="width:112px;min-width:112px">Acções</th>    
+            <th class="w3-center">Cotação</th>    
+            <th class="w3-center">Observações</th>    
+            <th class="w3-center"># Reserva</th>    
+            <th class="w3-center">Cliente</th>    
+          </tr>
+        </thead>
+        <tbody>
+        {% for feedback in feedbacks %}
+          <tr>
+            <td>{{feedback.id}}</td>
+            <td>
+              <div style="width:112px;min-width:112px">
+                <span class="w3-tooltip">
+                  <span style="position:absolute;left:0;bottom:32px" class="w3-round w3-text w3-tag">Ativar/Desativar Feedback (Calculo Cotação na Categoria)</span>
+                  <button class="w3-btn w3-border w3-white" onclick="changeStatus({{feedback.id}},'status')">
+                  {% if feedback.active == 1 %}
+                    <span id='status-{{feedback.id}}'>
+                      <i class="w3-text-green fas fa-check-circle fa-fw"></i>
+                    <span>
+                  {% else %}
+                    <span id='status-{{feedback.id}}'>
+                      <i class="w3-text-red fas fa-times-circle fa-fw"></i>
+                    </span>
+                  {% endif %}
+                  </button>
+                </span>
+                <span class="w3-tooltip">
+                  <span style="position:absolute;left:0;bottom:32px" class="w3-round w3-text w3-tag">Visivel (Mostrar Feedback no Site Desenvolvimento futuro??)</span>
+                  <button class="w3-btn w3-border w3-white" onclick="changeStatus({{feedback.id}},'visible')">
+                  {% if feedback.visible == 1 %}
+                    <span id='visible-{{feedback.id}}'>
+                      <i class="w3-text-green fas fa-eye fa-fw"></i>
+                    <span>
+                  {% else %}
+                    <span id='visible-{{feedback.id}}'>
+                      <i class="w3-text-red fa-eye-slash fas fa-fw"></i>
+                    </span>
+                  {% endif %}
+                  </button>
+                </span>
+              </div>
+            </td>
+            <td class="w3-center">{{ feedback.rate }}<i class="fa fa-star w3-text-yellow"></i></td>
+            <td>{{ feedback.observations }}</td>
+            <td class="w3-center">{{ feedback.booking.id }}-{{feedback.booking.available.category.namePt}}</td>
+            <td class="w3-center">{{ feedback.booking.client.username}}</td>
+          </tr>
+        {% endfor %}
+        </tbody>
+        <tfoot class="w3-sand">
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
 </div>
 
 <script>
 
-function editCategory(id, name){
+
+function changeStatus(id, action){
   $('.w3-overlay').show()
   setTimeout(function(){
   $.ajax({  
-    url:'{{ path('admin_category_show_edit') }}',
+    url:'{{ path('admin_feedback_status') }}',
     type: "POST",
-    data:'id='+id,
+    data:'id='+id+'&action='+action,
     success: function(data){
       $('.w3-overlay').hide()
-      $('#set-id').text(name)
-      $('#set-category').html(data)
-      $('#modal-edit-category').show()
+      $('#'+data.data.action+'-'+id).html(data.data.html)
     },
     error:function(data){
       $('.w3-overlay').hide()
@@ -111,11 +117,13 @@ function editCategory(id, name){
   }, 500)
 }
 
+
+stored=[]
+
 $(function(){
 
   table = $('#dataTable').DataTable({
     dom: 'lBfrtip',
-    rowReorder: true,
     buttons: [
         {
         extend:    'excelHtml5',
@@ -157,6 +165,7 @@ $(function(){
         }
       }
     ],
+    order: [[ 1, "desc" ]],
     columnDefs: [
       //{ className:"my_class", "targets": [4] },
       //{ "orderData":[ 2 ], "targets": [ 3 ] },

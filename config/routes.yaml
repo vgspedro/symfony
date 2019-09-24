@@ -50,10 +50,15 @@ send_feedback:
     methods: [POST]
     condition: 'request.isXmlHttpRequest()'
 
-
 admin_feedback_list:
     path: /admin-feedback-list/
     controller: App\Controller\FeedbackController::list
+
+admin_feedback_status:
+    path: /admin-feedback-status/
+    controller: App\Controller\FeedbackController::changeStatus
+    methods: [POST]
+    condition: 'request.isXmlHttpRequest()'
 
 ###
 # REPORT ISSUE

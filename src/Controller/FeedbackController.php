@@ -26,17 +26,55 @@ class FeedbackController extends AbstractController
         $this->session = $session; 
     }
     
-
     public function list(Request $request) {
         
         $em = $this->getDoctrine()->getManager();
-        $feedbacks = $em->getRepository(Feedback::class)->findAll();
+        $feedbacks = $em->getRepository(Feedback::class)->findBy([],['id' => 'DESC']);
+
         return $this->render('admin/feedback-list.html', [
             'feedbacks' => $feedbacks,
         ]);
     }
 
+    //Change the status or visible of a Feedback
+    public function changeStatus(Request $request) {
 
+        $em = $this->getDoctrine()->getManager();
+
+        $feedback = $em->getRepository(Feedback::class)->find($request->request->get('id'));
+
+        if(!$feedback)
+            return new JsonResponse([
+                'status' => 0,
+                'message' => 'fail',
+                'data' => 'Feedback com #'.$request->request->get('id').' não encontrado',
+            ]);
+
+        $visible = $feedback->getVisible() ? false : true;
+        $active = $feedback->getActive() ? false : true;
+
+        if($request->request->get('action') == 'status'){
+            $feedback->setActive($active);
+            $a = $active ? '<i class="w3-text-green fas fa-check-circle fa-fw"></i>' : '<i class="w3-text-red fas fa-times-circle fa-fw"></i>';
+        }    
+        else{
+            $feedback->setVisible($visible);
+            $a = $visible ? '<i class="w3-text-green fas fa-eye fa-fw"></i>' : '<i class="w3-text-red fa-eye-slash fas fa-fw"></i>';
+        }
+        
+        $em->persist($feedback);
+        $em->flush();
+
+        return new JsonResponse([
+            'status' => 1,
+            'message' => 'success',
+            'data' => [
+                'action' => $request->request->get('action'),
+                'html' => $a
+            ]
+        ]);
+
+    }
 
 
     public function sendFeedback(Request $request, \Swift_Mailer $mailer, TranslatorInterface $translator, FieldsValidator $fieldsValidator)
@@ -60,24 +98,22 @@ class FeedbackController extends AbstractController
             $form['rate']->getData() ? $rate = $form['rate']->getData() : $err[] = 'rate';
             $observations = $form['observations']->getData();
              
-            if($err){
-                $response = array(
+            if($err)
+                return new JsonResponse([
                     'status' => 0,
                     'message' => 'fields empty',
                     'data' => $err,
                     'mail' => null
-                );
-                return new JsonResponse($response);
-            }
+                ]);
 
             $booking = $em->getRepository(Booking::class)->findOneBy(['id' => $booking_nr, 'status'=> 'confirmed']);
             
             if(!$booking)
                 $err[] = 'booking_not_valid';
-            else{
+            
+            else
                 if($booking->getClient()->getEmail() != $email)
                     $err[] = 'booking_email_invalid';
-            }
 
             $fieldsValidator->noFakeName($name) ? $err[] = 'invalid_name' : false;
             $fieldsValidator->noFakeEmails($email)? $err[] = 'invalid_email' : false;
@@ -87,76 +123,71 @@ class FeedbackController extends AbstractController
             if($feedback)
                 $err[] = 'already_left_feedback';
 
-            if($err){
-                $response = array(
+            if($err)
+              return new JsonResponse([
                     'status' => 2,
                     'message' => 'invalid fields',
                     'data' => $err,
                     'mail' => null,
-                );
-                return new JsonResponse($response);
-            }
-            else
-            {
+                ]);
 
-                $rate = $rate >= 5 ? 5 : $rate;
-                $feedback = new Feedback();
-                $feedback->setBooking($booking);
-                $feedback->setRate($rate);
-                $feedback->setActive(0);
-                $feedback->setVisible(0);
-                $feedback->setObservations($observations);
-                $em->persist($feedback);
-                $em->flush();
+            $rate = $rate >= 5 ? 5 : $rate;
+            $feedback = new Feedback();
+            $feedback->setBooking($booking);
+            $feedback->setRate($rate);
+            $feedback->setActive(0);
+            $feedback->setVisible(0);
+            $feedback->setObservations($observations);
+            $em->persist($feedback);
+            $em->flush();
 
-                $transport = (new \Swift_SmtpTransport($company->getEmailSmtp(), $company->getEmailPort(), $company->getEmailCertificade()))
-                    ->setUsername($company->getEmail())
-                    ->setPassword($company->getEmailPass());            
-                
-                $mailer = new \Swift_Mailer($transport);
-                $subject = $translator->trans('send_feedback');
+            $transport = (new \Swift_SmtpTransport($company->getEmailSmtp(), $company->getEmailPort(), $company->getEmailCertificade()))
+                ->setUsername($company->getEmail())
+                ->setPassword($company->getEmailPass());            
+            
+            $mailer = new \Swift_Mailer($transport);
+            $subject = $translator->trans('send_feedback');
 
-                $message = (new \Swift_Message($subject))
-                    ->setFrom([$company->getEmail() => $company->getName()])
-                    ->setTo(['test@tarugabenagiltours.pt' => $company->getName()])
-                    ->addPart($subject, 'text/plain')
-                    ->setBody(
+            $message = (new \Swift_Message($subject))
+                ->setFrom([$company->getEmail() => $company->getName()])
+                ->setTo(['test@tarugabenagiltours.pt' => $company->getName()])
+                ->addPart($subject, 'text/plain')
+                ->setBody(
                 
                     $this->renderView(
-                        'emails/feedback-'.$locale.'.html.twig',
-                        array(
-                            'id' => $feedback->getBooking()->getId(),
-                            'name' => $name,
-                            'email' => $email,
-                            'rate' =>  $feedback->getRate(),
-                            'logo' => 'https://'.$request->getHost().'/upload/gallery/'.$company->getLogo(),
-                            'observations' => $feedback->getObservations()
-                        )
-                    ),
+                    'emails/feedback-'.$locale.'.html.twig',
+                    [
+                        'id' => $feedback->getBooking()->getId(),
+                        'name' => $name,
+                        'email' => $email,
+                        'rate' =>  $feedback->getRate(),
+                        'logo' => 'https://'.$request->getHost().'/upload/gallery/'.$company->getLogo(),
+                        'observations' => $feedback->getObservations()
+                    ]),
                     'text/html'
                 );
                 
-                $send = $mailer->send($message);
-            }
-            
-            $response = array(
+            $send = $mailer->send($message);
+
+            return new JsonResponse([
                 'status' => 1,
                 'message' => 'all valid',
                 'data' =>  'success',
                 'mail' => $send,
                 'locale' => $locale
-            );
-               return new JsonResponse($response);   
-          } 
-        $response = array(
-                'status' => 0,
-                'message' => 'fail_submit',
-                'data' =>  'fail',
-                'mail' => null,
-                'locale' => null);
-        return new JsonResponse($response);      
-    }
+            ]);
+        } 
+
+       return new JsonResponse([
+            'status' => 0,
+            'message' => 'fail_submit',
+            'data' =>  'fail',
+            'mail' => null,
+            'locale' => null
+        ]);  
     
+    }
+
 }
 
 ?>
