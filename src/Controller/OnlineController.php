@@ -9,6 +9,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 use App\Service\Stripe;
 use App\Entity\Company;
 use App\Entity\Booking;
+use App\Entity\Locales;
 use App\Entity\StripePaymentLogs;
 use App\Service\RequestInfo;
 use Money\Money;
@@ -67,6 +68,52 @@ class OnlineController extends AbstractController
         ]);    
     }
 
+
+
+    public function createPayment(Stripe $stripe, Request $request, TranslatorInterface $translator, RequestInfo $reqInfo)
+    {
+        
+        $em = $this->getDoctrine()->getManager();
+        
+        $company = $em->getRepository(Company::class)->find(1);
+
+        $local = $request->getLocale();
+
+        $locale = $em->getRepository(Locales::class)->findOneby(['name' => $local]);
+
+        $text = [
+            'required' => $translator->trans('required', array(), 'messages', $locale ->getName()), 
+            'next' => $translator->trans('next', array(), 'messages', $locale ->getName()), 
+            'description' => $translator->trans('description', array(), 'messages', $locale ->getName()), 
+            'payment' => $translator->trans('payment', array(), 'messages', $locale ->getName()),
+            'phone' => $translator->trans('phone', array(), 'messages', $locale ->getName()),
+            'name' => $translator->trans('name', array(), 'messages', $locale->getName()),
+            'amount' => $translator->trans('amount', array(), 'messages', $locale ->getName()),
+            'insert_card_n' => $translator->trans('insert_card_n', array(), 'messages', $locale ->getName()),
+            'pay_now' => $translator->trans('pay_now', array(), 'messages',$locale ->getName()),
+            'error' => $translator->trans('error', array(), 'messages', $locale ->getName()),
+            'check' => $translator->trans('check', array(), 'messages', $locale ->getName()),
+            'success' => $translator->trans('success', array(), 'messages', $locale ->getName()),
+            'wifi_error' => $translator->trans('wifi_error', array(), 'messages', $locale ->getName()),
+            'receipt' => $translator->trans('receipt', array(), 'messages', $locale ->getName()),
+        ];
+        
+        return $this->render('admin/create-pay-online.html',
+            [
+                'company' => $company,
+                'translator' => $text,
+                'payment_intent' => $stripe->createUpdatePaymentIntent($company, $request, null),
+                'host' => $reqInfo->getHost($request)
+            ]);
+        //else
+        //    return $this->redirectToRoute('index');
+    }
+
+
+
+
+
+
     public function setPayment(Stripe $stripe, Request $request, TranslatorInterface $translator, RequestInfo $reqInfo)
     {
 
@@ -109,7 +156,6 @@ class OnlineController extends AbstractController
                     'paylog' => $paylog,
                     'translator' => $text,
                     'payment_intent' => $stripe->createUpdatePaymentIntent($company, $request, $booking),
-                    'reasons' => $stripe->refundReasons($translator),
                     'host' => $reqInfo->getHost($request)
                 ]);
         }

@@ -29,9 +29,7 @@
     </div>
   </div>
 
-
-
-{% elseif booking|length > 0 %}
+{% else%}
 
   <div class="w3-row-padding w3-card-2 w3-sand w3-padding w3-large" style="max-width:600px;margin:0 auto">
      <div class="w3-col l12 w3-xlarge">
@@ -53,10 +51,5 @@
       <span class="">{{booking.client.username}}</span>
     </div>
   </div>
-
-{%else%}
-
-{{logs}}
-
 
 {%endif%}

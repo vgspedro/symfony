@@ -10,8 +10,6 @@ use Money\Money;
 class Stripe
 {	
 
-
-
 /**
     *Cancel a Payment Intent, if user doesnt end the purchase in 5 min, 
     *@param OnlinePayments Obj, $paymentIntendId String
@@ -77,9 +75,8 @@ class Stripe
         $stripe->setApiKey($company->getStripeSK());
 
         try{
-
-            if($request->request->get('secret')){
-
+            //online booking and admin set payment of a booking already made
+            if($request->request->get('secret') && $booking){
                 //set 100% value deposit link /set-stripe 
                 if($request->request->get('total'))
                     $chargeAmount = $booking->getAmount()->getAmount();
@@ -98,6 +95,21 @@ class Stripe
                     'description' => $product
                 ]);
             }
+
+            //create a new charge nop booking required
+            elseif($request->request->get('secret')){
+
+                $intentId = explode("_secret_", $request->request->get('secret'));
+                
+                $p_i = $intent->update($intentId[0],[
+                    'amount' => (int)$chargeAmount,
+                    'currency' => $company->getCurrency()->getCurrency(),
+                    'description' => $product
+                ]);
+
+            }
+            
+            //just a create a payment intent do get a secret to make a payment
             else{
                 $p_i = $intent->create([
                     'amount' => 50,

@@ -68,6 +68,20 @@
     </div>
 
     <div class="w3-dropdown-click">
+      <button onclick="dropDownMenu('payments')" class="w3-tooltip nav w3-hover-grey w3-bar-item w3-padding w3-sand w3-border-top w3-border-brown">
+        <i class="far fa-money-bill-alt fa-fw w3-text-amber"></i> Pagamento Extra
+      </button>
+      <div id="payments" class="w3-dropdown-content w3-bar-block" style="position:relative">
+        <a href="{{ path('create_payment') }}" class="w3-right-align w3-amber nav w3-border-white w3-border-bottom w3-border-top w3-bar-item w3-button w3-padding">
+          <i class="far fa-plus-square fa-fw"></i> Criar
+        </a>
+        <a href="#" onclick="alert('Brevemente disponivel')" id="pay-extra-list" class="w3-amber w3-border-bottom w3-border-white w3-right-align nav w3-bar-item w3-button w3-padding">
+          <i class="far fa-list-alt fa-fw"></i> Listar
+        </a>
+      </div>
+    </div>
+
+    <div class="w3-dropdown-click">
       <button onclick="dropDownMenu('gallery')" class="w3-tooltip nav w3-hover-grey w3-bar-item w3-padding w3-sand w3-border-top w3-border-brown">
         <i class="far fa-images w3-text-green"></i> Galeria</button>
       <div id="gallery" class="w3-dropdown-content w3-bar-block" style="position:relative">

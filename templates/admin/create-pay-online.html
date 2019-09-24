@@ -6,108 +6,92 @@
 <script src="https://js.stripe.com/v3/"></script>
 
 <style>
-.StripeElement{box-sizing: border-box;height: 45px;padding: 11px 12px;border: 1px solid transparent;background-color: white;box-shadow: 0 1px 3px 0 #e6ebf1;-webkit-transition: box-shadow 150ms ease;transition: box-shadow 150ms ease}
+.w3-input{border-bottom: 3px solid #3f51b5}
+.StripeElement{height: 45px;padding: 11px 12px;background-color: #fdf5e6; border-bottom: 3px solid #3f51b5}
 .StripeElement--focus{box-shadow: 0 1px 3px 0 #cfd7df}
 .StripeElement--invalid{border-color: #fa755a}
 .StripeElement--webkit-autofill{background-color: #fefde5 !important}
 </style>
 
+<form id="payment-form">
+
 <div class="w3-container">
 
 <div class="w3-xxlarge w3-row w3-xlarge w3-padding w3-margin-top">
-  <i class="fa fa-cc-stripe"></i> {{translator.payment}}
+  <i class="fa fa-money fa-fw"></i> {{translator.payment}} Extra
 </div>
 
   <div class="w3-row-padding w3-card-2 w3-sand w3-padding w3-large" style="max-width:600px;margin:0 auto">
-     <div class="w3-col l12 w3-xlarge">
-      <label>{{translator.purchase_data}} #{{booking.id}}</label>
+    <div class="w3-col s12 w3-xlarge">
+      <label>{{translator.description}}:</label>
+      <label class="w3-small required w3-hide w3-right w3-text-red">{{translator.required}}</label>
+      <input type="text" name="description" class="w3-input" placeholder="{{translator.description}}">
+      <span class="description"></span>
     </div>
 
-    <div class="w3-col s12">
-      <label>{{translator.tour}}:</label>
-      <span class="">
-        {% if booking.client.locale.name == 'pt_PT' %}
-          {{booking.available.category.namePt}}
-        {% else %}
-          {{booking.available.category.nameEn}}
-        {% endif %}
+    <div class="w3-col s12 w3-xlarge">
+      <label>{{translator.amount}}:</label>
+      <label class="w3-small required w3-hide w3-right w3-text-red">{{translator.required}}</label>
+      <input type="number" step="any" name="amount" class="w3-input" placeholder="Formato 0.00">
+      <span class="amount w3-right"></span>
+    </div>
+
+    <div class="w3-col s12 w3-right w3-margin-top no-show">
+      <span class="w3-button w3-block w3-blue w3-border w3-right w3-margin-bottom" onclick="showUserToProceed()">
+        {{translator.next}} <i class="fa fa-chevron-right"></i>
       </span>
     </div>
-    <div class="w3-col s12">
-      <label>{{translator.status}}:</label>
-        <span class="{{booking.status}}" style="text-transform: uppercase">{{translator.booking_status}}</span>
-    </div>
-    <div class="w3-col s12">
-      <label>{{translator.payment}}:</label>
-     <span class="bps {{booking.paymentStatus}}" style="text-transform: uppercase">{{translator.payment_status}}</span>
-    </div>
-    <div class="w3-col s12">
-      <label>{{translator.date}}:</label>
-      <span class="">{{booking.available.datetimestart|date('d/m/Y @ H:i')}}</span>
-    </div>
-    <div class="w3-col s12">
-      <label>{{translator.name}}:</label>
-      <span class="u-name">{{booking.client.username}}</span>
-    </div>
-    
-    <div class="w3-col s12">
-      <label>Email:</label>
-      <span class="u-email">{{booking.client.email}}</span>
-    </div>
-    <div class="w3-col s12">
-      <label>{{translator.phone}}:</label>
-      <span class="u-phone">{{booking.client.telephone}}</span>
-    </div>
-    <div class="w3-col s12">
-      <label>{{translator.adults}}:</label>
-      <span class="">{{booking.adult}}</span>
-    </div>
 
-    <div class="w3-col s12">
-      <label>{{translator.childrens}}:</label>
-      <span class="">{{booking.children}}</span>
-    </div>
 
-    <div class="w3-col s12">
-      <label>{{translator.babies}}:</label>
-      <span class="">{{booking.baby}}</span>
+    <div class="w3-col s12 show w3-xlarge w3-hide">
+      <label>Email <span class="w3-text-red w3-xxlarge">*</span></label>
+      <input type="text" name="email" class="u-email w3-input" placeholder="Email *">
     </div>
-
-    <div class="w3-col s12 w3-xlarge w3-border-top">
-      <label>{{translator.amount}}:</label>
-       <div class="w3-right">{{(booking.amount.amount/100)|number_format(2)}}{{company.currency.currency}}</div>
+    <div class="w3-col s12 show w3-xlarge w3-hide">
+      <label>{{translator.phone}} <span class="w3-text-red w3-xxlarge">*</span></label>
+      <input type="text" class="u-phone w3-input" name="phone" placeholder="{{translator.phone}} *">
     </div>
-
-    {% if paylog is null %}
-  
-    <div class="paylog w3-col s12 w3-margin-top">
-      <form id="payment-form">
-        <input type="hidden" name="total" value="1">
-        <label>{{translator.insert_card_n}}</label>
+    <div class="w3-col s12 w3-margin-top show w3-xlarge w3-hide">
+        <label>{{translator.insert_card_n}} <span class="w3-text-red w3-xxlarge">*</span></label>
         <div id="card-element" class="w3-input w3-border" style="padding: 10px 8px"></div>
         <div id="card-errors" class="w3-text-red w3-small" role="alert"></div>
         <div class="set-token"></div>
-        <input type="hidden" name="id" value="{{booking.id}}">
-      </form>
     </div>
-    <div class="paylog w3-col s12 w3-right w3-margin-top">
+    <div class="w3-col s12 w3-right w3-margin-top show w3-hide">
       <span class="w3-button w3-block w3-green w3-border w3-right w3-margin-bottom" id="card-button" data-secret="{{payment_intent.data.client_secret}}" onclick="buyNow()">
       <i class="fa fa-check"></i> {{translator.pay_now}}
         </span>
     </div>
-  {% endif %}
   </div>
 </div>
 
+</form>
 <script>
 
+function showUserToProceed(){
+  
+  $('.required').addClass('w3-hide')
+  
+  if(!$('input[name=description]').val()){
+    $('input[name=description]').prev().removeClass('w3-hide')
+    return
+  }
+  else if(!$('input[name=amount]').val()){
+    $('input[name=amount]').prev().removeClass('w3-hide')
+    return
+  }
+
+  $('.show').removeClass('w3-hide')
+  $('.no-show').addClass('w3-hide')
+  $('input[name=description]').removeAttr('type','text').attr('type','hidden')
+  $('input[name=amount]').removeAttr('type','number').attr('type','hidden')
+  $('.description').text($('input[name=description]').val())
+  $('.amount').text($('input[name=amount]').val()+'{{company.currency.currency}}')
+}
+
 $(document).ready(function(){
-
-{% if paylog is null %}
   buildStripe(key)
-  {% endif %}
 });
-
 
   var key = '{{company.stripePK}}'
   var stripe = ''
@@ -166,7 +150,6 @@ $(document).ready(function(){
         getUrlReceipt(result.paymentIntent.id)   
     })
   }
-
 
   //pi_id = payment_intent_id
   function getUrlReceipt(pi_id){

@@ -451,3 +451,8 @@ set_payment:
     path: /set-stripe
     controller: App\Controller\OnlineController::setPayment
     methods: [POST]
+
+create_payment:
+    path: /online-create-payment
+    controller: App\Controller\OnlineController::createPayment
+    #methods: [POST]

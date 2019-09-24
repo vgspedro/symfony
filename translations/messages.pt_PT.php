@@ -1,5 +1,7 @@
 <?php
 return array(
+    'next' => 'Seguinte',
+    'description' => 'Descrição',
     'payment_intent_unexpected_state' => 'Surgiu um erro ao processar o pagamento. Por favor atualize a página e tente novamente.',
     'insufficient_funds' => 'O cartão não tem o montante suficiente para a realizar a compra.',
     'payment_intent_authentication_failure' => 'Não nos foi possivel autenticar o modo de pagamento. Escolha um modo diferente e tente novamente.',
