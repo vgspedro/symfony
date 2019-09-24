@@ -324,7 +324,6 @@ class OnlineController extends AbstractController
         ]);
     }
 
-
     /**
      * @param Request $request operator data  
      */
@@ -339,12 +338,11 @@ class OnlineController extends AbstractController
             return new JsonResponse([
                     'status' => 0,
                     'message' => 'fail',
-                    'data' => 'Stripe Credencials not found.'// $translator->trans('operator_online_payments_not_found')
+                    'data' => 'Stripe Credencials not found.'
                 ]);
         }
 
-        $booking = $em->getRepository(Booking::class)->find($id);
-        
+        $booking = $em->getRepository(Booking::class)->find($id);        
         //INFORM THE USER BOOKING NOT FOUND 
         if(!$booking){
           return new JsonResponse([
@@ -353,14 +351,30 @@ class OnlineController extends AbstractController
             'data' => 'Booking # '.$id.' not found']);
         }
 
-        if($booking->getStripePaymentLogs()->getLogObj() != null){
+        if($booking->getStripePaymentLogs() && $booking->getStripePaymentLogs()->getLogObj()){
 
             $charge_id = $booking->getStripePaymentLogs()->getLogObj()->id;
+
+
+            if($booking->getPaymentStatus() == 'canceled'){
+                $logs = $stripe->getPaymentChargeCanceled($company,$charge_id);
+
+                if ($logs['status'] == 1)
+                    return $this->render('admin/pay-logs-canceled.html',[
+                        'logs' => $logs['data'],
+                        'booking' => $booking
+                    ]);
+                
+                return $this->render('admin/pay-logs-canceled.html',[
+                    'logs' => ['data' => null],
+                    'booking' => $booking
+                ]);
+            }
 
             $logs = $stripe->retrieveCharge($company, $charge_id);
 
             $booking->getStripePaymentLogs()->setLog(json_encode($logs['data']));
-            
+
             if($logs['data']->amount_refunded > 0){
                 $status = $logs['data']->amount != $logs['data']->amount_refunded ? Booking::STATUS_PARTIAL_REFUND: Booking::STATUS_REFUNDED; 
                 $booking->setPaymentStatus($status);
@@ -370,16 +384,25 @@ class OnlineController extends AbstractController
             $em->flush();
 
             if ($logs['status'] == 1)
-                return $this->render('admin/pay-logs.html',['logs' => $logs['data'], 'booking' => [
-                    'txt' =>$translator->trans($booking->getPaymentStatus()),
-                    'status' => $booking->getPaymentStatus()
+                return $this->render('admin/pay-logs.html',[
+                    'logs' => $logs['data'], 
+                    'booking' => [
+                        'txt' =>$translator->trans($booking->getPaymentStatus()),
+                        'status' => $booking->getPaymentStatus()
                     ]
                 ]);
 
             else
                 return new JsonResponse($logs);
         }
+
+        return $this->render('admin/pay-logs-canceled.html',[
+            'logs' => ['data' => null],
+            'booking' => $booking
+            ]);
     }
+
+
 
 
     private function sendEmail(Booking $booking, TranslatorInterface $translator){

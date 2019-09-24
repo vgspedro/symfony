@@ -181,6 +181,50 @@ class Stripe
         }
     }
 
+
+    /**
+    *Get the log of client canceled payment
+    *@param Company, Request Obj
+    *@return Charge Obj
+    **/
+    public function getPaymentChargeCanceled(Company $company, $paymentIntentId){
+
+        $stripe = new \Stripe\Stripe();
+        $charge = new \Stripe\Charge();
+
+        $stripe->setApiKey($company->getStripeSK());
+        
+        try{
+            $c = $charge->all(['payment_intent' => $paymentIntentId]);
+            return [
+                'status' => 1,
+                'message' => 'success',
+                'data' => $c
+            ];
+        }
+        catch (\Stripe\Error\Authentication $e) {
+            $body = $e->getJsonBody();
+            $err  = $body['error'];
+            return new JsonResponse([
+                'status' => 2,
+                'message' => $err,
+                'data' => $err['message']
+            ]);
+        }
+        catch (\Stripe\Error\InvalidRequest $e) {
+
+            $body = $e->getJsonBody();
+            $err  = $body['error'];
+            return new JsonResponse([
+                'status' => 2,
+                'message' => $err,
+                'data' => $err['message']
+            ]);
+        }
+    }
+
+
+
     /**
     *Create a refund, send money back to client
     *@param Company, Request Obj

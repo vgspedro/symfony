@@ -1,0 +1,62 @@
+<div class="w3-row w3-xlarge w3-padding" style="margin-top:-50px">
+  <i class="fa fa-cogs"></i> Logs
+</div>
+
+{%if logs.data|length > 0%}
+
+  <div class="w3-row-padding w3-card-2 w3-sand w3-padding w3-large" style="max-width:600px;margin:0 auto">
+     <div class="w3-col l12 w3-xlarge">
+      <label>Reserva: {{logs.data[0].description}}</label>
+    </div>
+    <div class="w3-col s12">
+      <label>Data Pagamento:</label>
+      <span class="">{{logs.data[0].created|date('d/m/Y @ H:i:s')}}</span>
+    </div>
+    <div class="w3-col s12">
+      <label>Pagamento #:</label>
+      <span class="">{{logs.data[0].id}}</span>
+    </div>
+    <div class="w3-col s12">
+      <label>Estado Pagamento:</label>
+      <span class="{{booking.paymentStatus}}" style="text-transform: uppercase"> {{booking.paymentStatus}}</span><br>
+      <label> Motivo:</label>
+       <span style="text-transform: uppercase">{{logs.data[0].failure_code}}</span><br>
+        <span>{{logs.data[0].failure_message}}</span>
+    </div>
+    <div class="w3-col s12">
+      <label>Nome:</label>
+      <span class="">{{logs.data[0].billing_details.name}}</span>
+    </div>
+  </div>
+
+
+
+{% elseif booking|length > 0 %}
+
+  <div class="w3-row-padding w3-card-2 w3-sand w3-padding w3-large" style="max-width:600px;margin:0 auto">
+     <div class="w3-col l12 w3-xlarge">
+      <label>Reserva: #{{booking.id}}-{{booking.available.category.namePt}}</label>
+    </div>
+    <div class="w3-col s12">
+      <label>Data Pagamento:</label>
+      <span class="">{{booking.postedAt|date('d/m/Y @ H:i:s')}}</span>
+    </div>
+    <div class="w3-col s12">
+      <label>Estado Pagamento:</label>
+      <span class="{{booking.paymentStatus}}" style="text-transform: uppercase">{{booking.paymentStatus}}</span><br>
+      <label> Motivo:</label>
+       <span style="text-transform: uppercase">timeout</span><br>
+        <span>O prazo para pagamento expirou.</span>
+    </div>
+    <div class="w3-col s12">
+      <label>Nome:</label>
+      <span class="">{{booking.client.username}}</span>
+    </div>
+  </div>
+
+{%else%}
+
+{{logs}}
+
+
+{%endif%}
