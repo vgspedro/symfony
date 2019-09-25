@@ -17,9 +17,11 @@ class ExtraPayment
     /**
      * @ORM\Column(type="text", name="log")
      */
-    private $log;    
-   	   	   
-	public function getId(){
+    private $log;     
+    /** @ORM\Column(name="posted_at", type="datetime") */
+    private $postedAt;  	   
+	
+    public function getId(){
 		return $this->id;
 	}
 	
@@ -37,6 +39,16 @@ class ExtraPayment
             $obj = json_decode($this->getLog());
         }
         return $obj;
+    }
+
+    public function getPostedAt()
+    {
+        return $this->postedAt;
+    }
+
+    public function setPostedAt($postedAt)
+    {
+        $this->postedAt = $postedAt;
     }
     
     public function getObjectType(){

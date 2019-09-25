@@ -358,6 +358,7 @@ class ExtraPaymentController extends AbstractController
         if($ch['status'] == 1){
             $ePayment = new ExtraPayment();
             $ePayment->setLog(json_encode($ch['data']->data[0]));
+            $ePayment->setPostedAt(new \DateTime());
             $em->persist($ePayment);
             $em->flush();
 
