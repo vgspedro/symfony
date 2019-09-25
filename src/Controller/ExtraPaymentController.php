@@ -173,6 +173,7 @@ class ExtraPaymentController extends AbstractController
         $charge = $moneyParser->parse($amount);
 
         $charge->getAmount() < 50 ? $err[] = $translator->trans('min_amount', array(), 'messages', $locale) : false;
+        $charge->getAmount() > 500000 ? $err[] = $translator->trans('max_amount', array(), 'messages', $locale) : false;
 
         if($err)
             return new JsonResponse([
@@ -249,6 +250,7 @@ class ExtraPaymentController extends AbstractController
         $charge = $moneyParser->parse($amount);
 
         $charge->getAmount() < 50 ? $err[] = $translator->trans('min_amount', array(), 'messages', $locale) : false;
+        $charge->getAmount() > 500000 ? $err[] = $translator->trans('max_amount', array(), 'messages', $locale) : false;
 
         $phone = str_replace('+','00',$phone);
         //NO FAKE DATA

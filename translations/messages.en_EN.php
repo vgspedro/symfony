@@ -1,6 +1,7 @@
 <?php
 return array(
-    'min_amount' => 'Minimum amount 0.50Eur',
+    'min_amount' => 'Min. amount 0.50Eur',
+    'max_amount' => 'Max. amount 5000.00Eur',
     'validate' => 'Validate',
     'local' => 'Local:',
     'next' => 'Next',
