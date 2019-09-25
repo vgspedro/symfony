@@ -6,88 +6,196 @@
 <script src="https://js.stripe.com/v3/"></script>
 
 <style>
-.w3-input{border-bottom: 3px solid #3f51b5}
+.w3-input{border-bottom: 3px solid #3f51b5; color: #3f51b5!important;font-weight:bold}
 .StripeElement{height: 45px;padding: 11px 12px;background-color: #fdf5e6; border-bottom: 3px solid #3f51b5}
 .StripeElement--focus{box-shadow: 0 1px 3px 0 #cfd7df}
 .StripeElement--invalid{border-color: #fa755a}
 .StripeElement--webkit-autofill{background-color: #fefde5 !important}
+::-webkit-input-placeholder {opacity: 0.3}
+::-moz-placeholder {opacity: 0.3}
+:-ms-input-placeholder{opacity: 0.3}
+:-moz-placeholder {opacity: 0.3}
 </style>
 
 <form id="payment-form">
-
 <div class="w3-container">
 
 <div class="w3-xxlarge w3-row w3-xlarge w3-padding w3-margin-top">
   <i class="fa fa-money fa-fw"></i> {{translator.payment}} Extra
 </div>
 
-  <div class="w3-row-padding w3-card-2 w3-sand w3-padding w3-large" style="max-width:600px;margin:0 auto">
+  <div class="w3-row-padding w3-card-2 w3-sand w3-padding w3-large w3-margin-bottom" style="max-width:600px;margin:0 auto">
+    
+    <div class="w3-col s12 w3-xlarge validate-no-show">
+      <label>{{translator.local}}</label>
+      <label class="w3-small required w3-hide w3-right w3-text-red">Local</label>
+      <select name="locale" class="w3-input">
+      {%for local in locales%}
+      <option value="{{local.name}}">{{local.name}}</option>
+      {%endfor%}
+      </select>
+    </div>
+    
     <div class="w3-col s12 w3-xlarge">
-      <label>{{translator.description}}:</label>
-      <label class="w3-small required w3-hide w3-right w3-text-red">{{translator.required}}</label>
+      <label class="text-description">{{translator.description}}</label>
+      <label class="w3-small required text-required w3-hide w3-right w3-text-red"></label>
       <input type="text" name="description" class="w3-input" placeholder="{{translator.description}}">
       <span class="description"></span>
     </div>
 
-    <div class="w3-col s12 w3-xlarge">
-      <label>{{translator.amount}}:</label>
-      <label class="w3-small required w3-hide w3-right w3-text-red">{{translator.required}}</label>
-      <input type="number" step="any" name="amount" class="w3-input" placeholder="Formato 0.00">
+    <div class="w3-col s12 w3-xlarge add-border">
+      <label class="text-amount">{{translator.amount}}</label>
+      <label class="w3-small required text-required w3-hide w3-right w3-text-red"></label>
+      <input type="number" step="any" name="amount" class="w3-input">
       <span class="amount w3-right"></span>
     </div>
 
     <div class="w3-col s12 w3-right w3-margin-top no-show">
-      <span class="w3-button w3-block w3-blue w3-border w3-right w3-margin-bottom" onclick="showUserToProceed()">
+      <span class="w3-button text-next admin w3-block w3-blue w3-border w3-right w3-margin-bottom" onclick="validatePayment()">
+        {{translator.next}} <i class="fa fa-chevron-right"></i>
+      </span>
+      
+      <p class="w3-hide validate-show">
+        <i class="fa fa-info-circle w3-text-blue"></i> Clique no botão Validar para criar um pagamento com base na Descrição e Montante inseridos.<br> O cliente preenche/faculta os campos seguintes. 
+      </p>
+      <span class="w3-button text-validate w3-block w3-hide w3-green w3-border w3-right w3-margin-bottom" onclick="showUserToProceed()">
+        {{translator.validate}} <i class="fa fa-check"></i>
+      </span>
+    </div>
+
+    <div class="w3-col s12 show w3-xlarge w3-hide w3-margin-top">
+      <label class="text-name">{{translator.name}} </label><span class="w3-text-red w3-xxlarge">*</span>
+      <input type="text" name="name" class="u-name w3-input" placeholder="{{translator.name}} *">
+      <span class="name"></span>
+    </div>
+
+    <div class="w3-col s12 show w3-xlarge w3-hide">
+      <label>Email </span></label><span class="w3-text-red w3-xxlarge">*</span>
+      <input type="text" name="email" class="u-email w3-input" placeholder="Email *">
+       <span class="email"></span>
+    </div>
+    <div class="w3-col s12 show w3-xlarge w3-hide">
+      <label class="text-phone">{{translator.phone}} </label><span class="w3-text-red w3-xxlarge">*</span>
+      <input type="number" class="u-phone w3-input" name="phone" placeholder="{{translator.phone}} *">
+      <span class="phone"></span>
+    </div>
+
+
+    <div class="w3-col s12 w3-margin-top w3-hide is-user-validated w3-xlarge w3-border-top">
+        <label class="text-insert_card_n">{{translator.insert_card_n}} </label><span class="w3-text-red w3-xxlarge">*</span>
+        <div id="card-element" class="w3-input" style="padding: 10px 8px"></div>
+        <div id="card-errors" class="w3-text-red w3-small" role="alert"></div>
+        <div class="set-token"></div>
+    </div>
+
+    <div class="w3-col s12 w3-margin-top show not-user-validated w3-hide">
+      <span class="w3-button text-next user w3-block w3-blue w3-border w3-right w3-margin-bottom" onclick="validateUserData()">
         {{translator.next}} <i class="fa fa-chevron-right"></i>
       </span>
     </div>
 
 
-    <div class="w3-col s12 show w3-xlarge w3-hide">
-      <label>Email <span class="w3-text-red w3-xxlarge">*</span></label>
-      <input type="text" name="email" class="u-email w3-input" placeholder="Email *">
-    </div>
-    <div class="w3-col s12 show w3-xlarge w3-hide">
-      <label>{{translator.phone}} <span class="w3-text-red w3-xxlarge">*</span></label>
-      <input type="text" class="u-phone w3-input" name="phone" placeholder="{{translator.phone}} *">
-    </div>
-    <div class="w3-col s12 w3-margin-top show w3-xlarge w3-hide">
-        <label>{{translator.insert_card_n}} <span class="w3-text-red w3-xxlarge">*</span></label>
-        <div id="card-element" class="w3-input" style="padding: 10px 8px"></div>
-        <div id="card-errors" class="w3-text-red w3-small" role="alert"></div>
-        <div class="set-token"></div>
-    </div>
-    <div class="w3-col s12 w3-right w3-margin-top show w3-hide">
+    <div class="w3-col s12 w3-margin-top w3-hide is-user-validated">
       <span class="w3-button w3-block w3-green w3-border w3-right w3-margin-bottom" id="card-button" data-secret="{{payment_intent.data.client_secret}}" onclick="buyNow()">
-      <i class="fa fa-check"></i> {{translator.pay_now}}
+      <i class="fa fa-check"></i><span class="text-pay_now"> {{translator.pay_now}}</span>
         </span>
     </div>
   </div>
 </div>
-
 </form>
 <script>
 
-function showUserToProceed(){
-  
-  $('.required').addClass('w3-hide')
-  
-  if(!$('input[name=description]').val()){
-    $('input[name=description]').prev().removeClass('w3-hide')
-    return
-  }
-  else if(!$('input[name=amount]').val()){
-    $('input[name=amount]').prev().removeClass('w3-hide')
-    return
+text=[]
+
+function validatePayment(){
+  var html = ''
+  $('.w3-overlay').show()
+  $.ajax({
+      url :'{{ path('validate_extra_payment')}}',
+      type: "POST",
+      cache: false,
+      data: $('#payment-form').serialize(),
+      success: function(data){
+        //console.log(data)
+        $('.w3-overlay').hide()
+        if (data.status == 1){
+          //console.log(data)
+          $('.text-validate, .validate-show').removeClass('w3-hide')
+          $('.text-next.admin, .validate-no-show').addClass('w3-hide')
+          text = data.data.text
+          $('input[name=description]').removeAttr('type','text').attr('type','hidden')
+          $('input[name=amount]').removeAttr('type','number').attr('type','hidden')
+          $('.description').text(data.data.payment.description)
+          $('.amount').text(parseFloat(data.data.payment.amount).toFixed(2)+'{{company.currency.currency}}')
+
+        }
+        else if (data.status == 2){
+          for (var k in data.data)
+            html+= data.data[k]+'<br>'
+          modalConditions(1, html, '{{translator.check}}') 
+        }
+        else{
+          modalConditions(1, data.message, '{{translator.check}}') 
+        }
+      },
+      error:function(data){
+        $('.w3-overlay').hide()
+        modalConditions(2, '{{translator.wifi_error}}', '{{translator.error}}')
+      }
+    })
   }
 
+function showUserToProceed(){
+  $('.add-border').addClass('w3-border-bottom')
   $('.show').removeClass('w3-hide')
-  $('.no-show').addClass('w3-hide')
-  $('input[name=description]').removeAttr('type','text').attr('type','hidden')
-  $('input[name=amount]').removeAttr('type','number').attr('type','hidden')
-  $('.description').text($('input[name=description]').val())
-  $('.amount').text($('input[name=amount]').val()+'{{company.currency.currency}}')
+  $('.no-show, .validate-show').addClass('w3-hide')
+  $('.text-validate').text(text.validate)
+  $('.text-description').text(text.description)
+  $('.text-phone').text(text.phone)
+  $('.text-insert_card_n').text(text.insert_card_n)
+  $('.text-amount').text(text.amount)
+  $('.text-name').text(text.name)
+  $('.text-pay_now').text(text.pay_now)
 }
+
+function validateUserData(){
+  var html = ''
+  $('.w3-overlay').show()
+  $.ajax({  
+      url :'{{ path('validate_user_data')}}',
+      type: "POST",
+      cache: false,
+      data: $('#payment-form').serialize(),
+      success: function(data){
+        //console.log(data)
+        $('.w3-overlay').hide()
+        if (data.status == 1){
+          //console.log(data)
+          $('.is-user-validated').removeClass('w3-hide')
+          $('.not-user-validated').addClass('w3-hide')
+          $('input[name=name]').removeAttr('type','text').attr('type','hidden')
+          $('input[name=email]').removeAttr('type','text').attr('type','hidden')
+          $('input[name=phone]').removeAttr('type','number').attr('type','hidden')
+          $('.name').text( $('input[name=name]').val())
+          $('.email').text( $('input[name=email]').val())
+          $('.phone').text( $('input[name=phone]').val())
+
+        }
+        else if (data.status == 2){
+          for (var k in data.data)
+            html+= data.data[k]+'<br>'
+          modalConditions(1, html, '{{translator.check}}') 
+        }
+        else{
+          modalConditions(1, data.message, '{{translator.check}}') 
+        }
+      },
+      error:function(data){
+        $('.w3-overlay').hide()
+        modalConditions(2, '{{translator.wifi_error}}', '{{translator.error}}')
+      }
+    })
+  }
 
 $(document).ready(function(){
   buildStripe(key)
@@ -134,12 +242,12 @@ $(document).ready(function(){
     stripe.handleCardPayment($('#card-button').data('secret'), card,{
       payment_method_data: {
         billing_details: {
-          name: $('.u-name').text(),
-          email: $('.u-email').text(),
-          phone: $('.u-phone').text()
+          name: $('.u-name').val(),
+          email: $('.u-email').val(),
+          phone: $('.u-phone').val()
         }
       },
-      receipt_email: $('.u-email').text()
+      receipt_email: $('.u-email').val()
     }
     ).then(function(result) {
       if (result.error) {
@@ -154,32 +262,32 @@ $(document).ready(function(){
   //pi_id = payment_intent_id
   function getUrlReceipt(pi_id){
       $.ajax({  
-      url :'{{ path('online_get_charge')}}',
+      url :'{{ path('get_charge_extra_payment')}}',
       type: "POST",
       cache: false,
       data: 'pi_id='+pi_id,
       success: function(data){
         $('.w3-overlay').hide()
+        //console.log(data)
         if (data.status == 1){
           info = data.data.data.data[0]
-          console.log(data)
           $('#payment-form').trigger('reset')
-          modalConditions (0, data.message.text+' '+data.message.status+'<br><div class="w3-center w3-large"><a class="w3-button w3-border w3-blue w3-round" target="_blank" href='+info.receipt_url+'>{{translator.receipt}}</a></div>', '{{translator.success}}')
-          $('.bps').addClass(info.status).text(data.message.status)
-          $('.paylog').remove()
+          modalConditions (0, '<div class="w3-center w3-large"><a class="w3-button w3-border w3-blue w3-round" target="_blank" href='+info.receipt_url+'>{{translator.receipt}}</a></div>', '{{translator.success}}')
+          $('.paylog, iframe, .is-user-validated').remove()
+
         }
         else{
-          modalConditions(1, data.message, '{{translator.check}}') 
+          modalConditions(1, data.message, text.check) 
         }
       },
       error:function(data){
         $('.w3-overlay').hide()
-        modalConditions(2, '{{translator.wifi_error}}', '{{translator.error}}')
+        modalConditions(2, text.wifi_error, text.error)
       }
     })
   }
 
-  function buyNow(){
+function buyNow(){
     $('#card-errors').empty()
     $('.w3-overlay').show()
     setTimeout(function(){
@@ -191,18 +299,16 @@ $(document).ready(function(){
           return
         }
         $.ajax({
-          url :'{{ path('online_charge_credit_card')}}',
+          url :'{{ path('charge_extra_payment')}}',
           type: "POST",
           data: $('#payment-form').serialize()+'&secret='+$('#card-button').data('secret'),
           cache: false,
           success: function(data){
             if(data.data != 'succeeded'){
               handleCard()
-            return
             }
             else if (data.status == 1){
               $('.w3-overlay').hide()
-              //buildStripe(key)
               $('#payment-form').trigger('reset')
               modalConditions(0, data.message, '{{translator.success}}')
             }
@@ -218,6 +324,7 @@ $(document).ready(function(){
       });
     }, 500)
   }
+
 
 </script>
 

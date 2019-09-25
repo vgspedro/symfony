@@ -1,7 +1,9 @@
 <?php
 return array(
+    'validate' => 'Validar',
+    'local' => 'Local:',
     'next' => 'Seguinte',
-    'description' => 'Descrição',
+    'description' => 'Descrição:',
     'payment_intent_unexpected_state' => 'Surgiu um erro ao processar o pagamento. Por favor atualize a página e tente novamente.',
     'insufficient_funds' => 'O cartão não tem o montante suficiente para a realizar a compra.',
     'payment_intent_authentication_failure' => 'Não nos foi possivel autenticar o modo de pagamento. Escolha um modo diferente e tente novamente.',
@@ -83,7 +85,7 @@ return array(
     'adults' => 'Adultos',
     'childrens' => 'Crianças',
     'babies' => 'Bébés',
-    'amount' => 'Montante',
+    'amount' => 'Montante:',
     'pay_now' => 'Efetuar Pagamento',
     'insert_card_n' => 'Insira nº Cartão',
     'succeeded' => 'Efetuado',

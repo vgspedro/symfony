@@ -461,3 +461,28 @@ create_extra_payment:
     path: /create-extra-payment
     controller: App\Controller\ExtraPaymentController::create
     #methods: [POST]
+
+list_extra_payment:
+    path: /list-extra-payment
+    controller: App\Controller\ExtraPaymentController::list
+    methods: [POST]
+
+validate_extra_payment:
+    path: /validate-extra-payment
+    controller: App\Controller\ExtraPaymentController::validateExtraPayment
+    methods: [POST]
+
+validate_user_data:
+    path: /validate-user-data
+    controller: App\Controller\ExtraPaymentController::validateUserData
+    methods: [POST]
+
+charge_extra_payment:
+    path: /charge-extra-payment
+    controller: App\Controller\ExtraPaymentController::chargeExtraPayment
+    methods: [POST]
+
+get_charge_extra_payment:
+    path: /get-charge-extra-payment
+    controller: App\Controller\ExtraPaymentController::getCharge
+    methods: [POST]

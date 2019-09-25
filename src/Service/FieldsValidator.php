@@ -1,6 +1,5 @@
 <?php
 namespace App\Service;
-
 /*https://github.com/nojacko/email-validator*/
 use EmailValidator\EmailValidator;
 /*https://packagist.org/packages/inacho/php-credit-card-validator*/
@@ -53,6 +52,9 @@ class FieldsValidator
         $invalid = 0;        
         if($a)
             $invalid = preg_replace("/[0-9|\+?]{0,2}[0-9]{9,14}/", "", $a);
+        if(strlen($a)<9)
+            $invalid = 1;
+        
         return $invalid;
     }
     

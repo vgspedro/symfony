@@ -95,22 +95,10 @@ class Stripe
                     'description' => $product
                 ]);
             }
-
-            //create a new charge nop booking required
-            elseif($request->request->get('secret')){
-
-                $intentId = explode("_secret_", $request->request->get('secret'));
-                
-                $p_i = $intent->update($intentId[0],[
-                    'amount' => (int)$chargeAmount,
-                    'currency' => $company->getCurrency()->getCurrency(),
-                    'description' => $product
-                ]);
-
-            }
             
             //just a create a payment intent do get a secret to make a payment
             else{
+
                 $p_i = $intent->create([
                     'amount' => 50,
                     'currency' => $company->getCurrency()->getCurrency(),
@@ -150,6 +138,54 @@ class Stripe
 
     }
 
+    /**
+    *update paymentIntent
+    *@param Company, Request Obj
+    *@return $charge array
+    **/
+    public function createExtraCharge(Company $company, $charge){
+
+        $stripe = new \Stripe\Stripe();
+        $intent = new \Stripe\PaymentIntent();
+        $stripe->setApiKey($company->getStripeSK());
+        try{               
+                $intentId = explode("_secret_", $charge['secret']);
+                $p_i = $intent->update($intentId[0],[
+                    'amount' => $charge['amount'],
+                    'currency' => $company->getCurrency()->getCurrency(),
+                    'description' => $charge['description']
+                ]);
+                
+            return [
+                'status' => 1,
+                'message' => 'success',
+                'data' => $p_i
+            ];
+        }
+        
+        catch (\Stripe\Error\Authentication $e) {
+            
+            $body = $e->getJsonBody();
+            $err  = $body['error'];
+            return [
+                'status' => 2,
+                'message' => $err,
+                'data' => $err['message']
+            ];
+        }
+        
+        catch (\Stripe\Error\InvalidRequest $e) {
+
+            $body = $e->getJsonBody();
+            $err  = $body['error'];
+            return [
+                'status' => 2,
+                'message' => $err,
+                'data' => $err['message']
+            ];
+        }
+
+    }
 
     /**
     *Get the receipt url to put on client email

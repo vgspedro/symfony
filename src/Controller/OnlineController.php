@@ -69,51 +69,6 @@ class OnlineController extends AbstractController
     }
 
 
-
-    public function createPayment(Stripe $stripe, Request $request, TranslatorInterface $translator, RequestInfo $reqInfo)
-    {
-        
-        $em = $this->getDoctrine()->getManager();
-        
-        $company = $em->getRepository(Company::class)->find(1);
-
-        $local = $request->getLocale();
-
-        $locale = $em->getRepository(Locales::class)->findOneby(['name' => $local]);
-
-        $text = [
-            'required' => $translator->trans('required', array(), 'messages', $locale ->getName()), 
-            'next' => $translator->trans('next', array(), 'messages', $locale ->getName()), 
-            'description' => $translator->trans('description', array(), 'messages', $locale ->getName()), 
-            'payment' => $translator->trans('payment', array(), 'messages', $locale ->getName()),
-            'phone' => $translator->trans('phone', array(), 'messages', $locale ->getName()),
-            'name' => $translator->trans('name', array(), 'messages', $locale->getName()),
-            'amount' => $translator->trans('amount', array(), 'messages', $locale ->getName()),
-            'insert_card_n' => $translator->trans('insert_card_n', array(), 'messages', $locale ->getName()),
-            'pay_now' => $translator->trans('pay_now', array(), 'messages',$locale ->getName()),
-            'error' => $translator->trans('error', array(), 'messages', $locale ->getName()),
-            'check' => $translator->trans('check', array(), 'messages', $locale ->getName()),
-            'success' => $translator->trans('success', array(), 'messages', $locale ->getName()),
-            'wifi_error' => $translator->trans('wifi_error', array(), 'messages', $locale ->getName()),
-            'receipt' => $translator->trans('receipt', array(), 'messages', $locale ->getName()),
-        ];
-        
-        return $this->render('admin/create-pay-online.html',
-            [
-                'company' => $company,
-                'translator' => $text,
-                'payment_intent' => $stripe->createUpdatePaymentIntent($company, $request, null),
-                'host' => $reqInfo->getHost($request)
-            ]);
-        //else
-        //    return $this->redirectToRoute('index');
-    }
-
-
-
-
-
-
     public function setPayment(Stripe $stripe, Request $request, TranslatorInterface $translator, RequestInfo $reqInfo)
     {
 
@@ -163,8 +118,6 @@ class OnlineController extends AbstractController
             return $this->redirectToRoute('index');
     }
 
-
-
     /**
     *Create Charge
     *@param $request
@@ -172,7 +125,7 @@ class OnlineController extends AbstractController
     **/
     public function chargeCreditCard(Request $request, Stripe $stripe, TranslatorInterface $translator)
     {
-        //$this->denyAccessUnlessGranted('ROLE_ADMIN', null, 'Unable to access this page!');
+        //$this->denyAccessUnlessGranted('ROLE_USER', null, 'Unable to access this page!');
 
         $id = $request->request->get('id');
         

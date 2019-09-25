@@ -61,6 +61,10 @@ function ajaxUpload(block){
         case 'feedback-list': 
             url = '{{ path("admin_feedback_list") }}' 
         break
+        case 'list-extra-payment': 
+            url = '{{ path("list_extra_payment") }}' 
+        break
+
     }
     $('.w3-overlay').show() 
     setTimeout(function(){
