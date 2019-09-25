@@ -53,9 +53,6 @@ class ExtraPaymentController extends AbstractController
             'receipt' => $translator->trans('receipt', array(), 'messages', $locale->getName()),
         ];
         
-        //$price_by_event->setAmount($moneyParser->parse($price->amount));
-        //'price' => $moneyFormatter->format($package->getPrice())
-
         return $this->render('admin/create-pay-online.html',
             [
                 'company' => $company,
@@ -356,16 +353,18 @@ class ExtraPaymentController extends AbstractController
         $ch = $stripe->getPaymentCharge($company, $request);
 
         if($ch['status'] == 1){
+
             $ePayment = new ExtraPayment();
             $ePayment->setLog(json_encode($ch['data']->data[0]));
             $ePayment->setPostedAt(new \DateTime());
             $em->persist($ePayment);
+
             $em->flush();
 
             return new JsonResponse([
                 'status' => 1,
                 'message' => [
-                    'text' => 'deu certo', 
+                    'text' => 'success',
                     'status' => null
                 ],
                 'data' => $ch]);
@@ -376,7 +375,5 @@ class ExtraPaymentController extends AbstractController
             'message' => 'Unable to Charge the Amount!',
             'data' => null]);
     }
-
-
 
 }

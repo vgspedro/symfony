@@ -132,15 +132,15 @@ function validatePayment(){
         else if (data.status == 2){
           for (var k in data.data)
             html+= data.data[k]+'<br>'
-          modalConditions(1, html, '{{translator.check}}') 
+          modalConditions(1, html, text.check) 
         }
         else{
-          modalConditions(1, data.message, '{{translator.check}}') 
+          modalConditions(1, data.message, text.check) 
         }
       },
       error:function(data){
         $('.w3-overlay').hide()
-        modalConditions(2, '{{translator.wifi_error}}', '{{translator.error}}')
+        modalConditions(2, text.wifi_error, text.error)
       }
     })
   }, 500)
@@ -188,15 +188,15 @@ function validateUserData(){
         else if (data.status == 2){
           for (var k in data.data)
             html+= data.data[k]+'<br>'
-          modalConditions(1, html, '{{translator.check}}') 
+          modalConditions(1, html, text.check) 
         }
         else{
-          modalConditions(1, data.message, '{{translator.check}}') 
+          modalConditions(1, data.message, text.check) 
         }
       },
       error:function(data){
         $('.w3-overlay').hide()
-        modalConditions(2, '{{translator.wifi_error}}', '{{translator.error}}')
+        modalConditions(2, text.wifi_error, text.error)
       }
     })
   }, 500)
@@ -257,7 +257,7 @@ $(document).ready(function(){
     ).then(function(result) {
       if (result.error) {
         $('.w3-overlay').hide()
-        modalConditions(1, result.error.message, '{{translator.check}}') 
+        modalConditions(1, result.error.message, text.check) 
       } 
       else
         getUrlReceipt(result.paymentIntent.id)   
@@ -277,7 +277,7 @@ $(document).ready(function(){
         if (data.status == 1){
           info = data.data.data.data[0]
           $('#payment-form').trigger('reset')
-          modalConditions (0, '<div class="w3-center w3-large"><a class="w3-button w3-border w3-blue w3-round" target="_blank" href='+info.receipt_url+'>{{translator.receipt}}</a></div>', '{{translator.success}}')
+          modalConditions (0, '<div class="w3-center w3-large"><a class="w3-button w3-border w3-blue w3-round" target="_blank" href='+info.receipt_url+'>'+text.receipt'+</a></div>', text.success)
           $('.paylog, iframe, .is-user-validated').remove()
 
         }
@@ -315,15 +315,15 @@ function buyNow(){
             else if (data.status == 1){
               $('.w3-overlay').hide()
               $('#payment-form').trigger('reset')
-              modalConditions(0, data.message, '{{translator.success}}')
+              modalConditions(0, data.message, text.success)
             }
             else{
               $('.w3-overlay').hide()
-              modalConditions(1, data.message, '{{translator.check}}') 
+              modalConditions(1, data.message, text.check) 
             }
           },
           error:function(data){
-            modalConditions(2, '{{translator.wifi_error}}', '{{translator.error}}')
+            modalConditions(2, text.wifi_error, text.error)
           }
         })
       });
