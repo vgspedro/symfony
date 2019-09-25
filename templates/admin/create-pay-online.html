@@ -93,7 +93,6 @@
       </span>
     </div>
 
-
     <div class="w3-col s12 w3-margin-top w3-hide is-user-validated">
       <span class="w3-button w3-block w3-green w3-border w3-right w3-margin-bottom" id="card-button" data-secret="{{payment_intent.data.client_secret}}" onclick="buyNow()">
       <i class="fa fa-check"></i><span class="text-pay_now"> {{translator.pay_now}}</span>
@@ -109,6 +108,8 @@ text=[]
 function validatePayment(){
   var html = ''
   $('.w3-overlay').show()
+
+  setTimeout(function(){
   $.ajax({
       url :'{{ path('validate_extra_payment')}}',
       type: "POST",
@@ -142,7 +143,8 @@ function validatePayment(){
         modalConditions(2, '{{translator.wifi_error}}', '{{translator.error}}')
       }
     })
-  }
+  }, 500)
+}
 
 function showUserToProceed(){
   $('.add-border').addClass('w3-border-bottom')
@@ -161,6 +163,8 @@ function showUserToProceed(){
 function validateUserData(){
   var html = ''
   $('.w3-overlay').show()
+  setTimeout(function(){
+
   $.ajax({  
       url :'{{ path('validate_user_data')}}',
       type: "POST",
@@ -195,7 +199,8 @@ function validateUserData(){
         modalConditions(2, '{{translator.wifi_error}}', '{{translator.error}}')
       }
     })
-  }
+  }, 500)
+}
 
 $(document).ready(function(){
   buildStripe(key)

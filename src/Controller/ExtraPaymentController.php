@@ -250,6 +250,7 @@ class ExtraPaymentController extends AbstractController
 
         $charge->getAmount() < 50 ? $err[] = $translator->trans('min_amount', array(), 'messages', $locale) : false;
 
+        $phone = str_replace('+','00',$phone);
         //NO FAKE DATA
         $validator->noFakeEmails($email) == 1 ? $err[] = $translator->trans('part_seven.email_invalid', array(), 'messages', $locale) : false;
 

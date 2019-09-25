@@ -49,9 +49,6 @@ class FieldsValidator
     }
 
     public function noFakeTelephone($a) {
-
-       $a = str_replace("+","00",$a);
-
         $invalid = 0;        
         if($a)
             $invalid = preg_replace("/[0-9|\+?]{0,2}[0-9]{9,14}/", "", $a);
