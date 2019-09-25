@@ -46,13 +46,13 @@
     <div class="w3-col s12 w3-xlarge add-border">
       <label class="text-amount">{{translator.amount}}</label>
       <label class="w3-small required text-required w3-hide w3-right w3-text-red"></label>
-      <input type="number" step="any" name="amount" class="w3-input">
+      <input type="number" step="any" name="amount" class="w3-input" placeholder="Min: 0.50">
       <span class="amount w3-right"></span>
     </div>
 
     <div class="w3-col s12 w3-right w3-margin-top no-show">
-      <span class="w3-button text-next admin w3-block w3-blue w3-border w3-right w3-margin-bottom" onclick="validatePayment()">
-        {{translator.next}} <i class="fa fa-chevron-right"></i>
+      <span class="w3-button admin-validate w3-block w3-blue w3-border w3-right w3-margin-bottom" onclick="validatePayment()">
+        <span class="text-next">{{translator.next}}</span> <i class="fa fa-chevron-right"></i>
       </span>
       
       <p class="w3-hide validate-show">
@@ -80,7 +80,6 @@
       <span class="phone"></span>
     </div>
 
-
     <div class="w3-col s12 w3-margin-top w3-hide is-user-validated w3-xlarge w3-border-top">
         <label class="text-insert_card_n">{{translator.insert_card_n}} </label><span class="w3-text-red w3-xxlarge">*</span>
         <div id="card-element" class="w3-input" style="padding: 10px 8px"></div>
@@ -89,8 +88,8 @@
     </div>
 
     <div class="w3-col s12 w3-margin-top show not-user-validated w3-hide">
-      <span class="w3-button text-next user w3-block w3-blue w3-border w3-right w3-margin-bottom" onclick="validateUserData()">
-        {{translator.next}} <i class="fa fa-chevron-right"></i>
+      <span class="w3-button user w3-block w3-blue w3-border w3-right w3-margin-bottom" onclick="validateUserData()">
+        <span class="text-next">{{translator.next}}</span> <i class="fa fa-chevron-right"></i>
       </span>
     </div>
 
@@ -121,7 +120,7 @@ function validatePayment(){
         if (data.status == 1){
           //console.log(data)
           $('.text-validate, .validate-show').removeClass('w3-hide')
-          $('.text-next.admin, .validate-no-show').addClass('w3-hide')
+          $('.admin-validate, .text-next.admin, .validate-no-show').addClass('w3-hide')
           text = data.data.text
           $('input[name=description]').removeAttr('type','text').attr('type','hidden')
           $('input[name=amount]').removeAttr('type','number').attr('type','hidden')
@@ -152,6 +151,7 @@ function showUserToProceed(){
   $('.text-validate').text(text.validate)
   $('.text-description').text(text.description)
   $('.text-phone').text(text.phone)
+  $('.text-next').text(text.next)
   $('.text-insert_card_n').text(text.insert_card_n)
   $('.text-amount').text(text.amount)
   $('.text-name').text(text.name)

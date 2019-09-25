@@ -67,17 +67,38 @@ class ExtraPaymentController extends AbstractController
     }
 
 
-    public function list(Stripe $stripe, Request $request, TranslatorInterface $translator, RequestInfo $reqInfo)
+
+    public function list(Request $request, TranslatorInterface $translator, RequestInfo $reqInfo, MoneyFormatter $moneyFormatter)
     {
 
         $em = $this->getDoctrine()->getManager();
 
         $company = $em->getRepository(Company::class)->find(1);
 
+        $extraPayment = $em->getRepository(ExtraPayment::class)->findBy([],['id' => 'DESC']);
+
+        $r = [];
+        
+        foreach ( $extraPayment as $e)
+            if($e->getObjectType() == 'charge'){
+                $r[] = [
+                    'id' => $e->getLogObj()->id,
+                    'id_' => $e->getId(),
+                    'amount' => $moneyFormatter->format(Money::EUR($e->getLogObj()->amount)),
+                    'currency' => $company->getCurrency()->getCurrency(),
+                    'description' => $e->getLogObj()->description,
+                    'email' => $e->getLogObj()->billing_details->email,
+                    'phone' => $e->getLogObj()->billing_details->phone,
+                    'name' => $e->getLogObj()->billing_details->name,
+                    'date' => \DateTime::createFromFormat('U', $e->getLogObj()->created)->format('d/m/Y H:i')
+                ];
+            }
+        
         return $this->render('admin/extra-payment-list.html',
             [
                 'company' => $company,
-                'host' => $reqInfo->getHost($request)
+                'host' => $reqInfo->getHost($request),
+                'extra_payments' => $r
             ]);
     }
 
@@ -141,6 +162,7 @@ class ExtraPaymentController extends AbstractController
         $description = $request->request->get('description') ? $request->request->get('description') : $err[] = $translator->trans('description', array(), 'messages', $locale);
         $amount = $request->request->get('amount')  ? $request->request->get('amount') : $err[] = $translator->trans('amount', array(), 'messages', $locale);
 
+
         if($err)
             return new JsonResponse([
                 'status' => 2,
@@ -149,6 +171,15 @@ class ExtraPaymentController extends AbstractController
             ]);
 
         $charge = $moneyParser->parse($amount);
+
+        $charge->getAmount() < 50 ? $err[] = $translator->trans('min_amount', array(), 'messages', $locale) : false;
+
+        if($err)
+            return new JsonResponse([
+                'status' => 2,
+                'message' => 'fail',
+                'data' => $err
+            ]);
 
         //$moneyFormatter->format($amount);
         //Money::EUR(0)
@@ -215,6 +246,10 @@ class ExtraPaymentController extends AbstractController
                 'data' => $err,
             ]);
 
+        $charge = $moneyParser->parse($amount);
+
+        $charge->getAmount() < 50 ? $err[] = $translator->trans('min_amount', array(), 'messages', $locale) : false;
+
         //NO FAKE DATA
         $validator->noFakeEmails($email) == 1 ? $err[] = $translator->trans('part_seven.email_invalid', array(), 'messages', $locale) : false;
 
@@ -228,8 +263,6 @@ class ExtraPaymentController extends AbstractController
                 'message' => 'fail',
                 'data' => $err
             ]);
-
-        $charge = $moneyParser->parse($amount);
 
         $text = [
             'validate' => $translator->trans('validate', array(), 'messages', $locale),

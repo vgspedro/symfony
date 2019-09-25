@@ -1,5 +1,6 @@
 <?php
 return array(
+    'min_amount' => 'Minimum amount 0.50Eur',
     'validate' => 'Validate',
     'local' => 'Local:',
     'next' => 'Next',

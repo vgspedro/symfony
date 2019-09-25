@@ -1,5 +1,6 @@
 <?php
 return array(
+    'min_amount' => 'Montante Minimo 0.50Eur',
     'validate' => 'Validar',
     'local' => 'Local:',
     'next' => 'Seguinte',
@@ -67,8 +68,7 @@ return array(
     'pending' => 'Pendente',
     'canceled' => 'Cancelada',
     'confirmed' => 'Confirmada',
-    'booking' => 'Reserva',
-    
+    'booking' => 'Reserva',   
     'order_info' => 'Info. Reserva',
     'total_to_pay' => 'Total a pagar',
     'deposit' => 'Depósito', 
