@@ -1,6 +1,4 @@
-
 <style>
-
  .dt-button{background: #FFF;border:1px solid #ccc;
  display: inline-block; padding: 8px 16px; vertical-align: middle;overflow: hidden;text-decoration: none; color: inherit;
     background-color: inherit;text-align: center; cursor: pointer; white-space: nowrap;color: #000!important;background-color: #87CEEB!important;font-size:18px}
@@ -41,13 +39,13 @@ table.dataTable thead > tr > th {padding-left: 8px!important}
 				<tbody>
       			{%for e in extra_payments %}
        				<tr>
- 						<td>{{ e.id_ }}</td>
- 						<td>{{ e.date }}</td>
- 						<td>{{ e.amount }}{{e.currency}}</td>
- 						<td>{{ e.description }}</td>
- 						<td>{{ e.name }}</td>
- 						<td>{{ e.email }}</td>
- 						<td>{{ e.phone }}</td>
+ 						<td class="w3-center">{{ e.id_ }}</td>
+ 						<td class="w3-center">{{ e.date }}</td>
+ 						<td class="w3-center">{{ e.amount }}{{e.currency}}</td>
+ 						<td class="w3-center">{{ e.description }}</td>
+ 						<td class="w3-center">{{ e.name }}</td>
+ 						<td class="w3-center">{{ e.email }}</td>
+ 						<td class="w3-center">{{ e.phone }}</td>
 					</tr>
 				{% endfor %}
 				</tbody>
@@ -63,7 +61,7 @@ $(function(){
 
   table = $('#dataTable').DataTable({
     dom: 'lBfrtip',
-	order: [[ 0, "desc" ]],
+    order: [[ 0, "desc" ]],
     buttons: [
         {
         extend:    'excelHtml5',
