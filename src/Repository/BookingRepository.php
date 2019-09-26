@@ -42,6 +42,9 @@ class BookingRepository extends ServiceEntityRepository
 
 
 
+
+
+
     /**
     * Get the clients with credit card that pass 15 days after the event
     */
@@ -99,6 +102,18 @@ class BookingRepository extends ServiceEntityRepository
         $day0 = $stmt->fetchAll();
 
 
+        $sql = "SELECT b.payment_status, COUNT(b.payment_status) AS count, COUNT(b.id) AS total
+            FROM booking b
+            WHERE b.date_event = :date
+            GROUP BY b.payment_status";
+
+        $stmt = $conn->prepare($sql);
+        $stmt->bindValue('date', $today->format('Y-m-d'));
+        $stmt->execute();
+        $day_p0 = $stmt->fetchAll();
+
+
+
         $sql = "SELECT b.status, COUNT(b.status) AS count, COUNT(b.id) AS total 
             FROM booking b
             WHERE b.date_event = :date
@@ -108,6 +123,19 @@ class BookingRepository extends ServiceEntityRepository
         $stmt->bindValue('date', $tomorrow->format('Y-m-d'));
         $stmt->execute();
         $day1 = $stmt->fetchAll();
+
+
+
+        $sql = "SELECT b.payment_status, COUNT(b.payment_status) AS count, COUNT(b.id) AS total
+            FROM booking b
+            WHERE b.date_event = :date
+            GROUP BY b.payment_status";
+
+        $stmt = $conn->prepare($sql);
+        $stmt->bindValue('date', $tomorrow->format('Y-m-d'));
+        $stmt->execute();
+        $day_p1 = $stmt->fetchAll();
+
 
         $sql = "SELECT c.name_pt AS category, COUNT(c.name_pt) AS total 
             FROM booking b
@@ -152,7 +180,7 @@ class BookingRepository extends ServiceEntityRepository
         $charts = array();
         array_push($charts, $chart0, $chart1);
 
-        return array('day0' => $day0, 'day1' => $day1, 'chart' => $charts); 
+        return array('day0' => $day0,  'day_p0' => $day_p0, 'day_p1' => $day_p1, 'day1' => $day1, 'chart' => $charts); 
     }
   
 

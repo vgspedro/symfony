@@ -38,6 +38,7 @@ class AdminController extends AbstractController
         $start = new \DateTime('first day of this month');
         $end = new \DateTime('last day of this month');
         $booking_month = $em->getRepository(Booking::class)->dashboardCurrentMonth($start, $end);
+        
 
         $company = $em->getRepository(Company::class)->find(1);
         

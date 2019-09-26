@@ -1,18 +1,7 @@
 
 <style>
-.chart_wrap {
-    position: relative;
-    padding-bottom: inherit;
-    height: 300px
-}
-
-.chart-container {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width:100%;
-    height:300px
-}
+.chart_wrap {position: relative; padding-bottom: inherit;height: 300px}
+.chart-container {position: absolute;top: 0;left: 0;width:100%; height:300px}
 </style>
 
   <header class="w3-container" style="padding-top:22px">
@@ -88,6 +77,96 @@
     </div>
   </div>
 
+
+
+  <div class="w3-row-padding w3-opacity-min">
+    <div class="w3-col l3 m6 s6 w3-margin-bottom">
+      <div class="w3-container w3-card w3-pale-yellow w3-padding-16">
+        <div class="w3-left"><i class="far fa-money-bill-alt w3-xxxlarge w3-text-green"></i></div>
+        <div class="w3-right">
+          <h3>
+            {% for bookings in booking.day_p0 if bookings.payment_status == "processing"  %}
+              {{ bookings.count }}
+              {% else %}
+                0
+            {% endfor %}
+          </h3>
+        </div>
+        <div class="w3-clear"></div>
+        <h4>Processamento</h4>
+      </div>
+    </div>
+    <div class="w3-col l3 m6 s6 w3-margin-bottom">
+      <div class="w3-container w3-pale-blue w3-card w3-padding-16">
+        <div class="w3-left"><i class="far fa-money-bill-alt w3-xxxlarge w3-text-green"></i></div>
+        <div class="w3-right">
+          <h3>
+            {% for bookings in booking.day_p0 if bookings.payment_status == "canceled"  %}
+              {{ bookings.count }}
+              {% else %}
+                0
+            {% endfor %}
+          </h3>
+        </div>
+        <div class="w3-clear"></div>
+        <h4>Cancelados</h4>
+      </div>
+    </div>
+    <div class="w3-col l3 m6 s6 w3-margin-bottom">
+      <div class="w3-container w3-pale-green w3-card w3-padding-16">
+        <div class="w3-left"><i class="far fa-money-bill-alt w3-xxxlarge w3-text-green"></i></div>
+        <div class="w3-right">
+          <h3>
+            {% for bookings in booking.day_p0 if bookings.payment_status == "succeeded"  %}
+              {{ bookings.count }}
+              {% else %}
+                0
+            {% endfor %}
+          </h3>
+        </div>
+        <div class="w3-clear"></div>
+        <h4>Efetuados</h4>
+      </div>
+    </div>
+    <div class="w3-col l3 m6 s6 w3-margin-bottom">
+      <div class="w3-container w3-pale-blue w3-card w3-padding-16">
+        <div class="w3-left"><i class="far fa-money-bill-alt w3-xxxlarge w3-text-green"></i></div>
+        <div class="w3-right">
+          <h3>
+            
+            {% set totalrefunded0 = 0 %}
+
+            {% for bookings in booking.day_p0 if bookings.payment_status == "refunded" or bookings.payment_status == "partial_refund" %}
+              {% set totalrefunded0 = totalrefunded0 + bookings.count %}
+            {% endfor %}
+            
+            {{ totalrefunded0 }}
+            
+            {% set totalrefunded0 = 0 %}
+
+          </h3>
+        </div>
+        <div class="w3-clear"></div>
+        <h4>Reembolsos</h4>
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
    <header class="w3-container">
     <h5><b>Amanhã {{ "now"|date_modify("+1 day")|date("d/m/Y") }}</b></h5>
   </header>
@@ -158,6 +237,84 @@
       </div>
     </div>
   </div>
+
+
+
+
+  <div class="w3-row-padding w3-opacity-min">
+    <div class="w3-col l3 m6 s6 w3-margin-bottom">
+      <div class="w3-container w3-card w3-pale-yellow w3-padding-16">
+        <div class="w3-left"><i class="far fa-money-bill-alt w3-xxxlarge w3-text-green"></i></div>
+        <div class="w3-right">
+          <h3>
+            {% for bookings in booking.day_p1 if bookings.payment_status == "processing"  %}
+              {{ bookings.count }}
+              {% else %}
+                0
+            {% endfor %}
+          </h3>
+        </div>
+        <div class="w3-clear"></div>
+        <h4>Processamento</h4>
+      </div>
+    </div>
+    <div class="w3-col l3 m6 s6 w3-margin-bottom">
+      <div class="w3-container w3-pale-blue w3-card w3-padding-16">
+        <div class="w3-left"><i class="far fa-money-bill-alt w3-xxxlarge w3-text-green"></i></div>
+        <div class="w3-right">
+          <h3>
+            {% for bookings in booking.day_p1 if bookings.payment_status == "canceled"  %}
+              {{ bookings.count }}
+              {% else %}
+                0
+            {% endfor %}
+          </h3>
+        </div>
+        <div class="w3-clear"></div>
+        <h4>Cancelados</h4>
+      </div>
+    </div>
+    <div class="w3-col l3 m6 s6 w3-margin-bottom">
+      <div class="w3-container w3-pale-green w3-card w3-padding-16">
+        <div class="w3-left"><i class="far fa-money-bill-alt w3-xxxlarge w3-text-green"></i></div>
+        <div class="w3-right">
+          <h3>
+            {% for bookings in booking.day_p1 if bookings.payment_status == "succeeded"  %}
+              {{ bookings.count }}
+              {% else %}
+                0
+            {% endfor %}
+          </h3>
+        </div>
+        <div class="w3-clear"></div>
+        <h4>Efetuados</h4>
+      </div>
+    </div>
+    <div class="w3-col l3 m6 s6 w3-margin-bottom">
+      <div class="w3-container w3-pale-blue w3-card w3-padding-16">
+        <div class="w3-left"><i class="far fa-money-bill-alt w3-xxxlarge w3-text-green"></i></div>
+        <div class="w3-right">
+          <h3>
+            {% set totalrefunded1 = 0 %}
+            {% for bookings in booking.day_p1 if bookings.payment_status == "refunded" or bookings.payment_status == "partial_refund" %}
+              {% set totalrefunded1 = totalrefunded1 + bookings.count %}
+            {% endfor %}
+            {{ totalrefunded1 }}
+          </h3>
+        </div>
+        <div class="w3-clear"></div>
+        <h4>Reembolsos</h4>
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+
+
+
 
   <div class="w3-row-padding w3-opacity-min">
 
