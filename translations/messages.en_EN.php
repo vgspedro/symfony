@@ -140,7 +140,7 @@ return array(
 'part_tree'=> array(
     'duration'=>'Duration',
     'adult'=>'Adult',
-    'children'=>'Children (Máx: 12Years)',
+    'children'=>'Children (Máx: 10Years)',
     'baby'=>'Baby (Máx: 23Months)',
 ),
 
@@ -162,7 +162,7 @@ return array(
     'address'=>'Address *',
     'name'=>'Name *',
     'adult'=>'Nr. Adults *',
-    'children'=>'Nr. Childrens (Máx: 12Years)',
+    'children'=>'Nr. Childrens (Máx: 10Years)',
     'baby'=>'Nr. Babies (Máx: 23Months)',
     'message'=>'Message',
     'date'=>'Date *',
