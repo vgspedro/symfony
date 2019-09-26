@@ -36,15 +36,6 @@ class BookingRepository extends ServiceEntityRepository
         return $query->getResult();
     } 
 
-
-
-
-
-
-
-
-
-
     /**
     * Get the clients with credit card that pass 15 days after the event
     */
@@ -63,6 +54,7 @@ class BookingRepository extends ServiceEntityRepository
         return $query->getResult();
     }
 
+
     /**
     * Send a reminder to clients that have a booking scheduled for tomorrow
     */
@@ -72,13 +64,13 @@ class BookingRepository extends ServiceEntityRepository
             JOIN b.client c
             WHERE b.dateEvent = :tomorrow
             AND b.status = :status
-            AND b.paymentStatus != :pay_status'; 
+            AND (b.paymentStatus = :pay_status OR b.paymentStatus IS NULL)'; 
 
         $query = $this->getEntityManager()->createQuery($dql)
             ->setParameter('tomorrow', $tomorrow)
             ->setParameter('status', 'confirmed')
-            ->setParameter('pay_status', 'canceled');
-          
+            ->setParameter('pay_status', 'succeeded');
+        
         return $query->getResult();
     }
 

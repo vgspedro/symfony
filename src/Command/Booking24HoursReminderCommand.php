@@ -62,7 +62,7 @@ class Booking24HoursReminderCommand extends Command
         
         foreach ($bookings as $booking) {
         
-            $this->sendEmail($booking, $company);
+           $this->sendEmail($booking, $company);
             $id.= $booking->getId().', ';
             
         }
@@ -73,7 +73,7 @@ class Booking24HoursReminderCommand extends Command
         $filesystem->touch($this->kernel->getProjectDir().'/cron_logs/reminder.txt', time());
 
         // outputs a message followed by a "\n"
-        //$output->writeln(count($bookings).' Bookings reminder send to bookings ('.$id.'), to warn them that tomorrow they have a booking: '.$tomorrow->format('d/m/Y'));
+        //$output->writeln($txt);
     }
 
     public function sendEmail(Booking $booking, Company $company){
