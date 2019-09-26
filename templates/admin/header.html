@@ -24,14 +24,12 @@
     </div>
   </div>
   <div class="w3-bar-block">
-    <a href="#" onclick="ajaxUpload(this.id)" id="dashboard" class="nav w3-bar-item w3-button w3-padding w3-sand w3-border-top w3-border-brown">
-      <i class="fas fa-tachometer-alt"></i> Painel Controlo
-    </a>
 
     <div class="w3-dropdown-click">
       <button onclick="dropDownMenu('company')" class="w3-tooltip nav w3-hover-grey w3-bar-item w3-padding w3-sand w3-border-top w3-border-brown">
          <i class="fa fa-home w3-text-blue"></i> {%trans%}company{%endtrans%}
       </button>
+
       <div id="company" class="w3-dropdown-content w3-bar-block" style="position:relative">
         <a href="#" onclick="ajaxUpload('company')" class="w3-right-align nav w3-border-top w3-border-white w3-blue w3-bar-item w3-button w3-padding">
           <i class="far fa-edit fa-fw"></i> {%trans%}edit{%endtrans%}
@@ -67,6 +65,7 @@
       </div>
     </div>
 
+
     <div class="w3-dropdown-click">
       <button onclick="dropDownMenu('payments')" class="w3-tooltip nav w3-hover-grey w3-bar-item w3-padding w3-sand w3-border-top w3-border-brown">
         <i class="far fa-money-bill-alt fa-fw w3-text-amber"></i> Pagamento Extra
@@ -81,6 +80,7 @@
       </div>
     </div>
 
+
     <div class="w3-dropdown-click">
       <button onclick="dropDownMenu('gallery')" class="w3-tooltip nav w3-hover-grey w3-bar-item w3-padding w3-sand w3-border-top w3-border-brown">
         <i class="far fa-images w3-text-green"></i> Galeria</button>
@@ -93,21 +93,6 @@
         </a>
       </div>
     </div>
-
-    <a href="#" onclick="ajaxUpload(this.id)" id="available" class="nav w3-bar-item w3-button w3-padding w3-sand w3-border-top w3-border-brown">
-       <i class="far fa-calendar-check"></i> Disponibilidades
-    </a>
-
-    <a href="#" onclick="ajaxUpload(this.id)" id="booking" class="nav w3-bar-item w3-button w3-padding w3-sand w3-border-top w3-border-brown">
-      <i class="far fa-calendar-alt fa-fw"></i> Reservas
-    </a>
-
-    <a href="#" onclick="ajaxUpload(this.id)" id="easy-text" class="nav w3-bar-item w3-button w3-padding w3-sand w3-border-top w3-border-brown">
-      <i class="fas fa-signal"></i> Texto Fácil
-    </a>
-    <a href="#" onclick="ajaxUpload(this.id)" id="warning" class="nav w3-bar-item w3-button w3-padding w3-sand w3-border-top w3-border-brown">
-      <i class="fa fa-exclamation-triangle"></i> Aviso
-    </a>
 
     <div class="w3-dropdown-click">
       <button onclick="dropDownMenu('user')" class="w3-tooltip nav w3-hover-grey w3-bar-item w3-padding w3-sand w3-border-top w3-border-brown">
@@ -122,13 +107,52 @@
         </a>
       </div>
     </div>
+
+
+    {% for menu in menus %}
+
+      {% set linkPath = menu.path != '#' ? path(menu.path) : '#' %}
+
+      {% set attribute = menu.id ? 'onclick=ajaxUpload("'~menu.id~'")' : false %}
+
+      {% set target = menu.target ? 'target='~menu.target : false %}
+
+      <a href="{{linkPath}}" {{target}} {{attribute}} class="w3-bar-item w3-button w3-padding w3-sand w3-border-top w3-border-brown">
+        <i class="{{menu.icon}}"></i> {{menu.name}}
+      </a>
+
+
+    {% endfor %}
+
+    <!--a href="#" onclick="ajaxUpload(this.id)" id="dashboard" class="nav w3-bar-item w3-button w3-padding w3-sand w3-border-top w3-border-brown">
+      <i class="fas fa-tachometer-alt"></i> Painel Controlo
+    </a-->
+
+    <!--a href="#" onclick="ajaxUpload(this.id)" id="available" class="nav w3-bar-item w3-button w3-padding w3-sand w3-border-top w3-border-brown">
+       <i class="far fa-calendar-check"></i> Disponibilidades
+    </a>
+
+    <a href="#" onclick="ajaxUpload(this.id)" id="booking" class="nav w3-bar-item w3-button w3-padding w3-sand w3-border-top w3-border-brown">
+      <i class="far fa-calendar-alt fa-fw"></i> Reservas
+    </a>
+
+    <a href="#" onclick="ajaxUpload(this.id)" id="easy-text" class="nav w3-bar-item w3-button w3-padding w3-sand w3-border-top w3-border-brown">
+      <i class="fas fa-signal"></i> Texto Fácil
+    </a>
+    <a href="#" onclick="ajaxUpload(this.id)" id="warning" class="nav w3-bar-item w3-button w3-padding w3-sand w3-border-top w3-border-brown">
+      <i class="fa fa-exclamation-triangle"></i> Aviso
+    </a>
+
     <a href="{{ path('index') }}" target="_blank" class="w3-bar-item w3-button w3-padding w3-sand w3-border-top w3-border-brown">
       <i class="fas fa-external-link-alt fa-fw"></i> Ver Site
     </a>
-    <a href="{{ path('logout') }}" class="w3-bar-item w3-button w3-padding w3-sand w3-border-top w3-border-bottom w3-border-brown">
+
+    <a href="{{ path('logout') }}" target="_self" class="w3-bar-item w3-button w3-padding w3-sand w3-border-top w3-border-bottom w3-border-brown">
       <i class="fas fa-sign-out-alt fa-fw"></i> Sair
-    </a>
-    <br><br>
+    </a-->
+    
+    <br>
+    <br>
   </div>
 </nav>
 
@@ -139,5 +163,7 @@
       </div>
     </div>
 </div>
-<div class="w3-margin-top"> 
- <!-- Header -->
+
+
+
+<!-- Header -->

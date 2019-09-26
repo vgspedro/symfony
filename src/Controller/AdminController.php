@@ -23,162 +23,15 @@ use App\Form\EventType;
 use App\Form\EasyTextType;
 use App\Service\MoneyFormatter;
 use App\Service\MoneyParser;
+use App\Service\Menu;
+use App\Service\RequestInfo;
 use Money\Money;
 
 class AdminController extends AbstractController
 {
 
-    public function paymentStripe(Request $request, MoneyParser $moneyParser, MoneyFormatter $moneyFormatter){
-
-        $em = $this->getDoctrine()->getManager();
-        $company = $em->getRepository(Company::class)->find(1);
-        $booking = $em->getRepository(Booking::class)->find($request->request->get('booking'));
-
-        $stripe = new \Stripe\Stripe();
-        $charge = new \Stripe\Charge();
-        $customer = new \Stripe\Customer();
-
-        $stripe->setApiKey($company->getStripeSk());
-
-        $chargeClient = $request->request->get('chargeAmount') ? $request->request->get('chargeAmount') : 0 ;
-
-        $amount = $moneyParser->parse($chargeClient);
-        
-        $request->request->get('stripeToken');
-
-        if(!$booking)
-            return new JsonResponse(array(
-                'status' => 0,
-                'message' => 'Reserva não encontrada!',
-                'data' => 'STRP-#11')
-            );
-
-        if(!$company)
-            return new JsonResponse(array(
-                'status' => 0,
-                'message' => 'Dados Empresa não encontrados!',
-                'data' => 'STRP-#12')
-            );
-
-        if( $amount->getAmount() < 1 || !$amount )
-            return new JsonResponse(array(
-                'status' => 0,
-                'message' => 'Insira um valor maior que <b class="w3-text-red">0 (Zero) </b>!.<br> Altere e tente novamente.',
-                'data' => 'STRP-#14')
-            );
-
-
-        if($amount->getAmount() > $booking->getAmount()->getAmount())
-            return new JsonResponse(array(
-                'status' => 0,
-                'message' => 'O valor inserido: <b class="w3-text-red">'.$moneyFormatter->format($amount).'€</b> é maior do que o valor da reserva <b class="w3-text-green">'.$moneyFormatter->format($booking->getAmount()).'€</b>.<br> Altere e tente novamente.',
-                'data' => 'STRP-#13')
-            );
-
-
-        //CREATE CARD PAYMENT
-        try {
-            $result = $charge->create(
-                ['amount' => $amount->getAmount(), 
-                'currency' => $company->getCurrency()->getCurrency(),
-                'source' => $request->request->get('stripeToken'), // obtained with Stripe.js -> token
-                'description' => $booking->getId().'-'.$booking->getAvailable()->getCategory()->getNameEn(),
-                'metadata' => ['name' => $booking->getClient()->getCardName()]
-            ]);
-
-        //STRIPE PAYMENT STATUSES FROM API ARE : succeeded, pending, or failed.
-
-        } catch(\Stripe\Error\Card $e) {
-
-            $booking->getClient()->setCvv($booking->getClient()->getCvv().'# CARD DECLINED **');
-            $em->persist($booking);
-            $em->flush();  
-
-            // Since it's a decline, \Stripe\Error\Card will be caught
-            $response = array(
-                'status' => 0,
-                'order_status' => 'DECLINED',
-                'message' => 'Credit Card declined, use other',
-                'data' => 'STRP-#0');
-
-            return new JsonResponse($response);
-
-        } catch (\Stripe\Error\RateLimit $e) {
-              // Too many requests made to the API too quickly
-            $response = array(
-                'status' => 0,
-                'message' => 'Too many requests made to the API too quickly!',
-                'data' => 'STRP-#1');
-            return new JsonResponse($response);
-
-        } 
-        catch (\Stripe\Error\InvalidRequest $e) {
-
-            // Invalid parameters were supplied to Stripe's API
-            $response = array(
-                'status' => 0,
-                'message' => 'Invalid parameters were supplied to Stripe´s API',
-                'data' => 'STRP-#2');
-            return new JsonResponse($response);
-        } 
-
-        catch (\Stripe\Error\Authentication $e) {
-              // Authentication with Stripe's API failed
-              // (maybe you changed API keys recently)
-            $response = array(
-                'status' => 0,
-                'message' => 'Authentication with Stripe´s API failed (API keys recently changed ?)',
-                'data' => 'STRP-#3');
-            return new JsonResponse($response);
-
-        } catch (\Stripe\Error\ApiConnection $e) {
-            
-              // Network communication with Stripe failed
-            $response = array(
-                'status' => 0,
-                'message' => 'Network communication with Stripe failed!',
-                'data' => 'STRP-#4');
-            return new JsonResponse($response);
-        
-        } catch (\Stripe\Error\Base $e) {
-              // Display a very generic error to the user, and maybe send
-              // yourself an email
-             $response = array(
-                'status' => 0,
-                'message' => 'Ops! Something went wrong!',
-                'data' => 'STRP-#5');
-            return new JsonResponse($response);
-        
-        } catch (Exception $e) {
-            // Something else happened, completely unrelated to Stripe
-
-           return new JsonResponse([
-                'status' => 0,
-                'message' => 'Something else happened, completely unrelated to Stripe',
-                'data' => 'STRP-#6'
-            ]);      
-        }
-
-        //succeeded, pending, or failed.
-        //completed == succeeded
-
-        $status = $result->status == 'succeeded' ? 'completed' : $result->status;
-
-        $booking->getClient()->setCvv($booking->getClient()->getCvv().'#'.$result->status);
-        $em->persist($booking);
-        $em->flush();                        
-      
-        return new JsonResponse([
-            'status' => 1,
-            'message' => 'Sucesso Cobrança Efetuada',
-            'data' => $status
-        ]);    
-    }
-
-
-    public function html(Request $request)
+    public function html(Request $request, RequestInfo $reqInfo, Menu $menu)
     {
-        $uri = $request->getUri();
         $em = $this->getDoctrine()->getManager();
         $booking = $em->getRepository(Booking::class)->dashboardValues();
 
@@ -187,15 +40,16 @@ class AdminController extends AbstractController
         $booking_month = $em->getRepository(Booking::class)->dashboardCurrentMonth($start, $end);
 
         $company = $em->getRepository(Company::class)->find(1);
-        $ua = $this->getBrowser();
         
         return $this->render('admin/base.html.twig',[
-            'browser' => $ua,
+            'menus' => $menu->administration(),
+            'browser' => $reqInfo->browserInfo($request),
             'booking' => $booking,
             'booking_month' => $booking_month,
             'company' => $company,
-            'host' => $this->getHost($request),
-            'url' => 'https://'.$request->getHost()
+            'host' => $reqInfo->getHost($request),
+            'url' => 'https://'.$reqInfo->getHost($request)
+
         ]);
     }
 
@@ -548,141 +402,154 @@ class AdminController extends AbstractController
     }
 
 
-    private function getHost($request) 
-    { 
-        $domain = $request->headers->get('host');
-        return preg_match('/127/i', $domain) || preg_match('/192/i', $domain) || preg_match('/demo/i', $domain) ? true : false;
+    /*
+    public function paymentStripe(Request $request, MoneyParser $moneyParser, MoneyFormatter $moneyFormatter){
+
+        $em = $this->getDoctrine()->getManager();
+        $company = $em->getRepository(Company::class)->find(1);
+        $booking = $em->getRepository(Booking::class)->find($request->request->get('booking'));
+
+        $stripe = new \Stripe\Stripe();
+        $charge = new \Stripe\Charge();
+        $customer = new \Stripe\Customer();
+
+        $stripe->setApiKey($company->getStripeSk());
+
+        $chargeClient = $request->request->get('chargeAmount') ? $request->request->get('chargeAmount') : 0 ;
+
+        $amount = $moneyParser->parse($chargeClient);
+        
+        $request->request->get('stripeToken');
+
+        if(!$booking)
+            return new JsonResponse(array(
+                'status' => 0,
+                'message' => 'Reserva não encontrada!',
+                'data' => 'STRP-#11')
+            );
+
+        if(!$company)
+            return new JsonResponse(array(
+                'status' => 0,
+                'message' => 'Dados Empresa não encontrados!',
+                'data' => 'STRP-#12')
+            );
+
+        if( $amount->getAmount() < 1 || !$amount )
+            return new JsonResponse(array(
+                'status' => 0,
+                'message' => 'Insira um valor maior que <b class="w3-text-red">0 (Zero) </b>!.<br> Altere e tente novamente.',
+                'data' => 'STRP-#14')
+            );
+
+
+        if($amount->getAmount() > $booking->getAmount()->getAmount())
+            return new JsonResponse(array(
+                'status' => 0,
+                'message' => 'O valor inserido: <b class="w3-text-red">'.$moneyFormatter->format($amount).'€</b> é maior do que o valor da reserva <b class="w3-text-green">'.$moneyFormatter->format($booking->getAmount()).'€</b>.<br> Altere e tente novamente.',
+                'data' => 'STRP-#13')
+            );
+
+
+        //CREATE CARD PAYMENT
+        try {
+            $result = $charge->create(
+                ['amount' => $amount->getAmount(), 
+                'currency' => $company->getCurrency()->getCurrency(),
+                'source' => $request->request->get('stripeToken'), // obtained with Stripe.js -> token
+                'description' => $booking->getId().'-'.$booking->getAvailable()->getCategory()->getNameEn(),
+                'metadata' => ['name' => $booking->getClient()->getCardName()]
+            ]);
+
+        //STRIPE PAYMENT STATUSES FROM API ARE : succeeded, pending, or failed.
+
+        } catch(\Stripe\Error\Card $e) {
+
+            $booking->getClient()->setCvv($booking->getClient()->getCvv().'# CARD DECLINED **');
+            $em->persist($booking);
+            $em->flush();  
+
+            // Since it's a decline, \Stripe\Error\Card will be caught
+            $response = array(
+                'status' => 0,
+                'order_status' => 'DECLINED',
+                'message' => 'Credit Card declined, use other',
+                'data' => 'STRP-#0');
+
+            return new JsonResponse($response);
+
+        } catch (\Stripe\Error\RateLimit $e) {
+              // Too many requests made to the API too quickly
+            $response = array(
+                'status' => 0,
+                'message' => 'Too many requests made to the API too quickly!',
+                'data' => 'STRP-#1');
+            return new JsonResponse($response);
+
+        } 
+        catch (\Stripe\Error\InvalidRequest $e) {
+
+            // Invalid parameters were supplied to Stripe's API
+            $response = array(
+                'status' => 0,
+                'message' => 'Invalid parameters were supplied to Stripe´s API',
+                'data' => 'STRP-#2');
+            return new JsonResponse($response);
+        } 
+
+        catch (\Stripe\Error\Authentication $e) {
+              // Authentication with Stripe's API failed
+              // (maybe you changed API keys recently)
+            $response = array(
+                'status' => 0,
+                'message' => 'Authentication with Stripe´s API failed (API keys recently changed ?)',
+                'data' => 'STRP-#3');
+            return new JsonResponse($response);
+
+        } catch (\Stripe\Error\ApiConnection $e) {
+            
+              // Network communication with Stripe failed
+            $response = array(
+                'status' => 0,
+                'message' => 'Network communication with Stripe failed!',
+                'data' => 'STRP-#4');
+            return new JsonResponse($response);
+        
+        } catch (\Stripe\Error\Base $e) {
+              // Display a very generic error to the user, and maybe send
+              // yourself an email
+             $response = array(
+                'status' => 0,
+                'message' => 'Ops! Something went wrong!',
+                'data' => 'STRP-#5');
+            return new JsonResponse($response);
+        
+        } catch (Exception $e) {
+            // Something else happened, completely unrelated to Stripe
+
+           return new JsonResponse([
+                'status' => 0,
+                'message' => 'Something else happened, completely unrelated to Stripe',
+                'data' => 'STRP-#6'
+            ]);      
+        }
+
+        //succeeded, pending, or failed.
+        //completed == succeeded
+
+        $status = $result->status == 'succeeded' ? 'completed' : $result->status;
+
+        $booking->getClient()->setCvv($booking->getClient()->getCvv().'#'.$result->status);
+        $em->persist($booking);
+        $em->flush();                        
+      
+        return new JsonResponse([
+            'status' => 1,
+            'message' => 'Sucesso Cobrança Efetuada',
+            'data' => $status
+        ]);    
     }
-
-
-
-    private function getBrowser() 
-    { 
-        $u_agent = $_SERVER['HTTP_USER_AGENT']; 
-        $bname = 'Unknown';
-        $platform = 'Unknown';
-        $version= "";
-
-        //First get the platform?
-        if (preg_match('/linux/i', $u_agent)) {
-            $platform = 'linux';
-        }
-        elseif (preg_match('/macintosh|mac os x/i', $u_agent)) {
-            $platform = 'mac';
-        }
-        elseif (preg_match('/windows|win32/i', $u_agent)) {
-            $platform = 'windows';
-        }
-        
-        $os_platform  = "Unknown OS Platform";
-
-        $os_array     = array(
-                          '/windows nt 10/i'      =>  'Windows 10',
-                          '/windows nt 6.3/i'     =>  'Windows 8.1',
-                          '/windows nt 6.2/i'     =>  'Windows 8',
-                          '/windows nt 6.1/i'     =>  'Windows 7',
-                          '/windows nt 6.0/i'     =>  'Windows Vista',
-                          '/windows nt 5.2/i'     =>  'Windows Server 2003/XP x64',
-                          '/windows nt 5.1/i'     =>  'Windows XP',
-                          '/windows xp/i'         =>  'Windows XP',
-                          '/windows nt 5.0/i'     =>  'Windows 2000',
-                          '/windows me/i'         =>  'Windows ME',
-                          '/win98/i'              =>  'Windows 98',
-                          '/win95/i'              =>  'Windows 95',
-                          '/win16/i'              =>  'Windows 3.11',
-                          '/macintosh|mac os x/i' =>  'Mac OS X',
-                          '/mac_powerpc/i'        =>  'Mac OS 9',
-                          '/linux/i'              =>  'Linux',
-                          '/ubuntu/i'             =>  'Ubuntu',
-                          '/iphone/i'             =>  'iPhone',
-                          '/ipod/i'               =>  'iPod',
-                          '/ipad/i'               =>  'iPad',
-                          '/android/i'            =>  'Android',
-                          '/blackberry/i'         =>  'BlackBerry',
-                          '/webos/i'              =>  'Mobile'
-                    );
-
-        foreach ($os_array as $regex => $value)
-         if (preg_match($regex, $u_agent))
-                $os_platform = $value;
-
-
-        // Next get the name of the useragent yes seperately and for good reason
-        if(preg_match('/MSIE/i',$u_agent) && !preg_match('/Opera/i',$u_agent)) 
-        { 
-            $bname = 'Internet Explorer'; 
-            $ub = "MSIE"; 
-        } 
-        elseif(preg_match('/Firefox/i',$u_agent)) 
-        { 
-            $bname = 'Mozilla Firefox'; 
-            $ub = "Firefox"; 
-        } 
-        elseif(preg_match('/Chrome/i',$u_agent)) 
-        { 
-            $bname = 'Google Chrome'; 
-            $ub = "Chrome"; 
-        } 
-        elseif(preg_match('/Safari/i',$u_agent)) 
-        { 
-            $bname = 'Apple Safari'; 
-            $ub = "Safari"; 
-        } 
-        elseif(preg_match('/Opera/i',$u_agent)) 
-        { 
-            $bname = 'Opera'; 
-            $ub = "Opera"; 
-        } 
-        elseif(preg_match('/Netscape/i',$u_agent)) 
-        { 
-            $bname = 'Netscape'; 
-            $ub = "Netscape"; 
-        } 
-        
-        $lang = explode(',',$_SERVER['HTTP_ACCEPT_LANGUAGE']);
-
-        $current_country = '';
-        $current_city = '';
-
-
-        // if the link is down http://api.hostip.info/get_html.php bullshit happens, how to solve it.....
-        
-        $html = '';
-
-        if ($html)
-        {
-            file_get_contents('http://api.hostip.info/get_html.php?ip='.$_SERVER['REMOTE_ADDR']);
-            $country = explode('Country: ',$country);
-            $city = explode('City: ',$country[1]);
-            $ip = explode('IP: ',$city[1]);
-            $location = explode('City: ',$country[1]);
-            $current_city = $ip[0];
-            $current_country = $location[0];
-        
-        $response =  array(
-            'name'      => $bname,
-            'os'        => ucfirst($platform),
-            'platform'  => ucfirst($os_platform),
-            'lang'      => $lang[0],
-            'country'   => $current_country,
-            'city'      => $current_city,
-            'ip'        => $_SERVER['REMOTE_ADDR']
-        );
-        }
-
-
-        else $response =  array(
-            'name'      => $bname,
-            'os'        => ucfirst($platform),
-            'platform'  => ucfirst($os_platform),
-            'lang'      => $lang[0],
-            'country'   => '-/-',
-            'city'      => '-/-',
-            'ip'        => $_SERVER['REMOTE_ADDR']
-        );
-
-        return $response;
-    } 
+*/
 
 
 }
