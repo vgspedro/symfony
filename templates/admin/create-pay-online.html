@@ -132,15 +132,15 @@ function validatePayment(){
         else if (data.status == 2){
           for (var k in data.data)
             html+= data.data[k]+'<br>'
-          modalConditions(1, html, text.check) 
+          modalConditions(1, html, '{{translator.check}}') 
         }
         else{
-          modalConditions(1, data.message, text.check) 
+          modalConditions(1, data.message,  '{{translator.check}}')
         }
       },
       error:function(data){
         $('.w3-overlay').hide()
-        modalConditions(2, text.wifi_error, text.error)
+        modalConditions(2, '{{translator.wifi_error}}', '{{translator.error}}')
       }
     })
   }, 500)

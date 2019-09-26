@@ -534,7 +534,7 @@ function getStripeLogs(id){
       type: "POST",
       data:'id='+id,
       success: function(data){
-        console.log(data)
+        //console.log(data)
         $('.w3-overlay').hide()
         if(data.status == 0){
           $('#info-client').show()                
@@ -555,6 +555,7 @@ function getStripeLogs(id){
 }
 
 
+/*
 function setPayment(id){
   $('.w3-overlay').show()
   setTimeout(function(){
@@ -582,8 +583,7 @@ function setPayment(id){
     })
   }, 500)
 }
-
-
+*/
 
 function setStatusTable(v){
   $('input.form-control.input-sm').val(v.substring(0,3)).trigger("keyup")
@@ -619,13 +619,17 @@ function modalBookingSetStatus(bookingId){
   }, 500)
 }
 
-
-x = $('input[name=stripe-pk]').val()
 /*STRIPE*/
-var stripe = Stripe(x)
+
+/*
+x = $('input[name=stripe-pk]').val()
+
+
+
+//var stripe = Stripe(x)
 
 // Create an instance of Elements.
-var elements = stripe.elements();
+//var elements = stripe.elements();
 
 // Custom styling can be passed to options when creating an Element.
 // (Note that this demo uses a wider set of styles than the guide below.)
@@ -722,6 +726,7 @@ function stripeTokenHandler(token) {
   }, 500)
 }
 
+*/
 /*STRIPE*/
 
 </script>
