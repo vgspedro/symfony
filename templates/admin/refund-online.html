@@ -110,9 +110,9 @@
     $('.w3-overlay').show()
     setTimeout(function(){
       $.ajax({  
-        url :'{{ path('online_payment_refund')}}',
+        url: '{{ path('online_payment_refund')}}',
         type: "POST",
-        data:$('#refund-form').serialize(),
+        data: $('#refund-form').serialize(),
         cache: false,
         success: function(data){
           $('.w3-overlay').hide()

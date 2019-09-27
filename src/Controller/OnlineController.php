@@ -1,18 +1,24 @@
 <?php
 namespace App\Controller;
 
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Contracts\Translation\TranslatorInterface;
+
 use App\Service\Stripe;
 use App\Entity\Company;
 use App\Entity\Booking;
 use App\Entity\Locales;
 use App\Entity\StripePaymentLogs;
+
 use App\Service\RequestInfo;
+use App\Service\MoneyParser;
+
 use Money\Money;
+
 
 class OnlineController extends AbstractController
 
@@ -255,7 +261,7 @@ class OnlineController extends AbstractController
     *@param 
     *@return json response of Request
     **/
-    public function onlinePaymentRefund(Request $request, Stripe $stripe, TranslatorInterface $translator)
+    public function onlinePaymentRefund(Request $request, Stripe $stripe, TranslatorInterface $translator, MoneyParser $moneyParser)
     {
         
         $em = $this->getDoctrine()->getManager();
@@ -263,6 +269,25 @@ class OnlineController extends AbstractController
         $company = $em->getRepository(Company::class)->find(1);
 
         $id = $request->request->get('id');
+
+        if(!$request->request->get('amount'))
+
+            return new JsonResponse([  
+                'status' => 0,
+                'message' => 'Insira montante a reembolasr!',
+                'data' => null
+            ]);
+
+        $charge = $moneyParser->parse($request->request->get('amount'));
+        
+        //just to avoid 0 refund or a max refund of 5000
+        if($charge->getAmount() < 1 || $charge->getAmount() > 500000)
+
+            return new JsonResponse([  
+                'status' => 0,
+                'message' => 'Montante Min: 0.01 - Max: 5000.00' ,
+                'data' => null
+            ]);
 
 
         $booking = $em->getRepository(Booking::class)->find($id);
@@ -319,7 +344,6 @@ class OnlineController extends AbstractController
                 'status' => $booking->getPaymentStatus(),
                 'email' => $send
             ]
-
         ]);
     }
 

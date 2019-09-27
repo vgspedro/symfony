@@ -2,10 +2,13 @@
 namespace App\Service;
 use App\Entity\Company;
 use App\Entity\Booking;
+use App\Entity\StripePaymentLogs;
+
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use App\Entity\StripePaymentLogs;
+
 use Money\Money;
+use App\Service\MoneyParser;
 
 class Stripe
 {	
@@ -281,16 +284,20 @@ class Stripe
 
     public function createRefund(Company $company, Request $request, $paylog){
 
+        $moneyParser = new MoneyParser();
+
         $stripe = new \Stripe\Stripe();
         $refund = new \Stripe\Refund();
         $stripe->setApiKey($company->getStripeSK());
+
+        $charge = $moneyParser->parse($request->request->get('amount'));
 
         //LETS DO THE REFUND
         try{            
             //CREATE THE REFUND
             $obj = $refund->create([
                 "charge" => $paylog,
-                "amount" => $request->request->get('amount')*100,
+                "amount" => $charge->getAmount(),
                 "reason" => $request->request->get('reason')
             ]);
 
