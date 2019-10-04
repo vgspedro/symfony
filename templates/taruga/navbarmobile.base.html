@@ -1,5 +1,5 @@
 
-<nav class="w3-sidenav w3-card-2 w3-animate-left w3-hide-larg_e" style="background: #eeeeff;top:0px" id="mySidenav">
+<nav class="w3-sidenav w3-card-2 w3-animate-left w3-sand" style="top:0px; opacity: 0.95" id="mySidenav">
  
  <div class="w3-border-top w3-border-bottom w3-right-align" style="margin-top:2px; padding: 6px 0px 10px 0px">
  <span onclick="w3_close()" class="w3-transparent w3-margin w3-padding-4" style="cursor:pointer">
@@ -45,11 +45,9 @@
   <span class='w3-medium' style="text-transform:uppercase">{% trans %}link.help_improve{% endtrans %}</span>
 </a>
 
-
 <div class="w3-border-top w3-border-bottom">
  <li class='w3-center w3-padding w3-opacity-min' style="display: inline-flex;margin-left:34px">
     {% if locales %}
-    
 
         {% for local in locales %}
          {% set l = app.request.locale != local.name ? 'w3-opacity' : '' %}
@@ -57,8 +55,6 @@
           <img style="cursor:pointer;height:36px;width:36px;margin:7px 8px" class="w3-border w3-round w3-right" src='{{local.filename}}' title="{{local.name}}">
         </a>
         {% endfor %}
-
-
 
     {% endif %}
  </li>
