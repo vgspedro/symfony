@@ -14,7 +14,6 @@ use Money\Money;
 class Booking
 {
     const STATUS_CONFIRMED = 'confirmed';
-
     const STATUS_INCOMPLETE = 'incomplete';
     const STATUS_CANCELED = 'canceled';
     const STATUS_CLEARED = 'cleared';

@@ -9,6 +9,23 @@ login_clients:
 logout:
     path: /logout    
 
+
+
+
+###
+# new page
+###
+index_new:
+    path: /new
+    controller: App\Controller\HomeNewController::index
+
+
+
+
+
+###
+# site
+###
 index:
     path: /
     controller: App\Controller\HomeController::html
@@ -346,6 +363,43 @@ admin_warning_edit:
     path: /admin-warning-edit/
     controller: App\Controller\WarningController::adminWarningEdit
 
+
+
+
+##
+# STAFF
+##
+
+admin_staff:
+    path: /admin-staff/
+    controller: App\Controller\StaffController::staff
+
+admin_staff_list:
+    path: /admin-staff-list/
+    controller: App\Controller\StaffController::staffList
+
+admin_staff_new:
+    path: /admin-staff-new/
+    controller: App\Controller\StaffController::staffNew
+
+admin_staff_delete:
+    path: /admin-staff-delete/
+    controller: App\Controller\StaffController::staffDelete
+
+admin_staff_add:
+    path: /admin-staff-add/
+    controller: App\Controller\StaffController::staffAdd
+    #condition: 'request.isXmlHttpRequest()'
+
+admin_staff_show_edit:
+    path: /admin-staff-show-edit/
+    controller: App\Controller\StaffController::staffShowEdit
+    #condition: 'request.isXmlHttpRequest()'
+
+admin_staff_edit:
+    path: /admin-staff-edit/
+    controller: App\Controller\StaffController::staffEdit
+    #condition: 'request.isXmlHttpRequest()'
 
 ##
 # GALLERY

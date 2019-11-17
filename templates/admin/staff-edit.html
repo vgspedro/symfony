@@ -1,0 +1,107 @@
+
+
+<style>
+ li { list-style-type:none}
+ ul{padding: 0px}
+.table-condensed>tbody>tr>td, .table-condensed>tbody>tr>th, .table-condensed>tfoot>tr>td, .table-condensed>tfoot>tr>th, .table-condensed>thead>tr>td, .table-condensed>thead>tr>th {border: 3px solid transparent!important} 
+ .w3-input {border-bottom: 0px solid #05788d}
+</style>
+<header class="w3-container" style="padding-top:22px">
+    <h5>
+      <b>
+        <i class="far fa-images"></i> Galeria <i class="far fa-edit fa-fw"></i>
+    </b>
+  </h5>
+</header>
+<div class="">
+  {{ form_start(form, {'attr': {'id': 'gallery-form'}})  }}
+
+    <input type="hidden" name="id" value="{{ gallery.id }}">
+  
+    <div class="w3-padding-16 w3-row-padding w3-border w3-sand">
+
+    <div class="w3-col s3 l3 m2" title="Vamos mostrar esta imagem aos clientes no site">
+      {{ form_label(form.is_active)}}<br>
+      {{ form_widget(form.is_active)}}
+    </div>
+
+    <div class="w3-col s12 l6 m8 w3-center" title="Vamos meter uma imagem">
+      <div class="w3-center w3-margin-bottom w3-border w3-imput w3-section set-image-container w3-padding" style="cursor:pointer"onclick="$('.set-image').trigger('click')">
+
+        {% if gallery.image %}
+        {% set url=gallery.image|split('/public_html/') %}
+          <img id="output" src="/{{ url[1] }}" class="w3-image w3-animate-zoom">
+        {% else %}
+        <i class="fa fa-camera w3-jumbo" style="color:#05788d"></i>
+        {% endif %}
+      </div>
+      {{ form_widget(form.image)}}
+    </div>
+
+    <div class="w3-col s0 l3 m2">&nbsp;</div>
+
+      <div class="w3-col l6 m6 s12 w3-margin-bottom">
+        {{ form_label(form.name_pt) }}
+        {{ form_widget(form.name_pt) }}
+      </div>
+      <div class="w3-col l6 m6 s12 w3-margin-bottom">
+        {{ form_label(form.name_en) }}
+        {{ form_widget(form.name_en)}}
+      </div>
+      <div class="w3-hide">
+        {{ form_widget(form.submit)}}
+      </div>
+    </div>
+    {{ form_end(form) }}
+  </div>
+
+<script>
+
+
+  var loadFile = function(event) {
+    $('.set-image-container').html('<img id="output" class="w3-image w3-animate-zoom">')
+    var output = document.getElementById('output')
+    output.src = URL.createObjectURL(event.target.files[0])
+  }
+
+$('#gallery-form').on('submit',function(e){
+  e.preventDefault()
+  obj=''
+  $('.w3-overlay').show()
+  console.log(new FormData($(this)))
+  $('.required').addClass('w3-hide')
+  //setTimeout(function(){
+    $.ajax({
+      url:'{{ path('admin_gallery_edit') }}',
+      type: "POST",
+      data: new FormData($(this)[0]),
+      processData: false,
+      contentType: false,
+      cache: false,
+      success: function(data){  
+        console.log(data)
+        $('.w3-overlay').hide()
+        if (data.message == 'success'){
+          ajaxUpload('gallery-list')
+          $('#modal-edit-gallery').hide()
+          $('#gallery-form').trigger('reset')
+        }
+        else if (data.message=='fail'){
+          for(i=0;i<data.data.length;i++)
+            obj += data.data[i]+'<br>'
+          $('#set-fields').html(obj)
+
+
+          $('#modal-fields').show()
+        }
+      },
+      error:function(data){
+        $('.w3-overlay').hide()
+        $('#modal-error').show()
+      }
+    })
+//  }, 500)
+})
+
+</script>
+

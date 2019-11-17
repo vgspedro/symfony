@@ -52,7 +52,7 @@ class Client implements UserInterface , \Serializable
     /** 
      * @Assert\NotBlank()
      * @Assert\Type("Locales")
-     *@ORM\ManyToOne(targetEntity="Locales", inversedBy="client") */
+     *@ORM\ManyToOne(targetEntity="Locales") */
     private $locale;
     /**
     * @ORM\Column(name="cvv", type="text", nullable=true)

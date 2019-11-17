@@ -64,6 +64,7 @@ class HomeController extends AbstractController
         }
         
         $cS = array();
+        $comments = $em->getRepository(Feedback::class)->findBy(['visible' => true,'active' => true]);
         $locales = $em->getRepository(Locales::class)->findAll();
         $warning = $em->getRepository(Warning::class)->find(10);
         $company = $em->getRepository(Company::class)->find(1);
@@ -144,7 +145,8 @@ class HomeController extends AbstractController
                 'about' => $about,
                 'host' => $reqInfo->getHost($request),
                 'page' => 'index',
-                'feedback' => $feedback
+                'feedback' => $feedback,
+                'comments' => $comments
             ]);
     }
 

@@ -15,7 +15,7 @@ class StripePaymentLogs
      */
     private $id;     
     /** 
-     * @ORM\ManyToOne(targetEntity="Booking", inversedBy="stripe_payment_logs") 
+     * @ORM\ManyToOne(targetEntity="Booking") 
      */
     private $booking;
     /**

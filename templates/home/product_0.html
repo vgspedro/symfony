@@ -1,0 +1,54 @@
+<style>
+.service-39381 {
+    background: #fff;
+    -webkit-box-shadow: 0 0 30px -5px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 0 30px -5px rgba(0, 0, 0, 0.2)}
+
+.service-39381 .price > span {
+    border-radius: 4px;
+    padding: 5px 10px;
+    color: #fff;
+}
+</style>
+
+
+{% if categories %}
+
+<section class="ftco-section ftco-pricing">
+  <div class="container">
+     <div class="row justify-content-center pb-3">
+          <div class="col-md-10 heading-section text-center ftco-animate">
+            <span class="subheading">Pricing</span>
+            <h2 class="mb-4">Our Tours</h2>
+            <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia</p>
+          </div>
+        </div>
+    <div class="row">
+
+    {% for category in categories %}
+
+          <div class="col-md-6 col-lg-4 mb-4">
+            <div class="service-39381">
+              <img src="/upload/category/{{ category.image }}" onerror="this.src='/upload/category/no-image.png'" alt="{{category.name}}" class="img-fluid">
+              <div class="p-4">
+                <span class="icon-tag mr-1 text-primary"></span><span style="font-size:20px;color#000">{{ category.name}}</span>
+                <div class="d-flex">
+                  <div class="mr-auto">
+                    <span class="icon-date_range"></span>
+                    Sep. 05 — Oct. 15
+                  </div>
+                  <div class="ml-auto price">
+                    <span class="bg-primary">$600</span>
+                  </div>
+                  
+                </div>
+              </div>
+            </div>
+          </div>
+        {%endfor%}
+        
+        </div>
+    </div>
+</section>
+
+{%endif%}

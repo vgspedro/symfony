@@ -12,6 +12,11 @@ parameters:
     gallery_images_height: '480'
 
 
+    staff_images_directory: '%kernel.project_dir%/public_html/upload/staff'
+    staff_images_width: '480'
+    staff_images_height: '640'
+
+
 services:
     # default configuration for services in *this* file
     _defaults:
@@ -43,6 +48,11 @@ services:
         arguments:
             $targetDir: '%gallery_images_directory%'
 
+    file_uploader.staff:
+        class: App\Service\FileUploader
+        arguments:
+            $targetDir: '%staff_images_directory%'
+
     App\Service\FileUploader: '@file_uploader.categories'
 
     image_resizer.categories:
@@ -60,6 +70,15 @@ services:
             $path: '%gallery_images_directory%'
             $width: '%gallery_images_width%'
             $height: '%gallery_images_height%'
+
+
+    image_resizer.staff:
+        class: App\Service\ImageResizer
+        arguments:
+            $path: '%staff_images_directory%'
+            $width: '%staff_images_width%'
+            $height: '%staff_images_height%'
+
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
 
@@ -85,6 +104,13 @@ services:
             App\Service\ImageResizer: '@image_resizer.gallery'
         arguments:
             - '%gallery_images_directory%'
+
+    App\Controller\StaffController:
+        bind:
+            App\Service\FileUploader: '@file_uploader.staff'
+            App\Service\ImageResizer: '@image_resizer.staff'
+        arguments:
+            - '%staff_images_directory%'
 
 
     App\EventSubscriber\LocaleSubscriber:

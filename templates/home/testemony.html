@@ -1,0 +1,39 @@
+{%if comments %}
+<section class="testimony-section bg-light">
+    <div class="container">
+        <div class="row ftco-animate justify-content-center">
+        	<div class="col-md-6 col-lg-5 d-flex">
+        		<div class="testimony-img" style="background-image: url(images/testimony-img.jpg);"></div>
+        	</div>
+        <div class="col-md-6 col-lg-7 py-5 pl-md-5">
+          	<div class="py-md-5">
+	          	<div class="heading-section ftco-animate">
+	          		<span class="subheading">Testimony</span>
+			          <h2 class="mb-0">Happy Customer</h2>
+			    </div>
+	            <div class="carousel-testimony owl-carousel ftco-animate">	              
+				{% for comment in comments %}
+	              <div class="item">
+	                <div class="testimony-wrap pb-4">
+	                  <div class="text">
+	                    <p class="mb-4">{{comment.observations}}</p>
+	                  </div>
+	                  <div class="d-flex">
+		                  <div class="user-img" style="background-image: url(upload/category/{{comment.booking.available.category.image}})">
+		                  </div>
+		                  <div class="pos ml-3">
+		                  	<p class="name">{{comment.booking.client.username}}</p>
+		                    <span class="position">{{comment.booking.available.category.nameEn}}</span>
+		                  </div>
+		                </div>
+	                </div>
+	              </div>
+				{% endfor %}
+	            </div>
+	        </div>
+        </div>
+    </div>
+    </div>
+</section>
+
+{% endif %}

@@ -1,0 +1,26 @@
+{% if comments %}
+
+<style>
+.bgimg-3{background-image: url(/upload/gallery/79741a0156e7c8b39a48901b5eed5292.jpeg)}
+</style>
+
+
+
+<section class="w3-container w3-padding-16 bgimg-3 w3-border-top" id="comnents">  
+{% for comment in comments %}
+
+{{comment.observations}}
+{{comment.booking.client.username}}
+{{comment.rate}}
+{{dump(comment)}}
+  <div class="w3-padding-8">
+    <h2 class="w3-center">
+      <i class="fa-ta ta-4 fa-ta-comments">&nbsp;</i>
+      <span>Feedback</span><br>
+    </h2>
+  
+  </div>
+ {% endfor %} 
+</section>
+
+{% endif %}
