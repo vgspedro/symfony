@@ -1,5 +1,8 @@
 <?php
 return array(
+    'welcome_to' => 'Welcome to',
+    'book_now' => 'Book now',
+
     'min_amount' => 'Min. amount 0.50Eur',
     'max_amount' => 'Max. amount 5000.00Eur',
     'validate' => 'Validate',
