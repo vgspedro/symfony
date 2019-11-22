@@ -5,8 +5,36 @@
           <div class="col-lg-12 ftco-animate d-flex align-items-center">
           	<div class="text text-center">
           		<span class="subheading">Welcome to Taruga Tours</span>
-		  				<h1 class="mb-4">We are professional</h1>
-		  				<p><a href="#" class="btn btn-primary btn-outline-primary px-4 py-2">Book now</a></p>
+              {% if category %}
+		  				
+                <h1 class="mb-4">{{ category.name }}</h1>
+  		  				
+                {% if category.adultAmount> 0 %}
+                  <h4>{% trans %}part_tree.adult{% endtrans %} {{ category.adultAmount}}<span>{{company.currency.currency}}</span>
+                  </h4>
+                {% else %}
+                  <h4>{% trans %}part_tree.adult{% endtrans %}
+                  <span>-/-</span>
+                </h4>
+                
+                {% endif %}
+                {% if category.childrenAmount > 0 %}
+                
+                <h4>{% trans %}part_tree.children{% endtrans %} {{ category.childrenAmount }}<span>{{company.currency.currency}}</span>
+                </h4>
+                {% else %}
+
+                <h4>{% trans %}part_tree.children{% endtrans %}</span>
+                  <span>-/-</span>
+                </h4>
+                
+                {% endif %}
+                
+                <p>
+                  <a href="#" onclick="navigation('#reservas', {{ category.id }})" class="btn btn-primary btn-outline-primary px-4 py-2">Book now</a>
+                </p>
+              
+              {% endif %}
 							</div>
             </div>
           </div>
