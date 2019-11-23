@@ -2,7 +2,8 @@
 return array(
     'welcome_to' => 'Bem vindo a ',
     'book_now' => 'Reservar já',
-    'not_available' => 'Indisponivel',
+    'unavailable' => 'Indisponivel',
+    'minutes' => 'minutos',
 
     'min_amount' => 'Montante Minimo 0.50Eur',
     'max_amount' => 'Montante Máximo 5000.00Eur',
