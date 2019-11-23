@@ -19,9 +19,13 @@ index_new:
     path: /new
     controller: App\Controller\HomeNewController::index
 
+index_new_info:
+    path: /new
+    controller: App\Controller\HomeNewController::index
 
-
-
+index_new_help_improve:
+    path: /new
+    controller: App\Controller\HomeNewController::index
 
 ###
 # site

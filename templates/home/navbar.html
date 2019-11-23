@@ -1,6 +1,6 @@
 <nav class="zoom-75 navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" style="padding-left:50px" id="ftco-navbar">
 	<div class="container">
-	    <a class="navbar-brand" href="/new">
+	    <a class="navbar-logo navbar-brand" href="{{ path('index_new') }}">
 			<img src="/upload/gallery/{{company.logo}}" alt="{{company.metaDescription}}" style="position:absolute;width:96px;left:-44px;top:-6px">
 	    	{{company.name}}
 	    </a>
@@ -8,23 +8,29 @@
 	    <button class="navbar-toggler navbar-brand" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
 	    <span class="icon icon-navicon"></span>
 	    </button>
-
+	    
 	     <div class="collapse navbar-collapse zoom-100" id="ftco-nav">
 	        <ul class="navbar-nav ml-auto text-right">
-	        	<li class="nav-item active"><a href="/new" class="nav-link">{% trans %}info.home{% endtrans %}</a></li>
-	        	<li class="nav-item"><a href="#" class="nav-link">{% trans %}info.usefull_info{% endtrans %}</a></li>
-	        	<li class="nav-item"><a href="#" class="nav-link">{% trans %}link.help_improve{% endtrans %}</a></li>
+
+				{% for link in menu %}
+
+		        	<li class="nav-item {{link.class}}" >
+		        		<a href="{{ path(link.path) }}" target="{{link.target}}" class="nav-link">{{link.name}}</a>
+		        	</li>
+
+				{% endfor %}
     			
     			{% if locales %}
          		{% for local in locales %}
-         		{% set l = app.request.locale != local.name ? 'grayscale' : '' %}
+         		{% if app.request.locale != local.name %}
         		
-        		<li class="nav-item flags">
-        		<a href="{{ path('index_user_translate', {lang: local.name, page: 'index_new'}) }}" class="nav-link {{l}}" style="padding: 16px 0px 0px 0px">
-          			<img style="cursor:pointer;height:36px;width:36px;margin:7px 8px" src='{{local.filename}}' title="{{local.name}}">
-        		</a>
+        		<li class="nav-item">
+	        		<a href="{{ path('index_user_translate', {lang: local.name, page: 'index_new'}) }}" class="nav-link" style="padding: 16px 0px 0px 0px">
+	          			<img class="flag" src='{{local.filename}}' title="{{local.name}}">
+	        		</a>
         		</li>
-        		
+
+				{% endif %}
         		{% endfor %}
     			{% endif %}
 	        
@@ -32,3 +38,13 @@
 		</div>
 	</div>
 </nav>
+
+<script>
+
+
+$('.nav-link, .navbar-logo').click(function(){
+
+$('#ftco-loader').css({'visibility':'visible','opacity':1})
+
+})
+</script>

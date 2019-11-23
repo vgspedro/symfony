@@ -32,6 +32,8 @@ use App\Service\MoneyFormatter;
 use App\Service\RequestInfo;
 use App\Service\FieldsValidator;
 use App\Service\Stripe;
+use App\Service\Menu;
+
 
 use Money\Money;
 
@@ -47,7 +49,7 @@ class HomeNewController extends AbstractController
         $this->session = $session; 
     }
     
-    public function index(Request $request, MoneyFormatter $moneyFormatter, RequestInfo $reqInfo)
+    public function index(Request $request, MoneyFormatter $moneyFormatter, RequestInfo $reqInfo, Menu $menu, TranslatorInterface $translator)
     {   
         //remove the session start_time
         $this->session->remove('start_time');
@@ -147,19 +149,18 @@ class HomeNewController extends AbstractController
                 'company' => $company,
                 'about' => $about,
                 'host' => $reqInfo->getHost($request),
-                'page' => 'index',
+                'page' => 'index_new',
                 'feedback' => $feedback,
                 'comments' => $comments,
-                'staffs' => $staffs
+                'staffs' => $staffs,
+                'menu' => $menu->site('index_new', $translator)
             ]);
     }
 
 
 
 
-
-
-    public function info(Request $request, MoneyFormatter $moneyFormatter, RequestInfo $reqInfo)
+    public function info(Request $request, MoneyFormatter $moneyFormatter, RequestInfo $reqInfo, Menu $menu, TranslatorInterface $translator)
     {   
         $id = !$request->query->get('id') ? 'home': $request->query->get('id');
         
@@ -175,7 +176,7 @@ class HomeNewController extends AbstractController
         $gallery = $em->getRepository(Gallery::class)->findBy(['isActive' => 1],['namePt' => 'ASC']);
         return $this->render('info.html.twig', 
             [
-                'colors'=> $this->color(),
+                'colors'=> '',//$this->color(),
                 'warning' => $warning,
                 'locale' => null,
                 'galleries' => $gallery,
@@ -183,7 +184,8 @@ class HomeNewController extends AbstractController
                 'id' => '#'.$id,
                 'company' => $company,
                 'host' => $reqInfo->getHost($request),
-                'page' => 'index_info'
+                'page' => 'index_new_info',
+                'menu' => $menu->site('index_new_info', $translator)
             ]
             );
     }
@@ -509,26 +511,6 @@ class HomeNewController extends AbstractController
 
         return $expired;
     }
-
-    private function color(){
-        return array(
-        'w3-text-black',
-        'w3-t-tour',
-        'w3-text-cyan',
-        'w3-text-indigo',
-        'w3-text-green',
-        'w3-text-light-blue',
-        'w3-text-deep-purple',
-        'w3-text-light-blue',
-        'w3-text-teal',
-        'w3-text-blue-gray',
-        'w3-text-aqua',
-        'w3-text-brown',
-        'w3-text-amber',
-        'w3-text-deep-orange',
-        );
-    }
-
 
 }
 

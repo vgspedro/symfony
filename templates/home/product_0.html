@@ -13,8 +13,7 @@
 
     {% for category in categories %}
 
-{# {dump(category)} #}
-          <div class="col-md-6 col-lg-4 mb-4">
+          <div class="col-md-6 col-lg-4 mb-4" id='category-{{category.id}}'>
             <div class="service-39381">
               <img src="/upload/category/{{ category.image }}" onerror="this.src='/upload/category/no-image.png'" alt="{{category.name}}" class="img-fluid">
               <div class="p-4">
@@ -28,8 +27,16 @@
                   </div>
 
                   <div class="ml-auto price">
-                  <!--span class="bg-primary">Book now</span-->
-                  <span class="btn btn-primary btn-outline-primary px-4 py-2"> Book now</span>
+
+                    {% if category.no_stock %} 
+                    <button disabled class="btn btn-danger btn-outline-danger px-4 py-2"> 
+                      {% trans %}not_available{% endtrans %}
+                    </button>
+                    {% else %}
+                    <span onclick="navigation('.ftco-booking', {{ category.id }})" class="btn btn-primary btn-outline-primary px-4 py-2"> 
+                      {% trans %}book_now{% endtrans %}
+                    </span>
+                    {% endif %}
                   </div>
                   
                 </div>
@@ -41,5 +48,22 @@
         </div>
     </div>
 </section>
+
+<script>
+
+function navigation(pos,id){
+  vl = 45;
+  $(".nav-space").val() ? vl = vl + parseInt($(".nav-space").val()) : vl;
+  $("html, body").animate({
+    scrollTop: $(pos).offset().top -vl
+  }, 750)
+  if (id){
+    $('select[name=category]').val(id)
+  }
+}
+
+
+</script>
+
 
 {%endif%}

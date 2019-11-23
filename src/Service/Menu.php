@@ -47,10 +47,24 @@ class Menu
         return $e;
     }
 
-    //to future develop??
-    public function site() {
-        $err = [];
-        return $err;
+    public function site($route, $translator){
+
+        $s=[];
+
+        $m[] = ['path' => 'index_new', 'name'=> $translator->trans('info.home'), 'target' => '_self', 'class' => '', 'route' => $route, 'submenu' => [] ];
+        $m[] = ['path' => 'index_new_info', 'name'=> $translator->trans('info.usefull_info'), 'target' => '_self', 'class' => '', 'submenu' => [] ];
+        $m[] = ['path' => 'index_new_help_improve', 'name'=> $translator->trans('link.help_improve'), 'target' => '_self', 'class' =>'', 'submenu' => [] ];
+
+        foreach ($m as $k){
+
+            $class = $k['path'] == $route ? ' active' : '';
+
+            $s[] = [
+                'path' => $k['path'], 'name'=> $k['name'], 'target' => $k['target'], 'class' => $class, 'submenu' => $k['submenu']
+            ];
+        }
+        
+        return $s;
     }
 
 }
