@@ -90,7 +90,7 @@ return array(
     'paid' => 'Pais',
     'placed' => 'Placed',
     'processing' => 'Processing',
-    'refunded' => 'Redunded',
+    'refunded' => 'Refunded',
     'partial_refund' => 'Parcial Refund',
     'refused' => 'Refused',
     'removed' => 'Removed',

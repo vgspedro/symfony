@@ -95,6 +95,8 @@
 			stagePadding: 0,
 			nav: false,
 			dots: true,
+			touchDrag: false,
+        	mouseDrag: false,
 			navText: ['<span class="ion-ios-arrow-back">', '<span class="ion-ios-arrow-forward">'],
 			responsive:{
 				0:{
@@ -116,6 +118,8 @@
 			stagePadding: 0,
 			nav: false,
 			dots: true,
+			touchDrag: false,
+        	mouseDrag: false,
 			navText: ['<span class="ion-ios-arrow-back">', '<span class="ion-ios-arrow-forward">'],
 			responsive:{
 				0:{
@@ -131,6 +135,9 @@
 		});
 	};
 	carousel();
+
+
+
 
 	$('nav .dropdown').hover(function(){
 		var $this = $(this);

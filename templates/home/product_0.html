@@ -6,7 +6,7 @@
           <div class="col-md-10 heading-section text-center ftco-animate">
             <span class="subheading">Pricing</span>
             <h2 class="mb-4">Our Tours</h2>
-            <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia</p>
+            <p>Come and enjoy the best Tour caves in Algarve only with {{company.name}}</p>
           </div>
         </div>
     <div class="row container-prod">
@@ -36,11 +36,35 @@
                 {% endfor %}
                 <br>
                 <span class="icon-clock-o text-primary"></span> {{category.duration}} {% trans %}minutes{% endtrans %}
-                <div class="d-flex" style="border-top:1px solid #aaa">
-                  <div class="mr-auto cat-description">
-                    <span class="icon-info-circle text-primary"></span>
-                    <span style="height:20px;overflow:auto">{{category.description}}</span>
+                <div class="d-flex">
+                                  
+
+                <div class="accordio_n md-accordio_n" id="accordionEx" role="tablist" aria-multiselectable="true">
+
+                  <div class="card_" style="border-bottom: 1px solid #e0e0e0_">
+
+                    <div class="card-heade_r" role="tab" id="heading-{{category.id}}">
+                      <a class="collapsed" data-toggle="collapse" data-parent="#accordionEx" href="#collapse-{{category.id}}"
+                        aria-expanded="false" aria-controls="collapse-{{category.id}}">
+                        <h5 class="text-info mb-0">
+                          More info
+                        </h5>
+                      </a>
+                    </div>
+                    <div id="collapse-{{category.id}}"  style="border-top:1px solid #aaa" class="collapse" role="tabpanel" aria-labelledby="heading-{{category.id}}" data-parent="#accordionEx" style="position:absolute;z-index:999">
+                      <div class="p-1" style="color: #000">
+                      {{category.description}}
+                      </div>
+                    </div>
+
                   </div>
+                </div>
+
+
+
+
+
+
                   </div>
                   <div class="d-flex" style="border-top:1px solid #aaa">
                   <div class="mr-auto">
@@ -69,6 +93,14 @@
         </div>
     </div>
 </section>
+
+
+
+
+
+
+
+
 
 <script>
 
