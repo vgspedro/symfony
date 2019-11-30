@@ -12,6 +12,8 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+//use FOS\CKEditorBundle\Form\Type\CKEditorType;
+
 
 class RgpdType extends AbstractType
 {
@@ -22,6 +24,13 @@ class RgpdType extends AbstractType
             array(
                 'required' => false
             ))
+            /*
+            ->add('rgpdhtml', CKEditorType::class, array(
+                'config' => [
+                 'toolbar' => 'full',
+                    'uiColor' => '#ffffff',
+                ]
+            ))*/
             ->add('locales', EntityType::class, array(
                     'class' => Locales::class,
                     'choice_label' => 'name',

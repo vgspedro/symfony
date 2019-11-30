@@ -13,11 +13,11 @@
         		<div class="carousel-team owl-carousel">
 				{% for staff in staffs %}
         			<div class="item">
-		        		<a href="#" class="team text-center">
+		        		<div href="" class="team text-center">
 		        			<div class="img" style="background-image: url(upload/staff/{{staff.image}})"></div>
 		        			<h2>{{staff.firstName}} {{staff.lastName}}</h2>
 		        			<span class="position">{{staff.job.name}}</span>
-		        		</a>
+		        		</div>
         			</div>
         			{% endfor %}
         		</div>

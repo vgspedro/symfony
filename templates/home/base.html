@@ -54,12 +54,15 @@
 .txt-shadow{ text-shadow: 0px 0px 1px #000}
 .f-16{font-size: 16px}
 .cat-description{padding:4px 0px}
-
-
-
-
+.marquee{max-width:95vw;padding: 6px 0 0 0;width:100%;margin: 0 auto;overflow: hidden;white-space: nowrap;box-sizing: border-box;animation: marquee 100s linear infinite;-webkit-animation: marquee 50s linear infinite}
+.no-cave-rides {background: rgba(255,40,40,.75);width: 100%;color: #FFF;white-space: nowrap; position:fixed;z-index:1; bottom:0px;font-size: 1.2em}
+@-webkit-keyframes marquee{0%{text-indent:27.5em}100%{text-indent:-105em}}
+@keyframes marquee{0%{text-indent:27.5em}100%{text-indent:-105em}}
+.marquee:hover{animation-play-state:paused}
+.nav-container{padding:2px 0}
 </style>
   <body>
+
 	{% include 'home/navbar.html' %}
     <!-- END nav -->
   {% include 'home/banner.html' %}

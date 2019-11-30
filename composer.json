@@ -6,6 +6,7 @@
         "ext-iconv": "*",
         "cboden/ratchet": "^0.4.1",
         "eventviva/php-image-resize": "^1.6",
+        "friendsofsymfony/ckeditor-bundle": "^2.1",
         "inacho/php-credit-card-validator": "^1.0",
         "moneyphp/money": "^3.2",
         "nojacko/email-validator": "~1.0",

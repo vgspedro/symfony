@@ -54,6 +54,13 @@
                     <div id="collapse-{{category.id}}"  style="border-top:1px solid #aaa" class="collapse" role="tabpanel" aria-labelledby="heading-{{category.id}}" data-parent="#accordionEx" style="position:absolute;z-index:999">
                       <div class="p-1" style="color: #000">
                       {{category.description}}
+                      {% if category.warrantyPayment %}
+
+                      <div class="text-center">
+                        -<br>
+                        {{category.warrantyPaymentTxt}}
+                      </div>
+                      {% endif %}
                       </div>
                     </div>
 

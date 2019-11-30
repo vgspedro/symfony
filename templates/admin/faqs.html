@@ -1,0 +1,153 @@
+<style>
+.note-editor {border-radius: 0px}
+textarea {color: #FFF!important}
+.btn-fullscreen{display: none}
+.w3-input {border-bottom: 0px solid #05788d}
+</style>
+
+<header class="w3-container" style="padding-top:22px">
+   <h5><b><i class="fas fa-question-circle"></i> FAQS</b></h5>
+</header>
+
+<div class="w3-row-padding">
+  {% for category in obj%}
+  <div class="w3-col s12 m6 l4 w3-margin-bottom">
+     <input type="hidden" id='{{category.id}}-faqs' value="{{category.html}}">
+    <div class="w3-card-2 w3-sand w3-border">
+      <div class="w3-center w3-col s12 w3-padding-small">
+      {{category.name}}
+      </div>
+      <div class="w3-row">
+        <div class="w3-col s6">
+          <button class="w3-btn w3-block w3-border w3-blue btn-{{ loop.index }}" onclick="editFaqs({{category.id}},'{{category.name}}', {{category.locales.id}})">
+            <i class="far fa-edit fa-fw"></i>
+          </button>
+        </div>
+        <div class="w3-col s6">
+          <img src="{{category.locales.filename}}" class="w3-right w3-border w3-opacity-min" style="height:45px">
+        </div>
+      </div>
+    </div>
+  </div>  
+  {% endfor %}
+</div>
+
+<div class="w3-container">
+  {{form_start(form, {'attr': {'id': 'form'}})}}
+  <div class="w3-row-padding w3-sand w3-border w3-padding-16">
+    <div class="w3-col s12 w3-hide">
+      {{form_label(form.locales)}}
+      {{form_widget(form.locales)}}
+    </div>
+
+    <div class="w3-col s12">
+      {{form_label(form.name)}}
+      {{form_widget(form.name)}}
+      {{form_widget(form.html)}}
+    </div>
+
+    <div class="w3-col s12">
+      <label>Texto</label>
+	     <div id="summernote"></div>
+    </div>
+  </div>
+  <div class="w3-row-padding w3-border-top">
+    <div class="w3-col s12 w3-margin-top w3-margin-bottom">
+      <button class="w3-btn-block w3-margin-left w3-right w3-button w3-border w3-green">
+        <i class="fa fa-check"></i> Guardar
+      </button>
+      <span class="w3-btn-block w3-button w3-right w3-border w3-white" onclick="clearFaqs()">
+         <i class="fa fa-eraser"></i> Limpar
+      </span>
+    </div>
+  </div>
+  <input type="hidden" name="id" id="faqs_id">
+  {{ form_end(form) }}
+</div>
+
+<script>
+
+$('#summernote').summernote({
+  placeholder: 'Insira ....',
+  tabsize: 3,
+  height: 600,
+  fontName:'Arial'
+})
+
+function deleteFaqsConfirm(id, n)
+{
+  $('#delete-faqs').html('<p class="w3-center w3-large">Tem a certeza que pretende apagar,<br><b>'+n+'</b> ?</p>')
+  $('#faqs-id').val(id)
+  $('#modal-delete-faqs').show()
+}
+
+function deleteFaqs(id){
+  $('#modal-delete-faqs').hide()
+  $('.w3-overlay').show()
+  setTimeout(function(){ 
+  $.ajax({
+    url:'{{ path('admin_faqs_delete') }}',  
+    type: "POST",
+    data:'id='+id,
+    success: function(data){
+      $('.w3-overlay').hide()
+      if (data.message == 'success'){
+        ajaxUpload('faqs')
+      }
+    },
+    error:function(data){
+      $('.w3-overlay').hide()
+      $('#modal-error').show()
+    }
+  })
+  }, 500)
+}
+
+function clearFaqs(){
+  $('#summernote').summernote('reset')
+  //$('#easytext, #easy_text_name').val('')
+} 
+
+
+function editFaqs(id,name,locales){
+	$('#summernote').summernote('code', $('#'+id+'-faqs').val())
+  $('#faqs_id').val(id)
+  $('#faqs_name').val(name)
+  $('#faqs_locales').val(locales)
+}
+
+$('#form').on('submit',function(e){
+  e.preventDefault()
+  obj=''
+  $('.w3-overlay').show()
+  $('#faqs_html').val($('#summernote').summernote('code'))
+  setTimeout(function(){
+    $.ajax({  
+      url:'{{ path('admin_faqs_edit') }}',
+      type: "POST",
+      data:$('#form').serialize(),
+      success: function(data){ 
+      //console.log(data) 
+        $('.w3-overlay').hide()
+         if (data.message == 'success'){
+          ajaxUpload('faqs')
+          clearFaqs()
+          $('#easy_text_name').val('')
+        }
+        else if (data.message=='fail'){
+          for(i=0;i<data.data.length;i++)
+            obj += data.data[i]+'<br>'
+          $('#set-fields').html(obj)
+          $('#modal-fields').show()
+        }
+      },
+      error:function(data){
+        $('.w3-overlay').hide()
+        $('#modal-error').show()
+      }
+    })
+  }, 500)
+})
+
+$('.btn-1').trigger('click')
+</script>

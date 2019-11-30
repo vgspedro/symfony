@@ -106,7 +106,8 @@ class Stripe
                     'amount' => 50,
                     'currency' => $company->getCurrency()->getCurrency(),
                     'description' => 'try_to_buy',
-                    'payment_method_types' => ['card']
+                    'payment_method_types' => ['card'],
+                    //'capture' => 'manual'
                 ]);
             }
 
@@ -374,6 +375,10 @@ class Stripe
             ];
         } 
     }
+
+
+
+
 
 
     public function refundReasons(TranslatorInterface $translator){

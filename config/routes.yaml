@@ -297,6 +297,29 @@ index_rgpd:
 
 
 ##
+# FAQS
+##
+
+admin_faqs:
+    path: /admin-faqs/
+    controller: App\Controller\FaqsController::faqs
+    #condition: 'request.isXmlHttpRequest()'
+
+admin_faqs_delete:
+    path: /admin-faqs-delete/
+    controller: App\Controller\FaqsController::faqsDelete
+
+admin_faqs_edit:
+    path: /admin-faqs-edit/
+    controller: App\Controller\FaqsController::faqsEdit
+
+index_faqs:
+    path: /index-faqs/
+    controller: App\Controller\FaqsController::faqsShow
+    #condition: 'request.isXmlHttpRequest()'
+
+
+##
 # ABOUT-US
 ##
 

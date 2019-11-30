@@ -1,3 +1,6 @@
+  
+
+
 <nav class="zoom-75 navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" style="padding-left:50px" id="ftco-navbar">
 	<div class="container">
 	    <a class="navbar-logo navbar-brand" href="{{ path('index_new') }}">
@@ -39,12 +42,15 @@
 	</div>
 </nav>
 
+ {% if warning.visible == 1 %}
+    <div class="no-cave-rides">
+        <p class="marquee">
+            <i class="icon-exclamation-triangle"></i>&nbsp;
+            <span> {{ app.request.locale == 'pt_PT' ? warning.infoPt : warning.infoEn }}</span>
+        </p>
+    </div>
+ {% endif %}
+
 <script>
-
-
-$('.nav-link, .navbar-logo').click(function(){
-
-$('#ftco-loader').css({'visibility':'visible','opacity':1})
-
-})
+$('.nav-link, .navbar-logo').click(function(){$('#ftco-loader').css({'visibility':'visible','opacity':1})})
 </script>

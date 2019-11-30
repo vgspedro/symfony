@@ -1,90 +1,125 @@
 
 <style>
-li { list-style-type:none}
-ul{padding: 0px}
-.table-condensed>tbody>tr>td, .table-condensed>tbody>tr>th, .table-condensed>tfoot>tr>td, .table-condensed>tfoot>tr>th, .table-condensed>thead>tr>td, .table-condensed>thead>tr>th {border: 0px solid #FFF!important}
+
+ .dt-button{background: #FFF;border:1px solid #ccc;
+ display: inline-block; padding: 8px 16px; vertical-align: middle;overflow: hidden;text-decoration: none; color: inherit;
+    background-color: inherit;text-align: center; cursor: pointer; white-space: nowrap;color: #000!important;background-color: #87CEEB!important;font-size:18px}
+
+select.input-sm, input .form-control .input-sm {height: 36px}
+table.dataTable.dtr-inline.collapsed > tbody > tr > td:first-child:before, table.dataTable.dtr-inline.collapsed > tbody > tr > th:first-child:before {
+    height: 24px;width: 24px;border-radius: 16px; text-align: center;line-height: 23px;font-size: 24px;border-radius: 0px;border: 1px solid #ddd;box-shadow: 0 0 0 #000}
+table.dataTable.dtr-inline.collapsed > tbody > tr > td:first-child, table.dataTable.dtr-inline.collapsed > tbody > tr > th:first-child {padding-left: 38px}
+.dt-button-collection{ width:100%;background: rgba(0,0,0,0.3);position: fixed;left:0px;padding: 96px 16px; z-index:99999;margin-top: 0px!important;top:0px}
+
 .w3-input {border-bottom: 0px solid #05788d}
 input, select, textarea {color: #000!important}
-
+.form-control{ border: 1px solid #ccc!important;height: 50px;padding: 0px 0px 0px 4px;padding-bottom: 0px}
+div.dataTables_length select {height: 50px}
 </style>
+
 <header class="w3-container" style="padding-top:22px">
-    <h5><b><i class="far fa-images"></i> Galeria <i class="far fa-plus-square fa-fw"></i></b></h5>
+   <h5><b><i class="fas fa-user-friends"></i> Staff</b></h5>
 </header>
-
-<div class="w3-padding-16 w3-container">
-  
-  {{ form_start(form, {'attr': {'id': 'gallery-form'}})  }}
-
-  <div class="w3-row-padding w3-border w3-sand">
-
-    <div class="w3-col s3 l2 m2" title="Vamos mostrar esta imagem aos clientes no site">
-      {{ form_label(form.is_active)}}<br>
-      {{ form_widget(form.is_active)}} 
-    </div>
-
-    <div class="w3-col s12 l6 m5 w3-center" title="Vamos meter uma imagem">
-      <div class="w3-white w3-center w3-margin-bottom w3-border w3-imput w3-section set-image-container w3-padding" style="cursor:pointer"onclick="$('.set-image').trigger('click')">
-        <i class="fa fa-camera w3-jumbo" style="color:#05788d"></i>
-      </div>
-      {{ form_widget(form.image)}}
-    </div>
-
-    <div class="w3-col l6 m6 s12 w3-margin-bottom">
-      {{ form_label(form.name_pt) }}
-      {{ form_widget(form.name_pt) }}
-    </div>
-      
-    <div class="w3-col l6 m6 s12 w3-margin-bottom">
-      {{ form_label(form.name_en) }}
-      {{ form_widget(form.name_en)}}
-    </div>  
-    <div class="w3-hide">
-      {{ form_widget(form.submit)}}
-      </div>
-
-      <div class="w3-col s12 w3-margin-top w3-margin-bottom w3-border-top">
-        <span class="w3-btn w3-border w3-green w3-right w3-margin-top" onclick="$('#gallery-form').trigger('submit')">
-            <i class="fa fa-check"></i> Guardar
-          </span>
-      </div>
-
-  </div>
-    {{ form_end(form) }}
+<div class="w3-row-padding">
+  <div class="w3-col s12">
+  <table id="dataTable" class="w3-border table table-striped centered hover table-bordered" style="width:100%">
+    <thead class="w3-sand">
+      <tr>
+      <th class="w3-center">Acções</th>
+      <th class="w3-center">Foto</th>    
+      <th class="w3-center">Nome</th>    
+      <th class="w3-center">Sobrenome</th>
+      <th class="w3-center">Posto</th>   
+      <th class="w3-center">Activo</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for staff in staffs%}
+       <tr id='g-{{ staff.id}}'>
+        <td>
+           <button class="w3-btn w3-border w3-blue" onclick="editStaff({{ staff.id}})">
+            <i class="far fa-edit fa-fw"></i>
+          </button>
+          <button class="w3-btn w3-border w3-red" style="width: 19px" onclick="deleteStaffConfirm({{ staff.id}},'{{ staff.getFirstname }}')">
+            <i class="fas fa-trash-alt"></i>
+          </button>
+        </td>
+        <td class="w3-center"><img src="/upload/staff/{{ staff.image }}" class="w3-card" style="width:50px"></td>
+        <td>{{ staff.getFirstname }}</td>
+        <td>{{ staff.getLastname }}</td>
+        <td>{{ staff.getJob.name }}</td>
+        <td class="w3-center">
+          {% if staff.IsActive == 1 %}
+            <i class="w3-text-green w3-xlarge fas fa-check-circle"></i>
+          {% else %}
+            <i class="w3-text-red w3-xlarge fas fa-times-circle"></i>
+          {% endif %}
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+    <tfoot class="w3-sand">
+      <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+    </tfoot>
+  </table>
+</div>
 </div>
 
 <script>
+ 
+stored = []
 
-  var loadFile = function(event) {
-    $('.set-image-container').html('<img id="output" class="w3-image w3-animate-zoom">')
-    var output = document.getElementById('output')
-    output.src = URL.createObjectURL(event.target.files[0])
-  }
-
-
-  $('#gallery-form').on('submit',function(e){
-  obj=''
-  e.preventDefault()
+function editStaff(id){
   $('.w3-overlay').show()
-  $('.required').addClass('w3-hide')
-  //setTimeout(function(){
+  setTimeout(function(){
+  $.ajax({  
+    url:'{{ path('admin_staff_show_edit') }}',
+    type: "POST",
+    data:'id='+id,
+    success: function(data){
+      $('.w3-overlay').hide()
+      $('#set-id').text(id)
+      $('#set-staff').html(data)
+      $('#modal-edit-staff').show()
+      if (data.message == 'success'){
+        $('#info-client').show()                
+        $('#info-client-head').removeClass('w3-red').addClass('w3-green').html('<span onclick="$(\'#info-client\').hide()" class="w3-button w3-display-topright w3-large"><i class="fa fa-times"></i></span><h1><i class="fa fa-check"></i> Sucesso</h1>')
+        $('#client-txt').html('')
+      }
+    },
+    error:function(data){
+      $('.w3-overlay').hide()
+      $('#modal-error').show()
+    }
+  })
+  }, 500)
+}
+
+function deleteStaffConfirm(id,n){
+  $('#delete-staff').html('<p class="w3-center w3-large">Tem a certeza que pretende apagar o elemento do Staff, <b>'+n+'</b> ?</p>')
+  $('#delete-id').val(id)
+  $('#modal-delete-staff').show()
+}
+
+function deleteStaff(id){
+  $('.w3-overlay').show()
+  setTimeout(function(){
     $.ajax({  
-      url:'{{ path('admin_gallery_add') }}',
+      url:'{{ path('admin_staff_delete') }}',
       type: "POST",
-      data: new FormData($(this)[0]),
-      processData: false,
-      contentType: false,
-      cache: false,
-      success: function(data){  
+      data:'id='+id,
+      success: function(data){
         $('.w3-overlay').hide()
-        console.log(data)
-        if (data.message == 'success'){
-          ajaxUpload('gallery-new')
-        }
-        else if (data.message=='fail'){
-          for(i=0;i<data.data.length;i++)
-            obj += data.data[i]+'<br>'
-          $('#set-fields').html(obj)
-          $('#modal-fields').show()
+        if (data.status == 1){
+          $('#modal-delete-staff').hide()
+          $('#g-'+data.message).remove()
         }
       },
       error:function(data){
@@ -92,7 +127,86 @@ input, select, textarea {color: #000!important}
         $('#modal-error').show()
       }
     })
-  //}, 500)
-})
-</script>
+  }, 500)
+}
 
+
+$(function(){
+
+
+  table = $('#dataTable').DataTable({
+    dom: 'lBfrtip',
+    order: [ 3, "ASC" ],
+    buttons: [
+      {
+        extend:    'excelHtml5',
+        text:      '<i class="far fa-file-excel"></i>',
+        titleAttr: 'Excel',
+        exportOptions: {
+          columns: [ 0, 1, 2, 3, 4, 5, 6]
+          }
+        },
+
+        {
+        extend:    'pdfHtml5',
+        text:      '<i class="far fa-file-pdf"></i>',
+        titleAttr: 'PDF',
+        exportOptions: {
+          columns: [ 0, 1, 2, 3, 4,5,6]
+          },
+          customize: function (doc) {
+            //doc.content[1].table.widths = Array(doc.content[1].table.body[0].length + 1).join('*').split('')
+              doc['footer']=(function(page, pages) {
+                return {
+                  columns: [
+                    {
+                      alignment: 'right',
+                      text: ['']
+                    },
+                  ],
+                  margin: 20
+                }
+              })
+            }
+        },
+        {
+        extend: 'colvis',
+        columns: ':gt(0)',
+        text:      '<i class="far fa-eye-slash"></i>',
+        titleAttr: 'Colunas',
+        exportOptions: {
+          columns: [ 0, 1, 2, 3, 4, 5]
+        }
+      }
+    ],
+    "columnDefs": [
+      //{ className:"my_class", "targets": [4] },
+      //{ "orderData":[ 2 ], "targets": [ 3 ] },
+        {
+          "targets": stored,
+          "visible": false
+          //"searchable": false
+        }
+    ],
+    "pageLength": 25,
+    "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+      responsive: true,
+      searching: true,
+      language: {
+        "lengthMenu": "Mostrar _MENU_ por pagina",
+        "zeroRecords": "0 Resultados",
+        "info": "Mostrar _PAGE_ de _PAGES_",
+        "infoEmpty": "Sem resultados",
+        "search": "Pesquisar",
+        "paginate": {
+        "previous": "Anterior",
+        "next": "Seguinte",
+      }
+    },
+    order: [[ 1, 'asc' ]]
+  })
+  $('#dataTable_length, .dt-buttons').addClass('w3-center w3-col s12 m6 l4 w3-section')
+  $('#dataTable_filter').addClass('w3-col s8 m12 l4 w3-center w3-section')
+})
+
+</script>

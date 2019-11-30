@@ -19,6 +19,18 @@ function ajaxUpload(block){
         case 'gallery-list': 
             url = '{{ path("admin_gallery_list") }}' 
         break
+        case 'gallery': 
+            url = '{{ path("admin_gallery") }}' 
+        break
+        case 'staff-new': 
+            url = '{{ path("admin_staff_new") }}' 
+        break
+        case 'staff-list': 
+            url = '{{ path("admin_staff_list") }}' 
+        break
+        case 'staff': 
+            url = '{{ path("admin_staff") }}' 
+        break
         case 'booking': 
             url = '{{ path("admin_booking") }}' 
         break
@@ -40,11 +52,12 @@ function ajaxUpload(block){
         case 'warning': 
             url = '{{ path("admin_warning") }}' 
         break
-        case 'gallery': 
-            url = '{{ path("admin_gallery") }}' 
-        break
+
         case 'rgpd': 
             url = '{{ path("admin_rgpd") }}' 
+        break
+        case 'faqs': 
+            url = '{{ path("admin_faqs") }}' 
         break
         case 'terms': 
             url = '{{ path("admin_terms") }}' 

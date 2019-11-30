@@ -3,6 +3,7 @@
 namespace App\Form;
 
 use App\Entity\Staff;
+use App\Entity\Job;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -15,6 +16,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Doctrine\ORM\EntityRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 
 class StaffType extends AbstractType
@@ -28,19 +30,26 @@ class StaffType extends AbstractType
                 'required' => false,
                 'attr' => ['class' => 'w3-hide set-image','onchange' => 'loadFile(event)']
             ))
-            ->add('name_pt', TextType::class,
+            ->add('first_name', TextType::class,
             array(
                 'required' => false,
-                'label' => 'Nome (PT)*',
-                'attr' => ['class' => 'w3-input w3-border w3-white','placeholder'=>'Nome (PT)*',]
+                'label' => 'Nome *',
+                'attr' => ['class' => 'w3-input w3-border w3-white','placeholder'=>'Nome *',]
             ))
-            ->add('name_en', TextType::class, array(
+            ->add('last_name', TextType::class, array(
                 'required' => false,
-                'label' => 'Nome (EN)*',
-                'attr' => ['class' => 'w3-input w3-border w3-white','placeholder'=>'Nome (EN)*']
+                'label' => 'Sobrenome *',
+                'attr' => ['class' => 'w3-input w3-border w3-white','placeholder'=>'Sobrenome*']
+            ))
+            ->add('job', EntityType::class, array(
+                'class' => Job::class,
+                'choice_label' => 'name',
+                'placeholder' => 'Posto/Profissão',
+                'label' => 'Posto/Profissão',
+                'attr' => ['class' => 'w3-select w3-border w3-white']   
             ))
             ->add('is_active', CheckboxType::class, array(
-                'label'    => 'Ativa?',
+                'label'    => 'Ativo?',
                 'required' => false,
                 'attr' => ['class' => 'w3-check']
             ))

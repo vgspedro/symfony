@@ -31,8 +31,11 @@ class StaffController extends AbstractController
     public function staffNew(Request $request)
     {
         $staff = new Staff();
-        $form = $this->createForm(StaffType::class, $gallery);
+     
+        $form = $this->createForm(StaffType::class, $staff);
+      
         $form->handleRequest($request);
+
         return $this->render('admin/staff-new.html',array(
             'form' => $form->createView()));
     }
@@ -41,7 +44,7 @@ class StaffController extends AbstractController
     {
         $staff = new Staff();
 
-        $form = $this->createForm(StaffType::class, $gallery);
+        $form = $this->createForm(StaffType::class, $staff);
 
         $form->handleRequest($request);
 
@@ -108,19 +111,19 @@ class StaffController extends AbstractController
 
         $staffs = $em->getRepository(Staff::class)->findAll();
 
-        return $this->render('admin/staff-list.html',array(
-            'staffs' =>  $staffs));
+        return $this->render('admin/staff-list.html', 
+            ['staffs' =>  $staffs]);
     }
 
 
     public function staffShowEdit(Request $request, ValidatorInterface $validator, FileUploader $fileUploader, ImageResizer $imageResizer)
     {
 
-        $staffId = $request->request->get('id');
+        $staff_id = $request->request->get('id');
         
         $em = $this->getDoctrine()->getManager();
 
-        $gallery = $em->getRepository(Staff::class)->find($staffId);
+        $staff = $em->getRepository(Staff::class)->find($staff_id);
 
         if ($staff->getImage()) {
 
@@ -135,7 +138,7 @@ class StaffController extends AbstractController
         else
             $staff->setImage(new File($this->staff_images_directory.'/no-image.png'));
 
-        $form = $this->createForm(StaffType::class, $gallery);
+        $form = $this->createForm(StaffType::class, $staff);
 
         return $this->render('admin/staff-edit.html',array(
             'form' => $form->createView(),
@@ -147,30 +150,30 @@ class StaffController extends AbstractController
     public function staffEdit(Request $request, ValidatorInterface $validator, FileUploader $fileUploader, ImageResizer $imageResizer)
     {
 
-        $galleryId = $request->request->get('id');
+        $staff_id = $request->request->get('id');
         
         $em = $this->getDoctrine()->getManager();
 
-        $gallery = $em->getRepository(Gallery::class)->find($galleryId);
+        $staff = $em->getRepository(Staff::class)->find($staff_id);
 
-        $img = $gallery->getImage();
+        $img = $staff->getImage();
 
-        if ($gallery->getImage()) {
+        if ($staff->getImage()) {
             
-            $path = file_exists($this->gallery_images_directory.'/'.$gallery->getImage()) ?
+            $path = file_exists($this->staff_images_directory.'/'.$staff->getImage()) ?
 
-            $this->gallery_images_directory.'/'.$gallery->getImage()
+            $this->staff_images_directory.'/'.$staff->getImage()
             :
-            $this->gallery_images_directory.'/no-image.png';
+            $this->staff_images_directory.'/no-image.png';
 
-            $gallery->setImage(new File($path));
+            $staff->setImage(new File($path));
         }
 
         else
 
-            $gallery->setImage(new File($this->gallery_images_directory.'/no-image.png'));
+            $staff->setImage(new File($this->staff_images_directory.'/no-image.png'));
 
-        $form = $this->createForm(GalleryType::class, $gallery);
+        $form = $this->createForm(StaffType::class, $staff);
 
         $form->handleRequest($request);
             
@@ -179,13 +182,13 @@ class StaffController extends AbstractController
             if($form->isValid()){ 
                 
                 $deleted = 1;
-                $gallery = $form->getData();
-                $file = $gallery->getImage();
+                $staff = $form->getData();
+                $file = $staff->getImage();
 
                 if (is_object($file)) {
                     $fileName = $fileUploader->upload($file);               
                     $imageResizer->resize($fileName);
-                    $gallery->setImage($fileName);
+                    $staff->setImage($fileName);
                     
                     //remove from folder older image
 
@@ -193,7 +196,7 @@ class StaffController extends AbstractController
 
                     if ($img && $img != 'no-image.png') {
                         try {
-                            $fileSystem->remove($this->gallery_images_directory.'/'.$img);
+                            $fileSystem->remove($this->staff_images_directory.'/'.$img);
                         } 
                         catch (IOExceptionInterface $exception) {
                             $deleted = '0 '.$exception->getPath();
@@ -201,17 +204,17 @@ class StaffController extends AbstractController
                     }
                 }
                 else
-                    $gallery->setImage($img);
+                    $staff->setImage($img);
 
                 try {
-                    $em->persist($gallery);
+                    $em->persist($staff);
                     $em->flush();
 
                     $response = array(
                         'result' => 1,
                         'message' => 'success',
                         'image' => $deleted,
-                        'data' => $gallery->getId());
+                        'data' => $staff->getId());
                 } 
                 catch(DBALException $e){
 
@@ -240,17 +243,17 @@ class StaffController extends AbstractController
     {
         $deleted = 1;
         $response = array();
-        $galleryId = $request->request->get('id');
+        $staff_id = $request->request->get('id');
         $em = $this->getDoctrine()->getManager();
 
-        $gallery = $em->getRepository(Gallery::class)->find($galleryId);
+        $staff= $em->getRepository(Staff::class)->find($staff_id);
        
-        if (!$gallery) {
-            $response = array('status' => 0, 'message' => 'Galeria #'.$galleryId .' não existe.', 'data' => null);
+        if (!$styaff) {
+            $response = ['status' => 0, 'message' => 'Staff #'.$staff_id .' não existe.', 'data' => null];
         }
         else{
-            $img = $gallery->getImage();
-            $em->remove($gallery);
+            $img = $staff->getImage();
+            $em->remove($staff);
             $em->flush();
 
             //remove from folder image
@@ -259,14 +262,14 @@ class StaffController extends AbstractController
 
             if ($img && $img != 'no-image.png') {
                 try {
-                    $fileSystem->remove($this->gallery_images_directory.'/'.$img);
+                    $fileSystem->remove($this->staff_images_directory.'/'.$img);
                 } 
                 catch (IOExceptionInterface $exception) {
                     $deleted = '0 '.$exception->getPath();
                 }
             }
             
-            $response = array('status'=> 1, 'data' => $deleted, 'message' => $galleryId);
+            $response = array('status'=> 1, 'data' => $deleted, 'message' => $staff_id);
         }
         return new JsonResponse($response);
     }
