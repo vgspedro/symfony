@@ -13,9 +13,9 @@
 
     {% for category in categories %}
 
-          <div class="col-md-6 col-lg-4 mb-4" id='category-{{category.id}}'>
+          <div class="col-md-6 col-lg-4 mb-4 col-sm-12 no-pd-l-r" id='category-{{category.id}}'>
             <div class="service-39381">
-              <img src="/upload/category/{{ category.image }}" onerror="this.src='/upload/category/no-image.png'" alt="{{category.name}}" class="img-fluid">
+              <img src="upload/category/{{ category.image }}" onerror="this.src='/upload/category/no-image.png'" alt="{{category.name}}" class="img-fluid">
               <div class="p-4">
                 <span class="icon-tag text-primary"></span>
                 <span style="font-size:20px;color#000">{{ category.name}}</span>
@@ -59,10 +59,6 @@
 
                   </div>
                 </div>
-
-
-
-
 
 
                   </div>
