@@ -39,19 +39,19 @@
                 <div class="d-flex">
                                   
 
-                <div class="accordio_n md-accordio_n" id="accordionEx" role="tablist" aria-multiselectable="true">
+                <div id="accordionEx-{{category.id}}" role="tablist" aria-multiselectable="true">
 
-                  <div class="card_" style="border-bottom: 1px solid #e0e0e0_">
+                  <div style="border-bottom: 1px solid #e0e0e0_">
 
-                    <div class="card-heade_r" role="tab" id="heading-{{category.id}}">
-                      <a class="collapsed" data-toggle="collapse" data-parent="#accordionEx" href="#collapse-{{category.id}}"
+                    <div role="tab" id="heading-{{category.id}}">
+                      <a class="collapsed" data-toggle="collapse" data-parent="#accordionEx-{{category.id}}" href="#collapse-{{category.id}}"
                         aria-expanded="false" aria-controls="collapse-{{category.id}}">
                         <h5 class="text-info mb-0">
                           More info
                         </h5>
                       </a>
                     </div>
-                    <div id="collapse-{{category.id}}"  style="border-top:1px solid #aaa" class="collapse" role="tabpanel" aria-labelledby="heading-{{category.id}}" data-parent="#accordionEx" style="position:absolute;z-index:999">
+                    <div id="collapse-{{category.id}}"  style="border-top:1px solid #aaa" class="collapse" role="tabpanel" aria-labelledby="heading-{{category.id}}" data-parent="#accordionEx-{{category.id}}" style="position:absolute;z-index:999">
                       <div class="p-1" style="color: #000">
                       {{category.description}}
                       {% if category.warrantyPayment %}

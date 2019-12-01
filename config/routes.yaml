@@ -7,10 +7,7 @@ login_clients:
     controller: App\Controller\SecurityController::loginClients
 
 logout:
-    path: /logout    
-
-
-
+    path: /logout
 
 ###
 # new page
@@ -20,12 +17,13 @@ index_new:
     controller: App\Controller\HomeNewController::index
 
 index_new_info:
-    path: /new
-    controller: App\Controller\HomeNewController::index
+    path: /usefull-info-new
+    controller: App\Controller\UsefullInfoNewController::index
 
-index_new_help_improve:
-    path: /new
-    controller: App\Controller\HomeNewController::index
+index_new_help_us_improve:
+    path: /help-us-improve-new
+    controller: App\Controller\HelpUsImproveNewController::index
+
 
 ###
 # site
@@ -80,6 +78,10 @@ admin_feedback_status:
     controller: App\Controller\FeedbackController::changeStatus
     methods: [POST]
     condition: 'request.isXmlHttpRequest()'
+
+
+
+
 
 ###
 # REPORT ISSUE

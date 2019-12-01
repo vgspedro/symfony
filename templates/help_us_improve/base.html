@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>{{ company.metaDescription }}</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Barlow+Condensed:500,600,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('css/open-iconic-bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/animate.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/owl.carousel.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/magnific-popup.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/aos.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/bootstrap-datepicker.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/jquery.timepicker.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/flaticon.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/icomoon.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+
+ 	<script src="js/jquery.min.js"></script>
+ 	<script src="js/jquery-migrate-3.0.1.min.js"></script>
+  </head>
+
+<style>
+
+@media(max-width: 528px){
+.zoom-75 {zoom: 75%}
+.no-pd-l-r {padding:0px}
+.zoom-100 {zoom:100%}}
+
+@media (max-width: 428px){.zoom-75{zoom:65%}}
+
+.ftco-navbar-light .navbar-toggler{margin-right: -8px}
+.team .img:after {background: transparent!important}
+.f-10{font-size: 10px}
+.ftco-navbar-light a .flag{margin-top:12px}
+.scrolled a .flag{margin-top:0px}
+.flag{height:28px;width:34px}
+.disabled{cursor: not-allowed}
+.text-yellow{color:#EEAD2D}
+.f-12{font-size: 12px}
+.txt-shadow{ text-shadow: 0px 0px 1px #000}
+.f-16{font-size: 16px}
+.cat-description{padding:4px 0px}
+.marquee{max-width:95vw;padding: 6px 0 0 0;width:100%;margin: 0 auto;overflow: hidden;white-space: nowrap;box-sizing: border-box;animation: marquee 100s linear infinite;-webkit-animation: marquee 50s linear infinite}
+.no-cave-rides {background: rgba(255,40,40,.75);width: 100%;color: #FFF;white-space: nowrap; position:fixed;z-index:1; bottom:0px;font-size: 1.2em}
+@-webkit-keyframes marquee{0%{text-indent:27.5em}100%{text-indent:-105em}}
+@keyframes marquee{0%{text-indent:27.5em}100%{text-indent:-105em}}
+.marquee:hover{animation-play-state:paused}
+.nav-container{padding:2px 0}
+</style>
+  <body>
+
+	{% include 'home/navbar.html' %}
+
+  {% include 'help_us_improve/banner.html' %}
+
+  {% include 'home/footer.html' %}
+ 
+  {% include 'home/loader.html' %}
+ 
+  <script src="js/popper.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+  <script src="js/jquery.easing.1.3.js"></script>
+  <script src="js/jquery.waypoints.min.js"></script>
+  <script src="js/jquery.stellar.min.js"></script>
+  <script src="js/owl.carousel.min.js"></script>
+  <script src="js/jquery.magnific-popup.min.js"></script>
+  <script src="js/aos.js"></script>
+  <script src="js/jquery.animateNumber.min.js"></script>
+  <script src="js/bootstrap-datepicker.js"></script>
+  <script src="js/jquery.timepicker.min.js"></script>
+  <script src="js/scrollax.min.js"></script>
+  <script src="js/main.js"></script>
+    
+  </body>
+</html>

@@ -1,0 +1,24 @@
+<section class="ftco-section ftco-no-pt ftco-no-pb">
+	<div class="container-fluid p-0">
+	<div class="row no-gutters">
+
+        {% for g in galleries %}
+		{%set name = app.request.locale == 'pt_PT' ? g.namePt : g.nameEn%}
+    	<div class="col-md-4 col-sm-6 col-xs-6 col-lg-3 col-6 ftco-animate">
+   			<div class="project">
+	    		<img src="/upload/gallery/{{g.image}}" class="img-fluid" alt="{{g.nameEn}}">
+	   			<div class="text">
+	    			<span>{{name}}</span>
+	    			<h3><a href="project.html">{{name}}</a></h3>
+	    		</div>
+	    		<a href="/upload/gallery/{{g.image}}" class="icon image-popup d-flex justify-content-center align-items-center">
+	    			<span class="icon-expand"></span>
+	    		</a>
+    		</div>
+    	</div>
+
+    	{% endfor %}
+		
+		</div>
+	</div>
+</section>

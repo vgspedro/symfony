@@ -119,9 +119,6 @@ class RequestInfo
     }
 
 
-
-
-
     public function browserInfo($request){    
         $r = array(
             'name'      => $this->getBrowser($request),
@@ -137,8 +134,5 @@ class RequestInfo
         );
     return $r;
     }
-
-  
-
 
 }

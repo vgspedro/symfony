@@ -28,7 +28,7 @@ class Faqs
     */
     private $name;
     /**
-     *@ORM\ManyToOne(targetEntity="Locales", inversedBy="faqs") */
+     *@ORM\ManyToOne(targetEntity="Locales") */
     private $locales;
     
     public function getId()
