@@ -4,11 +4,15 @@ namespace App\Repository;
 
 use App\Entity\AboutUs;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Symfony\Bridge\Doctrine\RegistryInterface;
+use Doctrine\Common\Persistence\ManagerRegistry;
+
 
 class AboutUsRepository extends ServiceEntityRepository
 {
-    public function __construct(RegistryInterface $registry)
+
+    public function __construct(ManagerRegistry $registry)
+
+    //public function __construct(RegistryInterface $registry)
     {
         parent::__construct($registry, AboutUs::class);
     }

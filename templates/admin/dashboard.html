@@ -16,11 +16,11 @@
         <div class="w3-left"><i class="far fa-hand-point-up w3-xxxlarge"></i></div>
         <div class="w3-right">
           <h3>
+            {%set a = '' %}
             {% for bookings in booking.day0 if bookings.status == "pending"  %}
-              {{ bookings.count }}
-              {% else %}
-                0
+              {% set a = bookings.status == "pending" ? bookings.count : 0 %}
             {% endfor %}
+            {{a}}
           </h3>
         </div>
         <div class="w3-clear"></div>
@@ -32,11 +32,11 @@
         <div class="w3-left"><i class="far fa-hand-paper w3-xxxlarge"></i></div>
         <div class="w3-right">
           <h3>
-            {% for bookings in booking.day0 if bookings.status == "canceled"  %}
-              {{ bookings.count }}
-              {% else %}
-                0
+            {%set b = '' %}
+            {% for bookings in booking.day0 %}
+             {% set a = bookings.status == "canceled" ? bookings.count : 0 %}
             {% endfor %}
+             {{b}}
           </h3>
         </div>
         <div class="w3-clear"></div>
@@ -48,11 +48,11 @@
         <div class="w3-left"><i class="far fa-thumbs-up w3-xxxlarge"></i></div>
         <div class="w3-right">
           <h3>
-            {% for bookings in booking.day0 if bookings.status == "confirmed"  %}
-              {{ bookings.count }}
-              {% else %}
-                0
+            {%set c = '' %}
+            {% for bookings in booking.day0%}
+              {% set a = bookings.status == "confirmed" ? bookings.count : 0 %}
             {% endfor %}
+            {{c}}
           </h3>
         </div>
         <div class="w3-clear"></div>
@@ -76,8 +76,6 @@
       </div>
     </div>
   </div>
-
-
 
   <div class="w3-row-padding w3-opacity-min">
     <div class="w3-col l3 m6 s6 w3-margin-bottom">
