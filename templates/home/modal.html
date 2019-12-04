@@ -1,3 +1,20 @@
+<style>
+.f-24{font-size:24px}
+.f-14{font-size:14px}
+.f-36{font-size:36px}
+.pointer{cursor:pointer}
+.w-54{width:54px}
+.h-58{height:58px}
+.dis-position{position: absolute;font-size: 32px; margin: 7px -13px;}
+.bold{font-weight: bold}
+.months, .days, .show-datetime{max-width: 800px}
+.op-20{opacity:0.2}
+.op-40{opacity:0.4}
+.op-60{opacity:0.6}
+.op-80{opacity:0.8}
+
+</style>
+
 
 <div id="fsModal" class="modal modal-full animated fade"tabindex="-1" role="dialog"aria-labelledby="myModalLabel" aria-hidden="true">
   <!-- dialog -->
@@ -9,22 +26,129 @@
        <h2 class="text-center">
           Dates
         </h2>
-          <button class="btn btn-default" data-dismiss="modal"> x </button>
+          <button class="btn btn-default" data-dismiss="modal"><i class="icon-times"></i></button>
       </div>
       <!-- header -->
       <!-- body -->
       <div class="modal-body modal-body-full">
-		<br>
+        <div class="container months">
+        <div class="row f-24 mb-4">
+          <div class="col-1 text-center btn-light btn-outline-default pointer">
+            <i class="icon-chevron-left"></i>
+          </div>
+          <div class="col-10 text-center btn-light btn-outline-default pointer">
+            <span><i class="icon-calendar"></i> Dezembro</span>
+          </div>
+          <div class="col-1 text-center btn-light btn-outline-default pointer">
+            <i class="icon-chevron-right"></i>
+          </div>
+        </div>
+        </div>
 
-        <p>The last word drumguish irish flag, hurricane, brandy manhattan. Lemon drop, pulteney fleischmann's seven and seven irish flag pisco sour metaxas, hayride, bellini. French 75 wolfram christian brothers, calvert painkiller, horse's neck old bushmill's gin pahit. Monte alban glendullan, edradour redline cherry herring anisette godmother, irish flag polish martini glen spey. Abhainn dearg bloody mary amaretto sour, ti punch black cossack port charlotte tequila slammer? Rum swizzle glen keith j & b sake bomb harrogate nights 7 crown! Hairy virgin tomatin lord calvert godmother wolfschmitt brass monkey aberfeldy caribou lou. Macuá, french 75 three wise men.</p>
+        <div class="container days">
+        <div class="row f-24">
+          <div class="col-1 text-center">
+            <i class="icon-chevron-left pointer"></i>
+          </div>
+          <div class="col-10 text-center f-14">
+            <div class="row bold" style="color:#000">
+              <div class="col-2">
+                <p class="mt-2">Seg 10</p>
+               <div class="mb-2 disabled op-60 btn btn-danger btn-outline-danger px-1 py-1 w-54 h-58">
+                <i class="icon-ban dis-position"></i>
+              </div>
+              <br>
+            </div>
+            <div class="col-2">
+              <p class="mt-2">Ter 11</p>
+              <div data-evt="5" data-date="11/12/2019 09:30" onclick="getEvent(this)"  class="mb-2 btn btn-primary btn-outline-primary px-1 py-1 w-54 h-58" style="border: 1px solid #1089ff !important">
+                <i class="icon-clock-o"></i><br>09:30
+              </div>
+              <br>
+              <div data-evt="5" data-date="11/12/2019 15:30" onclick="getEvent(this)"  class="mb-2 btn btn-primary btn-outline-primary px-1 py-1 w-54 h-58" style="border: 1px solid #1089ff !important">
+                <i class="icon-clock-o"></i><br>15:30
+              </div>
+              <br>
+              <div data-evt="2" data-date="11/12/2019 17:30" onclick="getEvent(this)"  class="mb-2 btn btn-primary btn-outline-primary px-1 py-1 w-54 h-58" style="border: 1px solid #1089ff !important">
+                <i class="icon-clock-o"></i><br>17:30
+              </div>
+              <br>
+
+            </div>
+            
+            <div class="col-2">
+              <p class="mt-2">Qua 12</p>
+               <div class="mb-2 disabled op-60 btn btn-danger btn-outline-danger px-1 py-1 w-54 h-58">
+                <i class="icon-ban dis-position"></i>
+              </div>
+              <br>
+            </div>
+            <div class="col-2">
+              <p class="mt-2">Qui 13</p>
+              <div data-evt="6" data-date="13/12/2019 09:30" onclick="getEvent(this)" class="mb-2 btn btn-primary btn-outline-primary px-1 py-1 pointer w-54 h-58" style="border: 1px solid #1089ff !important">
+                <i class="icon-clock-o"></i><br>09:30
+              </div>
+              <br>
+            </div>
+            <div class="col-2">
+              <p class="mt-2">Sex 14</p>
+              <div data-evt="7" data-date="14/12/2019 09:30" onclick="getEvent(this)"  class="mb-2 btn btn-primary btn-outline-primary px-1 py-1 pointer w-54 h-58" style="border: 1px solid #1089ff !important">
+                <i class="icon-clock-o"></i><br>09:30
+              </div>
+              <br>
+            </div>
+            <div class="col-2">
+              <p class="mt-2">Sáb 15</p>
+              <div data-evt="8" data-date="15/12/2019 09:30" onclick="getEvent(this)"  class="mb-2 btn btn-primary btn-outline-primary px-1 py-1 pointer w-54 h-58" style="border: 1px solid #1089ff !important">
+                <i class="icon-clock-o"></i><br> 09:30
+              </div>
+              <br>
+              <div data-evt="9" data-date="15/12/2019 11:30" onclick="getEvent(this)"  class="mb-2 btn btn-primary btn-outline-primary px-1 py-1 pointer w-54 h-58" style="border: 1px solid #1089ff !important">
+                <i class="icon-clock-o"></i><br> 11:30
+              </div>
+              <br>
+              <div data-evt="10" data-date="15/12/2019 15:30" onclick="getEvent(this)" class="mb-2 btn btn-primary btn-outline-primary px-1 py-1 pointer w-54 h-58" style="border: 1px solid #1089ff !important">
+                <i class="icon-clock-o"></i><br> 15:30
+              </div>
+              <br>
+              <div data-evt="3" data-date="15/12/2019 17:30" onclick="getEvent(this)" class="mb-2 btn btn-primary btn-outline-primary px-1 py-1 pointer w-54 h-58" style="border: 1px solid #1089ff !important">
+                <i class="icon-clock-o"></i><br> 17:30
+              </div>
+          </div>
+          </div>
+          </div>
+
+          <div class="col-1 text-center">
+            <i class="icon-chevron-right pointer"></i>
+          </div>
+        </div>
+        </div>
+
+
+        <div class="container show-datetime d-none">
+        <div class="row f-24 mb-4">
+          <div class="col-1 text-center">&nbsp;
+          </div>
+          <div class="col-10 text-center">
+            <h2><i class="icon-calendar"></i> Data Escolhida: <br><span class="set-datetime"></span> </h2>
+          </div>
+
+        </div>
+        
+        <div class="row">
+          <div class="col-12 text-center">
+            <button class="btn btn-outline-success px-4 py-2" data-dismiss="modal"> Seguinte</button>
+          </div>
+          </div>
+        </div>
+
+
       </div>
-      <!-- body -->
 
-      <!-- footer -->
       <div class="modal-footer modal-footer-full">
         <button class="btn btn-light btn-outline-default px-4 py-2"
                 data-dismiss="modal">
-          close
+          Close
         </button>
       </div>
       <!-- footer -->
@@ -37,3 +161,17 @@
 
 </div>
 <!-- modal -->
+<script>
+
+  function getEvent(obj){
+
+    $('.btn-primary').addClass('btn-outline-primary')
+    e = $(obj).data('evt')
+    $(obj).removeClass('btn-outline-primary')
+    d = $(obj).data('date')
+    $('.set-datetime').html(d)
+    $('.show-datetime').removeClass('d-none')
+  }
+
+</script>
+
