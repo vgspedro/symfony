@@ -22,6 +22,12 @@
 .zoom-70{zoom: 70%}
 }
 
+.col-1-7 {
+  -webkit-box-flex: 0;
+  -ms-flex: 0 0 14.285714%;
+  flex: 0 0 14.285714%;
+  max-width: 14.285714%}
+
 </style>
 
 
@@ -32,9 +38,7 @@
     <div class="modal-content modal-content-full">
       <!-- header -->
       <div class="modal-header" style="background:#FFF">
-       <h2 class="text-center">
-          Dates
-        </h2>
+       <h4 class="text-center">Choose a Date</h4>
           <button class="btn btn-default" data-dismiss="modal"><i class="icon-times"></i></button>
       </div>
       <!-- header -->
@@ -42,33 +46,42 @@
       <div class="modal-body modal-body-full">
         <div class="container months">
         <div class="row f-24 mb-4">
-          <div class="col-1 text-center btn-light btn-outline-default pointer">
+          <div class="col-2 text-center btn-light btn-outline-default pointer">
             <i class="icon-chevron-left"></i>
           </div>
-          <div class="col-10 text-center btn-light btn-outline-default pointer">
-            <span><i class="icon-calendar"></i> Dezembro</span>
+          <div class="col-8 text-center border border-secondary btn rounded pointer f-14">
+            <span><i class="icon-calendar"></i> December</span>
           </div>
-          <div class="col-1 text-center btn-light btn-outline-default pointer">
+          <div class="col-2 text-center btn-light btn-outline-default pointer">
             <i class="icon-chevron-right"></i>
           </div>
         </div>
         </div>
 
         <div class="container days">
+
         <div class="row f-24">
-          <div class="col-1 text-center">
+
+          <div class="col-sm-1 col-xs-3 col-3 text-left">
             <i class="icon-chevron-left pointer"></i>
           </div>
-          <div class="col-10 text-center f-14 zoom-78 zoom-70">
+
+          <div class="col-sm-0 col-xs-6 col-6 text-center d-block d-sm-none">Week</div>
+          
+          <div class="col-xs-3 text-right col-3 d-block d-sm-none">
+            <i class="icon-chevron-right pointer"></i>
+          </div>
+
+          <div class="col-sm-10 col-xs-12 text-center f-14 zoom-78 zoom-70">
             <div class="row bold" style="color:#000">
-              <div class="col-2">
+              <div class="col-1-7">
                 <p class="mt-2">Seg 10</p>
                <div class="mb-2 disabled op-60 btn btn-danger btn-outline-danger px-1 py-1 w-54 h-58">
                 <i class="icon-ban dis-position"></i>
               </div>
               <br>
             </div>
-            <div class="col-2">
+            <div class="col-1-7">
               <p class="mt-2">Ter 11</p>
               <div data-evt="5" data-date="11/12/2019 09:30" onclick="getEvent(this)"  class="mb-2 btn btn-primary btn-outline-primary px-1 py-1 w-54 h-58" style="border: 1px solid #1089ff !important">
                 <i class="icon-clock-o"></i><br>09:30
@@ -82,31 +95,31 @@
                 <i class="icon-clock-o"></i><br>17:30
               </div>
               <br>
-
             </div>
             
-            <div class="col-2">
+            <div class="col-1-7">
               <p class="mt-2">Qua 12</p>
                <div class="mb-2 disabled op-60 btn btn-danger btn-outline-danger px-1 py-1 w-54 h-58">
                 <i class="icon-ban dis-position"></i>
               </div>
               <br>
             </div>
-            <div class="col-2">
+            <div class="col-1-7">
               <p class="mt-2">Qui 13</p>
               <div data-evt="6" data-date="13/12/2019 09:30" onclick="getEvent(this)" class="mb-2 btn btn-primary btn-outline-primary px-1 py-1 pointer w-54 h-58" style="border: 1px solid #1089ff !important">
                 <i class="icon-clock-o"></i><br>09:30
               </div>
               <br>
             </div>
-            <div class="col-2">
+            <div class="col-1-7">
               <p class="mt-2">Sex 14</p>
               <div data-evt="7" data-date="14/12/2019 09:30" onclick="getEvent(this)"  class="mb-2 btn btn-primary btn-outline-primary px-1 py-1 pointer w-54 h-58" style="border: 1px solid #1089ff !important">
                 <i class="icon-clock-o"></i><br>09:30
               </div>
               <br>
             </div>
-            <div class="col-2">
+
+            <div class="col-1-7">
               <p class="mt-2">Sáb 15</p>
               <div data-evt="8" data-date="15/12/2019 09:30" onclick="getEvent(this)"  class="mb-2 btn btn-primary btn-outline-primary px-1 py-1 pointer w-54 h-58" style="border: 1px solid #1089ff !important">
                 <i class="icon-clock-o"></i><br> 09:30
@@ -124,12 +137,26 @@
                 <i class="icon-clock-o"></i><br> 17:30
               </div>
           </div>
+          <div class="col-1-7">
+            <p class="mt-2">Dom 16</p>
+            <div class="mb-2 disabled op-60 btn btn-danger btn-outline-danger px-1 py-1 w-54 h-58">
+              <i class="icon-ban dis-position"></i>
+            </div>
+            <br>
+          </div>
+
+
+
+
+
           </div>
           </div>
 
-          <div class="col-1 text-center">
+          <div class="col-sm-1 text-right d-none d-xl-block d-lg-block d-md-block d-sm-block d-md-none">
             <i class="icon-chevron-right pointer"></i>
           </div>
+
+
         </div>
         </div>
 
@@ -139,29 +166,19 @@
           <div class="col-1 text-center">&nbsp;
           </div>
           <div class="col-10 text-center">
-            <h3><i class="icon-calendar"></i> Data Escolhida: <br><span class="set-datetime"></span> </h3>
+            <h4><i class="icon-calendar"></i> Tour Date <br><span class="set-datetime"></span></h4>
           </div>
 
         </div>
         
         <div class="row">
           <div class="col-12 text-center">
-            <button class="btn btn-outline-success px-4 py-2" data-dismiss="modal"> Seguinte</button>
+            <button class="btn btn-outline-success px-4 py-2" data-dismiss="modal"> Next</button>
           </div>
           </div>
         </div>
 
-
       </div>
-
-      <div class="modal-footer modal-footer-full">
-        <button class="btn btn-light btn-outline-default px-4 py-2"
-                data-dismiss="modal">
-          Close
-        </button>
-      </div>
-      <!-- footer -->
-
     </div>
     <!-- content -->
 
@@ -182,5 +199,28 @@
     $('.show-datetime').removeClass('d-none')
   }
 
+
+function getIncrement(year, month){
+    let date = new Date('' + year + '-' + month + '-1');
+    let increment = date.getDay() > 0 ? date.getDay() - 2 : 5;
+    return increment;
+}
+
+function getDate(week, dayWeek, year, month, increment) {
+    var date
+    let day = week * 7 + dayWeek - increment;
+    if (day <= 0) {
+        let fechaAuxiliar = new Date('' + year + '-' + month + '-1');
+        date = new Date(fechaAuxiliar.getTime() + ((day - 1) * 24 * 60 * 60 * 1000));
+    }
+    else {
+        date = new Date('' + year + '-' + month + '-' + day);
+        if (isNaN(date.getTime())) {
+            let fechaAuxiliar = new Date('' + year + '-' + month + '-1');
+            date = new Date(fechaAuxiliar.getTime() + ((day + 1 - increment) * 24 * 60 * 60 * 1000));
+     }
+     return date;
+  }
+}
 </script>
 
