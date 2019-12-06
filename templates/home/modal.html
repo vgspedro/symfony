@@ -16,17 +16,10 @@
 @media (max-width: 580px){
 .zoom-78{zoom: 78%}
 .days{padding: 0px}
-}
-
-@media (max-width: 480px){
-.zoom-70{zoom: 70%}
-}
-
-.col-1-7 {
-  -webkit-box-flex: 0;
-  -ms-flex: 0 0 14.285714%;
-  flex: 0 0 14.285714%;
-  max-width: 14.285714%}
+.modal-body-full {top:54px}}
+@media (max-width: 480px){.zoom-70{zoom: 70%}}
+.col-1-7 {-webkit-box-flex: 0;-ms-flex: 0 0 14.285714%;flex: 0 0 14.285714%;max-width: 14.285714%}
+.bootstrap-datetimepicker-widget table th,.bootstrap-datetimepicker-widget table td.day {height: 54px;line-height: 54px;width:54px}
 
 </style>
 
@@ -37,25 +30,22 @@
     <!-- content -->
     <div class="modal-content modal-content-full">
       <!-- header -->
-      <div class="modal-header" style="background:#FFF">
+      <div class="modal-header modal-header-full">
        <h4 class="text-center">Choose a Date</h4>
-          <button class="btn btn-default" data-dismiss="modal"><i class="icon-times"></i></button>
+          <span class="pointer mr-2" style="margin-top:-6px"data-dismiss="modal"><i class="icon-times"></i></span>
       </div>
       <!-- header -->
       <!-- body -->
       <div class="modal-body modal-body-full">
         <div class="container months">
-        <div class="row f-24 mb-4">
-          <div class="col-2 text-center btn-light btn-outline-default pointer">
-            <i class="icon-chevron-left"></i>
+          <div class="row f-24 mb-4">
+            <div class='col-3'>&nbsp;</div>
+            <div class='col-sm-6'>
+              <div class="form-group">
+                <input type='text' class="form-control text-center pointer bold" id='datetimepicker' readonly/>
+              </div>
+            </div>
           </div>
-          <div class="col-8 text-center border border-secondary btn rounded pointer f-14">
-            <span><i class="icon-calendar"></i> December</span>
-          </div>
-          <div class="col-2 text-center btn-light btn-outline-default pointer">
-            <i class="icon-chevron-right"></i>
-          </div>
-        </div>
         </div>
 
         <div class="container days">
@@ -188,6 +178,34 @@
 </div>
 <!-- modal -->
 <script>
+
+$('#datetimepicker').datetimepicker({
+          format : 'DD/MM/YYYY',
+          ignoreReadonly: true,
+          defaultDate: "12/10/2019",
+          //inline: true,
+          //sideBySide: false,
+          icons: {
+            time: "icon-clock-o",
+            date: "icon icon-calendar",
+            up: "icon icon-chevron-up",
+            down: "icon-chevron-down",
+            left: "icon-chevron-left",
+            right: "icon-chevron-right"
+          },
+          //keepOpen: true,
+          //enabledDates: date,
+          locale: '{{app.request.locale}}',
+          //minDate: data.minDate,
+          //debug: true,
+          //maxDate: date[date.length -1]
+        })
+
+
+
+
+
+
 
   function getEvent(obj){
 
