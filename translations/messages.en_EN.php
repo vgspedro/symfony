@@ -223,6 +223,7 @@ return array(
     'gallery' => 'Gallery',
     'make_reservation' => 'Make a reservation',
     'call_us' => 'Call us',
+    'week' => 'Week',
 ),
 
 'arbitrary' => array(

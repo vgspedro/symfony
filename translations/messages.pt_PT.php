@@ -235,6 +235,7 @@ return array(
     'gallery' => 'Galeria',
     'make_reservation' => 'Efetuar reserva',
     'call_us' => 'Ligue',
+    'week' => 'Semana'
 ),
 
 'arbitrary' => array(

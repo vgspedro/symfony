@@ -6,7 +6,6 @@
 	{% endif%}
 {% endfor %}
 
-
 {% if products == true %}
 <section class="ftco-section ftco-booking bg-light">
     <div class="container ftco-relative">
@@ -20,9 +19,9 @@
         <h3 class="vr">{%trans%} info.call_us {% endtrans %}: {{company.telephone}}</h3>
     		<div class="row justify-content-center">
     			<div class="col-md-10 ftco-animate">
+
     				<form action="#" class="appointment-form">
 	            		<div class="row">
-
 	            			<div class="col-sm-12">
 	                			<div class="form-group">
 			              			<div class="select-wrap">
@@ -31,6 +30,7 @@
                       					</div>
                       					
                       					<select name="category" class="form-control">
+
 											<option value="">{% trans %}part_seven.tour{% endtrans %}</option>
           									{% for category in categories %}
             								{% if category.no_stock == 0 %}          						
@@ -49,12 +49,12 @@
 			              	</div>
 			              	<div class="col-sm-4">
 			                	<div class="form-group">
-					             	<input type="number" name="children" class="form-control" placeholder="Children">
+					             	<input type="number" name="children" class="form-control" placeholder="{% trans %}part_seven.children{%endtrans %}">
 					            </div>
 			              	</div>
 			              	<div class="col-sm-4">
 			                	<div class="form-group">
-			                  		<input type="number" name="baby" class="form-control" placeholder="Babies">
+			                  		<input type="number" name="baby" class="form-control" placeholder="{% trans %}part_seven.baby{%endtrans %}">
 			                	</div>    
 			              	</div>
 			              	<div class="col-md-12">

@@ -7,7 +7,7 @@
 .w-54{width:54px}
 .h-58{height:58px}
 .h-54{height:54px}
-.dis-position{position: absolute;font-size: 32px; margin: 7px -13px;}
+.dis-position{position: absolute;font-size: 32px; margin: 6px -13px}
 .bold{font-weight: bold}
 .months, .days, .show-datetime{max-width: 800px}
 .op-20{opacity:0.2}
@@ -57,97 +57,93 @@
 
         <div class="row f-24">
 
-          <div class="col-sm-1 col-xs-3 col-3 text-left">
+          <div class="col-sm-1 col-xs-3 col-3 text-left" onclick="getWeek(0)">
             <i class="icon-chevron-left pointer"></i>
           </div>
 
-          <div class="col-sm-0 col-xs-6 col-6 text-center d-block d-sm-none">Week</div>
+          <div class="col-sm-0 col-xs-6 col-6 text-center d-block d-sm-none">{%trans%}info.week{%endtrans%}</div>
           
-          <div class="col-xs-3 text-right col-3 d-block d-sm-none">
+          <div class="col-xs-3 text-right col-3 d-block d-sm-none" onclick="getWeek(1)">
             <i class="icon-chevron-right pointer"></i>
           </div>
 
           <div class="col-sm-10 col-xs-12 text-center f-14 zoom-78 zoom-74">
             <div class="row bold" style="color:#000">
-              <div class="col-1-7">
-                <p class="mt-2">Seg 10</p>
+              <div class="col-1-7" data-date="09/12/2019">
+                <p class="mt-2">Seg 9</p>
                <div class="mb-2 disabled op-60 btn btn-danger btn-outline-danger px-1 py-1 w-54 h-54">
                 <i class="icon-ban dis-position"></i>
               </div>
               <br>
             </div>
-            <div class="col-1-7">
-              <p class="mt-2">Ter 11</p>
-              <div data-evt="5" data-date="11/12/2019 09:30" onclick="getEvent(this)"  class="mb-2 btn btn-primary btn-outline-primary px-1 py-1 w-54 h-54" style="border: 1px solid #1089ff !important">
+            <div class="col-1-7" data-date="10/12/2019">
+              <p class="mt-2">Ter 10</p>
+              <div data-evt="5" data-date="10/12/2019 09:30" onclick="getEvent(this)"  class="mb-2 btn btn-primary btn-outline-primary px-1 py-1 w-54 h-54" style="border: 1px solid #1089ff !important">
                 <i class="icon-clock-o"></i><br>09:30
               </div>
               <br>
-              <div data-evt="5" data-date="11/12/2019 15:30" onclick="getEvent(this)"  class="mb-2 btn btn-primary btn-outline-primary px-1 py-1 w-54 h-54" style="border: 1px solid #1089ff !important">
+              <div data-evt="5" data-date="10/12/2019 15:30" onclick="getEvent(this)"  class="mb-2 btn btn-primary btn-outline-primary px-1 py-1 w-54 h-54" style="border: 1px solid #1089ff !important">
                 <i class="icon-clock-o"></i><br>15:30
               </div>
               <br>
-              <div data-evt="2" data-date="11/12/2019 17:30" onclick="getEvent(this)"  class="mb-2 btn btn-primary btn-outline-primary px-1 py-1 w-54 h-54" style="border: 1px solid #1089ff !important">
+              <div data-evt="2" data-date="10/12/2019 17:30" onclick="getEvent(this)"  class="mb-2 btn btn-primary btn-outline-primary px-1 py-1 w-54 h-54" style="border: 1px solid #1089ff !important">
                 <i class="icon-clock-o"></i><br>17:30
               </div>
               <br>
             </div>
             
-            <div class="col-1-7">
-              <p class="mt-2">Qua 12</p>
+            <div class="col-1-7" data-date="11/12/2019">
+              <p class="mt-2">Qua 11</p>
                <div class="mb-2 disabled op-60 btn btn-danger btn-outline-danger px-1 py-1 w-54 h-54">
                 <i class="icon-ban dis-position"></i>
               </div>
               <br>
             </div>
-            <div class="col-1-7">
-              <p class="mt-2">Qui 13</p>
-              <div data-evt="6" data-date="13/12/2019 09:30" onclick="getEvent(this)" class="mb-2 btn btn-primary btn-outline-primary px-1 py-1 pointer w-54 h-54" style="border: 1px solid #1089ff !important">
+            <div class="col-1-7" data-date="12/12/2019">
+              <p class="mt-2">Qui 12</p>
+              <div data-evt="6" data-date="12/12/2019 09:30" onclick="getEvent(this)" class="mb-2 btn btn-primary btn-outline-primary px-1 py-1 pointer w-54 h-54" style="border: 1px solid #1089ff !important">
                 <i class="icon-clock-o"></i><br>09:30
               </div>
               <br>
             </div>
-            <div class="col-1-7">
-              <p class="mt-2">Sex 14</p>
-              <div data-evt="7" data-date="14/12/2019 09:30" onclick="getEvent(this)"  class="mb-2 btn btn-primary btn-outline-primary px-1 py-1 pointer w-54 h-54" style="border: 1px solid #1089ff !important">
+            <div class="col-1-7" data-date="13/12/2019">
+              <p class="mt-2">Sex 13</p>
+              <div data-evt="7" data-date="13/12/2019 09:30" onclick="getEvent(this)"  class="mb-2 btn btn-primary btn-outline-primary px-1 py-1 pointer w-54 h-54" style="border: 1px solid #1089ff !important">
                 <i class="icon-clock-o"></i><br>09:30
               </div>
               <br>
             </div>
 
-            <div class="col-1-7">
-              <p class="mt-2">Sáb 15</p>
-              <div data-evt="8" data-date="15/12/2019 09:30" onclick="getEvent(this)"  class="mb-2 btn btn-primary btn-outline-primary px-1 py-1 pointer w-54 h-54" style="border: 1px solid #1089ff !important">
+            <div class="col-1-7" data-date="14/12/2019">
+              <p class="mt-2">Sáb 14</p>
+              <div data-evt="8" data-date="14/12/2019 09:30" onclick="getEvent(this)"  class="mb-2 btn btn-primary btn-outline-primary px-1 py-1 pointer w-54 h-54" style="border: 1px solid #1089ff !important">
                 <i class="icon-clock-o"></i><br> 09:30
               </div>
               <br>
-              <div data-evt="9" data-date="15/12/2019 11:30" onclick="getEvent(this)"  class="mb-2 btn btn-primary btn-outline-primary px-1 py-1 pointer w-54 h-54" style="border: 1px solid #1089ff !important">
+              <div data-evt="9" data-date="14/12/2019 11:30" onclick="getEvent(this)"  class="mb-2 btn btn-primary btn-outline-primary px-1 py-1 pointer w-54 h-54" style="border: 1px solid #1089ff !important">
                 <i class="icon-clock-o"></i><br> 11:30
               </div>
               <br>
-              <div data-evt="10" data-date="15/12/2019 15:30" onclick="getEvent(this)" class="mb-2 btn btn-primary btn-outline-primary px-1 py-1 pointer w-54 h-54" style="border: 1px solid #1089ff !important">
+              <div data-evt="10" data-date="14/12/2019 15:30" onclick="getEvent(this)" class="mb-2 btn btn-primary btn-outline-primary px-1 py-1 pointer w-54 h-54" style="border: 1px solid #1089ff !important">
                 <i class="icon-clock-o"></i><br> 15:30
               </div>
               <br>
-              <div data-evt="3" data-date="15/12/2019 17:30" onclick="getEvent(this)" class="mb-2 btn btn-primary btn-outline-primary px-1 py-1 pointer w-54 h-54" style="border: 1px solid #1089ff !important">
+              <div data-evt="3" data-date="14/12/2019 17:30" onclick="getEvent(this)" class="mb-2 btn btn-primary btn-outline-primary px-1 py-1 pointer w-54 h-54" style="border: 1px solid #1089ff !important">
                 <i class="icon-clock-o"></i><br> 17:30
               </div>
           </div>
-          <div class="col-1-7">
-            <p class="mt-2">Dom 16</p>
+          <div class="col-1-7" data-date="15/12/2019">
+            <p class="mt-2">Dom 15</p>
             <div class="mb-2 disabled op-60 btn btn-danger btn-outline-danger px-1 py-1 w-54 h-54">
               <i class="icon-ban dis-position"></i>
             </div>
             <br>
           </div>
 
-
-
-
-
           </div>
           </div>
 
-          <div class="col-sm-1 text-right d-none d-xl-block d-lg-block d-md-block d-sm-block d-md-none">
+          <div class="col-sm-1 text-right d-none d-xl-block d-lg-block d-md-block d-sm-block d-md-none" onclick="getWeek(1)">
             <i class="icon-chevron-right pointer"></i>
           </div>
 
@@ -166,7 +162,7 @@
         
         <div class="row">
           <div class="col-12 text-center">
-            <button class="btn btn-outline-success px-4 py-2" data-dismiss="modal"> Next</button>
+            <button class="btn btn-outline-success px-4 py-2" data-dismiss="modal">{%trans%}next{%endtrans%}</button>
           </div>
           </div>
         </div>
@@ -185,7 +181,8 @@
 $('#datetimepicker').datetimepicker({
   format : 'DD/MM/YYYY',
   ignoreReadonly: true,
-  defaultDate: "12/10/2019",
+  defaultDate: '{{ "tomorrow"|date("m/d/Y") }}',
+  //viewMode: 'months',
   //inline: true,
   //sideBySide: false,
   /*icons: {
@@ -208,6 +205,20 @@ $('#datetimepicker').datetimepicker({
           //maxDate: date[date.length -1]
         })
 
+$('#datetimepicker').on('dp.change', function(e){
+  console.log('get events from: '+ e.date.format(e.date._f)+' --> '+$('.appointment-form').serialize())
+  console.log('get data from server and rebuild week stucture')
+  
+  $('#ftco-loader').css({'opacity' : '0.7','visibility' : 'visible','z-index' : 9999})
+  setTimeout(function(){ $('#ftco-loader').css({'opacity' : 0,'visibility' : 'hidden','z-index' : 1000})}, 3500)
+})
+
+
+//boolean 1 = next week || 0 = previous week  
+function getWeek(boolean){
+  week = boolean ? $( ".col-1-7" ).last() : $( ".col-1-7" ).first()
+  $("#datetimepicker").data("DateTimePicker").date($(week).data('date'))
+}
 
   function getEvent(obj){
 
@@ -220,27 +231,13 @@ $('#datetimepicker').datetimepicker({
   }
 
 
-function getIncrement(year, month){
-    let date = new Date('' + year + '-' + month + '-1');
-    let increment = date.getDay() > 0 ? date.getDay() - 2 : 5;
-    return increment;
+
+function buildAvailability(arr){
+
+a= 1
+  return a
 }
 
-function getDate(week, dayWeek, year, month, increment) {
-    var date
-    let day = week * 7 + dayWeek - increment;
-    if (day <= 0) {
-        let fechaAuxiliar = new Date('' + year + '-' + month + '-1');
-        date = new Date(fechaAuxiliar.getTime() + ((day - 1) * 24 * 60 * 60 * 1000));
-    }
-    else {
-        date = new Date('' + year + '-' + month + '-' + day);
-        if (isNaN(date.getTime())) {
-            let fechaAuxiliar = new Date('' + year + '-' + month + '-1');
-            date = new Date(fechaAuxiliar.getTime() + ((day + 1 - increment) * 24 * 60 * 60 * 1000));
-     }
-     return date;
-  }
-}
+
 </script>
 
