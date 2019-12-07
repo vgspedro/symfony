@@ -77,7 +77,7 @@ class HomeNewController extends AbstractController
         
         $staffs = $em->getRepository(Staff::class)->findBy(['is_active' => 1],['first_name' => 'ASC']);
 
-        $categoryHl = $em->getRepository(Category::class)->findOneBy(['highlight' => 1],['orderBy' => 'ASC']);
+        $categoryHl = $em->getRepository(Category::class)->findOneBy(['highlight' => 1, 'isActive' => 1],['orderBy' => 'ASC']);
         $gallery = $em->getRepository(Gallery::class)->findBy(['isActive' => 1],['namePt' => 'DESC']);
 
         $now = new \DateTime('tomorrow');
@@ -85,18 +85,19 @@ class HomeNewController extends AbstractController
         $flag = false;
         $ord = [];
 
-        if($categoryHl->getAvailable()){
-            foreach ($categoryHl->getAvailable() as $available)
-                array_push($ord, $available->getDatetimeStart()->format('U'));
-
-            sort($ord);
+        if($categoryHl){
+            if($categoryHl->getAvailable()){
+                foreach ($categoryHl->getAvailable() as $available)
+                    array_push($ord, $available->getDatetimeStart()->format('U'));
+                sort($ord);
                 
-            for($t = 0; $t<count($ord); $t++) {
-                if($ord[$t] >= $now->format('U'))
-                    $flag = true;
-            }
-        }    
-    
+                for($t = 0; $t<count($ord); $t++) {
+                    if($ord[$t] >= $now->format('U'))
+                        $flag = true;
+                }
+            }    
+        }
+        
         $flag == true ? 
             $cH = [
                 'adultAmount' => $moneyFormatter->format($categoryHl->getAdultPrice()),

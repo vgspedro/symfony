@@ -1,0 +1,49 @@
+<style>
+.map-responsive iframe, .w{left:0;top:0;height:450px;width:100%}
+</style>
+<section class="bg-light">
+  <div class="map-responsive">
+    <div id="map" class="w"></div>
+  </div>
+</section>
+
+<script>
+function myMap() {
+    
+  var myCenter = new google.maps.LatLng({{company.getCoordsGoogleMaps}})
+  var mapCanvas = document.getElementById("map")
+  var mapOptions = {
+    center: myCenter,
+    scrollwheel: false,
+    draggable: false,    
+    zoom: 13,
+    panControl: true,
+    zoomControl: true,
+    mapTypeControl: false,
+    scaleControl: false,
+    streetViewControl: false,
+    overviewMapControl: false,
+    rotateControl: false,
+  }
+
+  var map = new google.maps.Map(mapCanvas, mapOptions)
+
+  var marker = new google.maps.Marker({position:myCenter})
+
+  marker.setMap(map)
+
+google.maps.event.addListener(marker,"click",function() {
+  map.setZoom(17)
+  map.setCenter(marker.getPosition())
+  })
+  var infowindow = new google.maps.InfoWindow({
+    content: "<b>{{company.getName}}</b>"
+  })
+  infowindow.open(map,marker)
+}
+
+</script>
+
+{%set l = app.request.locale == 'pt_PT'? 'pt':'en' %}
+
+<script src="https://maps.googleapis.com/maps/api/js?key={{company.getGoogleMapsApiKey}}&libraries=places&language={{l}}&region=PT&callback=myMap"></script>

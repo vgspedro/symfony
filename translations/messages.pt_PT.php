@@ -197,7 +197,7 @@ return array(
     'rgpd_txt' =>'Eu concordo que a Taruga Benagil Tours entre em contato comigo, para me informar do estado da minha reserva, em conformidade com o RGPD. Eu concordo que posso cancelar a qualquer momento. Eu concordo que as informações fornecidas através deste site são armazenadas e processadas com o propósito de obter a confirmação da minha reserva. A Taruga Benagil Tours leva a proteção de dados muito a sério.<br>Email: <a class="w3-text-blue" href="mailto:rgpd@tarugabenagiltours.pt?subject=Protecao%20Dados">rgpd@tarugabenagiltours.pt</a>',
     'zero' => 'Minimo é 1 Adulto, adicionou 0',
     'other_buy_it' => 'Outro cliente finalizou a compra 1º, tente outra data.',
-    'get_available' => 'Obter Datas',
+    'get_available' => 'Datas disponiveis',
     'no_stock' => 'De momento, este passeio, não tem disponibilidade.',
     'sorry' => 'Lamentamos mas...',
     'cvv_invalid' => 'CVV (3 digitos)',
@@ -213,6 +213,7 @@ return array(
 
 
 'info' => array(
+    'choose_a_date' => 'Escolha Data',
     'choose_date_hour'=> 'Escolha Data & Hora',
     'choose_date_calendar'=> 'Escolha Data do Calendário',
     'choose_hour'=> 'Escolha Hora',
@@ -225,13 +226,15 @@ return array(
     'personal_data' => 'Info. Pessoal',
     'credit_card_data' => 'Info. Cartão Crédito',
     'confirm' => 'Confirmar',
-    'fill_all' => 'Preencha todos os campos com <b class="w3-text-red w3-xxlarge">*</b>',
+    'fill_all' => 'Preencha todos os campos com <b class="text-danger">*</b>',
     'wp_set_no_cc_data' => 'Garantia pagamento obrigatório, mas os dados do Cartão estão em falta',
     'date_card_invalid' => 'Data Expiração Inválida',
     'doubts' => 'Dúvidas',
     'home' =>'Inicio',
     'usefull_info' =>'Informações Uteis',
-    'gallery' => 'Galeria'
+    'gallery' => 'Galeria',
+    'make_reservation' => 'Efetuar reserva',
+    'call_us' => 'Ligue',
 ),
 
 'arbitrary' => array(

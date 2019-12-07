@@ -18,9 +18,8 @@
         <div class="row no-gutters slider-text js-fullheight justify-content-center align-items-center">
           <div class="col-lg-12 ftco-animate d-flex align-items-center">
           	<div class="text text-center">
-          		<span class="subheading">{% trans %}welcome_to{% endtrans %} {{company.name}}</span>
               {% if category %}
-		  				
+		  				  <span class="subheading">{% trans %}welcome_to{% endtrans %} {{company.name}}</span>
                 <h1 class="mb-4">{{ category.name }}</h1>
   		  				
                 {% if category.adultAmount> 0 %}
@@ -47,8 +46,10 @@
                 <p>
                   <a href="#" onclick="navigation('.ftco-booking', {{ category.id }})" class="btn btn-primary btn-outline-primary px-4 py-2">{% trans %}book_now{% endtrans %}</a>
                 </p>
-              
+              {%else%}
+                  <h1 class="mb-4">{% trans %}welcome_to{% endtrans %}<br>{{company.name}}</h1>
               {% endif %}
+
 							</div>
             </div>
           </div>

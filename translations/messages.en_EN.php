@@ -184,7 +184,7 @@ return array(
     'book_after' => 'After submitting the booking order, we will send you a confirmation email.',
     'zero' => 'Minimum is 1 Adult, you added 0',
     'other_buy_it' => 'Other person just bought it, try another date.',
-    'get_available' => 'Obtain Dates',
+    'get_available' => 'Available Dates',
     'no_stock' => 'At this moment, this tour is unavailable.',
     'sorry' => 'Sorry but...',
     'cvv_invalid' => 'CVV (3 digits)',
@@ -201,6 +201,7 @@ return array(
 
 
 'info' => array(
+    'choose_a_date' => 'Choose a Date',
     'choose_date_hour'=> 'Choose Date & Hour',
     'choose_date_calendar'=> 'Choose a Date from the Calendar',
     'choose_hour'=> 'Choose Hour',
@@ -213,13 +214,15 @@ return array(
     'personal_data' => 'Personal Info',
     'credit_card_data' => 'Credit Card Info',
     'confirm' => 'Confirm',
-    'fill_all' => 'Fill all the fields with <b class="w3-text-red w3-xxlarge">*</b>',
+    'fill_all' => 'Fill all the fields with <b class="text-danger">*</b>',
     'wp_set_no_cc_data' => 'Warranty Payment required, but Credit Card data is missing.',
     'date_card_invalid' => 'Credit Card Expire Date Invalid',
     'doubts' => 'Doubts',
     'home' =>'Home',
     'usefull_info' =>'Usefull Info',
-    'gallery' => 'Gallery'
+    'gallery' => 'Gallery',
+    'make_reservation' => 'Make a reservation',
+    'call_us' => 'Call us',
 ),
 
 'arbitrary' => array(
