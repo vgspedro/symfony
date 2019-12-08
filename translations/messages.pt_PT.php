@@ -5,6 +5,14 @@ return array(
     'unavailable' => 'Indisponivel',
     'minutes' => 'minutos',
 
+    'sun' => 'Dom',
+    'mon' => 'Seg',
+    'tue' => 'Ter',
+    'wed' => 'Qua',
+    'thu' => 'Qui',
+    'fri' => 'Sex',
+    'sat' => 'Sáb',
+    
     'min_amount' => 'Montante Minimo 0.50Eur',
     'max_amount' => 'Montante Máximo 5000.00Eur',
     'validate' => 'Validar',

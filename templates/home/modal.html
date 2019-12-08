@@ -68,7 +68,10 @@
           </div>
 
           <div class="col-sm-10 col-xs-12 text-center f-14 zoom-78 zoom-74">
+
             <div class="row bold" style="color:#000">
+        
+
               <div class="col-1-7" data-date="09/12/2019">
                 <p class="mt-2">Seg 9</p>
                <div class="mb-2 disabled op-60 btn btn-danger btn-outline-danger px-1 py-1 w-54 h-54">
@@ -76,6 +79,9 @@
               </div>
               <br>
             </div>
+
+
+
             <div class="col-1-7" data-date="10/12/2019">
               <p class="mt-2">Ter 10</p>
               <div data-evt="5" data-date="10/12/2019 09:30" onclick="getEvent(this)"  class="mb-2 btn btn-primary btn-outline-primary px-1 py-1 w-54 h-54" style="border: 1px solid #1089ff !important">
@@ -178,6 +184,22 @@
 <!-- modal -->
 <script>
 
+
+
+/*
+unavalable='<div class="col-1-7" data-date="'+data.date+'"><p class="mt-2">'+date.dayname+' '+date.daynumber+'</p><div class="mb-2 disabled op-60 btn btn-danger btn-outline-danger px-1 py-1 w-54 h-54"><i class="icon-ban dis-position"></i></div><br></div>'
+*/
+
+
+
+
+
+
+
+
+
+
+
 $('#datetimepicker').datetimepicker({
   format : 'DD/MM/YYYY',
   ignoreReadonly: true,
@@ -211,6 +233,7 @@ $('#datetimepicker').on('dp.change', function(e){
   
   $('#ftco-loader').css({'opacity' : '0.7','visibility' : 'visible','z-index' : 9999})
   setTimeout(function(){ $('#ftco-loader').css({'opacity' : 0,'visibility' : 'hidden','z-index' : 1000})}, 3500)
+
 })
 
 
@@ -237,6 +260,10 @@ function buildAvailability(arr){
 a= 1
   return a
 }
+
+
+$('.show-datetime').addClass('d-none')
+
 
 
 </script>

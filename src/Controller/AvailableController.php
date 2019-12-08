@@ -11,6 +11,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Doctrine\DBAL\DBALException;
+use Doctrine\ORM\Tools\Pagination\Paginator;
+use Symfony\Component\Translation\TranslatorInterface;
+
 
 class AvailableController extends AbstractController
 {
@@ -408,6 +411,75 @@ class AvailableController extends AbstractController
             'status' => 1,
             'message' => 'Disponibilidade foi Apagada',
             'data' => $request->request->get('id')));
+    }
+
+/**
+*Get the availability of a category starting tomorrow in a period of 8 days
+*
+**/
+    public function getCategoryPeriodAvailability(Request $request, TranslatorInterface $translator) {
+    
+        $em = $this->getDoctrine()->getManager();
+
+        $category = $em->getRepository(Category::class)->find($request->request->get('category'));
+
+        if(!$category)
+            return new JsonResponse(array(
+                'status' => 0,
+                'message' => 'Categoria não foi encontrada!',
+                'data' => null));
+
+        $total_pax = $request->request->get('adult') > 0 ? $request->request->get('adult') : 0;
+
+        if($total_pax == 0)
+            return new JsonResponse(array(
+                'status' => 0,
+                'message' => 'Pedido tem q ser mais q 0(zero )!',
+                'data' => null));
+
+        $total_pax = (int)$request->request->get('adult') + (int)$request->request->get('children') + (int)$request->request->get('baby');
+
+        $next = $request->request->get('next') ? $request->request->get('next') : 1;
+
+        //if 0 is the previous week
+        if($next == 0){
+            $start = $request->request->get('start') ? \DateTime::createFromFormat('d/m/Y', $request->request->get('start')) : new \DateTime('tomorrow');
+            $end = $start;
+            $end->add(new \DateInterval('P8D'));
+        } 
+        else{
+            $start = $request->request->get('start') ? \DateTime::createFromFormat('d/m/Y', $request->request->get('start')) : new \DateTime('tomorrow');
+            $end = $start;
+            $end->add(new \DateInterval('P8D'));
+        }
+
+        $availability = $em->getRepository(Available::class)->findCategoryAvailabilityByWeekAndPax($category, $start, $end, $next, $total_pax);
+
+        $d = [];
+        $h = [];
+
+        foreach ($availability as $a)
+            $d[] = [
+                'date' => $a->getDatetimestart()->format('Y-m-d'),
+                'day' => $translator->trans(strtolower ($a->getDatetimeStart()->format('D'))).' '.$a->getDatetimeStart()->format('d'),
+                'week_day_year' => (int) $a->getDatetimeStart()->format('d'),
+                'week_day' => (int) $a->getDatetimeStart()->format('w'),
+                'id' => $a->getId(),
+                'hour' => $a->getDatetimeStart()->format('H:i'),
+            ];
+        
+/*
+        foreach ($d as $day) {
+        
+        }
+*/
+
+        return new JsonResponse([
+            'status' => 1,
+            'message' => 'Disponibilidade foi Apagada',
+            'data' => $d
+
+            ]);
     }
 
 }

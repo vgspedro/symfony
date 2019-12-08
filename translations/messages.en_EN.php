@@ -4,6 +4,16 @@ return array(
     'book_now' => 'Book now',
     'unavailable' => 'Unavailable',
     'minutes' => 'minutes',
+    
+    'sun' => 'Sun',
+    'mon' => 'Mon',
+    'tue' => 'Tue',
+    'wed' => 'Wed',
+    'thu' => 'Thu',
+    'fri' => 'Fri',
+    'sat' => 'Sat',
+ 
+
 
     'min_amount' => 'Min. amount 0.50Eur',
     'max_amount' => 'Max. amount 5000.00Eur',

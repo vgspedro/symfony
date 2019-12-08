@@ -262,6 +262,10 @@ admin_available_resources_actions:
     path: /admin-available-resources-actions/
     controller: App\Controller\AvailableController::adminAvailableResourcesActions
 
+available_by_period:
+    path: /available-by_period/
+    controller: App\Controller\AvailableController::getCategoryPeriodAvailability
+
 ##
 # EASY TEXT
 ##

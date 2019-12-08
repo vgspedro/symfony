@@ -7,7 +7,6 @@ use App\Entity\Category;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 
-
 class AvailableRepository extends ServiceEntityRepository
 {
      public function __construct(ManagerRegistry $registry)
@@ -27,6 +26,7 @@ class AvailableRepository extends ServiceEntityRepository
             ->setParameter('stock', $totalPax);
         return $query->execute();
     }
+
 
     public function findAvailableFromInterval($start, $end){
         $entityManager = $this->getEntityManager();
@@ -90,6 +90,25 @@ class AvailableRepository extends ServiceEntityRepository
         $stmt = $conn->prepare($sql);
         $stmt->execute(array('s' => $start->format('Y-m-d H:i:s'), 'e' => $end->format('Y-m-d H:i:s'), 'c' => $category->getId()));
         return $stmt->fetchAll();
+    }
+
+
+    public function findCategoryAvailabilityByWeekAndPax(Category $category, $start, $end, $next, $total_pax){
+
+        $em = $this->getEntityManager();
+
+        $query = $em->createQuery(
+            'SELECT a
+            FROM App\Entity\Available a
+            WHERE a.category = :category
+            AND a.stock >= :total_pax
+            AND a.datetimestart >= :start
+            ORDER BY a.datetimestart ASC')
+            ->setParameter('start', $start->format('Y-m-d H:i:s'))
+            ->setParameter('total_pax', $total_pax)
+            ->setParameter('category', $category);
+                
+        return $query->execute();
     }
 
 }
