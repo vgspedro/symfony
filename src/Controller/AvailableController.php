@@ -457,8 +457,18 @@ class AvailableController extends AbstractController
 
         $d = [];
         $h = [];
+        $ad = [];
+        $w = [];
+        $r = [];
+        foreach ($availability as $a){
 
-        foreach ($availability as $a)
+            array_push($ad, $a->getDatetimestart()->format('Y-m-d'));
+            array_push($w,(int) $a->getDatetimeStart()->format('d'));
+
+            $r = array_unique($w);
+
+            if (count($r) < 8){    
+            
             $d[] = [
                 'date' => $a->getDatetimestart()->format('Y-m-d'),
                 'day' => $translator->trans(strtolower ($a->getDatetimeStart()->format('D'))).' '.$a->getDatetimeStart()->format('d'),
@@ -466,19 +476,17 @@ class AvailableController extends AbstractController
                 'week_day' => (int) $a->getDatetimeStart()->format('w'),
                 'id' => $a->getId(),
                 'hour' => $a->getDatetimeStart()->format('H:i'),
+                'array_size' => count($r)
             ];
-        
-/*
-        foreach ($d as $day) {
-        
         }
-*/
+    }
 
         return new JsonResponse([
             'status' => 1,
-            'message' => 'Disponibilidade foi Apagada',
-            'data' => $d
-
+            'message' => 'success',
+            'data' => [ 
+                'available_dates' => $ad,
+                'week' => $d ]
             ]);
     }
 

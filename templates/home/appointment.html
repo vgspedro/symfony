@@ -85,7 +85,8 @@ function getAvailability(){
       console.log(data) 
         $('#ftco-loader').css({'opacity' : 0,'visibility' : 'hidden','z-index' : 1000})
         if (data.status == 1){
-			$('#fsModal').modal('show')
+          initializeDateTimePicker(data.data.available_dates)
+          $('#fsModal').modal('show')
         }
         else{
           for(i=0;i<data.data.length;i++)

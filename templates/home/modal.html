@@ -198,16 +198,19 @@ unavalable='<div class="col-1-7" data-date="'+data.date+'"><p class="mt-2">'+dat
 
 
 
+function initializeDateTimePicker(dates){
 
 
-$('#datetimepicker').datetimepicker({
-  format : 'DD/MM/YYYY',
-  ignoreReadonly: true,
-  defaultDate: '{{ "tomorrow"|date("m/d/Y") }}',
-  //viewMode: 'months',
-  //inline: true,
-  //sideBySide: false,
-  /*icons: {
+  d = dates
+console.log(d)
+  $('#datetimepicker').datetimepicker({
+    format : 'DD/MM/YYYY',
+    ignoreReadonly: true,
+    //defaultDate: '{{ "tomorrow"|date("m/d/Y") }}',
+    //viewMode: 'months',
+    //inline: true,
+    //sideBySide: false,
+    /*icons: {
             time: "icon-clock-o",
             date: "icon icon-calendar",
             up: "icon icon-chevron-up",
@@ -220,19 +223,20 @@ $('#datetimepicker').datetimepicker({
             vertical: 'bottom'
           },
           //keepOpen: true,
-          //enabledDates: date,
+          enabledDates: d,
           locale: '{{app.request.locale}}',
-          //minDate: data.minDate,
+          minDate: d[0],
           //debug: true,
-          //maxDate: date[date.length -1]
+          maxDate: d[d.length -1]
         })
+}
 
 $('#datetimepicker').on('dp.change', function(e){
   console.log('get events from: '+ e.date.format(e.date._f)+' --> '+$('.appointment-form').serialize())
   console.log('get data from server and rebuild week stucture')
   
-  $('#ftco-loader').css({'opacity' : '0.7','visibility' : 'visible','z-index' : 9999})
-  setTimeout(function(){ $('#ftco-loader').css({'opacity' : 0,'visibility' : 'hidden','z-index' : 1000})}, 3500)
+  //$('#ftco-loader').css({'opacity' : '0.7','visibility' : 'visible','z-index' : 9999})
+  //setTimeout(function(){ $('#ftco-loader').css({'opacity' : 0,'visibility' : 'hidden','z-index' : 1000})}, 3500)
 
 })
 
