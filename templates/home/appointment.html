@@ -70,29 +70,32 @@
 
 <script>
 
-function getAvailability(){
-
-	if( $('[name=category]').val() && $('[name=adult]').val() > 0){
+function getAvailability(){ 
+  var week = ''
+	
+  if( $('[name=category]').val() && $('[name=adult]').val() > 0){
 		pax = Number($('[name=adult]').val()) + Number($('[name=children]').val()) + Number($('[name=baby]').val())
  		$('#ftco-loader').css({'opacity' : '0.7','visibility' : 'visible','z-index' : 9999})
 		setTimeout(function(){
     	$.ajax({  
-      
       url:'{{ path('available_by_period') }}',
       type: "POST",
       data:$('.appointment-form').serialize(),
+      cache:false,
       success: function(data){ 
-      console.log(data) 
+      //console.log(data) 
         $('#ftco-loader').css({'opacity' : 0,'visibility' : 'hidden','z-index' : 1000})
         if (data.status == 1){
           initializeDateTimePicker(data.data.available_dates)
+          //console.log(data)
           $('#fsModal').modal('show')
+          buildWeekTemplate(data.data.week)
+        
         }
+        
         else{
-          for(i=0;i<data.data.length;i++)
-            obj += data.data[i]+'<br>'
-          $('#set-fields').html(obj)
-          $('#modal-fields').show()
+         alert('no availability')
+        
         }
       },
       error:function(data){
@@ -107,6 +110,33 @@ function getAvailability(){
 		alert('cate needed or adults')
 	}
 }
+
+
+
+
+function buildWeekTemplate(week){
+
+
+console.log(week)
+  var week_view =''
+  var next ='' 
+  var day =''
+  var hour =''
+
+
+  for (var k in week){
+    for (var j in week[k].event)   
+      hour+= '<div data-evt="'+week[k].event[j].id+'" data-date="'+week[k].event[j].date+' '+week[k].event[j].hour+'" onclick="getEvent(this)" class="mb-2 btn btn-primary btn-outline-primary px-1 py-1 pointer w-54 h-54" style="border: 1px solid #1089ff !important"><i class="icon-clock-o"></i><br>'+week[k].event[j].hour+'</div><br>' 
+
+    day+='<div class="col-1-7" data-date=""><p class="mt-2">'+week[k].day_week+'</p>'+hour+'</div>'
+    hour=''
+    }
+
+
+  $('.set-weeks').html(day)
+
+}
+
 
 </script>
 

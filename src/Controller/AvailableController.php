@@ -455,38 +455,63 @@ class AvailableController extends AbstractController
 
         $availability = $em->getRepository(Available::class)->findCategoryAvailabilityByWeekAndPax($category, $start, $end, $next, $total_pax);
 
-        $d = [];
-        $h = [];
+        //To set the available days in datepicker
         $ad = [];
-        $w = [];
-        $r = [];
+        //To show only one week at a time
+        $unique =[];
+
         foreach ($availability as $a){
-
             array_push($ad, $a->getDatetimestart()->format('Y-m-d'));
-            array_push($w,(int) $a->getDatetimeStart()->format('d'));
-
-            $r = array_unique($w);
-
-            if (count($r) < 8){    
+            $r = array_unique($ad);
             
-            $d[] = [
-                'date' => $a->getDatetimestart()->format('Y-m-d'),
-                'day' => $translator->trans(strtolower ($a->getDatetimeStart()->format('D'))).' '.$a->getDatetimeStart()->format('d'),
-                'week_day_year' => (int) $a->getDatetimeStart()->format('d'),
-                'week_day' => (int) $a->getDatetimeStart()->format('w'),
-                'id' => $a->getId(),
-                'hour' => $a->getDatetimeStart()->format('H:i'),
-                'array_size' => count($r)
-            ];
+            if(!in_array($a->getDatetimeStart()->format('Y-m-d'), $unique, true))
+                if (count($unique) < 7)
+                    array_push($unique, $a->getDatetimestart()->format('Y-m-d'));    
+            
+            if (count($r) < 8 )
+                $d[] = [ 
+                    'date_ymd' => $a->getDatetimestart()->format('Y-m-d'),
+                    'date' => $a->getDatetimestart()->format('d/m/Y'),
+                    //'day' => $translator->trans(strtolower ($a->getDatetimeStart()->format('D'))).' '.$a->getDatetimeStart()->format('d'),
+                    //'day_nr' => (int) $a->getDatetimeStart()->format('d'),
+                    //'week_day' => (int) $a->getDatetimeStart()->format('w'),
+                    'id' => $a->getId(),
+                    'hour' => $a->getDatetimeStart()->format('H:i'),            
+                ];            
         }
-    }
+
+        $temp = [];
+
+        $final = [];
+
+        foreach ($unique as $d_unique) {
+
+            foreach ($d as $avlb) 
+                if ($d_unique == $avlb['date_ymd'])
+                    $temp[] = $avlb;
+
+            $day_week = \DateTime::createFromFormat('Y-m-d', $d_unique);
+ 
+             $final[] = [
+                'date'=> $d_unique, 
+                'day_week' => $translator->trans(strtolower ($day_week->format('D'))).' '.$day_week->format('d'),
+                'event' => $temp
+            ];
+            
+            $temp = []; 
+        
+        }
+
+
+
 
         return new JsonResponse([
             'status' => 1,
             'message' => 'success',
             'data' => [ 
-                'available_dates' => $ad,
-                'week' => $d ]
+                'available_dates' => $ad,//Build calendar
+                'week' => $final
+                ] //Build the week
             ]);
     }
 
