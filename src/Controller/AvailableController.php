@@ -444,16 +444,12 @@ class AvailableController extends AbstractController
         //if 0 is the previous week
         if($next == 0){
             $start = $request->request->get('start') ? \DateTime::createFromFormat('d/m/Y', $request->request->get('start')) : new \DateTime('tomorrow');
-            $end = $start;
-            $end->add(new \DateInterval('P8D'));
         } 
         else{
             $start = $request->request->get('start') ? \DateTime::createFromFormat('d/m/Y', $request->request->get('start')) : new \DateTime('tomorrow');
-            $end = $start;
-            $end->add(new \DateInterval('P8D'));
         }
 
-        $availability = $em->getRepository(Available::class)->findCategoryAvailabilityByWeekAndPax($category, $start, $end, $next, $total_pax);
+        $availability = $em->getRepository(Available::class)->findCategoryAvailabilityByWeekAndPax($category, $start, $total_pax);
 
         //To set the available days in datepicker
         $ad = [];
@@ -472,16 +468,12 @@ class AvailableController extends AbstractController
                 $d[] = [ 
                     'date_ymd' => $a->getDatetimestart()->format('Y-m-d'),
                     'date' => $a->getDatetimestart()->format('d/m/Y'),
-                    //'day' => $translator->trans(strtolower ($a->getDatetimeStart()->format('D'))).' '.$a->getDatetimeStart()->format('d'),
-                    //'day_nr' => (int) $a->getDatetimeStart()->format('d'),
-                    //'week_day' => (int) $a->getDatetimeStart()->format('w'),
                     'id' => $a->getId(),
-                    'hour' => $a->getDatetimeStart()->format('H:i'),            
+                    'hour' => $a->getDatetimeStart()->format('H:i')          
                 ];            
         }
 
         $temp = [];
-
         $final = [];
 
         foreach ($unique as $d_unique) {
@@ -493,7 +485,7 @@ class AvailableController extends AbstractController
             $day_week = \DateTime::createFromFormat('Y-m-d', $d_unique);
  
              $final[] = [
-                'date'=> $d_unique, 
+                'date_human' => $day_week->format('d/m/Y'),
                 'day_week' => $translator->trans(strtolower ($day_week->format('D'))).' '.$day_week->format('d'),
                 'event' => $temp
             ];
@@ -501,9 +493,6 @@ class AvailableController extends AbstractController
             $temp = []; 
         
         }
-
-
-
 
         return new JsonResponse([
             'status' => 1,

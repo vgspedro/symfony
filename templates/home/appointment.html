@@ -8,74 +8,111 @@
 
 {% if products == true %}
 <section class="ftco-section ftco-booking bg-light">
-    <div class="container ftco-relative">
-    	<div class="row justify-content-center pb-3">
-         	<div class="col-md-10 heading-section text-center ftco-animate">
-          		<span class="subheading">{%trans%} link.booking{% endtrans %}</span>
-            	<h2 class="mb-4">{%trans%} info.make_reservation {% endtrans %}</h2>
-            	<p>{%trans%} info.fill_all{% endtrans %}</p>
-          	</div>
+  <div class="container ftco-relative">
+    <div class="row justify-content-center pb-3">
+      <div class="col-md-10 heading-section text-center ftco-animate">
+        <span class="subheading">{%trans%} link.booking{% endtrans %}</span>
+          <h2 class="mb-4">{%trans%} info.make_reservation {% endtrans %}</h2>
+          <p>{%trans%} info.fill_all{% endtrans %}</p>
+      </div>
+    </div>
+    <h3 class="vr">{%trans%} info.call_us {% endtrans %}: {{company.telephone}}</h3>
+    <div class="row justify-content-center">
+    	<div class="col-md-10 ftco-animate">
+    		<form class="appointment-form">
+          <div class="row">
+            <div class="col-sm-12">
+              <div class="form-group">
+                <div class="select-wrap">
+                  <div class="icon">
+                    <span class="ion-ios-arrow-down"></span>
+                  </div>
+                  <select name="category" class="form-control">
+                    <option value="">{% trans %}part_seven.tour{% endtrans %}</option>
+                    {% for category in categories %}
+                    {% if category.no_stock == 0 %}          						
+                    <option value="{{category.id}}">{{category.name}}</option>
+                    {% endif%}
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
+            </div>
+			      <div class="col-sm-4">
+              <div class="form-group">
+                <input type="number" name="adult" class="form-control" placeholder="{% trans %}part_seven.adult{%endtrans %}">
+              </div>
+            </div>
+            <div class="col-sm-4">
+              <div class="form-group">
+                <input type="number" name="children" class="form-control" placeholder="{% trans %}part_seven.children{%endtrans %}">
+              </div>
+            </div>
+            <div class="col-sm-4">
+              <div class="form-group">
+                <input type="number" name="baby" class="form-control" placeholder="{% trans %}part_seven.baby{%endtrans %}">
+              </div>    
+            </div>
+
+            <div class="col-md-12">
+              <div class="form-group">
+                <input type="hidden" name="next" value="0">
+                <input type="hidden" name="event" value="0">
+                <input type="hidden" name="date" value="0">
+              </div>
+            </div>
+          
+          <div class="col-md-12 form-group">
+            <span style="display:table" onclick="getAvailability()" class="btn btn-primary btn-outline-primary px-4 py-2">{% trans %}part_seven.get_available{% endtrans %}
+            </span>
+          </div>
         </div>
-        <h3 class="vr">{%trans%} info.call_us {% endtrans %}: {{company.telephone}}</h3>
-    		<div class="row justify-content-center">
-    			<div class="col-md-10 ftco-animate">
+        <div class="row personal-data d-none">
+          <div class="col-md-12 heading-section text-center ftco-animate fadeInUp ftco-animated">
+            <h2 class="set-datetime mt-4"></h2>
+          </div>
+            <div class="col-sm-12 col-md-4">
+              <div class="form-group">
+                <input type="text" name="name" class="form-control" placeholder="{% trans %}part_seven.name{%endtrans %}">
+              </div>
+            </div>
+            <div class="col-sm-12 col-md-4">
+              <div class="form-group">
+                <input type="text" name="email" class="form-control" placeholder="{% trans %}part_seven.email{%endtrans %}">
+              </div>    
+            </div>
+            <div class="col-sm-12 col-md-4">
+              <div class="form-group">
+                <input type="number" name="phone" class="form-control" placeholder="{% trans %}part_seven.telephone{%endtrans %}">
+              </div>    
+            </div>
 
-    				<form action="#" class="appointment-form">
-	            		<div class="row">
-	            			<div class="col-sm-12">
-	                			<div class="form-group">
-			              			<div class="select-wrap">
-                      					<div class="icon">
-                      						<span class="ion-ios-arrow-down"></span>
-                      					</div>
-                      					<select name="category" class="form-control">
-											<option value="">{% trans %}part_seven.tour{% endtrans %}</option>
-          									{% for category in categories %}
-            								{% if category.no_stock == 0 %}          						
-          									<option value="{{category.id}}">{{category.name}}</option>
-			          						{% endif%}
-         									{% endfor %}
-                      					</select>
-                    				</div>
-			            		</div>
-	              			</div>
-			              	<div class="col-sm-4">
-			                	<div class="form-group">
-					            	<input type="number" name="adult" class="form-control" placeholder="{% trans %}part_seven.adult{%endtrans %}">
-					        	</div>
-			              	</div>
-			              	<div class="col-sm-4">
-			                	<div class="form-group">
-					             	<input type="number" name="children" class="form-control" placeholder="{% trans %}part_seven.children{%endtrans %}">
-					            </div>
-			              	</div>
-			              	<div class="col-sm-4">
-			                	<div class="form-group">
-			                  		<input type="number" name="baby" class="form-control" placeholder="{% trans %}part_seven.baby{%endtrans %}">
-			                	</div>    
-			              	</div>
-			              	<div class="col-md-12">
-			              		<div class="form-group"></div>
-			              	</div>
-				        </div>
-		        		<div class="form-group">
+            <div class="col-sm-12 col-md-12">
+              <div class="form-group">
+                <input type="text" name="address" class="form-control" placeholder="{% trans %}part_seven.address{%endtrans %}">
+              </div>    
+            </div>
 
-	             			<span style="display:table"  onclick="getAvailability()" class="btn btn-primary btn-outline-primary px-4 py-2" data-to_ggle="modal" data-t_arget="#fsModal">{% trans %}part_seven.get_available{% endtrans %}</span>
-	            		</div>
-	        		</form>
-    			</div>
-    		</div>
+            <div class="col-sm-12 col-md-12 text-center">
+              <span onclick="alert('confirm')" class="btn btn-outline-success px-4 py-2">Buy Now
+              </span>
+            </div>
+
+          </div>
+        </form>
     	</div>
+    </div>
+  </div>
 </section>
 
 <script>
 
-function getAvailability(){ 
-  var week = ''
-	
+function getAvailability(){
+  $('.personal-data').addClass('d-none')
   if( $('[name=category]').val() && $('[name=adult]').val() > 0){
 		pax = Number($('[name=adult]').val()) + Number($('[name=children]').val()) + Number($('[name=baby]').val())
  		$('#ftco-loader').css({'opacity' : '0.7','visibility' : 'visible','z-index' : 9999})
+
 		setTimeout(function(){
     	$.ajax({  
       url:'{{ path('available_by_period') }}',
@@ -87,19 +124,16 @@ function getAvailability(){
         $('#ftco-loader').css({'opacity' : 0,'visibility' : 'hidden','z-index' : 1000})
         if (data.status == 1){
           initializeDateTimePicker(data.data.available_dates)
-          //console.log(data)
+          console.log(data)
           $('#fsModal').modal('show')
           buildWeekTemplate(data.data.week)
-        
         }
-        
         else{
          alert('no availability')
-        
         }
       },
       error:function(data){
-        $('.w3-overlay').hide()
+        $('#ftco-loader').css({'opacity' : 0,'visibility' : 'hidden','z-index' : 1000})
         $('#modal-error').show()
       }
     })
@@ -113,29 +147,22 @@ function getAvailability(){
 
 
 
+function buildWeekTemplate(days){
 
-function buildWeekTemplate(week){
-
-
-console.log(week)
-  var week_view =''
-  var next ='' 
   var day =''
-  var hour =''
+  var events =''
 
-
-  for (var k in week){
-    for (var j in week[k].event)   
-      hour+= '<div data-evt="'+week[k].event[j].id+'" data-date="'+week[k].event[j].date+' '+week[k].event[j].hour+'" onclick="getEvent(this)" class="mb-2 btn btn-primary btn-outline-primary px-1 py-1 pointer w-54 h-54" style="border: 1px solid #1089ff !important"><i class="icon-clock-o"></i><br>'+week[k].event[j].hour+'</div><br>' 
-
-    day+='<div class="col-1-7" data-date=""><p class="mt-2">'+week[k].day_week+'</p>'+hour+'</div>'
-    hour=''
-    }
-
+  for (var k in days){
+    for (var j in days[k].event)   
+      events += '<div data-evt="'+days[k].event[j].id+'" data-date="'+days[k].event[j].date+' '+days[k].event[j].hour+'" onclick="setEvent(this)" class="mb-2 btn btn-primary btn-outline-primary px-1 py-1 pointer w-54 h-54" style="border: 1px solid #1089ff !important"><i class="icon-clock-o"></i><br>'+days[k].event[j].hour+'</div><br>' 
+    day += '<div class="col-1-7" data-date="'+days[k].date_human+'"><p class="mt-2">'+days[k].day_week+'</p>'+events+'</div>'
+    events =''
+  }
 
   $('.set-weeks').html(day)
-
 }
+
+
 
 
 </script>

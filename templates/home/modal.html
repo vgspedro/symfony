@@ -68,101 +68,12 @@
           </div>
 
           <div class="col-sm-10 col-xs-12 text-center f-14 zoom-78 zoom-74">
-
-            <div class="row bold set-weeks" style="color:#000">
-        
-
-<!--
-
-
-
-              <div class="col-1-7" data-date="09/12/2019">
-                <p class="mt-2">Seg 9</p>
-               <div class="mb-2 disabled op-60 btn btn-danger btn-outline-danger px-1 py-1 w-54 h-54">
-                <i class="icon-ban dis-position"></i>
-              </div>
-              <br>
-            </div>
-
-
-
-            <div class="col-1-7" data-date="10/12/2019">
-              <p class="mt-2">Ter 10</p>
-              <div data-evt="5" data-date="10/12/2019 09:30" onclick="getEvent(this)"  class="mb-2 btn btn-primary btn-outline-primary px-1 py-1 w-54 h-54" style="border: 1px solid #1089ff !important">
-                <i class="icon-clock-o"></i><br>09:30
-              </div>
-              <br>
-              <div data-evt="5" data-date="10/12/2019 15:30" onclick="getEvent(this)"  class="mb-2 btn btn-primary btn-outline-primary px-1 py-1 w-54 h-54" style="border: 1px solid #1089ff !important">
-                <i class="icon-clock-o"></i><br>15:30
-              </div>
-              <br>
-              <div data-evt="2" data-date="10/12/2019 17:30" onclick="getEvent(this)"  class="mb-2 btn btn-primary btn-outline-primary px-1 py-1 w-54 h-54" style="border: 1px solid #1089ff !important">
-                <i class="icon-clock-o"></i><br>17:30
-              </div>
-              <br>
-            </div>
-            
-            <div class="col-1-7" data-date="11/12/2019">
-              <p class="mt-2">Qua 11</p>
-               <div class="mb-2 disabled op-60 btn btn-danger btn-outline-danger px-1 py-1 w-54 h-54">
-                <i class="icon-ban dis-position"></i>
-              </div>
-              <br>
-            </div>
-            <div class="col-1-7" data-date="12/12/2019">
-              <p class="mt-2">Qui 12</p>
-              <div data-evt="6" data-date="12/12/2019 09:30" onclick="getEvent(this)" class="mb-2 btn btn-primary btn-outline-primary px-1 py-1 pointer w-54 h-54" style="border: 1px solid #1089ff !important">
-                <i class="icon-clock-o"></i><br>09:30
-              </div>
-              <br>
-            </div>
-            <div class="col-1-7" data-date="13/12/2019">
-              <p class="mt-2">Sex 13</p>
-              <div data-evt="7" data-date="13/12/2019 09:30" onclick="getEvent(this)"  class="mb-2 btn btn-primary btn-outline-primary px-1 py-1 pointer w-54 h-54" style="border: 1px solid #1089ff !important">
-                <i class="icon-clock-o"></i><br>09:30
-              </div>
-              <br>
-            </div>
-
-            <div class="col-1-7" data-date="14/12/2019">
-              <p class="mt-2">Sáb 14</p>
-              <div data-evt="8" data-date="14/12/2019 09:30" onclick="getEvent(this)"  class="mb-2 btn btn-primary btn-outline-primary px-1 py-1 pointer w-54 h-54" style="border: 1px solid #1089ff !important">
-                <i class="icon-clock-o"></i><br> 09:30
-              </div>
-              <br>
-              <div data-evt="9" data-date="14/12/2019 11:30" onclick="getEvent(this)"  class="mb-2 btn btn-primary btn-outline-primary px-1 py-1 pointer w-54 h-54" style="border: 1px solid #1089ff !important">
-                <i class="icon-clock-o"></i><br> 11:30
-              </div>
-              <br>
-              <div data-evt="10" data-date="14/12/2019 15:30" onclick="getEvent(this)" class="mb-2 btn btn-primary btn-outline-primary px-1 py-1 pointer w-54 h-54" style="border: 1px solid #1089ff !important">
-                <i class="icon-clock-o"></i><br> 15:30
-              </div>
-              <br>
-              <div data-evt="3" data-date="14/12/2019 17:30" onclick="getEvent(this)" class="mb-2 btn btn-primary btn-outline-primary px-1 py-1 pointer w-54 h-54" style="border: 1px solid #1089ff !important">
-                <i class="icon-clock-o"></i><br> 17:30
-              </div>
-          </div>
-          <div class="col-1-7" data-date="15/12/2019">
-            <p class="mt-2">Dom 15</p>
-            <div class="mb-2 disabled op-60 btn btn-danger btn-outline-danger px-1 py-1 w-54 h-54">
-              <i class="icon-ban dis-position"></i>
-            </div>
-            <br>
-          </div>
-
-
--->
-
-
-
-          </div>
+            <div class="row bold set-weeks " style="color:#000"></div>
           </div>
 
           <div class="col-sm-1 text-right d-none d-xl-block d-lg-block d-md-block d-sm-block d-md-none" onclick="getWeek(1)">
             <i class="icon-chevron-right pointer"></i>
           </div>
-
-
         </div>
         </div>
 
@@ -177,7 +88,10 @@
         
         <div class="row">
           <div class="col-12 text-center">
-            <button class="btn btn-outline-success px-4 py-2" data-dismiss="modal">{%trans%}next{%endtrans%}</button>
+            <span class="proceed hidden" data-dismiss="modal"></span>
+            <button class=" btn btn-outline-success px-4 py-2" onclick="goToForm()">
+              {%trans%}next{%endtrans%}
+            </button>
           </div>
           </div>
         </div>
@@ -199,16 +113,16 @@
 unavalable='<div class="col-1-7" data-date="'+data.date+'"><p class="mt-2">'+date.dayname+' '+date.daynumber+'</p><div class="mb-2 disabled op-60 btn btn-danger btn-outline-danger px-1 py-1 w-54 h-54"><i class="icon-ban dis-position"></i></div><br></div>'
 */
 
-
-
-
-
-
-
+function goToForm(){
+  $('.personal-data').removeClass('d-none')
+  $('.proceed').trigger('click')
+  $("html, body").animate({
+    scrollTop: $('.col-md-12.form-group').offset().top -5
+  }, 500)
+}
 
 
 function initializeDateTimePicker(dates){
-
 
   d = dates
   //console.log(d)
@@ -240,40 +154,30 @@ function initializeDateTimePicker(dates){
         })
 }
 
-$('#datetimepicker').on('dp.change', function(e){
-  console.log('get events from: '+ e.date.format(e.date._f)+' --> '+$('.appointment-form').serialize())
-  console.log('get data from server and rebuild week stucture')
-  
-  //$('#ftco-loader').css({'opacity' : '0.7','visibility' : 'visible','z-index' : 9999})
-  //setTimeout(function(){ $('#ftco-loader').css({'opacity' : 0,'visibility' : 'hidden','z-index' : 1000})}, 3500)
-
+  $('#datetimepicker').on('dp.change', function(e){
+    console.log('get events from: '+ e.date.format(e.date._f)+' --> '+$('.appointment-form').serialize())
+    console.log('get data from server and rebuild week stucture')
+    //Make request to for availabilty
+    getAvailability()
 })
 
+  //b 1 = next week || 0 = previous week  
+  function getWeek(b){
+    week = b ? $( ".col-1-7" ).last() : $( ".col-1-7" ).first()
+    $('#datetimepicker').val($(week).data('date'))
+    alert(b)
+    $('[name=next]').val(b)
+  }
 
-//boolean 1 = next week || 0 = previous week  
-function getWeek(boolean){
-  week = boolean ? $( ".col-1-7" ).last() : $( ".col-1-7" ).first()
-  $("#datetimepicker").data("DateTimePicker").date($(week).data('date'))
-}
-
-  function getEvent(obj){
-
+  function setEvent(obj){
     $('.btn-primary').addClass('btn-outline-primary')
     e = $(obj).data('evt')
     $(obj).removeClass('btn-outline-primary')
     d = $(obj).data('date')
     $('.set-datetime').html(d)
     $('.show-datetime').removeClass('d-none')
+    $('[name=event]').val(e)
   }
-
-
-
-function buildAvailability(arr){
-
-a= 1
-  return a
-}
-
 
 $('.show-datetime').addClass('d-none')
 

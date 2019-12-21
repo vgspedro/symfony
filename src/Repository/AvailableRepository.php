@@ -93,7 +93,7 @@ class AvailableRepository extends ServiceEntityRepository
     }
 
 
-    public function findCategoryAvailabilityByWeekAndPax(Category $category, $start, $end, $next, $total_pax){
+    public function findCategoryAvailabilityByWeekAndPax(Category $category, $start, $total_pax){
 
         $em = $this->getEntityManager();
 
