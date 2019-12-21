@@ -13,6 +13,7 @@ return array(
     'fri' => 'Fri',
     'sat' => 'Sat',
  
+    'confirm_pay' => 'Confirm & Pay',
 
 
     'min_amount' => 'Min. amount 0.50Eur',

@@ -12,6 +12,8 @@ return array(
     'thu' => 'Qui',
     'fri' => 'Sex',
     'sat' => 'Sáb',
+
+    'confirm_pay' => 'Confirmar & Pagar',
     
     'min_amount' => 'Montante Minimo 0.50Eur',
     'max_amount' => 'Montante Máximo 5000.00Eur',

@@ -31,6 +31,7 @@
                     <option value="">{% trans %}part_seven.tour{% endtrans %}</option>
                     {% for category in categories %}
                     {% if category.no_stock == 0 %}          						
+                  
                     <option value="{{category.id}}">{{category.name}}</option>
                     {% endif%}
                     {% endfor %}
@@ -56,9 +57,10 @@
 
             <div class="col-md-12">
               <div class="form-group">
-                <input type="hidden" name="next" value="0">
-                <input type="hidden" name="event" value="0">
-                <input type="hidden" name="date" value="0">
+                <input type="hidden" name="next" value="">
+                <input type="hidden" name="event" value="">
+                <input type="hidden" name="date" value="">
+                <input type="hidden" name="wp" value="">
               </div>
             </div>
           
@@ -94,8 +96,7 @@
             </div>
 
             <div class="col-sm-12 col-md-12 text-center">
-              <span onclick="alert('confirm')" class="btn btn-outline-success px-4 py-2">Buy Now
-              </span>
+              <span onclick="validateUserData()" class="btn btn-outline-success px-4 py-2 confirm-btn"></span>
             </div>
 
           </div>
@@ -104,46 +105,128 @@
     </div>
   </div>
 </section>
-
 <script>
 
-function getAvailability(){
-  $('.personal-data').addClass('d-none')
-  if( $('[name=category]').val() && $('[name=adult]').val() > 0){
-		pax = Number($('[name=adult]').val()) + Number($('[name=children]').val()) + Number($('[name=baby]').val())
- 		$('#ftco-loader').css({'opacity' : '0.7','visibility' : 'visible','z-index' : 9999})
+function validateUserData(){    
+    $('#alerts').modal('show')
+    $('.alert-primary').removeClass('d-none').addClass('show')
+    $('.alert-primary span').html('Please fill the fields: email, name, phone, address')
+}
 
-		setTimeout(function(){
+flag = false
+
+function getAvailability(){
+  
+  closeAlert()
+
+  $('[name=next],[name=event], [name=date], [name=wp]').val('')
+
+  flag = false
+
+  $('.icon-chevron-right.next').removeClass('d-none')
+
+  $('.personal-data').addClass('d-none')
+  
+  if( $('[name=category]').val() && $('[name=adult]').val() > 0){
+
+		pax = Number($('[name=adult]').val()) + Number($('[name=children]').val()) + Number($('[name=baby]').val())
+
+ 		$('#ftco-loader').css({'opacity' : '0.7','visibility' : 'visible','z-index' : 9999})
+    		
+    setTimeout(function(){
     	$.ajax({  
-      url:'{{ path('available_by_period') }}',
+      url: '{{ path('available_by_period') }}',
       type: "POST",
-      data:$('.appointment-form').serialize(),
-      cache:false,
+      data: $('.appointment-form').serialize(),
+      cache: false,
       success: function(data){ 
-      //console.log(data) 
+      console.log(data) 
         $('#ftco-loader').css({'opacity' : 0,'visibility' : 'hidden','z-index' : 1000})
-        if (data.status == 1){
+        if (data.status == 1 && data.data.available_dates.length > 0){
           initializeDateTimePicker(data.data.available_dates)
-          console.log(data)
+          $('[name=wp]').val(data.data.payment)
+          var ymd = data.data.available_dates[0].split("-")    
+          
+          if (ymd.length > 0)
+            $('#datetimepicker').val(ymd[2]+'/'+ymd[1]+'/'+ymd[0])
+          
           $('#fsModal').modal('show')
           buildWeekTemplate(data.data.week)
+          flag = true
         }
         else{
-         alert('no availability')
+          $('#alerts').modal('show')
+          $('.alert-warning').removeClass('d-none').addClass('show')
+          $('.alert-warning span').html('No availability max pax is '+ data.data.availability)
         }
       },
       error:function(data){
         $('#ftco-loader').css({'opacity' : 0,'visibility' : 'hidden','z-index' : 1000})
-        $('#modal-error').show()
+        $('#alerts').modal('show')
+        $('.alert-danger').removeClass('d-none').addClass('show')
+        $('.alert-danger span').html('{%trans%}wifi_error{%endtrans%}')
       }
     })
   }, 500)
 
 	}
 	else{
-		alert('cate needed or adults')
+    $('#alerts').modal('show')
+    $('.alert-primary').removeClass('d-none').addClass('show')
+    $('.alert-primary span').html('Tour and adults')
 	}
 }
+
+
+
+
+function availabilityModal(){
+    
+  closeAlert()
+  
+  if( $('[name=category]').val() && $('[name=adult]').val() > 0){
+
+    pax = Number($('[name=adult]').val()) + Number($('[name=children]').val()) + Number($('[name=baby]').val())
+
+    $('#ftco-loader').css({'opacity' : '0.7','visibility' : 'visible','z-index' : 9999})
+        
+    setTimeout(function(){
+      $.ajax({  
+      url: '{{ path('available_by_period') }}',
+      type: "POST",
+      data: $('.appointment-form').serialize(),
+      cache: false,
+      success: function(data){ 
+      //console.log(data) 
+        $('#ftco-loader').css({'opacity' : 0,'visibility' : 'hidden','z-index' : 1000})
+        if (data.status == 1 && data.data.available_dates.length > 0){
+          initializeDateTimePicker(data.data.available_dates)
+          $('[name=wp]').val(data.data.payment)
+          $('#fsModal').modal('show')
+          buildWeekTemplate(data.data.week)
+        }
+        else{
+         alert('no availability max pax is'+ data.data.availability)
+        }
+      },
+      error:function(data){
+        $('#ftco-loader').css({'opacity' : 0,'visibility' : 'hidden','z-index' : 1000})
+        $('#alerts').modal('show')
+        $('.alert-danger').removeClass('d-none').addClass('show')
+        $('.alert-danger span').html('{%trans%}wifi_error{%endtrans%}')
+      }
+    })
+  }, 500)
+
+  }
+  else{
+    $('#alerts').modal('show')
+    $('.alert-primary').removeClass('d-none').addClass('show')
+    $('.alert-primary span').html('Tour and adults')
+  }
+}
+
+
 
 
 
@@ -154,8 +237,8 @@ function buildWeekTemplate(days){
 
   for (var k in days){
     for (var j in days[k].event)   
-      events += '<div data-evt="'+days[k].event[j].id+'" data-date="'+days[k].event[j].date+' '+days[k].event[j].hour+'" onclick="setEvent(this)" class="mb-2 btn btn-primary btn-outline-primary px-1 py-1 pointer w-54 h-54" style="border: 1px solid #1089ff !important"><i class="icon-clock-o"></i><br>'+days[k].event[j].hour+'</div><br>' 
-    day += '<div class="col-1-7" data-date="'+days[k].date_human+'"><p class="mt-2">'+days[k].day_week+'</p>'+events+'</div>'
+      events += '<div data-evt="'+days[k].event[j].id+'" data-date="'+days[k].event[j].date_dmy+' '+days[k].event[j].hour+'" onclick="setEvent(this)" class="mb-2 btn btn-primary btn-outline-primary px-1 py-1 pointer w-54 h-54" style="border: 1px solid #1089ff !important"><i class="icon-clock-o"></i><br>'+days[k].event[j].hour+'</div><br>' 
+    day += '<div class="col-1-7" data-date-ymd="'+days[k].date_ymd+'" data-date-dmy="'+days[k].date_dmy+'"><p class="mt-2">'+days[k].day_week+'</p>'+events+'</div>'
     events =''
   }
 

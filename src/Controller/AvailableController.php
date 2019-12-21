@@ -441,12 +441,12 @@ class AvailableController extends AbstractController
 
         $next = $request->request->get('next') ? $request->request->get('next') : 1;
 
-        //if 0 is the previous week
-        if($next == 0){
-            $start = $request->request->get('start') ? \DateTime::createFromFormat('d/m/Y', $request->request->get('start')) : new \DateTime('tomorrow');
+        //if -1 is the previous week
+        if($next == -1){
+            $start = $request->request->get('date') ? \DateTime::createFromFormat('Y-m-d', $request->request->get('date')) : new \DateTime('tomorrow');
         } 
         else{
-            $start = $request->request->get('start') ? \DateTime::createFromFormat('d/m/Y', $request->request->get('start')) : new \DateTime('tomorrow');
+            $start = $request->request->get('date') ? \DateTime::createFromFormat('Y-m-d', $request->request->get('date')) : new \DateTime('tomorrow');
         }
 
         $availability = $em->getRepository(Available::class)->findCategoryAvailabilityByWeekAndPax($category, $start, $total_pax);
@@ -467,7 +467,7 @@ class AvailableController extends AbstractController
             if (count($r) < 8 )
                 $d[] = [ 
                     'date_ymd' => $a->getDatetimestart()->format('Y-m-d'),
-                    'date' => $a->getDatetimestart()->format('d/m/Y'),
+                    'date_dmy' => $a->getDatetimestart()->format('d/m/Y'),
                     'id' => $a->getId(),
                     'hour' => $a->getDatetimeStart()->format('H:i')          
                 ];            
@@ -485,7 +485,8 @@ class AvailableController extends AbstractController
             $day_week = \DateTime::createFromFormat('Y-m-d', $d_unique);
  
              $final[] = [
-                'date_human' => $day_week->format('d/m/Y'),
+                'date_ymd' => $day_week->format('Y-m-d'),
+                'date_dmy' => $day_week->format('d/m/Y'),
                 'day_week' => $translator->trans(strtolower ($day_week->format('D'))).' '.$day_week->format('d'),
                 'event' => $temp
             ];
@@ -499,6 +500,8 @@ class AvailableController extends AbstractController
             'message' => 'success',
             'data' => [ 
                 'available_dates' => $ad,//Build calendar
+                'availability' => $category->getAvailability(),
+                'payment' => $category->getWarrantyPayment(),
                 'week' => $final
                 ] //Build the week
             ]);

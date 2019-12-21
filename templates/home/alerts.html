@@ -1,0 +1,46 @@
+  <div class="modal" id="alerts">
+    <div class="modal-dialog" style="padding-top: 4em">
+
+  <div class="alert alert-success alert-dismissible fade d-none">
+    <button type="button" class="close" onclick="closeAlert()">&times;</button>
+    <strong>{%trans%}success{%endtrans%}!</strong> 
+    <span>This alert box could indicate a successful or positive action.</span>
+  </div>
+  
+  <div class="alert alert-info alert-dismissible fade d-none">
+    <button type="button" class="close" onclick="closeAlert()">&times;</button>
+    <strong>{%trans%}info{%endtrans%}!</strong>
+    <span> This alert box could indicate a neutral informative change or action.</span>
+  </div>
+  
+  <div class="alert alert-warning alert-dismissible fade d-none">
+    <button type="button" class="close" onclick="closeAlert()">&times;</button>
+    <strong>{%trans%}check{%endtrans%}!</strong>
+    <span> This alert box could indicate a warning that might need attention.</span>
+  </div>
+  
+  <div class="alert alert-danger alert-dismissible fade d-none">
+    <button type="button" class="close" onclick="closeAlert()">&times;</button>
+    <strong>{%trans%}error{%endtrans%}!</strong>
+    <span> This alert box could indicate a dangerous or potentially negative action.</span>
+  </div>
+  
+  <div class="alert alert-primary alert-dismissible fade d-none">
+    <button type="button" class="close" onclick="closeAlert()">&times;</button>
+    <strong>{%trans%}required{%endtrans%}!</strong>
+    <span>Indicates an important action.</span>
+  </div>
+  </div>
+</div>
+
+<script>
+  function closeAlert(){
+    $('#alerts').modal('hide')
+    $('.alert').addClass('d-none').removeClass('show')
+    $('.alert span').empty()
+  }
+</script>
+
+
+
+

@@ -29,7 +29,7 @@
 
 </style>
 
-<div id="fsModal" class="modal modal-full animated fade"tabindex="-1" role="dialog"aria-labelledby="myModalLabel" aria-hidden="true">
+<div id="fsModal" class="modal modal-full animated fade" tabindex="-1" role="dialog"aria-labelledby="myModalLabel" aria-hidden="true">
   <!-- dialog -->
   <div class="modal-dialog modal-dialog-full">
     <!-- content -->
@@ -57,14 +57,14 @@
 
         <div class="row f-24">
 
-          <div class="col-sm-1 col-xs-3 col-3 text-left" onclick="getWeek(0)">
+          <div class="col-sm-1 col-xs-3 col-3 text-left" onclick="getWeek(-1)">
             <i class="icon-chevron-left pointer"></i>
           </div>
 
           <div class="col-sm-0 col-xs-6 col-6 text-center d-block d-sm-none">{%trans%}info.week{%endtrans%}</div>
           
           <div class="col-xs-3 text-right col-3 d-block d-sm-none" onclick="getWeek(1)">
-            <i class="icon-chevron-right pointer"></i>
+            <i class="icon-chevron-right pointer next"></i>
           </div>
 
           <div class="col-sm-10 col-xs-12 text-center f-14 zoom-78 zoom-74">
@@ -72,7 +72,7 @@
           </div>
 
           <div class="col-sm-1 text-right d-none d-xl-block d-lg-block d-md-block d-sm-block d-md-none" onclick="getWeek(1)">
-            <i class="icon-chevron-right pointer"></i>
+            <i class="icon-chevron-right pointer next"></i>
           </div>
         </div>
         </div>
@@ -107,66 +107,69 @@
 <!-- modal -->
 <script>
 
-
+available_dates = []
 
 /*
 unavalable='<div class="col-1-7" data-date="'+data.date+'"><p class="mt-2">'+date.dayname+' '+date.daynumber+'</p><div class="mb-2 disabled op-60 btn btn-danger btn-outline-danger px-1 py-1 w-54 h-54"><i class="icon-ban dis-position"></i></div><br></div>'
 */
 
 function goToForm(){
+  $('[name=wp]').val() ? $('.confirm-btn').html('{%trans%}confirm_pay{%endtrans%}') : $('.confirm-btn').html('{%trans%}info.confirm{%endtrans%}')
   $('.personal-data').removeClass('d-none')
   $('.proceed').trigger('click')
   $("html, body").animate({
-    scrollTop: $('.col-md-12.form-group').offset().top -5
+    scrollTop: $('.col-md-12.form-group').offset().top +16
   }, 500)
 }
 
 
 function initializeDateTimePicker(dates){
 
-  d = dates
-  //console.log(d)
+  available_dates = dates
+
   $('#datetimepicker').datetimepicker({
     format : 'DD/MM/YYYY',
     ignoreReadonly: true,
-    //defaultDate: '{{ "tomorrow"|date("m/d/Y") }}',
-    //viewMode: 'months',
-    //inline: true,
-    //sideBySide: false,
-    /*icons: {
-            time: "icon-clock-o",
-            date: "icon icon-calendar",
-            up: "icon icon-chevron-up",
-            down: "icon-chevron-down",
-            left: "icon-chevron-left",
-            right: "icon-chevron-right"
-          },*/
           widgetPositioning: {
             horizontal: 'left',
             vertical: 'bottom'
           },
-          //keepOpen: true,
-          enabledDates: d,
+          defaultDate:available_dates[0],
+          enabledDates: available_dates,
           locale: '{{app.request.locale}}',
-          minDate: d[0],
-          //debug: true,
-          maxDate: d[d.length -1]
+          minDate: available_dates[0],
+          maxDate: available_dates[available_dates.length -1]
         })
 }
 
   $('#datetimepicker').on('dp.change', function(e){
-    console.log('get events from: '+ e.date.format(e.date._f)+' --> '+$('.appointment-form').serialize())
-    console.log('get data from server and rebuild week stucture')
-    //Make request to for availabilty
-    getAvailability()
-})
+    
+    var ymd = $('#datetimepicker').val().split("/")    
+    if (ymd.length > 0)
+      $('[name=date]').val(ymd[2]+'-'+ymd[1]+'-'+ymd[0])
+    
+    $('.icon-chevron-right.next').removeClass('d-none')
+    if(flag == true)
+      availabilityModal()
+  })
 
-  //b 1 = next week || 0 = previous week  
+
+  //b 1 = next week || -1 = previous week  
   function getWeek(b){
-    week = b ? $( ".col-1-7" ).last() : $( ".col-1-7" ).first()
-    $('#datetimepicker').val($(week).data('date'))
-    alert(b)
+
+    $('.icon-chevron-right.next').removeClass('d-none')
+    week = b == 1 ? $( ".col-1-7" ).last() : $( ".col-1-7" ).first()
+  
+    if( b == 1 && $(week).data('date-ymd') >= available_dates[available_dates.length -1]){
+      $('.icon-chevron-right.next').addClass('d-none')
+      return
+    }
+
+    $('[name=date]').val($(week).data('date-ymd'))
     $('[name=next]').val(b)
+    //To make request
+    flag = true
+    $('#datetimepicker').val($(week).data('date-dmy')).trigger('change')
   }
 
   function setEvent(obj){
@@ -180,7 +183,6 @@ function initializeDateTimePicker(dates){
   }
 
 $('.show-datetime').addClass('d-none')
-
 
 
 </script>
