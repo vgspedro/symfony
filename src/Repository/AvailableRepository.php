@@ -104,7 +104,7 @@ class AvailableRepository extends ServiceEntityRepository
             AND a.stock >= :total_pax
             AND a.datetimestart >= :start
             ORDER BY a.datetimestart ASC')
-            ->setParameter('start', $start->format('Y-m-d H:i:s'))
+            ->setParameter('start', $start->format('Y-m-d 00:00:00'))
             ->setParameter('total_pax', $total_pax)
             ->setParameter('category', $category);
                 

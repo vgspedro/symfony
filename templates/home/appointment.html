@@ -113,7 +113,10 @@ function validateUserData(){
     $('.alert-primary span').html('Please fill the fields: email, name, phone, address')
 }
 
-flag = false
+
+var available_dates = []
+
+var flag = false
 
 function getAvailability(){
   
@@ -123,7 +126,7 @@ function getAvailability(){
 
   flag = false
 
-  $('.icon-chevron-right.next').removeClass('d-none')
+  $('.icon-chevron-right.next, .icon-chevron-left.previous').removeClass('d-none')
 
   $('.personal-data').addClass('d-none')
   
@@ -143,6 +146,8 @@ function getAvailability(){
       console.log(data) 
         $('#ftco-loader').css({'opacity' : 0,'visibility' : 'hidden','z-index' : 1000})
         if (data.status == 1 && data.data.available_dates.length > 0){
+          $('.icon-chevron-left.previous').addClass('d-none warning')
+          available_dates = data.data.available_dates
           initializeDateTimePicker(data.data.available_dates)
           $('[name=wp]').val(data.data.payment)
           var ymd = data.data.available_dates[0].split("-")    
@@ -176,59 +181,6 @@ function getAvailability(){
     $('.alert-primary span').html('Tour and adults')
 	}
 }
-
-
-
-
-function availabilityModal(){
-    
-  closeAlert()
-  
-  if( $('[name=category]').val() && $('[name=adult]').val() > 0){
-
-    pax = Number($('[name=adult]').val()) + Number($('[name=children]').val()) + Number($('[name=baby]').val())
-
-    $('#ftco-loader').css({'opacity' : '0.7','visibility' : 'visible','z-index' : 9999})
-        
-    setTimeout(function(){
-      $.ajax({  
-      url: '{{ path('available_by_period') }}',
-      type: "POST",
-      data: $('.appointment-form').serialize(),
-      cache: false,
-      success: function(data){ 
-      //console.log(data) 
-        $('#ftco-loader').css({'opacity' : 0,'visibility' : 'hidden','z-index' : 1000})
-        if (data.status == 1 && data.data.available_dates.length > 0){
-          initializeDateTimePicker(data.data.available_dates)
-          $('[name=wp]').val(data.data.payment)
-          $('#fsModal').modal('show')
-          buildWeekTemplate(data.data.week)
-        }
-        else{
-         alert('no availability max pax is'+ data.data.availability)
-        }
-      },
-      error:function(data){
-        $('#ftco-loader').css({'opacity' : 0,'visibility' : 'hidden','z-index' : 1000})
-        $('#alerts').modal('show')
-        $('.alert-danger').removeClass('d-none').addClass('show')
-        $('.alert-danger span').html('{%trans%}wifi_error{%endtrans%}')
-      }
-    })
-  }, 500)
-
-  }
-  else{
-    $('#alerts').modal('show')
-    $('.alert-primary').removeClass('d-none').addClass('show')
-    $('.alert-primary span').html('Tour and adults')
-  }
-}
-
-
-
-
 
 function buildWeekTemplate(days){
 

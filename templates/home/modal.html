@@ -58,7 +58,7 @@
         <div class="row f-24">
 
           <div class="col-sm-1 col-xs-3 col-3 text-left" onclick="getWeek(-1)">
-            <i class="icon-chevron-left pointer"></i>
+            <i class="icon-chevron-left pointer previous"></i>
           </div>
 
           <div class="col-sm-0 col-xs-6 col-6 text-center d-block d-sm-none">{%trans%}info.week{%endtrans%}</div>
@@ -107,8 +107,6 @@
 <!-- modal -->
 <script>
 
-available_dates = []
-
 /*
 unavalable='<div class="col-1-7" data-date="'+data.date+'"><p class="mt-2">'+date.dayname+' '+date.daynumber+'</p><div class="mb-2 disabled op-60 btn btn-danger btn-outline-danger px-1 py-1 w-54 h-54"><i class="icon-ban dis-position"></i></div><br></div>'
 */
@@ -123,23 +121,22 @@ function goToForm(){
 }
 
 
-function initializeDateTimePicker(dates){
-
-  available_dates = dates
+function initializeDateTimePicker(){
 
   $('#datetimepicker').datetimepicker({
     format : 'DD/MM/YYYY',
     ignoreReadonly: true,
-          widgetPositioning: {
-            horizontal: 'left',
-            vertical: 'bottom'
-          },
-          defaultDate:available_dates[0],
-          enabledDates: available_dates,
-          locale: '{{app.request.locale}}',
-          minDate: available_dates[0],
-          maxDate: available_dates[available_dates.length -1]
-        })
+    widgetPositioning: {
+      horizontal: 'left',
+      vertical: 'bottom'
+    },
+    defaultDate:available_dates[0],
+    enabledDates: available_dates,
+    locale: '{{app.request.locale}}',
+    minDate: available_dates[0],
+    maxDate: available_dates[available_dates.length -1]
+  })
+
 }
 
   $('#datetimepicker').on('dp.change', function(e){
@@ -147,8 +144,7 @@ function initializeDateTimePicker(dates){
     var ymd = $('#datetimepicker').val().split("/")    
     if (ymd.length > 0)
       $('[name=date]').val(ymd[2]+'-'+ymd[1]+'-'+ymd[0])
-    
-    $('.icon-chevron-right.next').removeClass('d-none')
+
     if(flag == true)
       availabilityModal()
   })
@@ -157,19 +153,48 @@ function initializeDateTimePicker(dates){
   //b 1 = next week || -1 = previous week  
   function getWeek(b){
 
-    $('.icon-chevron-right.next').removeClass('d-none')
+    $('.icon-chevron-right.next, .icon-chevron-left.previous').removeClass('d-none')
+
     week = b == 1 ? $( ".col-1-7" ).last() : $( ".col-1-7" ).first()
   
+    date_picker = $(week).data('date-dmy')
+
     if( b == 1 && $(week).data('date-ymd') >= available_dates[available_dates.length -1]){
+      //console.log('out max || click date = '+ $(week).data('date-ymd')+' max data = '+available_dates[available_dates.length -1])
       $('.icon-chevron-right.next').addClass('d-none')
       return
     }
+    
+    if(b == -1){
+      previous = new Date($(week).data('date-ymd')) 
+      previous.setDate(previous.getDate()- 7)
 
-    $('[name=date]').val($(week).data('date-ymd'))
-    $('[name=next]').val(b)
-    //To make request
-    flag = true
-    $('#datetimepicker').val($(week).data('date-dmy')).trigger('change')
+      previous_ymd = previous.getFullYear()+'-'+(previous.getMonth()+1) +'-'+previous.getDate()
+      previous_dmy = previous.getDate()+'/'+(previous.getMonth()+1)+'/'+previous.getFullYear()
+
+      if (previous_ymd <= available_dates[0]){
+
+        ddd = new Date(available_dates[0])
+        min_dmy = ddd.getDate()+'/'+(ddd.getMonth()+1)+'/'+ddd.getFullYear()
+        $('[name=date]').val(available_dates[0])
+        $('[name=next]').val(b)
+        $('.icon-chevron-left.previous').addClass('d-none')
+        $('#datetimepicker').val(min_dmy).trigger('change')
+        return
+      }
+      $('[name=date]').val(previous_ymd)
+      $('[name=next]').val(b)
+      date_picker = previous_dmy
+    }
+    else{
+      //console.log('click date = '+ $(week).data('date-ymd')+' min data = '+available_dates[0])
+      //console.log('click date = '+ $(week).data('date-ymd')+' max data = '+available_dates[available_dates.length -1])
+      $('[name=date]').val($(week).data('date-ymd'))
+      $('[name=next]').val(b)
+      //To make request
+      flag = true
+    }
+    $('#datetimepicker').val(date_picker).trigger('change')
   }
 
   function setEvent(obj){
@@ -181,6 +206,58 @@ function initializeDateTimePicker(dates){
     $('.show-datetime').removeClass('d-none')
     $('[name=event]').val(e)
   }
+
+
+
+function availabilityModal(){
+    
+  closeAlert()
+  
+  if( $('[name=category]').val() && $('[name=adult]').val() > 0){
+
+    pax = Number($('[name=adult]').val()) + Number($('[name=children]').val()) + Number($('[name=baby]').val())
+
+    $('#ftco-loader').css({'opacity' : '0.7','visibility' : 'visible','z-index' : 9999})
+        
+    setTimeout(function(){
+      $.ajax({  
+      url: '{{ path('available_by_period') }}',
+      type: "POST",
+      data: $('.appointment-form').serialize(),
+      cache: false,
+      success: function(data){ 
+        
+        console.log(data) 
+        $('#ftco-loader').css({'opacity' : 0,'visibility' : 'hidden','z-index' : 1000})
+        if (data.status == 1 && data.data.available_dates.length > 0){
+          $('[name=wp]').val(data.data.payment)
+          $('#fsModal').modal('show')
+          buildWeekTemplate(data.data.week)
+        }
+        else{
+         alert('no availability max pax is'+ data.data.availability)
+        }
+      },
+      error:function(data){
+        $('#ftco-loader').css({'opacity' : 0,'visibility' : 'hidden','z-index' : 1000})
+        $('#alerts').modal('show')
+        $('.alert-danger').removeClass('d-none').addClass('show')
+        $('.alert-danger span').html('{%trans%}wifi_error{%endtrans%}')
+      }
+    })
+  }, 500)
+
+  }
+  else{
+    $('#alerts').modal('show')
+    $('.alert-primary').removeClass('d-none').addClass('show')
+    $('.alert-primary span').html('Tour and adults')
+  }
+}
+
+
+
+
 
 $('.show-datetime').addClass('d-none')
 
