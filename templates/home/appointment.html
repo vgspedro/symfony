@@ -144,6 +144,13 @@
 </section>
 <script>
 
+
+function clearInfo(){
+  $('.personal-data, .show-datetime').addClass('d-none')
+  $('[name=next], [name=date] [name=wp], [name=event]').val('') 
+}
+
+
 //Validate the data added by the user 
 function validateBookingData(){
 
@@ -195,14 +202,11 @@ var flag = false
 function getAvailability(){
   
   closeAlert()
-
-  $('[name=next],[name=event], [name=date], [name=wp]').val('')
+  clearInfo()
 
   flag = false
 
   $('.icon-chevron-right.next, .icon-chevron-left.previous').removeClass('d-none')
-
-  $('.personal-data').addClass('d-none')
   
   if( $('[name=category]').val() && $('[name=adult]').val() > 0){
 
@@ -217,9 +221,7 @@ function getAvailability(){
       data: $('.appointment-form').serialize(),
       cache: false,
       success: function(data){ 
-      console.log(data) 
-        $('.show-datetime').addClass('d-none')
-        
+      console.log(data)         
         $('#ftco-loader').css({'opacity' : 0,'visibility' : 'hidden','z-index' : 1000})
         if (data.status == 1 && data.data.available_dates.length > 0){
           $('.icon-chevron-left.previous').addClass('d-none warning')
