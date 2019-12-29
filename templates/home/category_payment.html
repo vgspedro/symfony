@@ -1,17 +1,5 @@
+
 <script src="https://js.stripe.com/v3/"></script>
-
-<style>
-/*
-.StripeElement{height: 45px;padding: 11px 12px;background-color: #fdf5e6; border-bottom: 3px solid #3f51b5}
-
-.StripeElement--focus{box-shadow: 0 1px 3px 0 #cfd7df}
-.StripeElement--invalid{border-color: #fa755a}
-
-.StripeElement--webkit-autofill{background-color: #fefde5 !important}
-*/
-
-
-</style>
 
   <label class="">{% trans %}deposit{% endtrans %}:</label> 
   {% set deposit = data.payment.deposit == 0 ? 100 : data.payment.deposit*100 %}
@@ -39,13 +27,13 @@
       elements = stripe.elements()
       style = {
         base: {
-          color: '#3f51b5',
-          fontFamily: '"Helvetica Neue", Helvetica',
+          //color: '#3f51b5',
+          //fontFamily: '"Helvetica Neue", Helvetica',
           fontSmoothing: 'antialiased',
           fontWeight: 'bold',
           fontSize: '18px',
           '::placeholder': {
-            color: '#C8BFF9'
+            color: '#000'
           },
         },
         invalid: {
