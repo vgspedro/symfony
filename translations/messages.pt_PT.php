@@ -13,10 +13,15 @@ return array(
     'fri' => 'Sex',
     'sat' => 'Sáb',
 
+    'hour' => 'Hora',
+    'confirm_booking' => 'Confirme a Reserva',
     'confirm_pay' => 'Confirmar & Pagar',
     'more_info'=> 'Mais Info',
-    'read_gpdr'=> 'Read GPDR',
-    
+    'read_gpdr'=> 'Ler RGPD',
+    'email' => 'Email',
+    'address' => 'Morada',
+    'total' => 'Total', 
+
     'min_amount' => 'Montante Minimo 0.50Eur',
     'max_amount' => 'Montante Máximo 5000.00Eur',
     'validate' => 'Validar',

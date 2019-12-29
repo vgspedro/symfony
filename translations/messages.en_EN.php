@@ -12,12 +12,15 @@ return array(
     'thu' => 'Thu',
     'fri' => 'Fri',
     'sat' => 'Sat',
- 
+
+    'hour' => 'Hour',
+    'confirm_booking' => 'Confirm Booking',
     'confirm_pay' => 'Confirm & Pay',
     'more_info'=> 'More Info',
     'read_gpdr'=> 'Read GPDR',
-
-
+    'email' => 'Email',
+    'address' => 'Address',
+    'total' => 'Total', 
     'min_amount' => 'Min. amount 0.50Eur',
     'max_amount' => 'Max. amount 5000.00Eur',
     'validate' => 'Validate',

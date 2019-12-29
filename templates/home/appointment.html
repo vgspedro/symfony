@@ -16,8 +16,6 @@
 .btn.btn-info.btn-outline-info:hover{background:#17a2b8!important;color:#FFF!important}
 </style>
 
-
-
 <section class="ftco-section ftco-booking bg-light">
   <div class="container ftco-relative">
     <div class="row justify-content-center pb-3">
@@ -142,6 +140,8 @@
     </div>
   </div>
 </section>
+<section class="payment-container">
+</section>
 <script>
 
 //Validate the data added by the user 
@@ -157,13 +157,7 @@ function validateBookingData(){
       success: function(data){ 
         console.log(data) 
         $('#ftco-loader').css({'opacity' : 0,'visibility' : 'hidden','z-index' : 1000})
-    
-        //All is ok so far, build the info modal to show booking adn proceed to payment, if that is the case 
-        if (data.status == 1){
-          $('#fsModal-payment').modal('show')      
-        }
-
-        else if (data.status == 0){
+        if (data.status == 0){
           html =''
           $('#alerts').modal('show')
           $('.alert-warning').removeClass('d-none').addClass('show')
@@ -171,6 +165,14 @@ function validateBookingData(){
             html += data.message[k]+'<br>'
           $('.alert-warning span').html('<br>'+html)
         }
+
+        //All is ok so far, build the info modal to show booking adn proceed to payment, if that is the case 
+        else {
+          $('.payment-container').html(data)
+          $('#fsModal-payment').modal('show')
+        }
+
+
       },
       error:function(data){
         $('#ftco-loader').css({'opacity' : 0,'visibility' : 'hidden','z-index' : 1000})
@@ -269,15 +271,9 @@ function buildWeekTemplate(days){
   $('.set-weeks').html(day)
 }
 
-
-
-
 </script>
 
-
 {% include 'home/modal.html' %}
-
-{% include 'home/modal_payment.html' %}
 
 {%else%}
 

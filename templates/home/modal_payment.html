@@ -1,29 +1,3 @@
-<style>
-.f-24{font-size:24px}
-.f-14{font-size:14px}
-.f-18{font-size:18px}
-.f-36{font-size:36px}
-.pointer{cursor:pointer}
-.w-54{width:54px}
-.h-58{height:58px}
-.h-54{height:54px}
-.dis-position{position: absolute;font-size: 32px; margin: 6px -13px}
-.bold{font-weight: bold}
-.months, .days, .show-datetime{max-width: 800px}
-.op-20{opacity:0.2}
-.op-40{opacity:0.4}
-.op-60{opacity:0.6}
-.op-80{opacity:0.8}
-
-@media (max-width: 580px){
-.zoom-78{zoom: 78%}
-.days{padding: 0px}
-.mb-4-540{margin-bottom: 0px!important}
-.modal-body-full {top:54px}
-}
-
-</style>
-
 <div id="fsModal-payment" class="modal modal-full animated fade" tabindex="-1" role="dialog"aria-labelledby="myModalLabel" aria-hidden="true">
   <!-- dialog -->
   <div class="modal-dialog modal-dialog-full">
@@ -31,36 +5,58 @@
     <div class="modal-content modal-content-full">
       <!-- header -->
       <div class="modal-header modal-header-full">
-       <h4 class="text-center">{% trans %}Confirm your Booking{% endtrans %}</h4>
+       <h4 class="text-center">{% trans %}confirm_booking{% endtrans %}</h4>
           <span class="pointer mr-2" style="margin-top:-6px"data-dismiss="modal"><i class="icon-times"></i></span>
       </div>
       <!-- header -->
       <!-- body -->
-      <div class="modal-body modal-body-full">
+      <div class="modal-body modal-body-full no-pd-mob">
         <div class="container">
-          <div class="row f-24 mb-4">
-            <div class="col-12" style="max-width:640px">
-              Tour:<br>
-              Date: <br>
-              Hour:<br>
-              Adult: <br>
-              Children: <br>
-              Baby :<br>
+          <div class="row mb-4" style="font-size:1em;color:#000; max-width:640px;margin:0 auto">
+            <div class="col-12">
+              {%trans%}tour{%endtrans%}: {{data.booking.tour}}<br>
+              {%trans%}date{%endtrans%}: {{data.booking.date}}<br>
+              {%trans%}hour{%endtrans%}: {{data.booking.hour}}<br>
+              {%trans%}adults{%endtrans%}: {{data.adult.quantity}}x {{data.adult.subtotal_money}}<span class="font-weight-bold f-10">{{data.adult.subtotal.currency}}</span>
+              <br>
+
+              {% if data.children.quantity > 0 %}
+
+              {%trans%}childrens{%endtrans%}: {{data.children.quantity}}x {{data.children.subtotal_money}}<span class="font-weight-bold f-10">{{data.children.subtotal.currency}}</span>
+              <br>
+
+              {% endif %}
+              {% if data.baby.quantity > 0 %}
+
+              {%trans%}babies{%endtrans%}: {{data.baby.quantity}}x {{data.baby.subtotal_money}}<span class="font-weight-bold f-10">{data.baby.subtotal.currency}}</span>
+              <br>
+
+              {% endif %}
+
               <hr>
-              Name: <br>
-              Email: <br>
-              Telephone: <br>
-              Address:<br>
+              {%trans%}name{%endtrans%}: {{data.user.name}}<br>
+              {%trans%}email{%endtrans%}: {{data.user.email}}<br>
+              {%trans%}phone{%endtrans%}: {{data.user.telephone}}<br>
+              {%trans%}address{%endtrans%}: {{data.user.address}}<br>
               <hr>
-              Total:
+              <div class="f-24 text-center font-weight-bold" style="margin-top: -12px">
+                {%trans%}total{%endtrans%}: {{data.booking.total_money}}<span class="f-10">{{data.booking.total.currency}}</span>
+              </div>
             </div>
+            
+            {% if data.payment %}
+            <div class="col-12">
+              {% include 'home/category_payment.html' %}
+            </div>
+            {% endif %}
+
           </div>
         </div>
-        <div class="container show-datetime d-none">
+        <div class="container">
         <div class="row">
           <div class="col-12 text-center">
             <span class="proceed hidden" data-dismiss="modal"></span>
-            <button class=" btn btn-outline-success px-4 py-2" onclick="payNow()">
+            <button class="btn btn-outline-success px-4 py-2" onclick="payNow()">
               {%trans%}pay_now{%endtrans%}
             </button>
           </div>
@@ -70,15 +66,9 @@
       </div>
     </div>
     <!-- content -->
-
   </div>
   <!-- dialog -->
-
 </div>
-
-
-
-
 <!-- modal -->
 <script>
 

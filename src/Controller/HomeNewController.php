@@ -189,7 +189,7 @@ class HomeNewController extends AbstractController
             );
     }
 
-    public function validateBookingData(Request $request, MoneyFormatter $moneyFormatter, RequestInfo $reqInfo, FieldsValidator $fieldsValidator, TranslatorInterface $translator){
+    public function validateBookingData(Request $request, MoneyFormatter $moneyFormatter, RequestInfo $reqInfo, FieldsValidator $fieldsValidator, TranslatorInterface $translator, Stripe $stripe){
 
         $err = [];
         $em = $this->getDoctrine()->getManager();
@@ -297,15 +297,22 @@ class HomeNewController extends AbstractController
             ],
             'payment' => [
                 'enabled' => $available->getCategory()->getWarrantyPayment(),
-                'public_key' => $company->getStripePK()
+                'public_key' => $company->getStripePK(),
+                'payment_intent' => $available->getCategory()->getWarrantyPayment() ?  $stripe->createUpdatePaymentIntent($company, $request, null) : null,
+                'deposit' => $available->getCategory()->getDeposit()
             ]
         ];
 
+        return $this->render('home/modal_payment.html', 
+            [
+                'data' => $temp_booking
+            ]);
+/*
         return new JsonResponse([
             'status' => 1,
             'message' => 'success',
             'data' => $temp_booking
-        ]);
+        ]);*/
     }
 
 

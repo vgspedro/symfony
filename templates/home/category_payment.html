@@ -1,0 +1,143 @@
+<script src="https://js.stripe.com/v3/"></script>
+
+<style>
+/*
+.StripeElement{height: 45px;padding: 11px 12px;background-color: #fdf5e6; border-bottom: 3px solid #3f51b5}
+
+.StripeElement--focus{box-shadow: 0 1px 3px 0 #cfd7df}
+.StripeElement--invalid{border-color: #fa755a}
+
+.StripeElement--webkit-autofill{background-color: #fefde5 !important}
+*/
+
+
+</style>
+
+  <label class="">{% trans %}deposit{% endtrans %}:</label> 
+  {% set deposit = data.payment.deposit == 0 ? 100 : data.payment.deposit*100 %}
+  <span class="w3-right">{{deposit}}%</span><br>
+  <!--form id="payment-form"-->
+  <label class="w3-small w3-text-red">{% trans %}part_seven.card_n{% endtrans %}</label>
+  <div id="card-element" style="padding: 10px 8px"></div>
+  <div id="card-errors" class="w3-text-red w3-small" role="alert"></div>
+  <div class="set-token"></div>
+  <!--/form-->
+  <input type="hidden" id="card-button" data-secret="{{data.payment.payment_intent.data.client_secret}}">
+
+<script>
+
+  var key = '{{data.payment.public_key}}'
+  var stripe = ''
+  var elements = ''
+  var style = ''
+  var card = ''
+  var displayError = ''
+
+  function buildStripe(k){
+    if (k){
+      stripe = Stripe(k)
+      elements = stripe.elements()
+      style = {
+        base: {
+          color: '#3f51b5',
+          fontFamily: '"Helvetica Neue", Helvetica',
+          fontSmoothing: 'antialiased',
+          fontWeight: 'bold',
+          fontSize: '18px',
+          '::placeholder': {
+            color: '#C8BFF9'
+          },
+        },
+        invalid: {
+          color: '#fa755a',
+          iconColor: '#fa755a'
+        }
+      }
+      $('#card-errors').empty()
+      card = elements.create('card', {
+        hidePostalCode: true, 
+        style: style
+      })
+      
+      card.mount('#card-element');
+      card.addEventListener('change', function(event) {
+        displayError = document.getElementById('card-errors')
+        displayError.textContent = event.error ? event.error.message: ''
+      })
+    }
+  }
+
+  function handleCard(){
+    stripe.handleCardPayment($('#card-button').data('secret'), card,{
+      payment_method_data: {
+        billing_details: {
+          name: $('input[name=name]').val(),
+          email: $('input[name=email]').val(),
+          phone: $('input[name=telephone]').val()
+        }
+      },
+      receipt_email: $('input[name=email]').val()
+    }
+    ).then(function(result) {
+      if (result.error) {
+        $('.w3-overlay').hide()
+        
+        m = result.error.message
+
+        if(result.error.code == 'payment_intent_authentication_failure')
+          m = '{% trans %}payment_intent_authentication_failure{% endtrans %}'
+        
+        else if (result.error.code == 'card_declined' && result.error.decline_code == "insufficient_funds")
+          m = '{% trans %}insufficient_funds{% endtrans %}'
+
+        else if(result.error.code == 'payment_intent_unexpected_state'){
+          m = '{% trans %}payment_intent_unexpected_state{% endtrans %}'
+          $('.w3-closebtn').attr('onclick','location.reload(true)')
+        }
+
+        modalConditions(1, m, '{% trans %}check{% endtrans %}') 
+      } 
+      else
+        getUrlReceipt(result.paymentIntent.id)
+    })
+  }
+
+  //pi_id = payment_intent_id
+  function getUrlReceipt(pi_id){
+    var html = ''
+      $.ajax({  
+      url :'{{ path('home_get_charge')}}',
+      type: "POST",
+      cache: false,
+      data: 'pi_id='+pi_id,
+      success: function(data){
+        $(".w3-overlay, #loader-cont").hide();
+        //console.log(data)
+        if (data.status == 1){
+
+          info = data.data.data.data[0]
+          card.destroy()
+          $('#get-available').trigger('reset');
+          $('.set-visible, .wp-active, .wp-btn').addClass('w3-hide');
+          $('.wp-active').empty();
+          $('iframe').remove();
+
+          html ='<div style="margin-top:-8px" class="w3-right-align w3-xlarge w3-padding-small">{% trans %}order{% endtrans %} <span class="w3-xxxlarge">'+data.message+'</span></div><div class="w3-large">{% trans %}thank_you{% endtrans %}</div><div class="w3-large w3-center w3-text-deep-orange">{% trans %}spam_txt{% endtrans %}</div><div class="w3-right-align"><a class="w3-btn w3-border w3-white w3-round w3-medium" target="_blank" href='+info.receipt_url+'> {% trans %}receipt{% endtrans %}</a></div>'
+          modalConditions(0, html, '{% trans %}success{% endtrans %}')
+
+        }
+        else{
+          modalConditions(1, data.message, '{% trans %}check{% endtrans %}') 
+        }
+      },
+      error:function(data){
+        $(".w3-overlay, #loader-cont").hide();
+        modalConditions(2, '{% trans %}wifi_error{% endtrans %}', '{% trans %}error{% endtrans %}')
+      }
+    })
+  }
+
+  setTimeout(function(){buildStripe('{{data.payment.public_key}}') }, 1000)
+
+</script>
+
