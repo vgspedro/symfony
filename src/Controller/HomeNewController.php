@@ -159,8 +159,6 @@ class HomeNewController extends AbstractController
     }
 
 
-
-
     public function info(Request $request, MoneyFormatter $moneyFormatter, RequestInfo $reqInfo, Menu $menu, TranslatorInterface $translator)
     {   
         $id = !$request->query->get('id') ? 'home': $request->query->get('id');
@@ -191,7 +189,135 @@ class HomeNewController extends AbstractController
             );
     }
 
-    public function setBooking(Request $request, MoneyFormatter $moneyFormatter, RequestInfo $reqInfo, FieldsValidator $fieldsValidator, TranslatorInterface $translator, Stripe $stripe){
+    public function validateBookingData(Request $request, MoneyFormatter $moneyFormatter, RequestInfo $reqInfo, FieldsValidator $fieldsValidator, TranslatorInterface $translator){
+
+        $err = [];
+        $em = $this->getDoctrine()->getManager();
+        $local = $request->getLocale();
+        $locales = $em->getRepository(Locales::class)->findOneBy(['name' => $local]);
+
+        if(!$locales)
+             $locales = $em->getRepository(Locales::class)->findOneBy(['name' => 'pt_PT']);
+
+        $locale = $locales->getName();
+        if($this->getExpirationTime($request) == 1){ 
+            $err[] = $translator->trans('session');
+            return new JsonResponse([
+                'status' => 0,
+                'message' => $err,
+                'expiration' => 1
+            ]);
+        }
+
+        //First part of validation 
+        //the required fields on form, if empty send array to inform user what happen 
+        $request->request->get('name') ? $name = $request->request->get('name') : $err[] = $translator->trans('part_seven.name');
+        $request->request->get('email') ? $email = $request->request->get('email') : $err[] = 'Email *';
+        $request->request->get('address') ? $address = $request->request->get('address') : $err[] = $translator->trans('part_seven.address');
+        $request->request->get('telephone') ? $telephone = $request->request->get('telephone') : $err[] = $translator->trans('part_seven.telephone');
+        $request->request->get('check_rgpd') && $request->request->get('check_rgpd') !== null  ? $rgpd = true : $err[] = $translator->trans('part_seven.rgpd');
+        $request->request->get('event') ? $event = (int)$request->request->get('event') : $err[] = $translator->trans('event_not_found');
+        $request->request->get('adult') ? $adult = (int)$request->request->get('adult') : $err[] = $translator->trans('part_seven.adult');
+        
+        $children = $request->request->get('children') ? (int)$request->request->get('children') : 0;
+        $baby = $request->request->get('baby') ? (int)$request->request->get('baby') : 0;
+        
+        if($err)
+            return new JsonResponse([
+                'status' => 0,
+                'message' => $err,
+                'expiration' => 0
+            ]);
+        
+        //Avoid user fake data
+        $fieldsValidator->noFakeEmails($email) == 1 ? $err[] = $translator->trans('part_seven.email_invalid') : false;
+        $fieldsValidator->noFakeTelephone($telephone) == 1 ? $err[] = $translator->trans('part_seven.telephone_invalid') : false;
+        $fieldsValidator->noFakeName($name) == 1 ? $err[] = $translator->trans('part_seven.name_invalid') : false;
+        //Check if the Event exits
+        $available = $em->getRepository(Available::class)->find($event);
+
+        if(!$available)
+            $err[] = $translator->trans('event_not_found');
+
+        if($err)
+             return new JsonResponse([
+                'status' => 0,
+                'message' => $err,
+                'expiration' => 0
+            ]);
+        
+        $company = $em->getRepository(Company::class)->find(1);
+
+        //total amount of booking
+        $amountA = Money::EUR(0);
+        $amountC = Money::EUR(0);
+        $total = Money::EUR(0);
+
+        $amountA = $available->getCategory()->getAdultPrice();
+        $amountA = $amountA->multiply($adult);
+        $amountC = $available->getCategory()->getChildrenPrice();
+        $amountC = $amountC->multiply($children);
+        $total = $amountA->add($amountC);
+
+        $temp_booking = [
+            'booking' => [
+                'tour' => $locales->getName() =='pt_PT' ? $available->getCategory()->getNamePt() : $available->getCategory()->getNameEn(),
+                'date' => $available->getDatetimeStart()->format('d/m/Y'),
+                'hour' => $available->getDatetimeStart()->format('H:i'),
+                'total' => $total,
+                'total_money' => $moneyFormatter->format($total)
+            ],
+            'user' => [
+                'name' => $name,
+                'email' => $email,
+                'address' => $address,
+                'telephone' => $telephone
+            ],
+            'adult' =>[
+                'quantity' => $adult,
+                'subtotal' => $available->getCategory()->getAdultPrice(),
+                'subtotal_money' => $moneyFormatter->format($available->getCategory()->getAdultPrice()),
+                'total' => $amountA,
+                'total_money' => $moneyFormatter->format($amountA)
+
+            ],
+            'children' => [
+                'quantity' => $children,
+                'subtotal_money' => $moneyFormatter->format($available->getCategory()->getChildrenPrice()),
+                'subtotal' => $available->getCategory()->getChildrenPrice(),
+                'total' => $amountC,
+                'total_money' => $moneyFormatter->format($amountC)
+            ],
+            'baby' => [
+                'quantity' => $baby,
+                'subtotal' => Money::EUR(0),
+                'subtotal_money' => $moneyFormatter->format(Money::EUR(0)),
+                'total' => Money::EUR(0),
+                'total_money' => $moneyFormatter->format(Money::EUR(0)),
+            ],
+            'payment' => [
+                'enabled' => $available->getCategory()->getWarrantyPayment(),
+                'public_key' => $company->getStripePK()
+            ]
+        ];
+
+        return new JsonResponse([
+            'status' => 1,
+            'message' => 'success',
+            'data' => $temp_booking
+        ]);
+    }
+
+
+
+
+
+
+
+
+
+
+    public function setNewBooking(Request $request, MoneyFormatter $moneyFormatter, RequestInfo $reqInfo, FieldsValidator $fieldsValidator, TranslatorInterface $translator, Stripe $stripe){
 
         $err = [];
 
@@ -221,16 +347,22 @@ class HomeNewController extends AbstractController
         $request->request->get('address') ? $address = $request->request->get('address') : $err[] = $translator->trans('part_seven.address');
         $request->request->get('telephone') ? $telephone = $request->request->get('telephone') : $err[] = $translator->trans('part_seven.telephone');
         $request->request->get('check_rgpd') && $request->request->get('check_rgpd') !== null  ? $rgpd = true : $err[] = $translator->trans('part_seven.rgpd');
-        $request->request->get('ev') ? $event = $request->request->get('ev') : $err[] = $translator->trans('part_seven.event');
-        $request->request->get('adult') ? $adult = $request->request->get('adult') : $err[] = $translator->trans('part_seven.adult');
-        $children = $request->request->get('children') ? $request->request->get('children') : 0;
+        $request->request->get('event') ? $event = (int)$request->request->get('event') : $err[] = $translator->trans('part_seven.event');
+        $request->request->get('adult') ? $adult = (int)$request->request->get('adult') : $err[] = $translator->trans('part_seven.adult');
+        
+        $children = $request->request->get('children') ? (int)$request->request->get('children') : 0;
+        
         $baby = $request->request->get('baby') ? (int)$request->request->get('baby') : 0;
 
         $wp = $request->request->get('wp') == 'true' ? $request->request->get('wp') : false;
         
+
+        /*
         //payment is required
         if($wp)
             $request->request->get('secret') ? $secret = $request->request->get('secret') : $err[] = $translator->trans('secret');
+
+        */    
         if($err)
 
              return new JsonResponse([
@@ -238,7 +370,7 @@ class HomeNewController extends AbstractController
                 'message' => $err,
                 'expiration' => 0
             ]);
-
+        
         //NO FAKE DATA
         $fieldsValidator->noFakeEmails($email) == 1 ? $err[] = $translator->trans('part_seven.email_invalid') : false;
         $fieldsValidator->noFakeTelephone($telephone) == 1 ? $err[] = $translator->trans('part_seven.telephone_invalid') : false;
@@ -251,6 +383,8 @@ class HomeNewController extends AbstractController
                 'expiration' => 0
             ]);
 
+
+        //Create booking
         else{
 
             $em->getConnection()->beginTransaction();
@@ -320,6 +454,7 @@ class HomeNewController extends AbstractController
                 $em->flush();
 
                 if($wp){
+                
                     $company = $em->getRepository(Company::class)->find(1);
                     $i = $stripe->createUpdatePaymentIntent($company, $request, $booking);
                     
@@ -336,8 +471,7 @@ class HomeNewController extends AbstractController
                         $booking->setStatus(Booking::STATUS_CANCELED);
                         $booking->setStripePaymentLogs($payLogs);
                         $em->persist($booking);
-                $em->flush();
-
+                        $em->flush();
                     }
                 }
 

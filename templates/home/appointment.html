@@ -7,6 +7,17 @@
 {% endfor %}
 
 {% if products == true %}
+
+<style>
+.btn.btn-info.btn-outline-info {
+    border: 1px solid #17a2b8 !important;
+    background: transparent !important;
+    color: #17a2b8 !important}
+.btn.btn-info.btn-outline-info:hover{background:#17a2b8!important;color:#FFF!important}
+</style>
+
+
+
 <section class="ftco-section ftco-booking bg-light">
   <div class="container ftco-relative">
     <div class="row justify-content-center pb-3">
@@ -85,7 +96,7 @@
             </div>
             <div class="col-sm-12 col-md-4">
               <div class="form-group">
-                <input type="number" name="phone" class="form-control" placeholder="{% trans %}part_seven.telephone{%endtrans %}">
+                <input type="number" name="telephone" class="form-control" placeholder="{% trans %}part_seven.telephone{%endtrans %}">
               </div>    
             </div>
 
@@ -95,8 +106,34 @@
               </div>    
             </div>
 
+            <div class="col-sm-12 col-md-12">
+              <input type="checkbox" style="height: 26px; width: 26px;vertical-align:text-bottom" name="check_rgpd">
+              <label class="mb-0">{% trans %}part_seven.rgpd{% endtrans %}</label>
+
+              <div id="accordionEx-rgpd" role="tablist" aria-multiselectable="true" class="pb-2">
+                <div role="tab" id="heading-rgpd">
+                  <a class="collapsed text-info" data-toggle="collapse" data-parent="#accordionEx-rgpd" href="#collapse-rgpd" aria-expanded="false" aria-controls="collapse-rgpd">
+                    {% trans %}more_info{% endtrans %}
+                  </a>
+                </div>
+                    
+                <div id="collapse-rgpd" style="border-top:1px solid #aaa;border-bottom:1px solid #aaa" class="collapse" role="tabpanel" aria-labelledby="heading-rgpd" data-parent="#accordionEx-rgpd" style="position:absolute;z-index:999">
+                  <p class="pt-2" style="font-size:11px;color:#000">
+                    {% trans %}part_seven.rgpd_txt{% endtrans %}
+                  </p>
+                  <div class="text-right pb-2">
+                    <span onclick='showRgpd()' class="btn btn-info btn-outline-info px-4 py-2">
+                      {% trans %}read_gpdr{% endtrans %}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <input type="hidden" name="_csrf_token" value="{{csrf_token('authenticate') }}">
+            
             <div class="col-sm-12 col-md-12 text-center">
-              <span onclick="validateUserData()" class="btn btn-outline-success px-4 py-2 confirm-btn"></span>
+              <span onclick="validateBookingData()" class="btn btn-outline-success px-4 py-2 confirm-btn"></span>
             </div>
 
           </div>
@@ -107,10 +144,45 @@
 </section>
 <script>
 
-function validateUserData(){    
-    $('#alerts').modal('show')
-    $('.alert-primary').removeClass('d-none').addClass('show')
-    $('.alert-primary span').html('Please fill the fields: email, name, phone, address')
+//Validate the data added by the user 
+function validateBookingData(){
+
+  $('#ftco-loader').css({'opacity' : '0.7','visibility' : 'visible','z-index' : 9999})
+    setTimeout(function(){
+      $.ajax({  
+      url: '{{ path('validate_booking_data') }}',
+      type: "POST",
+      data: $('.appointment-form').serialize(),
+      cache: false,
+      success: function(data){ 
+        console.log(data) 
+        $('#ftco-loader').css({'opacity' : 0,'visibility' : 'hidden','z-index' : 1000})
+    
+        //All is ok so far, build the info modal to show booking adn proceed to payment, if that is the case 
+        if (data.status == 1){
+          $('#fsModal-payment').modal('show')      
+        }
+
+        else if (data.status == 0){
+          html =''
+          $('#alerts').modal('show')
+          $('.alert-warning').removeClass('d-none').addClass('show')
+          for (var k in data.message)
+            html += data.message[k]+'<br>'
+          $('.alert-warning span').html('<br>'+html)
+        }
+      },
+      error:function(data){
+        $('#ftco-loader').css({'opacity' : 0,'visibility' : 'hidden','z-index' : 1000})
+        $('#alerts').modal('show')
+        $('.alert-danger').removeClass('d-none').addClass('show')
+        $('.alert-danger span').html('{%trans%}wifi_error{%endtrans%}')
+      }
+    })
+  }, 500)
+
+
+
 }
 
 
@@ -204,6 +276,8 @@ function buildWeekTemplate(days){
 
 
 {% include 'home/modal.html' %}
+
+{% include 'home/modal_payment.html' %}
 
 {%else%}
 

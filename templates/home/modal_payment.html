@@ -1,0 +1,98 @@
+<style>
+.f-24{font-size:24px}
+.f-14{font-size:14px}
+.f-18{font-size:18px}
+.f-36{font-size:36px}
+.pointer{cursor:pointer}
+.w-54{width:54px}
+.h-58{height:58px}
+.h-54{height:54px}
+.dis-position{position: absolute;font-size: 32px; margin: 6px -13px}
+.bold{font-weight: bold}
+.months, .days, .show-datetime{max-width: 800px}
+.op-20{opacity:0.2}
+.op-40{opacity:0.4}
+.op-60{opacity:0.6}
+.op-80{opacity:0.8}
+
+@media (max-width: 580px){
+.zoom-78{zoom: 78%}
+.days{padding: 0px}
+.mb-4-540{margin-bottom: 0px!important}
+.modal-body-full {top:54px}
+}
+
+</style>
+
+<div id="fsModal-payment" class="modal modal-full animated fade" tabindex="-1" role="dialog"aria-labelledby="myModalLabel" aria-hidden="true">
+  <!-- dialog -->
+  <div class="modal-dialog modal-dialog-full">
+    <!-- content -->
+    <div class="modal-content modal-content-full">
+      <!-- header -->
+      <div class="modal-header modal-header-full">
+       <h4 class="text-center">{% trans %}Confirm your Booking{% endtrans %}</h4>
+          <span class="pointer mr-2" style="margin-top:-6px"data-dismiss="modal"><i class="icon-times"></i></span>
+      </div>
+      <!-- header -->
+      <!-- body -->
+      <div class="modal-body modal-body-full">
+        <div class="container">
+          <div class="row f-24 mb-4">
+            <div class="col-12" style="max-width:640px">
+              Tour:<br>
+              Date: <br>
+              Hour:<br>
+              Adult: <br>
+              Children: <br>
+              Baby :<br>
+              <hr>
+              Name: <br>
+              Email: <br>
+              Telephone: <br>
+              Address:<br>
+              <hr>
+              Total:
+            </div>
+          </div>
+        </div>
+        <div class="container show-datetime d-none">
+        <div class="row">
+          <div class="col-12 text-center">
+            <span class="proceed hidden" data-dismiss="modal"></span>
+            <button class=" btn btn-outline-success px-4 py-2" onclick="payNow()">
+              {%trans%}pay_now{%endtrans%}
+            </button>
+          </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <!-- content -->
+
+  </div>
+  <!-- dialog -->
+
+</div>
+
+
+
+
+<!-- modal -->
+<script>
+
+
+function payNow(){
+  alert('create booking and payment')
+  return
+  $('[name=wp]').val() ? $('.confirm-btn').html('{%trans%}confirm_pay{%endtrans%}') : $('.confirm-btn').html('{%trans%}info.confirm{%endtrans%}')
+  $('.personal-data').removeClass('d-none')
+  $('.proceed').trigger('click')
+  $("html, body").animate({
+    scrollTop: $('.col-md-12.form-group').offset().top +16
+  }, 500)
+}
+
+</script>
+

@@ -24,6 +24,17 @@ index_new_help_us_improve:
     path: /help-us-improve-new
     controller: App\Controller\HelpUsImproveNewController::index
 
+set_new_booking:
+    path: /new-booking
+    controller: App\Controller\HomeNewController::setNewBooking
+    condition: 'request.isXmlHttpRequest()'
+    methods: [POST]
+
+validate_booking_data:
+    path: /validate-booking-data
+    controller: App\Controller\HomeNewController::validateBookingData
+    condition: 'request.isXmlHttpRequest()'
+    methods: [POST]
 
 ###
 # site

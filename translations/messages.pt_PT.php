@@ -14,6 +14,8 @@ return array(
     'sat' => 'Sáb',
 
     'confirm_pay' => 'Confirmar & Pagar',
+    'more_info'=> 'Mais Info',
+    'read_gpdr'=> 'Read GPDR',
     
     'min_amount' => 'Montante Minimo 0.50Eur',
     'max_amount' => 'Montante Máximo 5000.00Eur',
@@ -203,7 +205,7 @@ return array(
     'email'=>'Email *',
     'submit'=>'Enviar',
     'tour' => 'Passeio *',
-    'rgpd' => 'RGPD (Regulamento Geral de Proteção de Dados)*',
+    'rgpd' => 'RGPD (Regulamento Geral de Proteção de Dados) *',
     'rgpd_txt' =>'Eu concordo que a Taruga Benagil Tours entre em contato comigo, para me informar do estado da minha reserva, em conformidade com o RGPD. Eu concordo que posso cancelar a qualquer momento. Eu concordo que as informações fornecidas através deste site são armazenadas e processadas com o propósito de obter a confirmação da minha reserva. A Taruga Benagil Tours leva a proteção de dados muito a sério.<br>Email: <a class="w3-text-blue" href="mailto:rgpd@tarugabenagiltours.pt?subject=Protecao%20Dados">rgpd@tarugabenagiltours.pt</a>',
     'zero' => 'Minimo é 1 Adulto, adicionou 0',
     'other_buy_it' => 'Outro cliente finalizou a compra 1º, tente outra data.',

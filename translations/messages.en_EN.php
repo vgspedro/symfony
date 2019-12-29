@@ -14,6 +14,8 @@ return array(
     'sat' => 'Sat',
  
     'confirm_pay' => 'Confirm & Pay',
+    'more_info'=> 'More Info',
+    'read_gpdr'=> 'Read GPDR',
 
 
     'min_amount' => 'Min. amount 0.50Eur',
@@ -190,7 +192,7 @@ return array(
     'email'=>'Email *',
     'submit'=>'Send',
     'tour' =>'Tour *',
-    'rgpd' => 'GDPR (General Data Protection Regulation)*',
+    'rgpd' => 'GDPR (General Data Protection Regulation) *',
     'rgpd_txt' =>'I agree that Taruga Benagil Tours can contact and inform me about the status of my booking, in accordance with the GDPR. I agree that I can cancel at any time. I agree that the information provided through this site is stored and processed for the purpose of Booking Confirmation. The Taruga Benagil Tours takes data protection very seriously.<br>Email: <a class="w3-text-blue" href="mailto:rgpd@tarugabenagiltours.pt?subject=Data%20Protection">rgpd@tarugabenagiltours.pt</a>',
     'book_after' => 'After submitting the booking order, we will send you a confirmation email.',
     'zero' => 'Minimum is 1 Adult, you added 0',
