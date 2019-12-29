@@ -298,7 +298,7 @@ class HomeNewController extends AbstractController
             'payment' => [
                 'enabled' => $available->getCategory()->getWarrantyPayment(),
                 'public_key' => $company->getStripePK(),
-                'payment_intent' => $available->getCategory()->getWarrantyPayment() ?  $stripe->createUpdatePaymentIntent($company, $request, null) : null,
+                'payment_intent' => $available->getCategory()->getWarrantyPayment() ? $stripe->createUpdatePaymentIntent($company, $request, null) : null,
                 'deposit' => $available->getCategory()->getDeposit()
             ]
         ];
