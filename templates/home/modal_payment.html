@@ -84,9 +84,6 @@
 function payNow(){
   alert('create booking and payment')
   return
-  $('[name=wp]').val() ? $('.confirm-btn').html('{%trans%}confirm_pay{%endtrans%}') : $('.confirm-btn').html('{%trans%}info.confirm{%endtrans%}')
-  $('.personal-data').removeClass('d-none')
-  $('.proceed').trigger('click')
   $("html, body").animate({
     scrollTop: $('.col-md-12.form-group').offset().top +16
   }, 500)
