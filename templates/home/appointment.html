@@ -36,7 +36,7 @@
                   <div class="icon">
                     <span class="ion-ios-arrow-down"></span>
                   </div>
-                  <select name="category" class="form-control">
+                  <select name="category" class="form-control" onchange="clearInfo()">
                     <option value="">{% trans %}part_seven.tour{% endtrans %}</option>
                     {% for category in categories %}
                     {% if category.no_stock == 0 %}          						
@@ -50,17 +50,17 @@
             </div>
 			      <div class="col-sm-4">
               <div class="form-group">
-                <input type="number" name="adult" class="form-control" placeholder="{% trans %}part_seven.adult{%endtrans %}">
+                <input type="number" name="adult" onchange="clearInfo()" class="form-control" placeholder="{% trans %}part_seven.adult{%endtrans %}">
               </div>
             </div>
             <div class="col-sm-4">
               <div class="form-group">
-                <input type="number" name="children" class="form-control" placeholder="{% trans %}part_seven.children{%endtrans %}">
+                <input type="number" name="children" onchange="clearInfo()" class="form-control" placeholder="{% trans %}part_seven.children{%endtrans %}">
               </div>
             </div>
             <div class="col-sm-4">
               <div class="form-group">
-                <input type="number" name="baby" class="form-control" placeholder="{% trans %}part_seven.baby{%endtrans %}">
+                <input type="number" name="baby" onchange="clearInfo()" class="form-control" placeholder="{% trans %}part_seven.baby{%endtrans %}">
               </div>    
             </div>
 
