@@ -39,9 +39,13 @@
               {%trans%}phone{%endtrans%}: {{data.user.telephone}}<br>
               {%trans%}address{%endtrans%}: {{data.user.address}}<br>
               <hr>
+
+              {% if data.payment.enabled %}
               <div class="f-24 text-center font-weight-bold" style="margin-top: -12px">
                 {%trans%}total{%endtrans%}: {{data.booking.total_money}}<span class="f-10">{{data.booking.total.currency}}</span>
               </div>
+            {% endif %}
+            
             </div>
             
             {% if data.payment.enabled %}
@@ -60,7 +64,7 @@
                 {% if data.payment.enabled %} 
                 {%trans%}pay_now{%endtrans%}
                 {%else%}
-                {%trans%}confirm{%endtrans%}
+                {%trans%}info.confirm{%endtrans%}
                 {% endif %}
             </button>
           </div>
