@@ -144,12 +144,10 @@
 </section>
 <script>
 
-
 function clearInfo(){
   $('.personal-data, .show-datetime').addClass('d-none')
   $('[name=next], [name=date], [name=wp], [name=event]').val('') 
 }
-
 
 //Validate the data added by the user 
 function validateBookingData(){
@@ -172,14 +170,12 @@ function validateBookingData(){
             html += data.message[k]+'<br>'
           $('.alert-warning span').html('<br>'+html)
         }
-
+        
         //All is ok so far, build the info modal to show booking adn proceed to payment, if that is the case 
         else {
           $('.payment-container').html(data)
           $('#fsModal-payment').modal('show')
         }
-
-
       },
       error:function(data){
         $('#ftco-loader').css({'opacity' : 0,'visibility' : 'hidden','z-index' : 1000})
@@ -190,13 +186,10 @@ function validateBookingData(){
     })
   }, 500)
 
-
-
 }
 
 
 var available_dates = []
-
 var flag = false
 
 function getAvailability(){

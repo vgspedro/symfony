@@ -14,35 +14,40 @@
         <div class="container">
           <div class="row mb-4" style="font-size:1em;color:#000; max-width:640px;margin:0 auto">
             <div class="col-12">
-              {%trans%}tour{%endtrans%}: {{data.booking.tour}}<br>
-              {%trans%}date{%endtrans%}: {{data.booking.date}}<br>
-              {%trans%}hour{%endtrans%}: {{data.booking.hour}}<br>
-              {%trans%}adults{%endtrans%}: {{data.adult.quantity}}x {{data.adult.subtotal_money}}<span class="font-weight-bold f-10">{{data.adult.subtotal.currency}}</span>
+              <b>{%trans%}name{%endtrans%}:</b> {{data.user.name}}<br>
+              <b>{%trans%}email{%endtrans%}:</b> {{data.user.email}}<br>
+              <b>{%trans%}phone{%endtrans%}:</b> {{data.user.telephone}}<br>
+              <b>{%trans%}address{%endtrans%}:</b> {{data.user.address}}<br>
+              <hr>
+
+              <b>{%trans%}tour{%endtrans%}:</b> {{data.booking.tour}}<br>
+              <b>{%trans%}date{%endtrans%}:</b> {{data.booking.date}}<br>
+              <b>{%trans%}hour{%endtrans%}:</b> {{data.booking.hour}}<br>
+              <b>{%trans%}adults{%endtrans%}:</b> {{data.adult.quantity}}x {{data.adult.subtotal_money}}<span class="font-weight-bold f-10">{{data.adult.subtotal.currency}}</span>
+              <span class="float-right">{{data.adult.total_money}}<span class="font-weight-bold f-10">{{data.adult.total.currency}}</span></span>
               <br>
 
               {% if data.children.quantity > 0 %}
 
-              {%trans%}childrens{%endtrans%}: {{data.children.quantity}}x {{data.children.subtotal_money}}<span class="font-weight-bold f-10">{{data.children.subtotal.currency}}</span>
+              <b>{%trans%}childrens{%endtrans%}:</b> {{data.children.quantity}}x {{data.children.subtotal_money}}<span class="font-weight-bold f-10">{{data.children.subtotal.currency}}</span>
+              <span class="float-right">{{data.children.total_money}}<span class="font-weight-bold f-10">{{data.children.total.currency}}</span></span>
               <br>
 
               {% endif %}
               {% if data.baby.quantity > 0 %}
 
-              {%trans%}babies{%endtrans%}: {{data.baby.quantity}}x {{data.baby.subtotal_money}}<span class="font-weight-bold f-10">{data.baby.subtotal.currency}}</span>
+              <b>{%trans%}babies{%endtrans%}:</b> {{data.baby.quantity}}x {{data.baby.subtotal_money}}<span class="font-weight-bold f-10">{{data.baby.subtotal.currency}}</span>
+              <span class="float-right">{{data.baby.total_money}}<span class="font-weight-bold f-10">{{data.baby.total.currency}}</span></span>
               <br>
 
               {% endif %}
 
               <hr>
-              {%trans%}name{%endtrans%}: {{data.user.name}}<br>
-              {%trans%}email{%endtrans%}: {{data.user.email}}<br>
-              {%trans%}phone{%endtrans%}: {{data.user.telephone}}<br>
-              {%trans%}address{%endtrans%}: {{data.user.address}}<br>
-              <hr>
+
 
               {% if data.payment.enabled %}
-              <div class="f-24 text-center font-weight-bold" style="margin-top: -12px">
-                {%trans%}total{%endtrans%}: {{data.booking.total_money}}<span class="f-10">{{data.booking.total.currency}}</span>
+              <div class="f-24 text-right" style="margin-top: -12px">
+                <span class="text-left"><b>{%trans%}total{%endtrans%}:</b></span> {{data.booking.total_money}}<span class="f-10">{{data.booking.total.currency}}</span>
               </div>
             {% endif %}
             
@@ -62,7 +67,7 @@
             <span class="proceed hidden" data-dismiss="modal"></span>
             <button class="btn btn-outline-success px-4 py-2" onclick="payNow()">
                 {% if data.payment.enabled %} 
-                {%trans%}pay_now{%endtrans%}
+                {%trans%}confirm_pay{%endtrans%}
                 {%else%}
                 {%trans%}info.confirm{%endtrans%}
                 {% endif %}
