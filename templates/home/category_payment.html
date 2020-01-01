@@ -1,17 +1,16 @@
 
 <script src="https://js.stripe.com/v3/"></script>
-
-  <label class="">{% trans %}deposit{% endtrans %}:</label> 
+  <!--label class="">{% trans %}deposit{% endtrans %}:</label> 
   {% set deposit = data.payment.deposit == 0 ? 100 : data.payment.deposit*100 %}
-  <span class="w3-right">{{deposit}}%</span><br>
+
+  <span class="w3-right">{{deposit}}%</span><br-->
   <!--form id="payment-form"-->
-  <label class="w3-small w3-text-red">{% trans %}part_seven.card_n{% endtrans %}</label>
+  <label class="mb-0">{% trans %}part_seven.card_n{% endtrans %}</label>
   <div id="card-element" style="padding: 10px 8px"></div>
-  <div id="card-errors" class="w3-text-red w3-small" role="alert"></div>
+  <div id="card-errors" class="font-weight-bold text-danger f-10" role="alert"></div>
   <div class="set-token"></div>
   <!--/form-->
   <input type="hidden" id="card-button" data-secret="{{data.payment.payment_intent.data.client_secret}}">
-
 <script>
 
   var key = '{{data.payment.public_key}}'
@@ -28,12 +27,12 @@
       style = {
         base: {
           //color: '#3f51b5',
-          //fontFamily: '"Helvetica Neue", Helvetica',
+          fontFamily:'"Poppins", Helvetica', //  '"Helvetica Neue", Helvetica',
           fontSmoothing: 'antialiased',
-          fontWeight: 'bold',
-          fontSize: '18px',
+          //fontWeight: '',
+          fontSize: '16px',
           '::placeholder': {
-            color: '#000'
+            color: '#111'
           },
         },
         invalid: {
@@ -68,8 +67,6 @@
     }
     ).then(function(result) {
       if (result.error) {
-        $('.w3-overlay').hide()
-        
         m = result.error.message
 
         if(result.error.code == 'payment_intent_authentication_failure')
@@ -82,8 +79,11 @@
           m = '{% trans %}payment_intent_unexpected_state{% endtrans %}'
           $('.w3-closebtn').attr('onclick','location.reload(true)')
         }
-
-        modalConditions(1, m, '{% trans %}check{% endtrans %}') 
+        
+        $('#ftco-loader').css({'opacity' : 0,'visibility' : 'hidden','z-index' : 1000})
+        $('#alerts').modal('show')
+        $('.alert-warning').removeClass('d-none').addClass('show')
+        $('.alert-warning span').html(m)   
       } 
       else
         getUrlReceipt(result.paymentIntent.id)
@@ -99,33 +99,41 @@
       cache: false,
       data: 'pi_id='+pi_id,
       success: function(data){
-        $(".w3-overlay, #loader-cont").hide();
+        $('#ftco-loader').css({'opacity' : 0,'visibility' : 'hidden','z-index' : 1000})
         //console.log(data)
         if (data.status == 1){
 
           info = data.data.data.data[0]
-          card.destroy()
-          $('#get-available').trigger('reset');
-          $('.set-visible, .wp-active, .wp-btn').addClass('w3-hide');
-          $('.wp-active').empty();
-          $('iframe').remove();
 
-          html ='<div style="margin-top:-8px" class="w3-right-align w3-xlarge w3-padding-small">{% trans %}order{% endtrans %} <span class="w3-xxxlarge">'+data.message+'</span></div><div class="w3-large">{% trans %}thank_you{% endtrans %}</div><div class="w3-large w3-center w3-text-deep-orange">{% trans %}spam_txt{% endtrans %}</div><div class="w3-right-align"><a class="w3-btn w3-border w3-white w3-round w3-medium" target="_blank" href='+info.receipt_url+'> {% trans %}receipt{% endtrans %}</a></div>'
-          modalConditions(0, html, '{% trans %}success{% endtrans %}')
+          html ='<div style="margin-top:-8px" class="text-right f-24">{% trans %}order{% endtrans %} <span style="font-size:30px;color:#000">'+data.message+'</span></div><div class="w3-large">{% trans %}thank_you{% endtrans %}</div><div style="color:#000;font-size:18px;text-align:center">{% trans %}spam_txt{% endtrans %}</div><hr><div class="w3-right-align"><a class="btn btn-primary btn-outline-primary px-2 py-1" target="_blank" href='+info.receipt_url+'> {% trans %}receipt{% endtrans %}</a></div>'
+
+          $('#alerts').modal('show')
+          $('.alert-success').removeClass('d-none').addClass('show')
+          $('.alert-success span').html(html)
+          //clearInterval(timer)
+          card.destroy()
+          clearBooking()
 
         }
         else{
-          modalConditions(1, data.message, '{% trans %}check{% endtrans %}') 
+          $('#alerts').modal('show')
+          $('.alert-warning').removeClass('d-none').addClass('show')
+          $('.alert-warning span').html(data.message)           
         }
       },
       error:function(data){
-        $(".w3-overlay, #loader-cont").hide();
-        modalConditions(2, '{% trans %}wifi_error{% endtrans %}', '{% trans %}error{% endtrans %}')
+        $('#ftco-loader').css({'opacity' : 0,'visibility' : 'hidden','z-index' : 1000})
+        $('#alerts').modal('show')
+        $('.alert-danger').removeClass('d-none').addClass('show')
+        $('.alert-danger span').html('{%trans%}wifi_error{%endtrans%}')
       }
     })
   }
 
-  setTimeout(function(){buildStripe('{{data.payment.public_key}}') }, 1000)
+  setTimeout(function(){
+    buildStripe('{{data.payment.public_key}}') 
+    $('.check-out').removeClass('d-none')
+  }, 1000)
 
 </script>
 

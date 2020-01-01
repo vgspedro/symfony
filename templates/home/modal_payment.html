@@ -6,76 +6,74 @@
       <!-- header -->
       <div class="modal-header modal-header-full">
        <h4 class="text-center">{% trans %}confirm_booking{% endtrans %}</h4>
-          <span class="pointer mr-2" style="margin-top:-6px"data-dismiss="modal"><i class="icon-times"></i></span>
+          <span class="pointer mr-2 proceed" style="margin-top:-6px" data-dismiss="modal"><i class="icon-times"></i></span>
       </div>
       <!-- header -->
       <!-- body -->
       <div class="modal-body modal-body-full no-pd-mob">
         <div class="container">
           <div class="row mb-4" style="font-size:1em;color:#000; max-width:640px;margin:0 auto">
-            <div class="col-12">
+            <div class="col-12 col-xl-6 col-lg-6 col-md-6">
               <b>{%trans%}name{%endtrans%}:</b> {{data.user.name}}<br>
               <b>{%trans%}email{%endtrans%}:</b> {{data.user.email}}<br>
               <b>{%trans%}phone{%endtrans%}:</b> {{data.user.telephone}}<br>
               <b>{%trans%}address{%endtrans%}:</b> {{data.user.address}}<br>
               <hr>
-
+            </div>
+              
+            <div class="col-12 col-xl-6 col-lg-6 col-md-6">
               <b>{%trans%}tour{%endtrans%}:</b> {{data.booking.tour}}<br>
               <b>{%trans%}date{%endtrans%}:</b> {{data.booking.date}}<br>
               <b>{%trans%}hour{%endtrans%}:</b> {{data.booking.hour}}<br>
-              <b>{%trans%}adults{%endtrans%}:</b> {{data.adult.quantity}}x {{data.adult.subtotal_money}}<span class="font-weight-bold f-10">{{data.adult.subtotal.currency}}</span>
-              <span class="float-right">{{data.adult.total_money}}<span class="font-weight-bold f-10">{{data.adult.total.currency}}</span></span>
+              <b>{%trans%}adults{%endtrans%}:</b> {{data.adult.quantity}}x {{data.adult.subtotal_money}}<span class="f-10">{{data.adult.subtotal.currency}}</span>
+              <span class="float-right">{{data.adult.total_money}}<span class="f-10">{{data.adult.total.currency}}</span></span>
               <br>
 
               {% if data.children.quantity > 0 %}
 
-              <b>{%trans%}childrens{%endtrans%}:</b> {{data.children.quantity}}x {{data.children.subtotal_money}}<span class="font-weight-bold f-10">{{data.children.subtotal.currency}}</span>
-              <span class="float-right">{{data.children.total_money}}<span class="font-weight-bold f-10">{{data.children.total.currency}}</span></span>
+              <b>{%trans%}childrens{%endtrans%}:</b> {{data.children.quantity}}x {{data.children.subtotal_money}}<span class="f-10">{{data.children.subtotal.currency}}</span>
+              <span class="float-right">{{data.children.total_money}}<span class="f-10">{{data.children.total.currency}}</span></span>
               <br>
 
               {% endif %}
               {% if data.baby.quantity > 0 %}
 
-              <b>{%trans%}babies{%endtrans%}:</b> {{data.baby.quantity}}x {{data.baby.subtotal_money}}<span class="font-weight-bold f-10">{{data.baby.subtotal.currency}}</span>
-              <span class="float-right">{{data.baby.total_money}}<span class="font-weight-bold f-10">{{data.baby.total.currency}}</span></span>
+              <b>{%trans%}babies{%endtrans%}:</b> {{data.baby.quantity}}x {{data.baby.subtotal_money}}<span class="f-10">{{data.baby.subtotal.currency}}</span>
+              <span class="float-right">{{data.baby.total_money}}<span class="f-10">{{data.baby.total.currency}}</span></span>
               <br>
 
               {% endif %}
 
               <hr>
-
-
-              {% if data.payment.enabled %}
-              <div class="f-24 text-right" style="margin-top: -12px">
-                <span class="text-left"><b>{%trans%}total{%endtrans%}:</b></span> {{data.booking.total_money}}<span class="f-10">{{data.booking.total.currency}}</span>
-              </div>
-            {% endif %}
-            
             </div>
-            
-            {% if data.payment.enabled %}
+              
             <div class="col-12">
-              {% include 'home/category_payment.html' %}
+              <div class="f-24 text-center" style="margin-top:-12px">
+                <span>
+                  <b>{%trans%}total{%endtrans%}:</b></span> {{data.booking.total_money}}<span class="f-10">{{data.booking.total.currency}}
+                </span>
+              </div>
+            
+              {% if data.payment.enabled %}
+                
+              <div>
+                {% include 'home/category_payment.html' %}
+              </div>
+              <div class="text-center check-out d-none">
+                <button class="btn btn-outline-success px-4 py-2 mt-4" onclick="checkOut()">
+                  {%trans%}confirm_pay{%endtrans%}
+                </button>
+              </div>
+              {% else%}
+              <div class="text-center">
+                <button class="btn btn-outline-success px-4 py-2" onclick="checkOut()">
+                  {%trans%}info.confirm{%endtrans%}
+                </button>
+              </div>
+              {% endif %}
             </div>
-            {% endif %}
 
           </div>
-        </div>
-        <div class="container">
-        <div class="row">
-          <div class="col-12 text-center">
-            <span class="proceed hidden" data-dismiss="modal"></span>
-            <button class="btn btn-outline-success px-4 py-2" onclick="payNow()">
-                {% if data.payment.enabled %} 
-                {%trans%}confirm_pay{%endtrans%}
-                {%else%}
-                {%trans%}info.confirm{%endtrans%}
-                {% endif %}
-            </button>
-          </div>
-          </div>
-        </div>
-
       </div>
     </div>
     <!-- content -->
@@ -85,14 +83,104 @@
 <!-- modal -->
 <script>
 
-
-function payNow(){
-  alert('create booking and payment')
-  return
-  $("html, body").animate({
-    scrollTop: $('.col-md-12.form-group').offset().top +16
-  }, 500)
+function checkOut(){ 
+  $('#ftco-loader').css({'opacity' : '0.7','visibility' : 'visible','z-index' : 9999})
+  if($('#card-button').length){
+    $('#card-errors').empty()
+    setTimeout(function(){
+      stripe.createToken(card).then(function(result) {
+        if (result.error){
+          var errorElement = document.getElementById('card-errors')
+          errorElement.textContent = result.error.message
+          $('#ftco-loader').css({'opacity' : 0,'visibility' : 'hidden','z-index' : 1000})
+          return
+        }
+        else
+          endBuy()
+      })
+    }, 500)
+  }
+  else{
+    setTimeout(function(){
+      endBuy()
+    }, 500)
+  }
 }
+
+function clearBooking(){
+  $('#fsModal-payment').modal('hide')
+  $('.appointment-form').trigger('reset')
+  clearInfo()
+}
+
+function endBuy(){
+
+  var html= ''
+  $.ajax({ 
+    url: '{{ path('set_new_booking') }}',
+    type: "POST",
+    cache: false,
+    data: $('.appointment-form').serialize()+'&secret='+$('#card-button').data('secret'),
+    success: function(data){
+
+      if (data.status == 3){
+        $('#ftco-loader').css({'opacity' : 0,'visibility' : 'hidden','z-index' : 1000})
+        $('#alerts').modal('show')
+        $('.alert-warning').removeClass('d-none').addClass('show')
+        $('.alert-warning span').html(data.message+'-->'+data.data)
+      }
+      else if (data.status == 1){
+        $('#ftco-loader').css({'opacity' : 0,'visibility' : 'hidden','z-index' : 1000})
+
+        clearBooking()
+        html ='<div style="margin-top:-8px" class="text-right f-24">{% trans %}order{% endtrans %} <span style="font-size:32px;color:#000">'+data.data+'</span></div><div class="">{% trans %}thank_you{% endtrans %}</div><hr><div style="color:#000;font-size:18px;text-align:center">{% trans %}spam_txt{% endtrans %}</div>'
+
+        $('#alerts').modal('show')
+        $('.alert-success').removeClass('d-none').addClass('show')
+        $('.alert-success span').html(html)
+        //clearInterval(timer)
+        
+        
+      }
+      //show what went wrong
+      else if (data.status == 0 || data.status == 2){
+              
+       $('#ftco-loader').css({'opacity' : 0,'visibility' : 'hidden','z-index' : 1000})
+              
+        for(var k in data.message)
+          html += '<div class="required">'+data.message[k]+'</div>'
+
+          $('#alerts').modal('show')
+          $('.alert-warning').removeClass('d-none').addClass('show')
+          $('.alert-warning span').html(html)
+      }      
+      else if (data.status == 4){
+          $('#ftco-loader').css({'opacity' : 0,'visibility' : 'hidden','z-index' : 1000})
+          $('#alerts').modal('show')
+          $('.alert-warning').removeClass('d-none').addClass('show')
+          $('.alert-warning span').html(data.message)
+      }
+      
+      //this has payment required
+      else if(data.data != 'succeeded'){
+        handleCard()
+      }
+      else{
+        $('#ftco-loader').css({'opacity' : 0,'visibility' : 'hidden','z-index' : 1000})
+        $('#alerts').modal('show')
+        $('.alert-warning').removeClass('d-none').addClass('show')
+        $('.alert-warning span').html(data.message+'-->'+data.data)   
+      }
+    },
+    error:function(data){
+      $('#ftco-loader').css({'opacity' : 0,'visibility' : 'hidden','z-index' : 1000})
+      $('#alerts').modal('show')
+      $('.alert-danger').removeClass('d-none').addClass('show')
+      $('.alert-danger span').html('{%trans%}wifi_error{%endtrans%}')
+    }
+  })
+}
+
 
 </script>
 

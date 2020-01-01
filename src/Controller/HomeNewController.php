@@ -315,19 +315,10 @@ class HomeNewController extends AbstractController
         ]);*/
     }
 
-
-
-
-
-
-
-
-
-
     public function setNewBooking(Request $request, MoneyFormatter $moneyFormatter, RequestInfo $reqInfo, FieldsValidator $fieldsValidator, TranslatorInterface $translator, Stripe $stripe){
 
-        $err = [];
 
+        $err = [];
         $em = $this->getDoctrine()->getManager();
 
         $local = $request->getLocale();
@@ -347,48 +338,45 @@ class HomeNewController extends AbstractController
                 'expiration' => 1
             ]);
         }
-        
-        //IF FIELDS IS NULL PUT IN ARRAY AND SEND BACK TO USER
+
+        //First part of validation 
+        //the required fields on form, if empty send array to inform user what happen 
         $request->request->get('name') ? $name = $request->request->get('name') : $err[] = $translator->trans('part_seven.name');
         $request->request->get('email') ? $email = $request->request->get('email') : $err[] = 'Email *';
         $request->request->get('address') ? $address = $request->request->get('address') : $err[] = $translator->trans('part_seven.address');
         $request->request->get('telephone') ? $telephone = $request->request->get('telephone') : $err[] = $translator->trans('part_seven.telephone');
         $request->request->get('check_rgpd') && $request->request->get('check_rgpd') !== null  ? $rgpd = true : $err[] = $translator->trans('part_seven.rgpd');
-        $request->request->get('event') ? $event = (int)$request->request->get('event') : $err[] = $translator->trans('part_seven.event');
+        $request->request->get('event') ? $event = (int)$request->request->get('event') : $err[] = $translator->trans('event_not_found');
         $request->request->get('adult') ? $adult = (int)$request->request->get('adult') : $err[] = $translator->trans('part_seven.adult');
         
         $children = $request->request->get('children') ? (int)$request->request->get('children') : 0;
-        
         $baby = $request->request->get('baby') ? (int)$request->request->get('baby') : 0;
-
-        $wp = $request->request->get('wp') == 'true' ? $request->request->get('wp') : false;
         
-
-        /*
-        //payment is required
-        if($wp)
-            $request->request->get('secret') ? $secret = $request->request->get('secret') : $err[] = $translator->trans('secret');
-
-        */    
         if($err)
-
-             return new JsonResponse([
+            return new JsonResponse([
                 'status' => 0,
                 'message' => $err,
                 'expiration' => 0
             ]);
         
-        //NO FAKE DATA
+        //Avoid user fake data
         $fieldsValidator->noFakeEmails($email) == 1 ? $err[] = $translator->trans('part_seven.email_invalid') : false;
         $fieldsValidator->noFakeTelephone($telephone) == 1 ? $err[] = $translator->trans('part_seven.telephone_invalid') : false;
         $fieldsValidator->noFakeName($name) == 1 ? $err[] = $translator->trans('part_seven.name_invalid') : false;
-        
+        //Check if the Event exits
+        $available = $em->getRepository(Available::class)->find($event);
+
+        if(!$available)
+            $err[] = $translator->trans('event_not_found');
+
         if($err)
              return new JsonResponse([
                 'status' => 0,
                 'message' => $err,
                 'expiration' => 0
             ]);
+
+
 
 
         //Create booking
@@ -460,9 +448,10 @@ class HomeNewController extends AbstractController
                 $em->persist($booking);
                 $em->flush();
 
-                if($wp){
+                if($available->getCategory()->getWarrantyPayment()){
                 
                     $company = $em->getRepository(Company::class)->find(1);
+
                     $i = $stripe->createUpdatePaymentIntent($company, $request, $booking);
                     
                     if($i['status'] == 1){
@@ -502,7 +491,7 @@ class HomeNewController extends AbstractController
                 ]);
             }
 
-            if($wp)
+            if($available->getCategory()->getWarrantyPayment())
                 return new JsonResponse([
                 'status' => 99,
                 'message' => 'waiting payment',

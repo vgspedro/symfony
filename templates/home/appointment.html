@@ -146,7 +146,7 @@
 
 function clearInfo(){
   $('.personal-data, .show-datetime').addClass('d-none')
-  $('[name=next], [name=date], [name=wp], [name=event]').val('') 
+  $('[name=next], [name=date], [name=event]').val('') 
 }
 
 //Validate the data added by the user 
@@ -267,6 +267,40 @@ function buildWeekTemplate(days){
 
   $('.set-weeks').html(day)
 }
+
+
+
+function showRgpd(){
+  $('#ftco-loader').css({'opacity' : '0.7','visibility' : 'visible','z-index' : 9999})
+  setTimeout(function(){
+    $.ajax({ 
+      url:'{{ path('index_rgpd') }}',
+      type: "POST",
+      success: function(data){  
+        $('#ftco-loader').css({'opacity' : 0,'visibility' : 'hidden','z-index' : 1000})
+        if (data.status == 1){
+          $('#fsModal-rgpd').modal('show')
+          $('.modal-title.rgpd').html(data.message)
+          $('.modal-body.rgpd').html(data.data)
+        }        
+        else {
+          $('#alerts').modal('show')
+          $('.alert-warning').removeClass('d-none').addClass('show')
+          $('.alert-warning span').html('{% trans %}gdpr_not_found{% endtrans %}')
+        }
+      },
+      error:function(data){
+        $('#ftco-loader').css({'opacity' : 0,'visibility' : 'hidden','z-index' : 1000})
+        $('#alerts').modal('show')
+        $('.alert-danger').removeClass('d-none').addClass('show')
+        $('.alert-danger span').html('{%trans%}wifi_error{%endtrans%}')
+      }
+    })
+  }, 500)
+}
+
+
+
 
 </script>
 
