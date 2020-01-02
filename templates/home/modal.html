@@ -41,7 +41,7 @@
       </div>
       <!-- header -->
       <!-- body -->
-      <div class="modal-body modal-body-full">
+      <div class="modal-body modal-body-full" style="bottom:0px;padding-bottom:0">
         <div class="container months">
           <div class="row f-24 mb-4 mb-4-540">
             <div class='col-md-3 col-sm-0 d-none d-lg-block d-xl-block d-md-block'>&nbsp;</div>
@@ -121,6 +121,19 @@
     </div>
   </div>
 </div>
+
+<div class="modal" id="fsModal-success">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content alert-success" style="background-color: #d4edda">
+      <div class="modal-header">
+        <h4 class="modal-title">{%trans%}success{%endtrans%}</h4>
+        <button type="button" class="close" data-dismiss="modal"><i class="icon-times"></i></button>
+      </div>
+      <div class="modal-body"></div>
+    </div>
+  </div>
+</div>
+
 
 <script>
 
@@ -219,8 +232,6 @@ function initializeDateTimePicker(){
     $('.show-datetime').removeClass('d-none')
     $('[name=event]').val(e)
   }
-
-
 
 function availabilityModal(){
     

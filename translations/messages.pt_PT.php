@@ -21,6 +21,8 @@ return array(
     'email' => 'Email',
     'address' => 'Morada',
     'total' => 'Total', 
+    'max_stock' => 'A disponibilidade máxima do Passeio é de ',
+    'tour_adults' => 'Os campos Passeio* e  Nº.Adultos* são obrigatórios!',
 
     'min_amount' => 'Montante Minimo 0.50Eur',
     'max_amount' => 'Montante Máximo 5000.00Eur',
@@ -57,7 +59,7 @@ return array(
     'required' => 'Obrigatório *',
     'wifi_error' =>'Por favor verifique a ligação Wi-fi/Internet, e tente novamente!',
     'order' => 'Reserva Nº',
-    'thank_you' => 'Dentro de <b class="w3-xlarge">12 horas</b> confirmaremos a sua reserva.<br>Obrigado, Taruga Benagil Tours.',
+    'thank_you' => 'Dentro de <b class="f-24">12 horas</b> confirmaremos a sua reserva.<br>Obrigado, Taruga Benagil Tours.',
     'session' => 'Sessão expirou!!',
     'check' => 'Verifique',
     'session_info' => 'Por favor, atualize a página!',

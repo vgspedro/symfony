@@ -10,7 +10,7 @@
       </div>
       <!-- header -->
       <!-- body -->
-      <div class="modal-body modal-body-full no-pd-mob">
+      <div class="modal-body modal-body-full no-pd-mob" style="bottom:0px;padding-bottom:0">
         <div class="container">
           <div class="row mb-4" style="font-size:1em;color:#000; max-width:640px;margin:0 auto">
             <div class="col-12 col-xl-6 col-lg-6 col-md-6">
@@ -83,7 +83,8 @@
 <!-- modal -->
 <script>
 
-function checkOut(){ 
+function checkOut(){
+  closeAlert() 
   $('#ftco-loader').css({'opacity' : '0.7','visibility' : 'visible','z-index' : 9999})
   if($('#card-button').length){
     $('#card-errors').empty()
@@ -114,7 +115,9 @@ function clearBooking(){
 }
 
 function endBuy(){
-
+  
+  closeAlert()
+  
   var html= ''
   $.ajax({ 
     url: '{{ path('set_new_booking') }}',
@@ -135,11 +138,9 @@ function endBuy(){
         clearBooking()
         html ='<div style="margin-top:-8px" class="text-right f-24">{% trans %}order{% endtrans %} <span style="font-size:32px;color:#000">'+data.data+'</span></div><div class="">{% trans %}thank_you{% endtrans %}</div><hr><div style="color:#000;font-size:18px;text-align:center">{% trans %}spam_txt{% endtrans %}</div>'
 
-        $('#alerts').modal('show')
-        $('.alert-success').removeClass('d-none').addClass('show')
-        $('.alert-success span').html(html)
-        //clearInterval(timer)
-        
+        $('#fsModal-success').modal('show')
+        $('#fsModal-success .modal-body').html(html)
+        //clearInterval(timer)        
         
       }
       //show what went wrong
@@ -151,8 +152,8 @@ function endBuy(){
           html += '<div class="required">'+data.message[k]+'</div>'
 
           $('#alerts').modal('show')
-          $('.alert-warning').removeClass('d-none').addClass('show')
-          $('.alert-warning span').html(html)
+          $('.alert-primary').removeClass('d-none').addClass('show')
+          $('.alert-primary span').html(html)
       }      
       else if (data.status == 4){
           $('#ftco-loader').css({'opacity' : 0,'visibility' : 'hidden','z-index' : 1000})

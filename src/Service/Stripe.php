@@ -86,7 +86,13 @@ class Stripe
 
                 //from online booking
                 else{
-                    $depositPercent = $booking->getAvailable()->getCategory()->getDeposit() != '0.00' ? $booking->getAvailable()->getCategory()->getDeposit() : 1;
+                    
+                    $depositPercent = $booking->getAvailable()->getCategory()->getDeposit() != '0.00' 
+                    ? 
+                        $booking->getAvailable()->getCategory()->getDeposit() 
+                    : 
+                        1;
+                    
                     $chargeAmount = $booking->getAmount()->getAmount() * $depositPercent;
                 }
                 

@@ -151,7 +151,8 @@ function clearInfo(){
 
 //Validate the data added by the user 
 function validateBookingData(){
-
+  
+  closeAlert()
   $('#ftco-loader').css({'opacity' : '0.7','visibility' : 'visible','z-index' : 9999})
     setTimeout(function(){
       $.ajax({  
@@ -165,10 +166,10 @@ function validateBookingData(){
         if (data.status == 0){
           html =''
           $('#alerts').modal('show')
-          $('.alert-warning').removeClass('d-none').addClass('show')
+          $('.alert-primary').removeClass('d-none').addClass('show')
           for (var k in data.message)
             html += data.message[k]+'<br>'
-          $('.alert-warning span').html('<br>'+html)
+          $('.alert-primary span').html('<br>'+html)
         }
         
         //All is ok so far, build the info modal to show booking adn proceed to payment, if that is the case 
@@ -208,7 +209,7 @@ function getAvailability(){
  		$('#ftco-loader').css({'opacity' : '0.7','visibility' : 'visible','z-index' : 9999})
     		
     setTimeout(function(){
-    	$.ajax({  
+    	$.ajax({
       url: '{{ path('available_by_period') }}',
       type: "POST",
       data: $('.appointment-form').serialize(),
@@ -220,7 +221,9 @@ function getAvailability(){
           $('.icon-chevron-left.previous').addClass('d-none warning')
           available_dates = data.data.available_dates
           initializeDateTimePicker(data.data.available_dates)
-          $('[name=wp]').val(data.data.payment)
+          
+          //$('[name=wp]').val(data.data.payment)
+          
           var ymd = data.data.available_dates[0].split("-")    
           
           if (ymd.length > 0)
@@ -232,8 +235,8 @@ function getAvailability(){
         }
         else{
           $('#alerts').modal('show')
-          $('.alert-warning').removeClass('d-none').addClass('show')
-          $('.alert-warning span').html('No availability max pax is '+ data.data.availability)
+          $('.alert-primary').removeClass('d-none').addClass('show')
+          $('.alert-primary span').html('<br>{%trans%}max_stock{%endtrans%} '+ data.data.availability)
         }
       },
       error:function(data){
@@ -249,7 +252,7 @@ function getAvailability(){
 	else{
     $('#alerts').modal('show')
     $('.alert-primary').removeClass('d-none').addClass('show')
-    $('.alert-primary span').html('Tour and adults')
+    $('.alert-primary span').html('<br>{%trans%}tour_adults{%endtrans%}')
 	}
 }
 
@@ -271,6 +274,7 @@ function buildWeekTemplate(days){
 
 
 function showRgpd(){
+  closeAlert()
   $('#ftco-loader').css({'opacity' : '0.7','visibility' : 'visible','z-index' : 9999})
   setTimeout(function(){
     $.ajax({ 

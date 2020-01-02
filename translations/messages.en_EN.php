@@ -38,7 +38,7 @@ return array(
     'required'=>'Required *',
     'wifi_error' =>'Please check Wi-fi/Internet connection, and try again!',
     'order' => 'Booking Nr.',
-    'thank_you' => 'In <b class="w3-xlarge">12 hours</b> we will confirm your booking.<br>Thank you, Taruga Benagil Tours.',
+    'thank_you' => 'In <b class="f-24">12 hours</b> we will confirm your booking.<br>Thank you, Taruga Benagil Tours.',
     'session' => 'Session timeout reached!!',
     'check' => 'Check',
     'session_info' => 'Please, refresh the page!',
@@ -74,6 +74,8 @@ return array(
     'canceled' => 'Canceled',
     'confirmed' => 'Confirmed',
     'booking' => 'Booking',
+    'max_stock' => 'The maximum availability for the tour is ',
+    'tour_adults' => 'The fields Tour* and Nr.Adults* are required!',
 
     'order_info' => 'Order Info',
     'total_to_pay' => 'Amount to Pay',
