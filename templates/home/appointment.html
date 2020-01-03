@@ -69,7 +69,6 @@
                 <input type="hidden" name="next" value="">
                 <input type="hidden" name="event" value="">
                 <input type="hidden" name="date" value="">
-                <input type="hidden" name="wp" value="">
               </div>
             </div>
           
@@ -220,10 +219,7 @@ function getAvailability(){
         if (data.status == 1 && data.data.available_dates.length > 0){
           $('.icon-chevron-left.previous').addClass('d-none warning')
           available_dates = data.data.available_dates
-          initializeDateTimePicker(data.data.available_dates)
-          
-          //$('[name=wp]').val(data.data.payment)
-          
+          initializeDateTimePicker(data.data.available_dates)         
           var ymd = data.data.available_dates[0].split("-")    
           
           if (ymd.length > 0)
