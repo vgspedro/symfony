@@ -76,6 +76,8 @@ return array(
     'booking' => 'Booking',
     'max_stock' => 'The maximum availability for the tour is ',
     'tour_adults' => 'The fields Tour* and Nr.Adults* are required!',
+    'charge_message' => 'To be paid in Check-In',
+    'pay' => 'Pay Now',
 
     'order_info' => 'Order Info',
     'total_to_pay' => 'Amount to Pay',

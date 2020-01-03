@@ -1,15 +1,10 @@
 
 <script src="https://js.stripe.com/v3/"></script>
-  <!--label class="">{% trans %}deposit{% endtrans %}:</label> 
-  {% set deposit = data.payment.deposit == 0 ? 100 : data.payment.deposit*100 %}
-
-  <span class="w3-right">{{deposit}}%</span><br-->
-  <!--form id="payment-form"-->
   <label class="mb-0">{% trans %}part_seven.card_n{% endtrans %}</label>
   <div id="card-element" style="padding: 10px 8px"></div>
   <div id="card-errors" class="font-weight-bold text-danger f-10" role="alert"></div>
   <div class="set-token"></div>
-  <!--/form-->
+
   <input type="hidden" id="card-button" data-secret="{{data.payment.payment_intent.data.client_secret}}">
 <script>
 

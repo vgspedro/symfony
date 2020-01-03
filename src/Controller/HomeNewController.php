@@ -259,13 +259,27 @@ class HomeNewController extends AbstractController
         $amountC = $amountC->multiply($children);
         $total = $amountA->add($amountC);
 
+
+        $deposit_percent = $available->getCategory()->getDeposit() != '0.00' ? 
+            $available->getCategory()->getDeposit()
+        :
+            1;
+
         $temp_booking = [
             'booking' => [
                 'tour' => $locales->getName() =='pt_PT' ? $available->getCategory()->getNamePt() : $available->getCategory()->getNameEn(),
                 'date' => $available->getDatetimeStart()->format('d/m/Y'),
                 'hour' => $available->getDatetimeStart()->format('H:i'),
                 'total' => $total,
-                'total_money' => $moneyFormatter->format($total)
+                'total_money' => $moneyFormatter->format($total),
+                'total_to_charge' => $total_to_charge = $total->multiply($deposit_percent),
+                'total_to_charge_money' => $moneyFormatter->format($total_to_charge),
+                'to_be_charged' => $total->subtract(), 
+                'charge_message' => $translator->trans('charge_message'),
+                'to_be_charged_money' => $moneyFormatter->format($total),
+                'to_be_charged' => $to_be_charged = $total->subtract($total_to_charge), 
+                'to_be_charged_money' => $moneyFormatter->format($to_be_charged)
+            
             ],
             'user' => [
                 'name' => $name,
@@ -299,7 +313,7 @@ class HomeNewController extends AbstractController
                 'enabled' => $available->getCategory()->getWarrantyPayment(),
                 'public_key' => $company->getStripePK(),
                 'payment_intent' => $available->getCategory()->getWarrantyPayment() ? $stripe->createUpdatePaymentIntent($company, $request, null) : null,
-                'deposit' => $available->getCategory()->getDeposit()
+                'deposit' => ($available->getCategory()->getDeposit() != '0.00' ? $available->getCategory()->getDeposit() : 1 )*100
             ]
         ];
 
@@ -377,12 +391,11 @@ class HomeNewController extends AbstractController
             ]);
 
 
-
-
         //Create booking
         else{
 
             $em->getConnection()->beginTransaction();
+
             $available = $em->getRepository(Available::class)->find($event);
 
             if(!$available){

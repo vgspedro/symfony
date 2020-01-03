@@ -48,14 +48,32 @@
             </div>
               
             <div class="col-12">
+                         
+              {% if data.payment.enabled %}
+              {% if data.payment.deposit != 100 %}
+
               <div class="f-24 text-center" style="margin-top:-12px">
                 <span>
-                  <b>{%trans%}total{%endtrans%}:</b></span> {{data.booking.total_money}}<span class="f-10">{{data.booking.total.currency}}
+                  <b>{%trans%}pay{%endtrans%}:</b>
+                </span>{{data.booking.total_to_charge_money}}<span class="f-10">{{data.booking.total.currency}}</span>
+                <br>
+                <span>
+                  <b>{{data.booking.charge_message}}:</b>
+                </span>{{data.booking.to_be_charged_money}}<span class="f-10">{{data.booking.total.currency}}</span>
                 </span>
               </div>
-            
-              {% if data.payment.enabled %}
-                
+
+              {%else%}
+                <div class="f-24 text-center" style="margin-top:-12px">
+                <span>
+                  <b>{%trans%}total{%endtrans%} :</b></span>{{data.booking.total_money}}<span class="f-10">{{data.booking.total.currency}}
+                </span>
+              </div>
+
+              {%endif%}
+
+
+
               <div>
                 {% include 'home/category_payment.html' %}
               </div>
@@ -64,13 +82,27 @@
                   {%trans%}confirm_pay{%endtrans%}
                 </button>
               </div>
+
+              
               {% else%}
+              
+              <div class="f-24 text-center" style="margin-top:-12px">
+                <span>
+                  <b>{%trans%}total{%endtrans%}:</b></span> {{data.booking.total_money}}<span class="f-10">{{data.booking.total.currency}}
+                </span>
+              </div>
               <div class="text-center">
                 <button class="btn btn-outline-success px-4 py-2" onclick="checkOut()">
                   {%trans%}info.confirm{%endtrans%}
                 </button>
               </div>
+              
               {% endif %}
+
+
+
+
+
             </div>
 
           </div>

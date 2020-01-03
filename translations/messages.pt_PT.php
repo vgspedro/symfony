@@ -23,6 +23,8 @@ return array(
     'total' => 'Total', 
     'max_stock' => 'A disponibilidade máxima do Passeio é de ',
     'tour_adults' => 'Os campos Passeio* e  Nº.Adultos* são obrigatórios!',
+    'charge_message' => 'A pagar no embarque',
+    'pay' => 'A pagar agora',
 
     'min_amount' => 'Montante Minimo 0.50Eur',
     'max_amount' => 'Montante Máximo 5000.00Eur',
