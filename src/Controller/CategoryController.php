@@ -68,7 +68,7 @@ class CategoryController extends AbstractController
             $tickets[] = $this->calculatePrice($translator->trans('adults'), $category->getDeposit(), $category->getAdultPrice()->getAmount(), $request->request->get('adult'));
         
         if($request->request->get('children') > 0)
-            $this->calculatePrice($translator->trans('childrens'), $category->getDeposit(), $category->getChildrenPrice()->getAmount(), $request->request->get('children'));
+            $tickets[] = $this->calculatePrice($translator->trans('childrens'), $category->getDeposit(), $category->getChildrenPrice()->getAmount(), $request->request->get('children'));
         
         if($request->request->get('baby') > 0)
             $tickets[] = ['type' => $translator->trans('babies'), 'quantity' => $request->request->get('baby'), 'subtotal' => 0, 'total' => 0 ];
