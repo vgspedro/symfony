@@ -13,6 +13,9 @@ return array(
     'fri' => 'Fri',
     'sat' => 'Sat',
 
+    'thanks' => 'Thank you',
+    'hello' =>'Hello',
+    'countdown' => 'Countdown',
     'hour' => 'Hour',
     'confirm_booking' => 'Confirm Booking',
     'confirm_pay' => 'Confirm & Pay',
@@ -91,7 +94,6 @@ return array(
     'team' => 'Team',
     'our_team' => 'Our Team',
     'our_team_txt' => 'Meet a few elements of the crew.',
-
     'testimony' => 'Testimony',
     'happy_customer' => 'happy customer',
     'information' => 'Information',
@@ -115,7 +117,7 @@ return array(
     'date' => 'Date',
     'payment' => 'Payment',
     'refund' => 'Refund',
-    'refund_txt' => 'A refund was issued, please click on the button "Refund", to see it',
+    'refund_txt' => 'We are sorry for the inconvenience, but the weather conditions don´t allow the realization of the Tour.<br><br>A refund was issued, please click on the button "Refund", to see it',
     'name' => 'Name',
     'adults' => 'Adults',
     'childrens' => 'Children',

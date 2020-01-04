@@ -37,18 +37,19 @@
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('css/gly.css') }}">
     <link rel="stylesheet" href="{{ asset('css/bootstrap-datetimepicker.min.css') }}">
-
+    <link rel="stylesheet" href="{{ asset('css/cookieconsent.min.css') }}">
     <script src="{{ asset('js/jquery.min.js') }}"></script>
+
     <script src="{{ asset('js/jquery-migrate-3.0.1.min.js') }}"></script>
     <script src="{{ asset('js/moment-with-locales.min.js') }}"></script>
     <script src="{{ asset('js/bootstrap-datetimepicker.min.js') }}"></script>
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-138976385-1"></script>
-    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.js"></script>
     <script>
-      window.dataLayer = window.dataLayer || [];
+      window.dataLayer = window.dataLayer || []
         function gtag(){dataLayer.push(arguments)}
         gtag('js', new Date());
-       gtag('config', 'UA-138976385-1');
+       gtag('config', 'UA-138976385-1')
     </script>
 
 
@@ -106,13 +107,50 @@
 .marquee:hover{animation-play-state:paused}
 .nav-container{padding:2px 0}
 
-
 .StripeElement{box-shadow: none !important;border: 2px solid #1089ff !important;font-weight: 500; background: transparent !important;
-    color: #563b4c !important;
-    font-size: 16px;
-    border-radius: 5px;}
+color: #563b4c !important;font-size: 16px;border-radius: 5px}
 
 
+
+.cc-btn{
+    border: 3px solid #1089ff!important;
+    background-color:transparent!important;
+    color: #1089ff!important;
+    cursor: pointer;
+    -webkit-box-shadow: 0px 24px 36px -11px rgba(0, 0, 0, 0.09);
+    -moz-box-shadow: 0px 24px 36px -11px rgba(0, 0, 0, 0.09);
+    box-shadow: 0px 24px 36px -11px rgba(0, 0, 0, 0.09);
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    padding-bottom: 0.5rem;
+    padding-top: 0.5rem !important;
+    display: inline-block;
+    font-weight: 400;
+    text-align:center;
+    font-size: 1.3em;
+    text-transform: capitalize;
+    vertical-align: middle;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    line-height: 1.5;
+    -webkit-transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
+    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
+    -o-transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out}
+.cc-color-override--546657846.cc-window {
+  padding:4em;
+  font-family: "Poppins", Arial, sans-serif!important;
+  color: #FFF!important;
+  background-color: rgba(0, 0, 0, 0.6)!important;
+  text-transform: uppercase;
+  font-size: 0.8em}
+
+.cc-link{color: #17a2b8 !important}
+.cc-btn:hover{background:#1089ff!important;color:#FFF!important}
+.flag:hover{opacity: 0.7}
 
 </style>
   <body>
@@ -123,7 +161,7 @@
 
   {# % include 'home/welcome.html' % #}
 
-  {% include 'home/services_1.html' %}
+  {% include 'home/services.html' %}
 
   {% include 'home/product_0.html' %}
 
@@ -156,6 +194,21 @@
   <script src="js/jquery.timepicker.min.js"></script>
   <script src="js/scrollax.min.js"></script>
   <script src="js/main.js"></script>
-    
+  
+
+  <script>
+        window.addEventListener("load", function(){
+        window.cookieconsent.initialise({
+          "palette": {
+            "popup":{"background":"rgba(214,209,156,0.85)","text":"#333"},
+            "button":{"background":"#3f51b5","text":"#FFF"}},
+            "content": {"message": "{% trans %}cookies.txt{% endtrans %}", 
+            "dismiss": "{% trans %}cookies.btn{% endtrans %}",
+            "link": "{% trans %}cookies.link{% endtrans %}",
+            "href": "https://cookiesandyou.com/"
+          }
+        })
+      })
+  </script>
   </body>
 </html>

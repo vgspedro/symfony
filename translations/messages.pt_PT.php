@@ -13,6 +13,9 @@ return array(
     'fri' => 'Sex',
     'sat' => 'Sáb',
 
+    'hello' =>'Olá',
+    'thanks' => 'Obrigado',
+    'countdown' => 'Limite',
     'hour' => 'Hora',
     'confirm_booking' => 'Confirme a Reserva',
     'confirm_pay' => 'Confirmar & Pagar',
@@ -133,7 +136,7 @@ return array(
     'date' => 'Data',
     'payment' => 'Pagamento',
     'refund' => 'Reembolso',
-    'refund_txt' => 'Foi-lhe efetuado um reembolso, por favor clique no botão "Reembolso", para ver',
+    'refund_txt' => 'Lamentamos o inconveniente, mas as condições climáticas não permitem a realização do Passeio.<br><br> Foi efetuado um reembolso, por favor clique no botão "Refund", para ver',
     'name' => 'Nome',
     'adults' => 'Adultos',
     'childrens' => 'Crianças',

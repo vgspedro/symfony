@@ -191,6 +191,7 @@ class HomeNewController extends AbstractController
 
     public function validateBookingData(Request $request, MoneyFormatter $moneyFormatter, RequestInfo $reqInfo, FieldsValidator $fieldsValidator, TranslatorInterface $translator, Stripe $stripe){
 
+        
         $err = [];
         $em = $this->getDoctrine()->getManager();
         $local = $request->getLocale();
@@ -627,7 +628,7 @@ class HomeNewController extends AbstractController
                         'children' => $booking->getChildren(),
                         'baby' => $booking->getBaby(),
                         'wp' => $category->getWarrantyPayment(),
-                        'logo' => 'https://'.$domain.'/upload/gallery/'.$company->getLogo(),
+                        'logo' => $company->getLinkMyDomain().'/upload/gallery/'.$company->getLogo(),
                         'terms' => !$terms ? '' : $terms->getName(),
                         'terms_txt' => !$terms ? '' : $terms->getTermsHtml(),
                         'company_name' => $company->getName(),

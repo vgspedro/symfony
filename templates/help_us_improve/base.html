@@ -49,6 +49,7 @@
 @keyframes marquee{0%{text-indent:27.5em}100%{text-indent:-105em}}
 .marquee:hover{animation-play-state:paused}
 .nav-container{padding:2px 0}
+.flag:hover{opacity: 0.7}
 </style>
   <body>
 
@@ -57,6 +58,10 @@
   {% include 'help_us_improve/banner.html' %}
 
   {% include 'home/map.html' %}
+
+  {% include 'home/modal_testimony.html' %}
+
+  {% include 'home/modal_report_issue.html' %}
 
   {% include 'home/footer.html' %}
  

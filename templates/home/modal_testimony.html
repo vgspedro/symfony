@@ -1,0 +1,92 @@
+<div class="modal" id="fsModal-abitrary">
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">{% trans %}arbitrary.name{%endtrans%}</h4>
+        <button type="button" class="close" data-dismiss="modal"><i class="icon-times"></i></button>
+      </div>
+      <div class="modal-body f-14">
+        <p>
+          {% trans %}arbitrary.txt{%endtrans%}
+        </p>
+      </div> 
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal"><i class="icon-times"></i></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div id="modal-show-feedback" style="padding-top:64px;padding-bottom:64px;display:none;z-index:9" class="w3-modal">
+  <div class="w3-modal-content w3-card-4 w3-animate-zoom" style="max-width:650px">
+    <div class="w3-border-bottom w3-padding w3-light-grey">
+      <span class="w3-closebtn w3-padding-small" onclick="clearFeedback();$('#modal-show-feedback').hide()">
+        <i class="fa fa-times"></i>
+      </span>
+      <p class="w3-text-black w3-xxlarge"><i class="fa fa-smile-o"></i> {% trans %}send_feedback{% endtrans %}</p>
+    </div>
+    <div class="w3-container w3-white w3-padding-16 w3-border-bottom">
+    {{ form_start(feedbackForm, {'attr': {'id': 'feedback-form'}})  }}
+      <div class="w3-row-padding w3-large">
+        
+        <div class="w3-col l6 m12 s12">
+          <label class="w3-small w3-text-red">{%trans%}part_seven.name{%endtrans%} </label>
+          <span class="w3-text-red w3-medium w3-hide w3-right name bold required-txt">{%trans%}required{%endtrans%}</span>
+          <span class="w3-text-red w3-medium w3-hide w3-right invalid_name bold required-txt">{%trans%}part_seven.name_invalid{%endtrans%}</span>
+          {{ form_widget(feedbackForm.name)}} 
+        </div>
+
+        <div class="w3-col l6 m12 s12">
+          <label class="w3-small w3-text-red">{%trans%}part_seven.email{%endtrans%} </label>
+          <span class="w3-text-red w3-medium w3-hide w3-right email bold required-txt">{%trans%}required{%endtrans%}</span>
+          <span class="w3-text-red w3-medium w3-hide w3-right invalid_email bold required-txt">{%trans%}part_seven.email_invalid{%endtrans%}</span>
+          {{ form_widget(feedbackForm.email)}} 
+        </div>
+
+
+
+        <div class="w3-col l6 m12 s12">
+          <label class="w3-small w3-text-red">{%trans%}part_seven.booking_nr{%endtrans%} </label>
+          <span class="w3-text-red w3-medium w3-hide w3-right booking_nr bold required-txt">{%trans%}required{%endtrans%}</span>
+          <span class="w3-text-red w3-medium w3-hide w3-right booking_not_valid bold required-txt">{%trans%}booking_not_valid{%endtrans%}</span>
+          <span class="w3-text-red w3-medium w3-hide w3-right booking_email_invalid bold required-txt">{%trans%}booking_email_invalid{%endtrans%}</span>
+          <span class="w3-text-red w3-medium w3-hide w3-right already_left_feedback bold required-txt">{%trans%}already_left_feedback{%endtrans%}</span>
+          {{ form_widget(feedbackForm.booking)}} 
+        </div>
+
+        <div class="w3-col l6 m12 s12">
+          <div class="w3-hide">
+          {{ form_widget(feedbackForm.rate)}}
+          </div>
+          <label class="w3-small w3-text-red">{%trans%}part_seven.rating{%endtrans%} </label>
+          <span class="w3-text-red w3-medium w3-hide w3-right rate bold required-txt">{%trans%}required{%endtrans%}</span>
+          <div class="w3-padding-small" style="margin-top:6px">
+            {% for i in 1..5 %}
+            <i class="fa fa-star w3-xlarge star-nr-{{i}}" onclick="setStars({{i}})" style="cursor:pointer" title="{{i}}-stars"></i> 
+            {% endfor %}
+          </div>
+        </div>
+
+        <div class="w3-col l12">
+          <label class="w3-small">{%trans%}part_seven.observations{%endtrans%} </label>
+          {{ form_widget(feedbackForm.observations)}}
+        </div>
+
+        <div class="w3-col s12">
+           <div class="user-message-feedback w3-margin-top w3-center w3-text-green w3-hide bold w3-light-grey w3-padding w3-border w3-margin-bottom w3-round"></div>
+        </div>
+
+      </div>
+    {{form_end(feedbackForm)}}
+
+    </div>
+    <div class="w3-container w3-padding-16 w3-margin-bottom">
+      <span class="w3-btn w3-white w3-border w3-round w3-left" onclick="clearFeedback();$('#modal-show-feedback').hide()">
+        <i class="fa fa-times"></i> {%trans%}close{%endtrans%} </span>
+
+      <span class="w3-btn w3-border w3-green w3-round w3-right" onclick="$('#feedback-form').trigger('submit')">
+        <i class="fa fa-check"></i> {%trans%}part_seven.submit{%endtrans%} </span>
+    </div>
+  </div>
+</div>

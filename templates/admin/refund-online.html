@@ -62,19 +62,13 @@
       <span class="">{{booking.baby}}</span>
     </div>
 
-    <div class="w3-col l6 m6 s12">
+    <div class="w3-col l12 m12 s12">
       <label>{{translator.amount}} {{company.currency.currency}}</label>
       <input type="hidden" value="{{booking.id}}" name="b_id">
-      <input class="w3-input w3-border" name='amount' style="height:45px" value="{{(booking.depositamount.amount/100)|number_format(2)}}">
+      <input class="w3-input w3-border" name='amount' style="padding:0 1em;text-align:right;font-size:1.7em" value="{{(booking.depositamount.amount/100)|number_format(2)}}">
     </div>
-    <div class="w3-col l6 m6 s12">
-      <label>{{translator.motive}}</label>
-      <select name='reason' class="w3-border w3-block" style="height:45px">
-      {% for reason in reasons %}
-        <option value="{{reason.value}}">{{reason.text}}</option>
-      {% endfor %}
-      <select>
-    </div>
+    
+
     <div class="w3-col s12 w3-margin-top">
       <span class="w3-button w3-orange w3-border w3-right w3-margin-bottom w3-block" onclick="paymentRefund()">
       <i class="fa fa-reply"></i> {{translator.refund}}

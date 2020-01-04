@@ -166,7 +166,7 @@ function endBuy(){
       }
       else if (data.status == 1){
         $('#ftco-loader').css({'opacity' : 0,'visibility' : 'hidden','z-index' : 1000})
-
+        clearInterval(timer)
         clearBooking()
         html ='<div style="margin-top:-8px" class="text-right f-24">{% trans %}order{% endtrans %} <span style="font-size:32px;color:#000">'+data.data+'</span></div><div class="">{% trans %}thank_you{% endtrans %}</div><hr><div style="color:#000;font-size:18px;text-align:center">{% trans %}spam_txt{% endtrans %}</div>'
 

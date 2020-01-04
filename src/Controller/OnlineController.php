@@ -274,7 +274,7 @@ class OnlineController extends AbstractController
 
             return new JsonResponse([  
                 'status' => 0,
-                'message' => 'Insira montante a reembolasr!',
+                'message' => 'Insira montante a reembolsar!',
                 'data' => null
             ]);
 
@@ -426,9 +426,7 @@ class OnlineController extends AbstractController
     }
 
 
-
-
-    private function sendEmail(Booking $booking, TranslatorInterface $translator){
+    private function sendEmail(Booking $booking,  $translator){
 
         $em = $this->getDoctrine()->getManager();
 
@@ -445,7 +443,7 @@ class OnlineController extends AbstractController
         
         $mailer = new \Swift_Mailer($transport);
                     
-        $subject =  $translator->trans('booking').' #'.$booking->getId().' ('.$translator->trans('refund').')';
+        $subject =  $translator->trans('booking').' #'.$booking->getId().' ('.$translator->trans('refund', [], 'messages', $locale->getName()).')';
         
         if($booking->getStripePaymentLogs())
             if($booking->getStripePaymentLogs()->getLogObj())
@@ -457,15 +455,18 @@ class OnlineController extends AbstractController
             ->addPart($subject, 'text/plain')
             ->setBody(
                 $this->renderView(
-                    'emails/refund-'.$locale ->getName().'.html.twig',
+                    'emails/refund.html.twig',
                     [
                         'id' => $booking->getId(),
+                        'hello' => $translator->trans('hello', [], 'messages', $locale->getName()),
                         'name' => $client->getUsername(),
+                        'thanks' => $translator->trans('thanks', [], 'messages', $locale->getName()),
                         'company_name' => $company->getName(),
                         'logo' => $company->getLinkMyDomain().'/upload/gallery/'.$company->getLogo(),
-                        'receipt' => $translator->trans('receipt'),
-                        'refund_txt' => $translator->trans('refund_txt'),
-                        'receipt_url' => $receipt_url ? $receipt_url : ''
+                        'receipt' => $translator->trans('receipt', [], 'messages', $locale->getName()),
+                        'refund_txt' => $translator->trans('refund_txt', [], 'messages', $locale->getName()),
+                        'receipt_url' => $receipt_url ? $receipt_url : '',
+                        'local' => $locale->getName()
                     ]
                 ),
                 'text/html'

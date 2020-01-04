@@ -305,7 +305,7 @@ class Stripe
             $obj = $refund->create([
                 "charge" => $paylog,
                 "amount" => $charge->getAmount(),
-                "reason" => $request->request->get('reason')
+                //"reason" => $request->request->get('reason')
             ]);
 
             return [

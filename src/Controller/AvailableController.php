@@ -13,10 +13,19 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 
 class AvailableController extends AbstractController
 {
+
+    private $session;
+
+    public function __construct(SessionInterface $session)
+    {
+        $this->session = $session; 
+    }
+
 
     public function adminAvailable(Request $request)
     {
@@ -413,6 +422,7 @@ class AvailableController extends AbstractController
             'data' => $request->request->get('id')));
     }
 
+
 /**
 *Get the availability of a category starting tomorrow in a period of 8 days
 *
@@ -494,6 +504,9 @@ class AvailableController extends AbstractController
             $temp = []; 
         
         }
+        
+        //since we have stock, set the expiration time to end the booking process
+        $this->session->set('start_time', $request->server->get('REQUEST_TIME'));
 
         return new JsonResponse([
             'status' => 1,
@@ -502,7 +515,9 @@ class AvailableController extends AbstractController
                 'available_dates' => $ad,//Build calendar
                 'availability' => $category->getAvailability(),
                 'payment' => $category->getWarrantyPayment(),
-                'week' => $final
+                'week' => $final,
+                'expiration' => 900,
+                'expiration_start' => $this->session->get('start_time')
                 ] //Build the week
             ]);
     }

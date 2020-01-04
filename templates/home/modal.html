@@ -254,15 +254,19 @@ function availabilityModal(){
       cache: false,
       success: function(data){ 
         
-        console.log(data) 
+        console.log(data)
+
         $('#ftco-loader').css({'opacity' : 0,'visibility' : 'hidden','z-index' : 1000})
         if (data.status == 1 && data.data.available_dates.length > 0){
-          $('[name=wp]').val(data.data.payment)
-          $('#fsModal').modal('show')
+          timeDecrease(data.data.expiration)
+          //$('[name=wp]').val(data.data.payment)
+          //$('#fsModal').modal('show')
           buildWeekTemplate(data.data.week)
         }
         else{
-         alert('no availability max pax is'+ data.data.availability)
+          $('#alerts').modal('show')
+          $('.alert-primary').removeClass('d-none').addClass('show')
+          $('.alert-primary span').html('<br>{%trans%}max_stock{%endtrans%} '+ data.data.availability)
         }
       },
       error:function(data){

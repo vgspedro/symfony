@@ -69,7 +69,6 @@ hr {margin-top: 0.5rem;margin-bottom: 0.5rem}
                 <input type="hidden" name="date" value="">
               </div>
             </div>
-          
           <div class="col-md-12 form-group">
             <span style="display:table" onclick="getAvailability()" class="btn btn-primary btn-outline-primary px-4 py-2">{% trans %}part_seven.get_available{% endtrans %}
             </span>
@@ -77,6 +76,9 @@ hr {margin-top: 0.5rem;margin-bottom: 0.5rem}
         </div>
         <div class="row personal-data d-none">
           <div class="col-md-12 heading-section text-center ftco-animate fadeInUp ftco-animated">
+            <div class="text-right" style="margin:6px 0px -24px 0px">
+              {% trans %}countdown{% endtrans %} <div class="badge badge-danger f-14 timer text-center" style="width:2.7em"></div>
+            </div>
             <h2 class="set-datetime mt-4"></h2>
           </div>
             <div class="col-sm-12 col-md-4">
@@ -137,6 +139,7 @@ hr {margin-top: 0.5rem;margin-bottom: 0.5rem}
     </div>
   </div>
 </section>
+
 <section class="payment-container">
 </section>
 <script>
@@ -183,12 +186,12 @@ function validateBookingData(){
       }
     })
   }, 500)
-
 }
-
 
 var available_dates = []
 var flag = false
+
+
 
 function getAvailability(){
   
@@ -215,6 +218,8 @@ function getAvailability(){
       console.log(data)         
         $('#ftco-loader').css({'opacity' : 0,'visibility' : 'hidden','z-index' : 1000})
         if (data.status == 1 && data.data.available_dates.length > 0){
+
+          timeDecrease(data.data.expiration)
           $('.icon-chevron-left.previous').addClass('d-none warning')
           available_dates = data.data.available_dates
           initializeDateTimePicker(data.data.available_dates)         
@@ -257,14 +262,13 @@ function buildWeekTemplate(days){
 
   for (var k in days){
     for (var j in days[k].event)   
-      events += '<div data-evt="'+days[k].event[j].id+'" data-date="'+days[k].event[j].date_dmy+' '+days[k].event[j].hour+'" onclick="setEvent(this)" class="mb-2 btn btn-primary btn-outline-primary px-1 py-1 pointer w-54 h-54" style="border: 1px solid #1089ff !important"><i class="icon-clock-o"></i><br>'+days[k].event[j].hour+'</div><br>' 
+      events += '<div data-evt="'+days[k].event[j].id+'" data-date="'+days[k].event[j].date_dmy+' '+days[k].event[j].hour+'" onclick="setEvent(this)" class="mb-2 btn btn-primary btn-outline-primary px-1 py-1 pointer w-54 h-54" style="border:1px solid #1089ff!important"><i class="icon-clock-o"></i><br>'+days[k].event[j].hour+'</div><br>' 
     day += '<div class="col-1-7" data-date-ymd="'+days[k].date_ymd+'" data-date-dmy="'+days[k].date_dmy+'"><p class="mt-2">'+days[k].day_week+'</p>'+events+'</div>'
     events =''
   }
 
   $('.set-weeks').html(day)
 }
-
 
 
 function showRgpd(){
@@ -297,6 +301,30 @@ function showRgpd(){
   }, 500)
 }
 
+
+
+var timer ='';
+
+function timeDecrease(v){
+
+  if (timer) 
+    clearInterval(timer)
+
+  timer = setInterval(function() {
+  
+
+    if (v == 0){
+    //      $('#alerts').modal('show')
+    //      $('.alert-warning').removeClass('d-none').addClass('show')
+    //      $('.alert-warning span').html('{% trans %}session_info{% endtrans %}')
+      clearInterval(timer)
+    }
+
+    $('.timer').text(v)
+
+    v--;
+  }, 1000)
+}
 
 
 
