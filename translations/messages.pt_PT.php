@@ -25,6 +25,32 @@ return array(
     'tour_adults' => 'Os campos Passeio* e  Nº.Adultos* são obrigatórios!',
     'charge_message' => 'A pagar no embarque',
     'pay' => 'A pagar agora',
+    'services' => 'Serviços',
+    'services_menu' => 'Menu Serviços',
+    'services_menu_txt' => 'Oferecemos passeios turisticos, pelas Grutas de Benagil na Costa Algarvia.',
+
+    'spectacular_tours' => 'Passeios Espetaculares',
+    'years_experience' => 'Anos de Experiência',
+    'good_captain' => 'Bom Capitão',
+    'pricing' => 'Preços',
+    'our_tours' => 'Os Nossos Passeios',
+    'our_tours_txt' => 'Venha e aprecie um passeio pelas Grutas com ',
+
+    'team' => 'Equipa',
+    'our_team' => 'A Nossa Equipa',
+    'our_team_txt' => 'Conheça alguns elementos da equipa.',
+
+    'testimony' => 'Testemunhos',
+    'happy_customer' => 'Clientes Contentes',
+    'information' => 'Informação',
+    'have_questions' => 'Tem perguntas?',
+
+    'our_faqs' => 'A nossas Faqs',
+    'our_faqs_txt' => 'As nossas respostas a perguntas mais frequentes, não hesite em nos contatar se não encontrar a sua resposta.',
+
+    'terms' => 'Termos & Condições',
+    'our_terms' => 'Os Nossos Termos',
+    'our_terms_txt' => 'O não cumprimento dos seguintes termos, seremos obrigados a cancelar o passeio.',
 
     'min_amount' => 'Montante Minimo 0.50Eur',
     'max_amount' => 'Montante Máximo 5000.00Eur',

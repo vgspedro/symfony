@@ -4,7 +4,7 @@
           <div class="col-md">
             <div class="ftco-footer-widget mb-4">
               <h2 class="ftco-heading-2 logo">{{company.name}}</h2>
-              <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p>
+              <p>{%trans%}services_menu_txt{%endtrans%}</p>
               <ul class="ftco-footer-social list-unstyled float-md-left float-lft mt-5">
 
              {% if company.linkFacebookActive == true %}
@@ -76,7 +76,7 @@
           </div>
           <div class="col-md">
             <div class="ftco-footer-widget mb-4 ml-md-5">
-              <h2 class="ftco-heading-2">Information</h2>
+              <h2 class="ftco-heading-2">{%trans%}information{%endtrans%}</h2>
               <ul class="list-unstyled">
 
                 <li><a href="/usefull-info-new/#faqs" class="py-2 d-block">FAQs</a></li>
@@ -100,7 +100,7 @@
           </div>
           <div class="col-md">
             <div class="ftco-footer-widget mb-4">
-            	<h2 class="ftco-heading-2">Have a Questions?</h2>
+            	<h2 class="ftco-heading-2">{%trans%}have_questions{%endtrans%}</h2>
             	<div class="block-23 mb-3">
 	              <ul>
 	                <li><span class="icon icon-map-marker"></span><span class="text">{{company.address}}, {{company.pCode}}, {{company.city}}, {{company.country.name}}</span></li>
