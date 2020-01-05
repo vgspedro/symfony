@@ -13,6 +13,13 @@ return array(
     'fri' => 'Sex',
     'sat' => 'Sáb',
 
+    'issue' => 'Problema',
+    'to_be_improved' => 'A melhorar',
+    'to_be_improved_txt' => 'Estamos sempre procurando maneiras de melhorar, ajude-nos a afinar os nossos serviços.',
+
+    'your_feedback' => 'O seu feedback',
+    'your_feedback_txt' => 'Agradecemos informação sobre a sua experiência, reserve um momento para nos dar algum feedback, clique no botão abaixo', 
+    
     'hello' =>'Olá',
     'thanks' => 'Obrigado',
     'countdown' => 'Limite',

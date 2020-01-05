@@ -13,6 +13,13 @@ return array(
     'fri' => 'Fri',
     'sat' => 'Sat',
 
+    'issue' => 'Issue',
+    'to_be_improved' => 'To be Improved',
+    'to_be_improved_txt' =>'We are always looking for ways to improve, help us fine tune our services.',
+
+    'your_feedback' => 'Your testimony',
+    'your_feedback_txt' => 'We appreciate information regarding your experience, take a moment to give us some feedback, please click on the button below.', 
+
     'thanks' => 'Thank you',
     'hello' =>'Hello',
     'countdown' => 'Countdown',

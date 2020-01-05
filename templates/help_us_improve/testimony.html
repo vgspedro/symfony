@@ -1,0 +1,42 @@
+<section class="testimony-section ftco-section services-section bg-white ftco-no-pb">
+    <div class="container text-center">
+        <div class="row ftco-animate justify-content-center fadeInUp ftco-animated">
+	        <div class="col-md-6 col-lg-7 py-5 pl-md-5">
+	          	<div class="py-md-5">
+		          	<div class="heading-section mb-4 mt-md-5">
+		          		<span class="subheading">{%trans%}testimony{%endtrans%}</span>
+		            	<h2 class="mb-4">{%trans%}your_feedback{%endtrans%}</h2>
+		          	</div>
+		          	<div class="pb-md-5">
+						<p>{%trans%}your_feedback_txt{%endtrans%}</p>
+						<p class="text-center">
+	                  		<button onclick="showTestimonyModal(0)" class="btn btn-primary btn-outline-primary px-4 py-2">Feedback</button>
+	                	</p>
+					</div>
+		        </div>
+	        </div>
+	        <div class="col-md-6 col-lg-5 d-flex">
+	        	<div class="testimony-img" style="background-image:url({{asset('images/feedback.jpg')}})"></div>
+	        </div>
+	    </div>
+    </div>
+</section>
+<script>
+
+
+
+  var url_string = window.location.href
+  function getParams(){
+	var url = new URL(url_string)
+	if(url.searchParams.get('id'))
+		showTestimonyModal(url.searchParams.get('id'))
+  }
+
+function showTestimonyModal(id){
+	console.log(id)
+	$('#modal-testimony').modal('show')
+} 
+
+getParams()
+
+</script>

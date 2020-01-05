@@ -1,0 +1,30 @@
+
+<section class="testimony-section bg-white">
+    <div class="container text-center">
+        <div class="row ftco-animate justify-content-center fadeInUp ftco-animated">
+	        <div class="col-md-6 col-lg-7 py-5 pl-md-5">
+	          	<div class="py-md-5">
+		          	<div class="heading-section mb-4 mt-md-5">
+	          		<span class="subheading txt-center-768">{%trans%}issue{%endtrans%}</span>
+	            	<h2 class="mb-4 txt-center-768">{%trans%}to_be_improved{%endtrans%}</h2>
+		          	</div>
+		          	<div class="pb-md-5">
+						<p>{%trans%}to_be_improved_txt{%endtrans%}</p>
+						<p class="text-center">
+	                  		<button onclick="showIssueModal()" class="btn btn-primary btn-outline-primary px-4 py-2">{%trans%}issue{%endtrans%}</button>
+	                	</p>
+					</div>
+		        </div>
+	        </div>
+	        <div class="col-md-6 col-lg-5 d-flex">
+	        	<div class="testimony-img" style="background-image:url({{asset('images/issue.jpg')}})"></div>
+	        </div>
+	    </div>
+    </div>
+	<script>
+
+	function showIssueModal(){
+		$('#modal-issue').modal('show')
+	} 
+	</script>
+</section>

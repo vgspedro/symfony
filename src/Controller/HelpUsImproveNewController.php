@@ -9,6 +9,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 use App\Entity\Company;
 use App\Entity\Warning;
 use App\Entity\Locales;
+use App\Entity\Feedback;
 use App\Entity\Booking;
 use App\Form\ReportIssueType;
 use App\Form\FeedbackType;
@@ -38,6 +39,7 @@ class HelpUsImproveNewController extends AbstractController
         $locales = $em->getRepository(Locales::class)->findAll();
         $warning = $em->getRepository(Warning::class)->find(10);
         $company = $em->getRepository(Company::class)->find(1);
+        $comments = $em->getRepository(Feedback::class)->findBy(['visible' => true,'active' => true]);
         
         $reportIssueForm = $this->createForm(ReportIssueType::class);
         $feedbackForm = $this->createForm(FeedbackType::class);
@@ -47,6 +49,7 @@ class HelpUsImproveNewController extends AbstractController
                 'locales' => $locales,
                 'warning' => $warning,
                 'company' => $company,
+                'comments' => $comments,
                 'host' => $reqInfo->getHost($request),
                 'page' => 'index_help_improve',
                 'reportIssueForm' => $reportIssueForm->createView(),

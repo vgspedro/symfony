@@ -1,33 +1,13 @@
-<div class="modal" id="fsModal-abitrary">
+<div class="modal" id="modal-issue">
   <div class="modal-dialog modal-md">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title">{% trans %}arbitrary.name{%endtrans%}</h4>
+        <h4 class="modal-title">{%trans%}report_issue{%endtrans%}</h4>
         <button type="button" class="close" data-dismiss="modal"><i class="icon-times"></i></button>
       </div>
       <div class="modal-body f-14">
-        <p>
-          {% trans %}arbitrary.txt{%endtrans%}
-        </p>
-      </div> 
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal"><i class="icon-times"></i></button>
-      </div>
-    </div>
-  </div>
-</div>
 
-
-
-<div id="modal-show-report-issue" style="padding-top:64px;padding-bottom:64px;display:none;z-index:9" class="w3-modal">
-  <div class="w3-modal-content w3-card-4 w3-animate-zoom" style="max-width:650px">
-    <div class="w3-border-bottom w3-padding w3-light-grey">
-       <span class="w3-closebtn w3-padding-small" onclick="clearFeedback();$('#modal-show-report-issue').hide()">
-        <i class="fa fa-times"></i>
-      </span>
-     <p class="w3-text-black w3-xxlarge"><i class="fa fa-exclamation-circle"></i> {%trans%}report_issue{%endtrans%}</p>
-    </div>
-    <div class="w3-container w3-white w3-padding-16 w3-border-bottom">
+      
     {{ form_start(reportIssueForm, {'attr': {'id': 'report-issue-form'}})  }}
       <div class="w3-row-padding">
         
@@ -61,14 +41,17 @@
         </div>
       </div>
     {{form_end(reportIssueForm)}}
-
-    </div>
-    <div class="w3-container w3-white w3-padding-16 w3-margin-bottom">
-      <span class="w3-btn w3-border w3-white w3-round w3-left" onclick="clearReportIssue();$('#modal-show-report-issue').hide()">
-        <i class="fa fa-times"></i> {%trans%}close{%endtrans%} </span>
-
-      <span class="w3-btn w3-border w3-green w3-round w3-right" onclick="$('#report-issue-form').trigger('submit')">
-        <i class="fa fa-check"></i> {%trans%}part_seven.submit{%endtrans%} </span>
+      </div> 
+      <div class="modal-footer">
+        <span class="btn btn-outline-success px-4 py-2" onclick="$('#report-issue-form').trigger('submit')">
+        {%trans%}part_seven.submit{%endtrans%}
+        </span>
+        <button type="button" class="btn btn-default" onclick="clearReportIssue()" data-dismiss="modal">
+          <i class="icon-times"></i>
+        </button>
+      </div>
     </div>
   </div>
 </div>
+
+
