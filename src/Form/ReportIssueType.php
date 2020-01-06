@@ -19,27 +19,27 @@ class ReportIssueType extends AbstractType
             array(
                 'label'=> 'part_seven.name',
                 'attr' => array(
-                    'class' => 'w3-input', 
+                    'class' => 'form-control', 
                     'placeholder' => 'part_seven.name')))
         ->add('email', TextType::class,
             array('label'=> 'part_seven.email',
                 'attr' => array(
-                'class' => 'w3-input',
+                'class' => 'form-control',
                 'placeholder' => 'part_seven.email')))
         ->add('image', FileType::class,
             array('label'=> 'attach_image',
                 'attr' => array(
-                'class' => 'w3-input',
+                'class' => '',
                 'placeholder' => 'part_seven.image')))
         ->add('observations', TextareaType::class,
             array('label' => 'part_seven.observations',
                 'attr' => array(
-                'class' => 'w3-input w3-light-grey',
+                'class' => 'form-control',
                 'rows' => 5,
                 'placeholder' => 'part_seven.observations')))
         ->add('submit', SubmitType::class,
             array('label'=> false, 'attr' => array(
-                'class' => 'w3-hide')))
+                'class' => 'd-none')))
         ;
     }
 }

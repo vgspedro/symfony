@@ -4,6 +4,12 @@ return array(
     'book_now' => 'Reservar já',
     'unavailable' => 'Indisponivel',
     'minutes' => 'minutos',
+    'reminder_txt' => 'Olá, não se esqueça que ...',
+    'reminder_txt_body' => 'This is a reminder that your booking is scheduled for tomorrow with ',
+
+    'check_in_time' => 'O Check-in é feito 30 minutos antes na nossa Ticket Shop.',
+    'at' => 'às',
+    'for' => 'para',
 
     'sun' => 'Dom',
     'mon' => 'Seg',

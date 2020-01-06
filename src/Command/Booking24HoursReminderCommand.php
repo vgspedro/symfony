@@ -88,32 +88,31 @@ class Booking24HoursReminderCommand extends Command
                 
         $mailer = new \Swift_Mailer($transport);
         
-        if ($booking->getClient()->getLocale()->getName() == 'pt_PT'){
-            
-            $subject =  'Olá, não se esqueça que ...';
-            $tour = $booking->getAvailable()->getCategory()->getNamePt();
-        }
-        else{
-            $subject =  'Hello, don´t forget that ...';
-            $tour = $booking->getAvailable()->getCategory()->getNameEn();
-        }
-
-        $message = (new \Swift_Message($subject))
+        $message = (new \Swift_Message( $this->translator->trans('reminder_txt', [], 'messages', $booking->getClient()->getLocale()->getName()) ))
                 ->setFrom([$company->getEmail() => $company->getName()])
                 ->setTo([$booking->getClient()->getEmail() => $booking->getClient()->getUsername()])
                 ->addPart($subject, 'text/plain')
                 ->setBody(
 
                 $this->templating->render(
-                    'emails/booking-reminder-'.$booking->getClient()->getLocale()->getName().'.html.twig',
+                    'emails/booking-reminder.html.twig',
                     array(
                         'id' => $booking->getId(),
                         'name' => $booking->getClient()->getUsername(),
                         'time' => $booking->getTimeEvent()->format('H:i'),
                         'date' => $booking->getDateEvent()->format('d/m/Y'),
-                        'tour' => $tour,
+                        'tour' => $booking->getClient()->getLocale()->getName() == 'pt_PT' ? $booking->getAvailable()->getCategory()->getNamePt() : $booking->getAvailable()->getCategory()->getNameEn(),
                         'logo' => $company->getLinkMyDomain().'/upload/gallery/'.$company->getLogo(),
-                        'company_name' => $company->getName()
+                        'company_name' => $company->getName(),
+                        'testimony_link' => $company->getLinkMyDomain().'/help-us-improve-new?id='.$booking->getId().'#testimony',
+                        'your_feedback' => $this->translator->trans('your_feedback', [], 'messages', $booking->getClient()->getLocale()->getName()),
+                        'your_feedback_txt' => $this->translator->trans('your_feedback_txt', [], 'messages', $booking->getClient()->getLocale()->getName()),
+                        'hello' => $this->translator->trans('hello', [], 'messages', $booking->getClient()->getLocale()->getName()),
+                        'at' => $this->translator->trans('at', [], 'messages', $booking->getClient()->getLocale()->getName()),
+                        'for' => $this->translator->trans('for', [], 'messages', $booking->getClient()->getLocale()->getName()),
+                        'check_in_time' => $this->translator->trans('check_in_time', [], 'messages', $booking->getClient()->getLocale()->getName()),
+                        'reminder_txt_body' => $this->translator->trans('reminder_txt_body', [], 'messages', $booking->getClient()->getLocale()->getName()),
+                        'thanks' => $this->translator->trans('thanks', [], 'messages', $booking->getClient()->getLocale()->getName()),
                     )
                 ),
                 'text/html'

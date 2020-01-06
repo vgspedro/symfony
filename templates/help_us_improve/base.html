@@ -87,7 +87,31 @@
   <script src="js/scrollax.min.js"></script>
   <script src="js/main.js"></script>
 
+<script>
+
+
+  //?id=128#testimony
+  var url_string = window.location.href
+  
+  function getParams(){
+    var url = new URL(url_string)
+  
+    if(url.searchParams.get('id'))
+      showTestimonyModal(url.searchParams.get('id'))
+  }
+
+  function showTestimonyModal(id){
+    $('#modal-testimony').modal('show')
+    $('#feedback_booking').val(id).attr('readonly', true)
+  }   
+  
+  getParams()
+
+</script>
+
+
   </body>
+
 
 
 

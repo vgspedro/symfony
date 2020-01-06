@@ -21,34 +21,34 @@ class FeedbackType extends AbstractType
             array(
                 'label'=> 'part_seven.name',
                 'attr' => array(
-                    'class' => 'w3-input', 
+                    'class' => 'form-control', 
                     'placeholder' => 'part_seven.name')))
         ->add('email', TextType::class,
             array('label'=> 'part_seven.email',
                 'attr' => array(
-                'class' => 'w3-input',
+                'class' => 'form-control',
                 'placeholder' => 'part_seven.email')))
         ->add('booking', IntegerType::class, 
             array(
                 'label'=> 'part_seven.booking_nr',
                 'attr' => array(
-                    'class' => 'w3-input', 
+                    'class' => 'form-control', 
                     'placeholder' => 'part_seven.booking_nr')))
         ->add('rate',IntegerType::class, 
             array(
                 'label'=> 'part_seven.rating',
                 'attr' => array(
-                    'class' => 'w3-input', 
+                    'class' => 'form-control', 
                     'placeholder' => 'part_seven.rating')))
         ->add('observations', TextareaType::class,
             array('label' => 'part_seven.observations',
                 'attr' => array(
-                'class' => 'w3-input w3-light-grey',
+                'class' => 'form-control bg-light',
                 'rows' => 5,
                 'placeholder' =>'part_seven.observations')))
         ->add('submit', SubmitType::class,
             array('label'=> false, 'attr' => array(
-                'class' => 'w3-hide')))
+                'class' => 'd-none')))
         ;
     }
 

@@ -6,66 +6,59 @@
         <button type="button" class="close" data-dismiss="modal"><i class="icon-times"></i></button>
       </div>
       <div class="modal-body f-14">
-        
-
-
-
 
     {{ form_start(feedbackForm, {'attr': {'id': 'feedback-form'}})  }}
-      <div class="w3-row-padding w3-large">
+      <div class="row">
         
-        <div class="w3-col l6 m12 s12">
-          <label class="w3-small w3-text-red">{%trans%}part_seven.name{%endtrans%} </label>
-          <span class="w3-text-red w3-medium w3-hide w3-right name bold required-txt">{%trans%}required{%endtrans%}</span>
-          <span class="w3-text-red w3-medium w3-hide w3-right invalid_name bold required-txt">{%trans%}part_seven.name_invalid{%endtrans%}</span>
+        <div class="col-md-12 col-sm-12">
+          <label class="w3-text-danger">{%trans%}part_seven.name{%endtrans%} </label>
+          <span class="wtext-danger d-none w3-right name bold required-txt">{%trans%}required{%endtrans%}</span>
+          <span class="text-danger d-none w3-right invalid_name bold required-txt">{%trans%}part_seven.name_invalid{%endtrans%}</span>
           {{ form_widget(feedbackForm.name)}} 
         </div>
 
-        <div class="w3-col l6 m12 s12">
+        <div class="col-md-12 col-sm-12">
           <label class="w3-small w3-text-red">{%trans%}part_seven.email{%endtrans%} </label>
-          <span class="w3-text-red w3-medium w3-hide w3-right email bold required-txt">{%trans%}required{%endtrans%}</span>
-          <span class="w3-text-red w3-medium w3-hide w3-right invalid_email bold required-txt">{%trans%}part_seven.email_invalid{%endtrans%}</span>
+          <span class="text-danger w3-medium d-none w3-right email bold required-txt">{%trans%}required{%endtrans%}</span>
+          <span class="text-danger w3-medium d-none w3-right invalid_email bold required-txt">{%trans%}part_seven.email_invalid{%endtrans%}</span>
           {{ form_widget(feedbackForm.email)}} 
         </div>
 
 
 
-        <div class="w3-col l6 m12 s12">
+        <div class="col-md-12 col-sm-12">
           <label class="w3-small w3-text-red">{%trans%}part_seven.booking_nr{%endtrans%} </label>
-          <span class="w3-text-red w3-medium w3-hide w3-right booking_nr bold required-txt">{%trans%}required{%endtrans%}</span>
-          <span class="w3-text-red w3-medium w3-hide w3-right booking_not_valid bold required-txt">{%trans%}booking_not_valid{%endtrans%}</span>
-          <span class="w3-text-red w3-medium w3-hide w3-right booking_email_invalid bold required-txt">{%trans%}booking_email_invalid{%endtrans%}</span>
-          <span class="w3-text-red w3-medium w3-hide w3-right already_left_feedback bold required-txt">{%trans%}already_left_feedback{%endtrans%}</span>
+          <span class="text-danger w3-medium d-none w3-right booking_nr bold required-txt">{%trans%}required{%endtrans%}</span>
+          <span class="text-danger w3-medium d-none w3-right booking_not_valid bold required-txt">{%trans%}booking_not_valid{%endtrans%}</span>
+          <span class="text-danger w3-medium d-none w3-right booking_email_invalid bold required-txt">{%trans%}booking_email_invalid{%endtrans%}</span>
+          <span class="text-danger w3-medium d-none w3-right already_left_feedback bold required-txt">{%trans%}already_left_feedback{%endtrans%}</span>
           {{ form_widget(feedbackForm.booking)}} 
         </div>
 
-        <div class="w3-col l6 m12 s12">
-          <div class="w3-hide">
+        <div class="col-md-12 col-sm-12">
+          <div class="d-none">
           {{ form_widget(feedbackForm.rate)}}
           </div>
-          <label class="w3-small w3-text-red">{%trans%}part_seven.rating{%endtrans%} </label>
-          <span class="w3-text-red w3-medium w3-hide w3-right rate bold required-txt">{%trans%}required{%endtrans%}</span>
+          <label class="">{%trans%}part_seven.rating{%endtrans%} </label>
+          <span class="text-danger w3-medium d-none w3-right rate bold required-txt">{%trans%}required{%endtrans%}</span>
           <div class="w3-padding-small" style="margin-top:6px">
             {% for i in 1..5 %}
-            <i class="fa fa-star w3-xlarge star-nr-{{i}}" onclick="setStars({{i}})" style="cursor:pointer" title="{{i}}-stars"></i> 
+            <i class="icon-star w3-xlarge star-nr-{{i}}" onclick="setStars({{i}})" style="cursor:pointer" title="{{i}}-stars"></i> 
             {% endfor %}
           </div>
         </div>
 
-        <div class="w3-col l12">
+        <div class="col-lg-12">
           <label class="w3-small">{%trans%}part_seven.observations{%endtrans%} </label>
           {{ form_widget(feedbackForm.observations)}}
         </div>
 
-        <div class="w3-col s12">
-           <div class="user-message-feedback w3-margin-top w3-center w3-text-green w3-hide bold w3-light-grey w3-padding w3-border w3-margin-bottom w3-round"></div>
+        <div class="col-lg-12">
+           <div class="user-message-feedback w3-margin-top w3-center text-success d-none bold w3-light-grey w3-padding w3-border w3-margin-bottom w3-round"></div>
         </div>
 
       </div>
-    {{form_end(feedbackForm)}}
-
-
-
+      {{form_end(feedbackForm)}}
       </div> 
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal"><i class="icon-times"></i></button>
@@ -77,3 +70,8 @@
   </div>
 </div>
 
+<script>
+
+  $('#feedback_booking').attr('readonly', false).val('')
+
+</script>
