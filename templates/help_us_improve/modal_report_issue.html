@@ -1,8 +1,13 @@
+<style>
+input[type='file']{border: 2px solid #FFF!important}
+.required-txt{margin-top: -18px}
+</style>
+
 <div class="modal" id="modal-issue">
   <div class="modal-dialog modal-md">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title">{%trans%}report_issue{%endtrans%}</h4>
+        <h4 class="modal-title" style="text-transform: uppercase;font-weight:bold">{%trans%}report_issue{%endtrans%}</h4>
         <button type="button" class="close" data-dismiss="modal"><i class="icon-times"></i></button>
       </div>
       <div class="modal-body f-14">
@@ -10,39 +15,48 @@
       
     {{ form_start(reportIssueForm, {'attr': {'id': 'report-issue-form', 'class':'appointment-form'}})  }}
       <div class="row">
-        <div class="col-lg-6 col-md-12 col-sm-12">
-          <label class="w3-small text-danger">{%trans%}part_seven.name{%endtrans%} </label>
-          <span class="text-danger w3-medium d-none w3-right name bold required-txt">{%trans%}required{%endtrans%}</span>
-          <span class="text-danger w3-medium d-none w3-right invalid_name bold required-txt">{%trans%}part_seven.name_invalid{%endtrans%}</span>
-          {{ form_widget(reportIssueForm.name)}} 
+        <div class="col-sm-12">
+          <div class="form-group">
+            <span class="text-danger f-10 d-none float-right name required-txt"><b>{%trans%}required{%endtrans%}</b></span>
+            <span class="text-danger f-10 d-none float-right invalid_name required-txt"><b>{%trans%}part_seven.name_invalid{%endtrans%}</b></span>
+            {{ form_widget(reportIssueForm.name)}} 
+          </div>
         </div>
 
-        <div class="col-lg-6 col-md-12 col-sm-12">
-          <label class="w3-small text-danger">{%trans%}part_seven.email{%endtrans%} </label>
-          <span class="text-danger w3-medium d-none w3-right email bold required-txt">{%trans%}required{%endtrans%}</span>
-          <span class="text-danger w3-medium d-none w3-right invalid_email bold required-txt">{%trans%}part_seven.email_invalid{%endtrans%}</span>
-          {{ form_widget(reportIssueForm.email)}} 
+        <div class="col-sm-12">
+          <div class="form-group">
+            <span class="text-danger f-10 d-none float-right email required-txt"><b>{%trans%}required{%endtrans%}</b></span>
+            <span class="text-danger f-10 d-none float-right invalid_email required-txt"><b>{%trans%}part_seven.email_invalid{%endtrans%}</b></span>
+            {{ form_widget(reportIssueForm.email)}} 
+          </div>
         </div>
 
         <div class="col-lg-12">
-          <label class="w3-small">{%trans%}part_seven.observations{%endtrans%} </label>
+           <div class="form-group">
+           <span class="text-danger f-10 d-none float-right observations required-txt"><b>{%trans%}required{%endtrans%}</b></span> 
           {{ form_widget(reportIssueForm.observations)}} 
+          </div>
+        </div>
+        
+        <div class="col-lg-12">
+          <div class="py-4">
+            <span class="text-danger f-10 d-none float-right invalid_attach_image required-txt"><b>{%trans%}invalid_attach_image{%endtrans%}</b></span>
+            <b><span class="text-danger f-10 d-none float-right js_attach_image bold required-txt"></span></b>
+            {{ form_widget(reportIssueForm.image)}} 
+          </div>
         </div>
         <div class="col-lg-12">
-          <label class="w3-small">{%trans%}attach_image{%endtrans%} </label>
-          <span class="text-danger w3-medium d-none w3-right invalid_attach_image bold required-txt">{%trans%}invalid_attach_image{%endtrans%}</span>
-          <span class="text-danger w3-medium d-none w3-right js_attach_image bold required-txt"></span>
-          {{ form_widget(reportIssueForm.image)}} 
-        </div>
-
-        <div class="col-lg-12">
-          <div class="user-message-report-issue w3-margin-top w3-center text-success d-none bold w3-light-grey w3-padding w3-border w3-margin-bottom w3-round"></div>
-        </div>
+          <div class="form-group">
+            <b>
+              <div class="user-message-report-issue mt-2 text-center text-success d-none p-2 w3-margin-bottom"></div>
+            </b>
+          </div>  
       </div>
-    {{form_end(reportIssueForm)}}
-      </div> 
+      {{form_end(reportIssueForm)}}
+    </div> 
+  </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default mr-5 px-4 py-2"  style="border:1px solid #000" onclick="clearReportIssue()" data-dismiss="modal">{%trans%}close{%endtrans%}</button>
+        <button type="button" class="btn btn-default mr-5 px-4 py-2" style="border:1px solid #000" onclick="clearReportIssue()" data-dismiss="modal">{%trans%}close{%endtrans%}</button>
         <span class="btn btn-outline-success px-4 py-2" onclick="$('#report-issue-form').trigger('submit')">
         {%trans%}part_seven.submit{%endtrans%}
         </span>
@@ -51,9 +65,11 @@
   </div>
 </div>
 
+
 <script>
 
   function clearReportIssue(){
+    $('.required').addClass('d-none')
     $('#report-issue-form').trigger('reset')
     $('.required').addClass('d-none')
   }
@@ -62,7 +78,8 @@
     e.preventDefault()
     form = new FormData($(this)[0])
     $('.required-txt').addClass('d-none')
-    $('.w3-overlay').show()
+    
+    $('#ftco-loader').css({'opacity' : '0.7','visibility' : 'visible','z-index' : 9999})
     setTimeout(function(){
       fileStatus = showFileSize()
       if(fileStatus.status == 1){

@@ -1,8 +1,12 @@
+<style>
+.required-txt{margin-top: -18px}
+</style>
+
 <div class="modal" id="modal-testimony">
   <div class="modal-dialog modal-md">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title">{% trans %}send_feedback{% endtrans %}</h4>
+        <h4 class="modal-title" style="text-transform:uppercase;font-weight:bold">{% trans %}send_feedback{% endtrans %}</h4>
 
         <button type="button" class="close" data-dismiss="modal"><i class="icon-times"></i></button>
       </div>
@@ -36,7 +40,7 @@
             <span class="text-danger f-10 d-none float-right rate required-txt"><b>{%trans%}required{%endtrans%}</b></span>
             <div class="text-center">
               {% for i in 1..5 %}
-                <i class="icon-star f-30 star-nr-{{i}}" onclick="setStars({{i}})" style="cursor:pointer" title="{{i}}-stars"></i> 
+                <i class="icon-star txt-shadow f-30 star-nr-{{i}}" onclick="setStars({{i}})" style="cursor:pointer" title="{{i}}-stars"></i> 
               {% endfor %}
           
             </div>
@@ -81,15 +85,15 @@
 
   function setStars(nr){
     c = 0
-    $('.icon-star').removeClass('text-yellow w3-animate-zoom')
+    $('.icon-star').removeClass('text-yellow animate-zoom')
 
     while (c != nr){
       c++
-      $('.star-nr-'+c).addClass('text-yellow w3-animate-zoom')
+      $('.star-nr-'+c).addClass('text-yellow animate-zoom')
     }
-
     $('#feedback_rate').val(nr)
   }
+
 
   $('#feedback-form').on('submit',function(e){
     e.preventDefault()
