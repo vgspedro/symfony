@@ -455,7 +455,7 @@ class OnlineController extends AbstractController
             ->addPart($subject, 'text/plain')
             ->setBody(
                 $this->renderView(
-                    'emails/refund.html.twig',
+                    'emails/refund.html',
                     [
                         'id' => $booking->getId(),
                         'hello' => $translator->trans('hello', [], 'messages', $locale->getName()),

@@ -24,13 +24,7 @@
 
 <style>
 .team h2, .ftco-footer .ftco-footer-widget h2{color: #EEAD2D}
-@media(max-width: 528px){
-.zoom-75 {zoom: 75%}
-.no-pd-l-r {padding:0px}
-.zoom-100 {zoom:100%}}
-
-@media (max-width: 428px){.zoom-75{zoom:65%}}
-
+.f-30{font-size: 30px}
 .ftco-navbar-light .navbar-toggler{margin-right: -8px}
 .team .img:after {background: transparent!important}
 .f-10{font-size: 10px}
@@ -100,11 +94,6 @@
       showTestimonyModal(url.searchParams.get('id'))
   }
 
-  function showTestimonyModal(id){
-    $('#modal-testimony').modal('show')
-    $('#feedback_booking').val(id).attr('readonly', true)
-  }   
-  
   getParams()
 
 </script>

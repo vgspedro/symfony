@@ -25,7 +25,8 @@ return array(
 
     'your_feedback' => 'O seu feedback',
     'your_feedback_txt' => 'Agradecemos informação sobre a sua experiência, reserve um momento para nos dar algum feedback, clique no botão abaixo', 
-    
+    'feedback_input' => 'Comentário *', 
+
     'hello' =>'Olá',
     'thanks' => 'Obrigado',
     'countdown' => 'Limite',

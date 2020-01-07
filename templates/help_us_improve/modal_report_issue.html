@@ -6,9 +6,9 @@
         <button type="button" class="close" data-dismiss="modal"><i class="icon-times"></i></button>
       </div>
       <div class="modal-body f-14">
-
+      <p class="text-center">{%trans%} info.fill_all{% endtrans %}</p>
       
-    {{ form_start(reportIssueForm, {'attr': {'id': 'report-issue-form'}})  }}
+    {{ form_start(reportIssueForm, {'attr': {'id': 'report-issue-form', 'class':'appointment-form'}})  }}
       <div class="row">
         <div class="col-lg-6 col-md-12 col-sm-12">
           <label class="w3-small text-danger">{%trans%}part_seven.name{%endtrans%} </label>
@@ -42,13 +42,118 @@
     {{form_end(reportIssueForm)}}
       </div> 
       <div class="modal-footer">
+        <button type="button" class="btn btn-default mr-5 px-4 py-2"  style="border:1px solid #000" onclick="clearReportIssue()" data-dismiss="modal">{%trans%}close{%endtrans%}</button>
         <span class="btn btn-outline-success px-4 py-2" onclick="$('#report-issue-form').trigger('submit')">
         {%trans%}part_seven.submit{%endtrans%}
         </span>
-        <button type="button" class="btn btn-default" onclick="clearReportIssue()" data-dismiss="modal">
-          <i class="icon-times"></i>
-        </button>
       </div>
     </div>
   </div>
 </div>
+
+<script>
+
+  function clearReportIssue(){
+    $('#report-issue-form').trigger('reset')
+    $('.required').addClass('d-none')
+  }
+
+  $('#report-issue-form').on('submit',function(e){
+    e.preventDefault()
+    form = new FormData($(this)[0])
+    $('.required-txt').addClass('d-none')
+    $('.w3-overlay').show()
+    setTimeout(function(){
+      fileStatus = showFileSize()
+      if(fileStatus.status == 1){
+        $('#ftco-loader').css({'opacity' : 0,'visibility' : 'hidden','z-index' : 1000})
+        $('.js_attach_pdf').removeClass('d-none').html(fileStatus.text)
+      }
+      else{
+        $.ajax({
+          url:"{{ path('send_report_issue') }}",
+          type: "POST",
+          data: form,
+          processData: false,
+          contentType: false,
+          cache: false,
+          success: function(data){
+            $('#ftco-loader').css({'opacity' : 0,'visibility' : 'hidden','z-index' : 1000})
+                if(data.status == 1)
+                {
+                    $('#report-issue-form').trigger('reset')
+                    $('.user-message-report-issue').removeClass('d-none').html('{% trans %}reported_issue_submited{% endtrans %}');
+                    setTimeout(function(){$('.user-message-report-issue').addClass('d-none')}, 10000)
+                  }
+                  else{ 
+                    $('#form_'+data.data[0]).focus()
+                    for(var k in data.data)
+                      $('.'+data.data[k]).removeClass('d-none')
+                  }
+               },
+               error:function(data){
+                $('#ftco-loader').css({'opacity' : 0,'visibility' : 'hidden','z-index' : 1000})
+                $('#alerts').modal('show')
+                $('.alert-danger').removeClass('d-none').addClass('show')
+                $('.alert-danger span').html('{%trans%}wifi_error{%endtrans%}')
+               }
+            })
+          }
+         }, 500)
+    })
+
+
+
+
+function showFileSize() {
+    var file
+  /*BROWSER NO FILEREADER SUPPORT*/
+    if (!window.FileReader) {
+        return {status:1, text:'{% trans %}no_api_file{% endtrans %}'}
+    }
+    i = document.getElementById('report_issue_image')
+  /*INPUT ELEMENT NOT FOUND*/
+    if (!i) {
+      var $el = $('#report_issue_image')
+        $el.wrap('<form>').closest('form').get(0).reset()
+      $el.unwrap()
+        return  {status:0, text:'{% trans %}no_file_input_found{% endtrans %}'}
+    }
+  /*BROWSER NO FILES SUPPORT*/
+    else if (!i.files) {
+      var $el = $('#'+input.target.id)
+        $el.wrap('<form>').closest('form').get(0).reset()
+      $el.unwrap()
+      return {status:1, text:'{% trans %}no_file_support{% endtrans %}'}
+    }
+    else {
+        file = i.files[0]
+      if (file){
+        var fileTypes = ['jpg','jpeg','png','gif'] 
+        extension = file.name.split('.').pop().toLowerCase()
+        isSuccess = fileTypes.indexOf(extension) > -1
+      /*VALIDATE THE IMAGE EXTENSIONS*/
+         if (!isSuccess){
+          var $el = $('#report_issue_image')
+          $el.wrap('<form>').closest('form').get(0).reset()
+          $el.unwrap()
+          return {status:1, text:'{% trans %}invalid_attach_image{% endtrans %}'}
+        }
+    /*VALIDATE THE IMAGE SIZE IN BYTES 2MB ALLOWED*/
+        else if (file.size > 1999999){
+        var $el = $('#report_issue_image')
+          $el.wrap('<form>').closest('form').get(0).reset()
+        $el.unwrap()
+        return {status:1, text:'{% trans %}invalid_image_size{% endtrans %}'}
+        }
+       
+        else{
+       return {status:0, text:file.size +'bytes'}
+      }
+      return {status:0, text:0}
+    }
+    return {status:0, text:0}
+  }
+  return {status:0, text:0}
+}
+</script>

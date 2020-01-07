@@ -64,3 +64,7 @@
 2019-11-28 23:00:01 - Next day booking reminder 29/11/2019, 0xBookings[]
 2019-11-29 23:00:01 - Next day booking reminder 30/11/2019, 0xBookings[]
 2019-11-30 23:00:02 - Next day booking reminder 01/12/2019, 0xBookings[]
+2020-01-07 07:54:50 - Next day booking reminder 08/01/2020, 0xBookings[]
+2020-01-07 07:59:15 - Next day booking reminder 08/01/2020, 1xBookings[294, ]
+2020-01-07 08:01:16 - Next day booking reminder 08/01/2020, 1xBookings[294, ]
+2020-01-07 08:03:40 - Next day booking reminder 08/01/2020, 1xBookings[294, ]

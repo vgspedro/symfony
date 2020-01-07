@@ -80,24 +80,28 @@ class FeedbackController extends AbstractController
     public function sendFeedback(Request $request, \Swift_Mailer $mailer, TranslatorInterface $translator, FieldsValidator $fieldsValidator)
     {
         $locale = $request->getLocale();
+
         $em = $this->getDoctrine()->getManager();
         $company = $em->getRepository(Company::class)->find(1);
+        
         $form = $this->createForm(FeedbackType::class);
         
         $form->handleRequest($request);
-        # check if form is submitted and Recaptcha response is success
-        $err = array();
+        
+        # check if form is submitted
+        $err = [];
 
         if($form->isSubmitted() && $form->isValid() ){
 
             //IF FIELDS IS NULL PUT IN ARRAY AND SEND BACK TO USER
 
-            $form['name']->getData() ? $name = $form['name']->getData() : $err[] = 'name';
+            //$form['name']->getData() ? $name = $form['name']->getData() : $err[] = 'name';
             $form['email']->getData() ? $email = $form['email']->getData() : $err[] = 'email';
             $form['booking']->getData() ? $booking_nr = $form['booking']->getData() : $err[] = 'booking_nr';
             $form['rate']->getData() ? $rate = $form['rate']->getData() : $err[] = 'rate';
-            $observations = $form['observations']->getData();
-             
+            $form['observations']->getData() ?  $observations = $form['observations']->getData() : $err[] = 'observations';
+            
+
             if($err)
                 return new JsonResponse([
                     'status' => 0,
@@ -115,7 +119,7 @@ class FeedbackController extends AbstractController
                 if($booking->getClient()->getEmail() != $email)
                     $err[] = 'booking_email_invalid';
 
-            $fieldsValidator->noFakeName($name) ? $err[] = 'invalid_name' : false;
+            //$fieldsValidator->noFakeName($name) ? $err[] = 'invalid_name' : false;
             $fieldsValidator->noFakeEmails($email)? $err[] = 'invalid_email' : false;
             
             $feedback = $em->getRepository(Feedback::class)->findOneBy(['booking' => $booking]);
@@ -158,10 +162,10 @@ class FeedbackController extends AbstractController
                     'emails/feedback-'.$locale.'.html.twig',
                     [
                         'id' => $feedback->getBooking()->getId(),
-                        'name' => $name,
-                        'email' => $email,
-                        'rate' =>  $feedback->getRate(),
-                        'logo' => 'https://'.$request->getHost().'/upload/gallery/'.$company->getLogo(),
+                        'name' => $booking->getClient()->getUsername(),
+                        'email' => $booking->getClient()->getEmail(),
+                        'rate' => $feedback->getRate(),
+                        'logo' => $company->getLinkMyDomain().'/upload/gallery/'.$company->getLogo(),
                         'observations' => $feedback->getObservations()
                     ]),
                     'text/html'

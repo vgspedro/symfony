@@ -3,65 +3,65 @@
     <div class="modal-content">
       <div class="modal-header">
         <h4 class="modal-title">{% trans %}send_feedback{% endtrans %}</h4>
+
         <button type="button" class="close" data-dismiss="modal"><i class="icon-times"></i></button>
       </div>
       <div class="modal-body f-14">
-
-    {{ form_start(feedbackForm, {'attr': {'id': 'feedback-form'}})  }}
+        <p class="text-center">{%trans%} info.fill_all{% endtrans %}</p>
+      
+        {{ form_start(feedbackForm, {'attr': {'id': 'feedback-form', 'class':'appointment-form'}})  }}
+      
       <div class="row">
-        
-        <div class="col-md-12 col-sm-12">
-          <label class="w3-text-danger">{%trans%}part_seven.name{%endtrans%} </label>
-          <span class="wtext-danger d-none w3-right name bold required-txt">{%trans%}required{%endtrans%}</span>
-          <span class="text-danger d-none w3-right invalid_name bold required-txt">{%trans%}part_seven.name_invalid{%endtrans%}</span>
-          {{ form_widget(feedbackForm.name)}} 
-        </div>
-
-        <div class="col-md-12 col-sm-12">
-          <label class="w3-small w3-text-red">{%trans%}part_seven.email{%endtrans%} </label>
-          <span class="text-danger w3-medium d-none w3-right email bold required-txt">{%trans%}required{%endtrans%}</span>
-          <span class="text-danger w3-medium d-none w3-right invalid_email bold required-txt">{%trans%}part_seven.email_invalid{%endtrans%}</span>
-          {{ form_widget(feedbackForm.email)}} 
-        </div>
-
-
-
-        <div class="col-md-12 col-sm-12">
-          <label class="w3-small w3-text-red">{%trans%}part_seven.booking_nr{%endtrans%} </label>
-          <span class="text-danger w3-medium d-none w3-right booking_nr bold required-txt">{%trans%}required{%endtrans%}</span>
-          <span class="text-danger w3-medium d-none w3-right booking_not_valid bold required-txt">{%trans%}booking_not_valid{%endtrans%}</span>
-          <span class="text-danger w3-medium d-none w3-right booking_email_invalid bold required-txt">{%trans%}booking_email_invalid{%endtrans%}</span>
-          <span class="text-danger w3-medium d-none w3-right already_left_feedback bold required-txt">{%trans%}already_left_feedback{%endtrans%}</span>
-          {{ form_widget(feedbackForm.booking)}} 
-        </div>
-
-        <div class="col-md-12 col-sm-12">
-          <div class="d-none">
-          {{ form_widget(feedbackForm.rate)}}
-          </div>
-          <label class="">{%trans%}part_seven.rating{%endtrans%} </label>
-          <span class="text-danger w3-medium d-none w3-right rate bold required-txt">{%trans%}required{%endtrans%}</span>
-          <div class="w3-padding-small" style="margin-top:6px">
-            {% for i in 1..5 %}
-            <i class="icon-star w3-xlarge star-nr-{{i}}" onclick="setStars({{i}})" style="cursor:pointer" title="{{i}}-stars"></i> 
-            {% endfor %}
+        <div class="col-sm-12">
+          <div class="form-group">
+            <span class="text-danger f-10 d-none float-right email required-txt"><b>{%trans%}required{%endtrans%}</b></span>
+            <span class="text-danger f-10 d-none float-right booking_email_invalid required-txt"><b>{%trans%}booking_email_invalid{%endtrans%}</b></span>
+            <span class="text-danger f-10 d-none float-right invalid_email required-txt"><b>{%trans%}part_seven.email_invalid{%endtrans%}</b></span>
+            {{ form_widget(feedbackForm.email)}} 
           </div>
         </div>
 
-        <div class="col-lg-12">
-          <label class="w3-small">{%trans%}part_seven.observations{%endtrans%} </label>
+        <div class="col-sm-12">
+          <div class="form-group">
+            <span class="text-danger f-10 d-none float-right booking_nr required-txt"><b>{%trans%}required{%endtrans%}</b></span>
+            <span class="text-danger f-10 d-none float-right booking_not_valid required-txt"><b>{%trans%}booking_not_valid{%endtrans%}</b></span>
+            <span class="text-danger f-10 d-none float-right already_left_feedback required-txt"><b>{%trans%}already_left_feedback{%endtrans%}</b></span>
+            {{ form_widget(feedbackForm.booking)}} 
+          </div>
+        </div>
+
+        <div class="col-sm-12">
+          <div class="form-group" style="margin:-0.5em 0em 0.7em 0em">
+            {{ form_widget(feedbackForm.rate)}}
+            <span class="text-danger f-10 d-none float-right rate required-txt"><b>{%trans%}required{%endtrans%}</b></span>
+            <div class="text-center">
+              {% for i in 1..5 %}
+                <i class="icon-star f-30 star-nr-{{i}}" onclick="setStars({{i}})" style="cursor:pointer" title="{{i}}-stars"></i> 
+              {% endfor %}
+          
+            </div>
+          </div>
+      </div>
+      <div class="col-lg-12">
+        <div class="form-group">
+          <span class="text-danger f-10 d-none float-right observations required-txt"><b>{%trans%}required{%endtrans%}</b></span>
           {{ form_widget(feedbackForm.observations)}}
         </div>
-
-        <div class="col-lg-12">
-           <div class="user-message-feedback w3-margin-top w3-center text-success d-none bold w3-light-grey w3-padding w3-border w3-margin-bottom w3-round"></div>
+      </div>
+      
+      <div class="col-lg-12">
+        <div class="form-group">
+          <b>
+            <div class="user-message-feedback mt-2 text-center text-success d-none p-2 w3-margin-bottom"></div>
+          </b>
         </div>
+      </div>
 
       </div>
       {{form_end(feedbackForm)}}
       </div> 
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal"><i class="icon-times"></i></button>
+        <button type="button" class="btn btn-default mr-5 px-4 py-2"  style="border:1px solid #000" data-dismiss="modal">{%trans%}close{%endtrans%}</button>
         <span class="btn btn-outline-success px-4 py-2" onclick="$('#feedback-form').trigger('submit')">
           {%trans%}part_seven.submit{%endtrans%}
         </span>
@@ -72,6 +72,67 @@
 
 <script>
 
-  $('#feedback_booking').attr('readonly', false).val('')
+  function clearFeedback(){
+    $('#feedback-form').trigger('reset')
+    $('.icon-star').removeClass('text-yellow animate-zoom')
+    $('.required').addClass('d-none')
+    $('#feedback_booking').val('').removeAttr('readonly')
+  }
 
+  function setStars(nr){
+    c = 0
+    $('.icon-star').removeClass('text-yellow w3-animate-zoom')
+
+    while (c != nr){
+      c++
+      $('.star-nr-'+c).addClass('text-yellow w3-animate-zoom')
+    }
+
+    $('#feedback_rate').val(nr)
+  }
+
+  $('#feedback-form').on('submit',function(e){
+    e.preventDefault()
+    $('.required-txt').addClass('d-none')
+    $('#ftco-loader').css({'opacity' : '0.7','visibility' : 'visible','z-index' : 9999})
+    
+    setTimeout(function(){
+      $.ajax({
+        url:"{{ path('send_feedback') }}",
+        type: "POST",
+        data: $('#feedback-form').serialize(),
+        cache: false,
+        success: function(data){
+          console.log(data)
+          $('#ftco-loader').css({'opacity' : 0,'visibility' : 'hidden','z-index' : 1000})
+          if(data.status == 1)
+          {
+            clearFeedback()
+            $('.user-message-feedback').removeClass('d-none').html('{% trans %}feedback_success{% endtrans %}')
+            setTimeout(function(){$('.user-message-feedback').addClass('d-none')}, 10000)
+          }
+          else{ 
+            $('#form_'+data.data[0]).focus()
+            for(var k in data.data)
+              $('.'+data.data[k]).removeClass('d-none')
+          }
+        },
+        error:function(data){
+          $('#ftco-loader').css({'opacity' : 0,'visibility' : 'hidden','z-index' : 1000})
+          $('#alerts').modal('show')
+          $('.alert-danger').removeClass('d-none').addClass('show')
+          $('.alert-danger span').html('{%trans%}wifi_error{%endtrans%}')
+        }
+      })
+    }, 500)
+  })
+
+
+  function showTestimonyModal(id){
+    $('.required-txt').addClass('d-none')
+    $('#modal-testimony').modal('show')
+    if(id > 0)
+      $('#feedback_booking').val(id).attr('readonly', true)
+  }   
+  
 </script>

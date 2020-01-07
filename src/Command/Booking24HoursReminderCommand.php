@@ -91,11 +91,12 @@ class Booking24HoursReminderCommand extends Command
         $message = (new \Swift_Message( $this->translator->trans('reminder_txt', [], 'messages', $booking->getClient()->getLocale()->getName()) ))
                 ->setFrom([$company->getEmail() => $company->getName()])
                 ->setTo([$booking->getClient()->getEmail() => $booking->getClient()->getUsername()])
-                ->addPart($subject, 'text/plain')
+                ->addPart( $this->translator->trans('reminder_txt', [], 'messages', $booking->getClient()->getLocale()->getName()),
+                 'text/plain')
                 ->setBody(
 
                 $this->templating->render(
-                    'emails/booking-reminder.html.twig',
+                    'emails/booking-reminder.html',
                     array(
                         'id' => $booking->getId(),
                         'name' => $booking->getClient()->getUsername(),
