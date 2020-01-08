@@ -59,6 +59,8 @@ class HelpUsImproveNewController extends AbstractController
         );
     }
 
+
+
     public function sendReportIssue(Request $request, \Swift_Mailer $mailer, TranslatorInterface $translator, FieldsValidator $fieldsValidator)
     {
         $em = $this->getDoctrine()->getManager();
@@ -125,7 +127,7 @@ class HelpUsImproveNewController extends AbstractController
                             'name' => $name,
                             'email' => $email,
                             'observations' => $observations,
-                            'logo' => 'https://'.$request->getHost().'/upload/gallery/'.$company->getLogo(),
+                            'logo' => $company->getLinkMyDomain().'/upload/gallery/'.$company->getLogo(),
                         )
                     ),
                     'text/html'

@@ -120,7 +120,7 @@ class HelpImproveController extends AbstractController
                             'name' => $name,
                             'email' => $email,
                             'observations' => $observations,
-                            'logo' => 'https://'.$request->getHost().'/upload/gallery/'.$company->getLogo(),
+                            'logo' => $company->getLinkMyDomain().'/upload/gallery/'.$company->getLogo(),
                         )
                     ),
                     'text/html'

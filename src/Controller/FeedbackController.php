@@ -101,7 +101,6 @@ class FeedbackController extends AbstractController
             $form['rate']->getData() ? $rate = $form['rate']->getData() : $err[] = 'rate';
             $form['observations']->getData() ?  $observations = $form['observations']->getData() : $err[] = 'observations';
             
-
             if($err)
                 return new JsonResponse([
                     'status' => 0,
