@@ -1,6 +1,7 @@
 <style>
 input[type='file']{border: 2px solid #FFF!important}
 .required-txt{margin-top: -18px}
+.modal-dialog{padding-bottom: 9em}
 </style>
 
 <div class="modal" id="modal-issue">
@@ -11,55 +12,53 @@ input[type='file']{border: 2px solid #FFF!important}
         <button type="button" class="close" data-dismiss="modal"><i class="icon-times"></i></button>
       </div>
       <div class="modal-body f-14">
-      <p class="text-center">{%trans%} info.fill_all{% endtrans %}</p>
-      
-    {{ form_start(reportIssueForm, {'attr': {'id': 'report-issue-form', 'class':'appointment-form'}})  }}
-      <div class="row">
-        <div class="col-sm-12">
-          <div class="form-group">
-            <span class="text-danger f-10 d-none float-right name required-txt"><b>{%trans%}required{%endtrans%}</b></span>
-            <span class="text-danger f-10 d-none float-right invalid_name required-txt"><b>{%trans%}part_seven.name_invalid{%endtrans%}</b></span>
-            {{ form_widget(reportIssueForm.name)}} 
-          </div>
-        </div>
-
-        <div class="col-sm-12">
-          <div class="form-group">
-            <span class="text-danger f-10 d-none float-right email required-txt"><b>{%trans%}required{%endtrans%}</b></span>
-            <span class="text-danger f-10 d-none float-right invalid_email required-txt"><b>{%trans%}part_seven.email_invalid{%endtrans%}</b></span>
-            {{ form_widget(reportIssueForm.email)}} 
-          </div>
-        </div>
-
-        <div class="col-lg-12">
-           <div class="form-group">
-           <span class="text-danger f-10 d-none float-right observations required-txt"><b>{%trans%}required{%endtrans%}</b></span> 
-          {{ form_widget(reportIssueForm.observations)}} 
-          </div>
-        </div>
+        <p class="text-center">{%trans%} info.fill_all{% endtrans %}</p>
         
-        <div class="col-lg-12">
-          <div class="py-4">
-            <span class="text-danger f-10 d-none float-right invalid_attach_image required-txt"><b>{%trans%}invalid_attach_image{%endtrans%}</b></span>
-            <b><span class="text-danger f-10 d-none float-right js_attach_image bold required-txt"></span></b>
-            {{ form_widget(reportIssueForm.image)}} 
+        {{ form_start(reportIssueForm, {'attr': {'id': 'report-issue-form', 'class':'appointment-form'}})  }}
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="form-group">
+              <span class="text-danger f-10 d-none float-right name required-txt"><b>{%trans%}required{%endtrans%}</b></span>
+              <span class="text-danger f-10 d-none float-right invalid_name required-txt"><b>{%trans%}part_seven.name_invalid{%endtrans%}</b></span>
+              {{ form_widget(reportIssueForm.name)}} 
+            </div>
           </div>
-        </div>
-        <div class="col-lg-12">
-          <div class="form-group">
-            <b>
-              <div class="user-message-report-issue mt-2 text-center text-success d-none p-2 w3-margin-bottom"></div>
-            </b>
-          </div>  
+
+          <div class="col-sm-12">
+            <div class="form-group">
+              <span class="text-danger f-10 d-none float-right email required-txt"><b>{%trans%}required{%endtrans%}</b></span>
+              <span class="text-danger f-10 d-none float-right invalid_email required-txt"><b>{%trans%}part_seven.email_invalid{%endtrans%}</b></span>
+              {{ form_widget(reportIssueForm.email)}} 
+            </div>
+          </div>
+
+          <div class="col-lg-12">
+             <div class="form-group">
+             <span class="text-danger f-10 d-none float-right observations required-txt"><b>{%trans%}required{%endtrans%}</b></span> 
+            {{ form_widget(reportIssueForm.observations)}} 
+            </div>
+          </div>
+          
+          <div class="col-lg-12">
+            <div class="py-4">
+              <span class="text-danger f-10 d-none float-right invalid_attach_image required-txt"><b>{%trans%}invalid_attach_image{%endtrans%}</b></span>
+              <b><span class="text-danger f-10 d-none float-right js_attach_image bold required-txt"></span></b>
+              {{ form_widget(reportIssueForm.image)}} 
+            </div>
+          </div>
+          <div class="col-lg-12">
+            <div class="form-group">
+              <b>
+                <div class="user-message-report-issue mt-2 text-center text-success d-none p-2 w3-margin-bottom"></div>
+              </b>
+            </div>  
+          </div>
+          {{form_end(reportIssueForm)}}
+        </div> 
       </div>
-      {{form_end(reportIssueForm)}}
-    </div> 
-  </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default mr-5 px-4 py-2" style="border:1px solid #000" onclick="clearReportIssue()" data-dismiss="modal">{%trans%}close{%endtrans%}</button>
-        <span class="btn btn-outline-success px-4 py-2" onclick="$('#report-issue-form').trigger('submit')">
-        {%trans%}part_seven.submit{%endtrans%}
-        </span>
+        <span class="btn btn-outline-success px-4 py-2" onclick="$('#report-issue-form').trigger('submit')">{%trans%}part_seven.submit{%endtrans%}</span>
       </div>
     </div>
   </div>

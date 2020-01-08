@@ -1,5 +1,6 @@
 <style>
 .required-txt{margin-top: -18px}
+.modal-dialog{padding-bottom: 9em}
 </style>
 
 <div class="modal" id="modal-testimony">
@@ -7,7 +8,6 @@
     <div class="modal-content">
       <div class="modal-header">
         <h4 class="modal-title" style="text-transform:uppercase;font-weight:bold">{% trans %}send_feedback{% endtrans %}</h4>
-
         <button type="button" class="close" data-dismiss="modal"><i class="icon-times"></i></button>
       </div>
       <div class="modal-body f-14">
@@ -15,52 +15,51 @@
       
         {{ form_start(feedbackForm, {'attr': {'id': 'feedback-form', 'class':'appointment-form'}})  }}
       
-      <div class="row">
-        <div class="col-sm-12">
-          <div class="form-group">
-            <span class="text-danger f-10 d-none float-right email required-txt"><b>{%trans%}required{%endtrans%}</b></span>
-            <span class="text-danger f-10 d-none float-right booking_email_invalid required-txt"><b>{%trans%}booking_email_invalid{%endtrans%}</b></span>
-            <span class="text-danger f-10 d-none float-right invalid_email required-txt"><b>{%trans%}part_seven.email_invalid{%endtrans%}</b></span>
-            {{ form_widget(feedbackForm.email)}} 
-          </div>
-        </div>
-
-        <div class="col-sm-12">
-          <div class="form-group">
-            <span class="text-danger f-10 d-none float-right booking_nr required-txt"><b>{%trans%}required{%endtrans%}</b></span>
-            <span class="text-danger f-10 d-none float-right booking_not_valid required-txt"><b>{%trans%}booking_not_valid{%endtrans%}</b></span>
-            <span class="text-danger f-10 d-none float-right already_left_feedback required-txt"><b>{%trans%}already_left_feedback{%endtrans%}</b></span>
-            {{ form_widget(feedbackForm.booking)}} 
-          </div>
-        </div>
-
-        <div class="col-sm-12">
-          <div class="form-group" style="margin:-0.5em 0em 0.7em 0em">
-            {{ form_widget(feedbackForm.rate)}}
-            <span class="text-danger f-10 d-none float-right rate required-txt"><b>{%trans%}required{%endtrans%}</b></span>
-            <div class="text-center">
-              {% for i in 1..5 %}
-                <i class="icon-star txt-shadow f-30 star-nr-{{i}}" onclick="setStars({{i}})" style="cursor:pointer" title="{{i}}-stars"></i> 
-              {% endfor %}
-          
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="form-group">
+              <span class="text-danger f-10 d-none float-right email required-txt"><b>{%trans%}required{%endtrans%}</b></span>
+              <span class="text-danger f-10 d-none float-right booking_email_invalid required-txt"><b>{%trans%}booking_email_invalid{%endtrans%}</b></span>
+              <span class="text-danger f-10 d-none float-right invalid_email required-txt"><b>{%trans%}part_seven.email_invalid{%endtrans%}</b></span>
+              {{ form_widget(feedbackForm.email)}} 
             </div>
           </div>
-      </div>
-      <div class="col-lg-12">
-        <div class="form-group">
-          <span class="text-danger f-10 d-none float-right observations required-txt"><b>{%trans%}required{%endtrans%}</b></span>
-          {{ form_widget(feedbackForm.observations)}}
-        </div>
-      </div>
-      
-      <div class="col-lg-12">
-        <div class="form-group">
-          <b>
-            <div class="user-message-feedback mt-2 text-center text-success d-none p-2 w3-margin-bottom"></div>
-          </b>
-        </div>
-      </div>
 
+          <div class="col-sm-12">
+            <div class="form-group">
+              <span class="text-danger f-10 d-none float-right booking_nr required-txt"><b>{%trans%}required{%endtrans%}</b></span>
+              <span class="text-danger f-10 d-none float-right booking_not_valid required-txt"><b>{%trans%}booking_not_valid{%endtrans%}</b></span>
+              <span class="text-danger f-10 d-none float-right already_left_feedback required-txt"><b>{%trans%}already_left_feedback{%endtrans%}</b></span>
+              {{ form_widget(feedbackForm.booking)}} 
+            </div>
+          </div>
+
+          <div class="col-sm-12">
+            <div class="form-group" style="margin:-0.5em 0em 0.7em 0em">
+              {{ form_widget(feedbackForm.rate)}}
+              <span class="text-danger f-10 d-none float-right rate required-txt"><b>{%trans%}required{%endtrans%}</b></span>
+              <div class="text-center">
+                {% for i in 1..5 %}
+                  <i class="icon-star txt-shadow f-30 star-nr-{{i}}" onclick="setStars({{i}})" style="cursor:pointer" title="{{i}}-stars"></i> 
+                {% endfor %}
+            
+              </div>
+            </div>
+        </div>
+        <div class="col-lg-12">
+          <div class="form-group">
+            <span class="text-danger f-10 d-none float-right observations required-txt"><b>{%trans%}required{%endtrans%}</b></span>
+            {{ form_widget(feedbackForm.observations)}}
+          </div>
+        </div>
+        
+        <div class="col-lg-12">
+          <div class="form-group">
+            <b>
+              <div class="user-message-feedback mt-2 text-center text-success d-none p-2 w3-margin-bottom"></div>
+            </b>
+          </div>
+        </div>
       </div>
       {{form_end(feedbackForm)}}
       </div> 
