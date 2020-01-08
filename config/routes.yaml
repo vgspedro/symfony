@@ -13,7 +13,7 @@ logout:
 # new page
 ###
 index_new:
-    path: /new
+    path: /
     controller: App\Controller\HomeNewController::index
 
 index_new_info:
@@ -39,9 +39,9 @@ validate_booking_data:
 ###
 # site
 ###
-index:
-    path: /
-    controller: App\Controller\HomeController::html
+#index:
+#    path: /
+#    controller: App\Controller\HomeController::html
 
 index_info:
     path: /info/
