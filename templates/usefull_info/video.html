@@ -3,9 +3,9 @@
 		<div class="row">
 			<div class="col-md-6 d-flex">
 				<div class="p-md-5 img img-2 d-flex justify-content-center align-items-center" style="background-image:url({{asset('images/video-banner.jpg')}})">
-					<a href="https://vimeo.com/382914106" class="icon popup-vimeo d-flex justify-content-center align-items-center">
+					<button type="button" class="icon btn popup-vimeo d-flex justify-content-center align-items-center" data-toggle="modal" data-src="https://www.youtube.com/embed/2KlGsFsnSTQ" data-target="#modal-video">
 						<span class="icon-play"></span>
-					</a>
+					</button>
 				</div>
 			</div>
 		<div class="col-md-6 py-md-5 pb-5 wrap-about pb-md-5 ftco-animate fadeInUp ftco-animated">
@@ -21,3 +21,37 @@
 		</div>
 	</div>
 </section>
+
+
+<!-- Modal -->
+<div class="modal fade" id="modal-video" tabindex="-1" role="dialog" aria-labelledby="videoModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-body" style="position:relative;padding:0px">
+       <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="position:absolute;right:-18px;top:-8px;z-index:999;font-size:2rem;font-weight: normal;color:#fff;opacity:1;">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <!-- 16:9 aspect ratio -->
+		<div class="embed-responsive embed-responsive-16by9">
+  			<iframe class="embed-responsive-item" src="" id="video" allowscriptaccess="always" allow="autoplay"></iframe>
+		</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+	var $videoSrc
+	
+	$('.popup-vimeo').click(function() { $videoSrc = $(this).data( "src" )})
+	// when the modal is opened autoplay it  
+	$('#modal-video').on('shown.bs.modal', function (e) {
+		// set the video src to autoplay and not to show related video. Youtube related video is like a box of chocolates... you never know what you're gonna get
+		$("#video").attr('src',$videoSrc + "?autoplay=1&amp;modestbranding=1&amp;showinfo=0" )
+	})
+	// stop playing the youtube video when I close the modal
+	$('#modal-video').on('hide.bs.modal', function (e) {
+    	// a poor man's stop video
+    	$("#video").attr('src',$videoSrc)
+	}) 
+</script>

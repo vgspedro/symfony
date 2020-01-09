@@ -112,7 +112,7 @@
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title rgpd"></h4>
+        <h4 class="modal-title rgpd" style="text-transform:uppercase;font-weight:bold"></h4>
         <button type="button" class="close" data-dismiss="modal"><i class="icon-times"></i></button>
       </div>
       <div class="modal-body rgpd f-14"></div>
@@ -125,11 +125,12 @@
   </div>
 </div>
 
+
 <div class="modal" id="fsModal-success">
   <div class="modal-dialog modal-sm">
     <div class="modal-content alert-success" style="background-color: #d4edda">
       <div class="modal-header">
-        <h4 class="modal-title">{%trans%}success{%endtrans%}</h4>
+        <h4 class="modal-title" style="text-transform:uppercase;font-weight:bold">{%trans%}success{%endtrans%}</h4>
         <button type="button" class="close" data-dismiss="modal"><i class="icon-times"></i></button>
       </div>
       <div class="modal-body"></div>
@@ -168,14 +169,18 @@ function initializeDateTimePicker(){
 
 }
 
+
   $('#datetimepicker').on('dp.change', function(e){
-    
+
     var ymd = $('#datetimepicker').val().split("/")    
     if (ymd.length > 0)
       $('[name=date]').val(ymd[2]+'-'+ymd[1]+'-'+ymd[0])
-
-    if(flag == true)
+    
+    if(flag == true){
       availabilityModal()
+      $('.icon-chevron-left.previous').removeClass('d-none')    
+    }
+
   })
 
 
@@ -195,36 +200,58 @@ function initializeDateTimePicker(){
     }
     
     if(b == -1){
-      previous = new Date($(week).data('date-ymd')) 
-      previous.setDate(previous.getDate()- 7)
+      previous_date = new Date($(week).data('date-ymd')) 
+      previous_date.setDate(previous_date.getDate() -7)
 
-      previous_ymd = previous.getFullYear()+'-'+(previous.getMonth()+1) +'-'+previous.getDate()
-      previous_dmy = previous.getDate()+'/'+(previous.getMonth()+1)+'/'+previous.getFullYear()
-
-      if (previous_ymd <= available_dates[0]){
-
-        ddd = new Date(available_dates[0])
-        min_dmy = ddd.getDate()+'/'+(ddd.getMonth()+1)+'/'+ddd.getFullYear()
+      previous = dateToTimestamp(previous_date)
+      first_date = dateToTimestamp(available_dates[0])
+      
+      if (previous <= first_date){
         $('[name=date]').val(available_dates[0])
         $('[name=next]').val(b)
         $('.icon-chevron-left.previous').addClass('d-none')
-        $('#datetimepicker').val(min_dmy).trigger('change')
+        $('#datetimepicker').val(dateToDmy(available_dates[0])).trigger('change')
         return
       }
-      $('[name=date]').val(previous_ymd)
+      $('[name=date]').val(dateToYmd(previous_date))
       $('[name=next]').val(b)
-      date_picker = previous_dmy
+      $('.icon-chevron-left.previous').removeClass('d-none')
+      date_picker = dateToDmy(previous_date)
     }
     else{
-      //console.log('click date = '+ $(week).data('date-ymd')+' min data = '+available_dates[0])
-      //console.log('click date = '+ $(week).data('date-ymd')+' max data = '+available_dates[available_dates.length -1])
       $('[name=date]').val($(week).data('date-ymd'))
       $('[name=next]').val(b)
       //To make request
       flag = true
     }
+    $('.icon-chevron-left.previous').removeClass('d-none')
     $('#datetimepicker').val(date_picker).trigger('change')
   }
+
+
+function dateToTimestamp(date){
+  return new Date(date).getTime()
+}
+
+function dateToDmy(date){
+  d = new Date(date)
+  m = Number(d.getMonth())+1
+  day = d.getDate() <= 9 ? '0'+d.getDate() : d.getDate()
+  month = m <= 9 ? '0'+m : m
+
+  return day+'/'+month+'/'+d.getFullYear()
+}
+
+
+function dateToYmd(date){
+  d = new Date(date)
+  m = Number(d.getMonth())+1
+  day = d.getDate() <= 9 ? '0'+d.getDate() : d.getDate()
+  month = m <= 9 ? '0'+m : m
+
+  return d.getFullYear()+'-'+month+'-'+day
+}
+
 
   function setEvent(obj){
     $('.btn-primary').addClass('btn-outline-primary')
