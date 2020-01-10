@@ -57,7 +57,7 @@ return array(
     'wifi_error' =>'Please check Wi-fi/Internet connection, and try again!',
     'order' => 'Booking Nr.',
     'thank_you' => 'In <b class="f-24">12 hours</b> we will confirm your booking.<br>Thank you, Taruga Benagil Tours.',
-    'session' => 'Session timeout reached!!',
+    'session' => 'Session timeout reached!!<br> Please, refresh the page!',
     'check' => 'Check',
     'session_info' => 'Please, refresh the page!',
     'time_left' => 'Time left to finish your booking:',

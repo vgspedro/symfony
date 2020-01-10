@@ -48,17 +48,17 @@ hr {margin-top: 0.5rem;margin-bottom: 0.5rem}
             </div>
 			      <div class="col-sm-4">
               <div class="form-group">
-                <input type="number" name="adult" onchange="clearInfo()" class="form-control" placeholder="{% trans %}part_seven.adult{%endtrans %}">
+                <input type="number" name="adult" min="0" step='1' onchange="clearInfo()" class="form-control" placeholder="{% trans %}part_seven.adult{%endtrans %}">
               </div>
             </div>
             <div class="col-sm-4">
               <div class="form-group">
-                <input type="number" name="children" onchange="clearInfo()" class="form-control" placeholder="{% trans %}part_seven.children{%endtrans %}">
+                <input type="number" name="children" min="0" step='1' onchange="clearInfo()" class="form-control" placeholder="{% trans %}part_seven.children{%endtrans %}">
               </div>
             </div>
             <div class="col-sm-4">
               <div class="form-group">
-                <input type="number" name="baby" onchange="clearInfo()" class="form-control" placeholder="{% trans %}part_seven.baby{%endtrans %}">
+                <input type="number" name="baby" min="0" step='1' onchange="clearInfo()" class="form-control" placeholder="{% trans %}part_seven.baby{%endtrans %}">
               </div>    
             </div>
 
@@ -151,7 +151,9 @@ function clearInfo(){
 
 //Validate the data added by the user 
 function validateBookingData(){
-  
+
+  setMinValues()
+
   closeAlert()
   $('#ftco-loader').css({'opacity' : '0.7','visibility' : 'visible','z-index' : 9999})
     setTimeout(function(){
@@ -166,12 +168,12 @@ function validateBookingData(){
         if (data.status == 0){
           html =''
           $('#alerts').modal('show')
-          $('.alert-primary').removeClass('d-none').addClass('show')
+          $('.alert-warning').removeClass('d-none').addClass('show')
           for (var k in data.message)
             html += data.message[k]+'<br>'
-          $('.alert-primary span').html('<br>'+html)
+          $('.alert-warning span').html('<br>'+html)          
         }
-        
+
         //All is ok so far, build the info modal to show booking adn proceed to payment, if that is the case 
         else {
           $('.payment-container').html(data)
@@ -191,7 +193,11 @@ function validateBookingData(){
 var available_dates = []
 var flag = false
 
-
+function setMinValues(){
+  $('[name=adult]').val() < 0 ? $('[name=adult]').val(0) : $('[name=adult]').val()
+  $('[name=children]').val() < 0 ? $('[name=children]').val(0) : $('[name=children]').val() 
+  $('[name=baby]').val() < 0 ? $('[name=baby]').val(0) : $('[name=baby]').val()
+}
 
 function getAvailability(){
   
@@ -201,10 +207,8 @@ function getAvailability(){
   flag = false
 
   $('.icon-chevron-right.next, .icon-chevron-left.previous').removeClass('d-none')
-  
-  if( $('[name=category]').val() && $('[name=adult]').val() > 0){
 
-		pax = Number($('[name=adult]').val()) + Number($('[name=children]').val()) + Number($('[name=baby]').val())
+    setMinValues()
 
  		$('#ftco-loader').css({'opacity' : '0.7','visibility' : 'visible','z-index' : 9999})
     		
@@ -232,10 +236,20 @@ function getAvailability(){
           buildWeekTemplate(data.data.week)
           flag = true
         }
-        else{
+        else if (data.status == 2){
+
+          html =''
+          for (var k in data.data)
+            html += data.data[k]+'<br>'
+          
+          $('.alert-primary span').html('<br>'+html)
           $('#alerts').modal('show')
           $('.alert-primary').removeClass('d-none').addClass('show')
-          $('.alert-primary span').html('<br>{%trans%}max_stock{%endtrans%} '+ data.data.availability)
+        }
+        else{
+          $('#alerts').modal('show')
+          $('.alert-warning').removeClass('d-none').addClass('show')
+          $('.alert-warning span').html('<br>{%trans%}max_stock{%endtrans%} '+ data.data.availability)
         }
       },
       error:function(data){
@@ -247,12 +261,12 @@ function getAvailability(){
     })
   }, 500)
 
-	}
-	else{
+	//}
+	/*else{
     $('#alerts').modal('show')
     $('.alert-primary').removeClass('d-none').addClass('show')
     $('.alert-primary span').html('<br>{%trans%}tour_adults{%endtrans%}')
-	}
+	}*/
 }
 
 function buildWeekTemplate(days){

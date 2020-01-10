@@ -33,7 +33,7 @@ class HelpUsImproveNewController extends AbstractController
         
         if(!$this->session->get('_locale')){
             $this->session->set('_locale', $local);
-            return $this->redirectToRoute('index_help_us_improve_new');
+            return $this->redirectToRoute('index_new_help_us_improve');
         }
         
         $locales = $em->getRepository(Locales::class)->findAll();
@@ -51,7 +51,7 @@ class HelpUsImproveNewController extends AbstractController
                 'company' => $company,
                 'comments' => $comments,
                 'host' => $reqInfo->getHost($request),
-                'page' => 'index_help_improve',
+                'page' => 'index_new_help_us_improve',
                 'reportIssueForm' => $reportIssueForm->createView(),
                 'feedbackForm' => $feedbackForm->createView(),
                 'menu' => $menu->site('index_new_help_us_improve', $translator)

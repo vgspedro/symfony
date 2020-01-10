@@ -9,7 +9,7 @@ input[type='file']{border: 2px solid #FFF!important}
     <div class="modal-content">
       <div class="modal-header">
         <h4 class="modal-title" style="text-transform: uppercase;font-weight:bold">{%trans%}report_issue{%endtrans%}</h4>
-        <button type="button" class="close" data-dismiss="modal"><i class="icon-times"></i></button>
+        <button type="button" class="close" data-dismiss="modal" onclick="clearReportIssue()"><i class="icon-times"></i></button>
       </div>
       <div class="modal-body f-14">
         <p class="text-center">{%trans%} info.fill_all{% endtrans %}</p>
@@ -102,9 +102,11 @@ input[type='file']{border: 2px solid #FFF!important}
                     setTimeout(function(){$('.user-message-report-issue').addClass('d-none')}, 10000)
                   }
                   else{ 
-                    $('#form_'+data.data[0]).focus()
+                    
                     for(var k in data.data)
                       $('.'+data.data[k]).removeClass('d-none')
+                  
+                    $('#report_issue_'+data.data[0]).focus()
                   }
                },
                error:function(data){

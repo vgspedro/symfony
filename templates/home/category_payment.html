@@ -67,7 +67,7 @@
       if (result.error) {
         m = result.error.message
         
-        alert(result.error.code)
+        //alert(result.error.code)
         
         if(result.error.code == 'payment_intent_authentication_failure')
           m = '{% trans %}payment_intent_authentication_failure{% endtrans %}'

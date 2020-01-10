@@ -1,3 +1,6 @@
+<style>
+.btn-float{width: 44px;height: 44px;line-height: 44px;position: fixed;right: 0;top: 0;text-decoration: none;text-align: center;color: #FFF;font-style: normal;padding: 0;background-color: transparent;border: 0;-webkit-appearance: none;-moz-appearance: none;appearance: none;font-size: 28px;cursor: pointer;font-family: Arial, Baskerville, monospace}
+</style>
 <section class="ftco-section ftco-no-pb ftco-no-pt">
 	<div class="container">
 		<div class="row">
@@ -26,11 +29,9 @@
 <!-- Modal -->
 <div class="modal fade" id="modal-video" tabindex="-1" role="dialog" aria-labelledby="videoModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg" role="document">
-    <div class="modal-content">
+    <div class="modal-content" style="margin-top:5em;border-radius:0">
       <div class="modal-body" style="position:relative;padding:0px">
-       <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="position:absolute;right:-18px;top:-8px;z-index:999;font-size:2rem;font-weight: normal;color:#fff;opacity:1;">
-          <span aria-hidden="true">&times;</span>
-        </button>
+       <button type="button" class="btn-float" data-dismiss="modal" aria-label="Close">&times;</button>
         <!-- 16:9 aspect ratio -->
 		<div class="embed-responsive embed-responsive-16by9">
   			<iframe class="embed-responsive-item" src="" id="video" allowscriptaccess="always" allow="autoplay"></iframe>

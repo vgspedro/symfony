@@ -183,8 +183,8 @@ class HomeNewController extends AbstractController
                 'id' => '#'.$id,
                 'company' => $company,
                 'host' => $reqInfo->getHost($request),
-                'page' => 'index_new_info',
-                'menu' => $menu->site('index_new_info', $translator)
+                'page' => 'usefull-info-new',
+                'menu' => $menu->site('usefull_info', $translator)
             ]
             );
     }
@@ -218,11 +218,11 @@ class HomeNewController extends AbstractController
         $request->request->get('telephone') ? $telephone = $request->request->get('telephone') : $err[] = $translator->trans('part_seven.telephone');
         $request->request->get('check_rgpd') && $request->request->get('check_rgpd') !== null  ? $rgpd = true : $err[] = $translator->trans('part_seven.rgpd');
         $request->request->get('event') ? $event = (int)$request->request->get('event') : $err[] = $translator->trans('event_not_found');
-        $request->request->get('adult') ? $adult = (int)$request->request->get('adult') : $err[] = $translator->trans('part_seven.adult');
         
-        $children = $request->request->get('children') ? (int)$request->request->get('children') : 0;
-        $baby = $request->request->get('baby') ? (int)$request->request->get('baby') : 0;
-        
+        !$request->request->get('adult') || $request->request->get('adult') <= 0 ? $err[] = $translator->trans('part_seven.adult') : $adult = $request->request->get('adult');
+        $children = !$request->request->get('children') || $request->request->get('children') <= 0 ? 0 : $request->request->get('children');
+        $baby = !$request->request->get('baby') || $request->request->get('baby') <= 0 ? 0 : $request->request->get('baby');
+
         if($err)
             return new JsonResponse([
                 'status' => 0,
@@ -362,10 +362,10 @@ class HomeNewController extends AbstractController
         $request->request->get('telephone') ? $telephone = $request->request->get('telephone') : $err[] = $translator->trans('part_seven.telephone');
         $request->request->get('check_rgpd') && $request->request->get('check_rgpd') !== null  ? $rgpd = true : $err[] = $translator->trans('part_seven.rgpd');
         $request->request->get('event') ? $event = (int)$request->request->get('event') : $err[] = $translator->trans('event_not_found');
-        $request->request->get('adult') ? $adult = (int)$request->request->get('adult') : $err[] = $translator->trans('part_seven.adult');
-        
-        $children = $request->request->get('children') ? (int)$request->request->get('children') : 0;
-        $baby = $request->request->get('baby') ? (int)$request->request->get('baby') : 0;
+
+        !$request->request->get('adult') || $request->request->get('adult') <= 0 ? $err[] = $translator->trans('part_seven.adult') : $adult = $request->request->get('adult');
+        $children = !$request->request->get('children') || $request->request->get('children') <= 0 ? 0 : $request->request->get('children');
+        $baby = !$request->request->get('baby') || $request->request->get('baby') <= 0 ? 0 : $request->request->get('baby');
         
         if($err)
             return new JsonResponse([

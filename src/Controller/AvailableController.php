@@ -428,26 +428,33 @@ class AvailableController extends AbstractController
 *
 **/
     public function getCategoryPeriodAvailability(Request $request, TranslatorInterface $translator) {
-    
+
+        $err=[];
+        
+        $request->request->get('category') ? '' : $err[] = $translator->trans('part_seven.tour');
+        !$request->request->get('adult') || $request->request->get('adult') <= 0 ? $err[] = $translator->trans('part_seven.adult') : $adult = $request->request->get('adult');
+        $children = !$request->request->get('children') || $request->request->get('children') <= 0 ? 0 : $request->request->get('children');
+        $baby = !$request->request->get('baby') || $request->request->get('baby') <= 0 ? 0 : $request->request->get('baby');
+
+        if ($err)
+            return new JsonResponse([
+                'status' => 2,
+                'message' => 'Fields missing!',
+                'data' => $err
+            ]);
+
         $em = $this->getDoctrine()->getManager();
 
         $category = $em->getRepository(Category::class)->find($request->request->get('category'));
 
         if(!$category)
-            return new JsonResponse(array(
-                'status' => 0,
-                'message' => 'Categoria não foi encontrada!',
-                'data' => null));
+            return new JsonResponse([
+                'status' => 2,
+                'message' => $translator->trans('part_seven.no_stock'),
+                'data' => null
+            ]);
 
-        $total_pax = $request->request->get('adult') > 0 ? $request->request->get('adult') : 0;
-
-        if($total_pax == 0)
-            return new JsonResponse(array(
-                'status' => 0,
-                'message' => 'Pedido tem q ser mais q 0(zero )!',
-                'data' => null));
-
-        $total_pax = (int)$request->request->get('adult') + (int)$request->request->get('children') + (int)$request->request->get('baby');
+        $total_pax = $adult + $children + $baby;
 
         $next = $request->request->get('next') ? $request->request->get('next') : 1;
 

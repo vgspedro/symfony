@@ -8,7 +8,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h4 class="modal-title" style="text-transform:uppercase;font-weight:bold">{% trans %}send_feedback{% endtrans %}</h4>
-        <button type="button" class="close" data-dismiss="modal"><i class="icon-times"></i></button>
+        <button type="button" class="close" data-dismiss="modal" onclick="clearFeedback()"><i class="icon-times"></i></button>
       </div>
       <div class="modal-body f-14">
         <p class="text-center">{%trans%} info.fill_all{% endtrans %}</p>
@@ -106,7 +106,7 @@
         data: $('#feedback-form').serialize(),
         cache: false,
         success: function(data){
-          console.log(data)
+          //console.log(data)
           $('#ftco-loader').css({'opacity' : 0,'visibility' : 'hidden','z-index' : 1000})
           if(data.status == 1)
           {
@@ -115,9 +115,10 @@
             setTimeout(function(){$('.user-message-feedback').addClass('d-none')}, 10000)
           }
           else{ 
-            $('#form_'+data.data[0]).focus()
             for(var k in data.data)
               $('.'+data.data[k]).removeClass('d-none')
+
+            $('#feedback_'+data.data[0]).focus()
           }
         },
         error:function(data){
