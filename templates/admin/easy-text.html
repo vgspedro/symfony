@@ -1,8 +1,29 @@
-<script src="{{ asset('js/image-resize.min.js') }}"></script>
-
 <style type="text/css">
 .w3-input {border-bottom: 0px solid #05788d}
 .ql-snow{background: white}
+
+<style>
+.note-editor {border-radius: 0px}
+textarea {color: #FFF!important}
+.btn-fullscreen{display: none}
+
+ .dt-button{background: #FFF;border:1px solid #ccc;
+ display: inline-block; padding: 8px 16px; vertical-align: middle;overflow: hidden;text-decoration: none; color: inherit;
+    background-color: inherit;text-align: center; cursor: pointer; white-space: nowrap;color: #000!important;background-color: #87CEEB!important;font-size:18px}
+
+select.input-sm, input .form-control .input-sm {height: 36px}
+table.dataTable.dtr-inline.collapsed > tbody > tr > td:first-child:before, table.dataTable.dtr-inline.collapsed > tbody > tr > th:first-child:before {
+    height: 24px;width: 24px;border-radius: 16px; text-align: center;line-height: 23px;font-size: 24px;border-radius: 0px;border: 1px solid #ddd;box-shadow: 0 0 0 #000}
+table.dataTable.dtr-inline.collapsed > tbody > tr > td:first-child, table.dataTable.dtr-inline.collapsed > tbody > tr > th:first-child {padding-left: 38px}
+.dt-button-collection{ width:100%;background: rgba(0,0,0,0.3);position: fixed;left:0px;padding: 96px 16px; z-index:99999;margin-top: 0px!important;top:0px}
+
+.w3-input {border-bottom: 0px solid #05788d}
+input, select, textarea {color: #000!important}
+.form-control{ border: 1px solid #ccc!important;height: 50px;padding: 0px 0px 0px 4px;padding-bottom: 0px}
+div.dataTables_length select {height: 50px}
+
+div.dataTables_length label{float:left}
+div.dataTables_filter label {float: right}
 </style>
 
 <header class="w3-container" style="padding-top:22px">
@@ -10,20 +31,19 @@
 </header>
 
 <div class="w3-row-padding">
-  {% for category in easyTexts%}
-  <div class="w3-col s6 m4 l3 w3-margin-bottom">
+  {% for t in easyTexts%}
+  <div class="w3-col s4 m3 l2 w3-margin-bottom">
     <div class="w3-card-2 w3-sand w3-border">
-      <div class="w3-center w3-col s12 w3-padding-small">
-      {{category.name}}
+      <div class="w3-col s12 w3-padding-small">
+      {{t.name}}
       </div>
       <div class="w3-row">
-        <div class="w3-col s6">
-          <button class="w3-btn w3-block w3-border w3-blue" onclick="editEasyText('{{category.id}}','{{category.name}}',{{category.easytext}})">
+        <div class="w3-col s12 text-right">
+          <input type="hidden" id='{{t.id}}-easy' value="{{t.easyTextHtml}}">
+          <button class="w3-btn w3-border w3-blue" onclick="editEasyText('{{t.id}}','{{t.name}}')">
             <i class="far fa-edit fa-fw"></i>
           </button>
-        </div>
-        <div class="w3-col s6">
-        <button class="w3-btn w3-block w3-border w3-red" onclick="deleteEasyTextConfirm('{{ category.id}}','{{ category.name }}')">
+        <button class="w3-btn w3-border w3-red" onclick="deleteEasyTextConfirm('{{t.id}}','{{t.name}}')">
           <i class="fas fa-trash-alt"></i>
         </button>
         </div>
@@ -40,11 +60,11 @@
         {{form_label(form.name)}}
         {{form_widget(form.name)}}
       </div>
+    <div class="w3-col s12">
+      <label>Texto</label>
+       <div id="summernote"></div>
+    </div>
 
-      <div class="w3-col s12">
-        <label>Texto</label>
-        <div id="editor" class="w3-white" style="height: 375px"></div>
-      </div>
     </div>
     <div class="w3-row-padding w3-border-top">
       <div class="w3-col s12 w3-margin-top w3-margin-bottom">
@@ -57,37 +77,32 @@
       </div>
     </div>
     <input type="hidden" name="id" id="easytext">
-    {{form_widget(form.easytext)}}
+    
     {{form_widget(form.easytexthtml)}}
+  
   {{ form_end(form) }}
 </div>
 
 <script>
   
-delta =''
-
-var quill = new Quill('#editor', {
- modules: {
-    toolbar: [
-      ['bold', 'italic'],
-      [{ 'header': [4, 3, 2, 1, false] }],
-      ['link', 'blockquote', 'code-block', 'image', 'video'],
-      [{ list: 'ordered' }, { list: 'bullet' }],
-      [{ color:  [] }, { background: [] }],
-    ],
-     imageResize: {
-        displaySize: true,
-        handleStyles: {
-         backgroundColor: 'black',
-         border: 'none'
-                // other camelCase styles for size display
-            }
-    }
-  },
-  placeholder: 'Insira Texto Fácil.....',
-  theme: 'snow'  // or 'bubble',
-
+$('#summernote').summernote({
+  placeholder: 'Insira ....',
+  tabsize: 3,
+  height: 300,
+  fontName:'Arial'
 })
+
+
+function clearEasyText(){
+  $('#summernote').summernote('reset')
+  $('#easytext, #easy_text_name').val('')
+} 
+
+function editEasyText(id,name){
+  $('#summernote').summernote('code', $('#'+id+'-easy').val())
+  $('#easytext').val(id)
+  $('#easy_text_name').val(name)
+}
 
 
 function deleteEasyTextConfirm(id, n)
@@ -105,12 +120,10 @@ function deleteEasyText(id){
     url:'{{ path('admin_easy_text_delete') }}',  
     type: "POST",
     data:'id='+id,
+    cache: false,
     success: function(data){
-     // console.log(data)
       $('.w3-overlay').hide()
-      if (data.message == 'success'){
-        ajaxUpload('easy-text')
-      }
+      data.status == 1 ? ajaxUpload('easy-text') : alert(data.data)
     },
     error:function(data){
       $('.w3-overlay').hide()
@@ -120,41 +133,30 @@ function deleteEasyText(id){
   }, 500)
 }
 
-function clearEasyText(){
-  quill.setContents('')
-  $('#easytext, #easy_text_name').val('')
-} 
-
-
-function editEasyText(id,name,easytext){
-	quill.setContents(easytext)
-  $('#easytext').val(id)
-  $('#easy_text_name').val(name)
-  //$('#debug').html(quill.root.innerHTML)
-}
-
 $('#easytext-form').on('submit',function(e){
   e.preventDefault()
   $('.required').addClass('w3-hide')
   $('.w3-overlay').show()
-  $('#easy_text_easytext').val(JSON.stringify(window.delta = quill.getContents()))
-  $('#easy_text_easytexthtml').val(quill.root.innerHTML)
+  $('#easy_text_easytexthtml').val($('#summernote').summernote('code'))
   setTimeout(function(){
     $.ajax({  
       url:'{{ path('admin_easy_text') }}',
       type: "POST",
-      data:$('#easytext-form').serialize(),
+      cache: false,
+      data: $('#easytext-form').serialize(),
       success: function(data){  
         $('.w3-overlay').hide()
-         if (data.message == 'success'){
+        console.log(data)
+
+         if (data.status == 1)
           ajaxUpload('easy-text')
-          quill.setContents('')
-          $('#easy_text_name').val('')
-        }
-        else if (data.message=='fail'){
-          for(i=0;i<data.data.length;i++)
-            $('.'+data.data[i]).removeClass('w3-hide')
-          $('#modal-fields').show()
+        
+        else{
+          var  h = ''
+          for(var i in data.data)
+            h+= data.data[i]
+
+          alert(data.message +'-->'+h)
         }
       },
       error:function(data){

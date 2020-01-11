@@ -15,20 +15,16 @@ class EasyTextType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('easytext', HiddenType::class,
-            array(
-                'required' => false
-            ))
             ->add('easytexthtml', HiddenType::class,
-            array(
+            [
                 'required' => false
-            ))
+            ])
             ->add('name', TextType::class,
-                array(
+                [
                 'label' => 'Titulo *', 
                 'required' => false,
-                'attr' => ['class' => 'w3-input w3-border w3-white w3-margin-bottom','placeholder'=>'Titulo *']
-            ))
+                'attr' => ['class' => 'w3-input w3-border w3-white w3-margin-bottom', 'placeholder' => 'Titulo *']
+             ])
         ;
     }
     

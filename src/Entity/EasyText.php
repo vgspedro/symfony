@@ -17,15 +17,12 @@ class EasyText
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
-    /**
-     * @ORM\Column(type="text")
-     */
-    private $easyText;
+
     /**
      * @ORM\Column(type="text")
      */
     private $easyTextHtml;
-
+    
     /**
     * @ORM\Column(type="string", length=50)
     * @Assert\NotBlank(message="NAME")
@@ -45,16 +42,6 @@ class EasyText
     public function setName($name)
     {
         $this->name = $name;
-    }
-
-    public function getEasyText()
-    {
-        return $this->easyText;
-    }
-
-    public function setEasyText($easyText)
-    {
-        $this->easyText = $easyText;
     }
 
     public function getEasyTextHtml()

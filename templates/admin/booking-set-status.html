@@ -59,16 +59,16 @@
       </div>
       <div class="w3-col l12 s12">
         <label><i class="fas fa-notes-medical"></i> Notas</label>
-        <div id="editor" class="w3-col s12 w3-white" style="height:150px">
+        <div id="summernote" class="w3-col s12">
         {{ seeBooking.notes | raw }}
         </div>
       </div>
       <div class="w3-col l3 m6 s12">
         <label><i class="fas fa-paste"></i> Texto Fácil</label>
-        <select id="booking_easy_text" onchange="setEasyText($(this).find(':selected').data('quill'))" class="w3-input w3-white NOTES w3-border" style="height:45px">
-          <option data-html='' data-quill=''>Escolha </option>
+        <select id="booking_easy_text" onchange="setEasyText($(this).find(':selected').data('html'))" class="w3-input w3-white NOTES w3-border" style="height:45px">
+          <option data-html=''>Escolha </option>
          {% for easytext in seeBooking.easyText%}
-          <option value="{{ easytext.id }}" data-html="{{ easytext.easytexthtml }}" data-quill="{{ easytext.easytext }}" >{{easytext.name}}</option>
+          <option value="{{ easytext.id }}" data-html="{{ easytext.easytexthtml }}">{{easytext.name}}</option>
          {% endfor %}
         </select>
       </div>
@@ -77,11 +77,17 @@
 
 <script>
 
-function setEasyText(v){
-  quill.setContents(v)
-}
+function setEasyText(v){$('#summernote').summernote('code', v)}
+
+$('#summernote').summernote({
+  placeholder: 'Insira ....',
+  tabsize: 3,
+  height: 250,
+  fontName:'Arial'
+})
 
 $('#bookingstatus').on('submit',function(e){
+
   $('.w3-overlay').show()
   var html = ''
   e.preventDefault()
@@ -89,7 +95,7 @@ $('#bookingstatus').on('submit',function(e){
     $.ajax({  
       url:'{{ path('admin_booking_send_status') }}',
       type: "POST",
-      data:$('#bookingstatus').serialize()+'&notes='+quill.root.innerHTML,
+      data:$('#bookingstatus').serialize()+'&notes='+$('#summernote').summernote('code'),
       success: function(data){
         $('.w3-overlay').hide()
         if (data.status == 1){
@@ -117,7 +123,6 @@ $('#bookingstatus').on('submit',function(e){
             $('#btn-'+data.data.id).addClass(c).removeClass('w3-white')
           }, 5000)
 
-          
           if (data.stock_it == 1){
             $('#modal-success').show()
             html += data.message+'<br>Reserva #'+data.data.id+' foi cancelada e o stock resposto nas disponibilidades.<br> Se a reserva se encontra em canceled, e mudar para outro estado.<br><span class="w3-text-red">NÃO muda as disponibilidades,<br>NÃO retira do stock.</span>'
@@ -138,28 +143,4 @@ $('#bookingstatus').on('submit',function(e){
   }, 500)
 })
 
- delta =''
-
-var quill = new Quill('#editor', {
- modules: {
-    toolbar: [
-      ['bold', 'italic'],
-      [{ 'header': [4, 3, 2, 1, false] }],
-      ['link', 'blockquote', 'code-block', 'image', 'video'],
-      [{ list: 'ordered' }, { list: 'bullet' }],
-      [{ color:  [] }, { background: [] }],
-    ],
-     imageResize: {
-        displaySize: true,
-        handleStyles: {
-         backgroundColor: 'black',
-         border: 'none'
-                // other camelCase styles for size display
-            }
-    }
-  },
-  placeholder: 'Insira Texto Fácil.....',
-  theme: 'snow'  // or 'bubble',
-
-})
 </script>

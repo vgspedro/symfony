@@ -41,56 +41,58 @@ class EasyTextController extends AbstractController
                     $em->persist($easyTexts);
                     $em->flush();
 
-                    $response = array(
-                        'result' => 1,
+                    $response = [
+                        'status' => 1,
                         'message' => 'success',
-                        'data' => $easyTexts->getId());
+                        'data' => $easyTexts->getId()
+                    ];
                 }
-                else{   
-                    $response = array(
-                        'result' => 0,
-                        'message' => 'fail',
+                else  
+                    $response = [
+                        'status' => 0,
+                        'message' => 'Fail',
                         'data' => $this->getErrorMessages($form)
-                    );
-                }
+                    ];
             }
             else
-                $response = array(
-                    'result' => 2,
-                    'message' => 'fail not submitted',
-                    'data' => '');
-                return new JsonResponse($response);
+
+                $response = [
+                    'status' => 2,
+                    'message' => 'Fail not submitted',
+                    'data' => []];
+            return new JsonResponse($response);
+        
         }
 
-        return $this->render('admin/easy-text.html',array(
+        return $this->render('admin/easy-text.html', [
             'form' => $form->createView(),
             'easyTexts' => $easyText
-        ));
+        ]);
     }
 
 
     public function EasyTextDelete(Request $request){
 
-        $response = array();
+        $response = [];
         $easyTextId = $request->request->get('id');
-        $entity = $this->getDoctrine()->getManager();
+        $em = $this->getDoctrine()->getManager();
         
-        $easyText = $entity->getRepository(EasyText::class)->find($easyTextId);
+        $easyText = $em->getRepository(EasyText::class)->find($easyTextId);
        
-        if (!$easyText) {
-            $response = array('message'=>'fail', 'status' => 'Texto Fácil #'.$easyTextId . ' não existe.');
-        }
+        if (!$easyText)
+            $response = ['status' => 0,  'message' => 'fail', 'data' => 'Texto Fácil #'.$easyTextId . ' não existe.'];
+
         else{
-            $entity->remove($easyText);
-            $entity->flush();
-            $response = array('message'=>'success', 'status' => $easyTextId);
+            $em->remove($easyText);
+            $em->flush();
+            $response = ['status' => 1, 'message' => 'success', 'data' => $easyTextId];
         }
         return new JsonResponse($response);
     }
 
     protected function getErrorMessages(\Symfony\Component\Form\Form $form) 
     {
-        $errors = array();
+        $errors = [];
         foreach ($form->getErrors() as $key => $error) {
             $errors[] = $error->getMessage();
         }

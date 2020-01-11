@@ -80,17 +80,24 @@ div.dataTables_length select {height: 50px}
         </tr>
       </thead>
       <tbody>
+        <tr id="filter_global" class="w3-hide">
+          <td>Global search</td>
+          <td align="center"><input type="text" class="global_filter" id="global_filter"></td>
+          <td align="center"><input type="checkbox" class="global_filter" id="global_regex"></td>
+          <td align="center"><input type="checkbox" class="global_filter" id="global_smart" checked="checked"></td>
+        </tr>
+
         <tr id="filter_col11" data-column="10">
           <td> Pagamento</td>
-          <td align="center"><input type="text" class="column_filter w3-input w3-border w3-white" id="col10_filter" value="cancelada"></td>
-          <td align="center"><input type="checkbox" class="column_filter w3-check" id="col10_regex" checked></td>
+          <td align="center"><input type="text" class="column_filter w3-input w3-border w3-white" id="col10_filter" value="can"></td>
+          <td align="center"><input type="checkbox" class="column_filter w3-check" id="col10_regex" checked="checked"></td>
+          <td class="w3-hide"><input type="checkbox" class="column_filter" id="col10_smart"></td>
         </tr>
       </tbody>
     </table>
   </div>
 
   <div class="w3-col s12">
-    <div style="overflow-x:auto">
       <table id="dataTables" class="w3-border table table-striped hover table-bordered w3-hide" style="width:100%">
         <thead class="w3-sand">
           <tr>
@@ -109,7 +116,6 @@ div.dataTables_length select {height: 50px}
           </tr>
         </tfoot>
       </table>
-    </div>
   </div>
 </div>
 
@@ -246,6 +252,9 @@ var index = 0
       filterColumn( $(this).parents('tr').attr('data-column'))
     })
 
+    $('input.global_filter').on( 'keyup click', function () {
+        filterGlobal()
+    })
 
     $( ".see-pass" ).hover(
     function() {
@@ -351,13 +360,13 @@ function searchValue(){
       table = $('#dataTables').DataTable({
       dom: 'lBfrtip',
       rowId: "id",
-      "paging": true,
-      "serverside":true,
-      "drawCallback": function( settings ) {},
-      "ajax": 
+      paging: true,
+      serverside: true,
+      drawCallback: function( settings ) {},
+      ajax: 
         {
-        "url" :'{{ path('admin_booking_search') }}?'+data,
-        "dataSrc": function (j) {  
+        url :'{{ path('admin_booking_search') }}?'+data,
+        dataSrc: function (j) {  
         //console.log(j.data)
         $('.w3-overlay, .table-overlay').hide()
         if( j.options > 1500){
@@ -382,6 +391,8 @@ function searchValue(){
           $('.set-confirmed').text(j.confirmed)
           $('.set-pending').text(j.pending)
           $('#dataTables').removeClass('w3-hide')
+          $('#col10_regex').prop('checked', true)
+          $( "#col10_filter" ).keyup()
           return j.data
         }
       }
@@ -505,7 +516,7 @@ function searchValue(){
         "next": "Seguinte",
         }
     },
-    "footerCallback": function ( row, data, start, end, display ) {
+    footerCallback: function ( row, data, start, end, display ) {
           var api = this.api(), data
           // Remove the formatting to get integer data for summation
           var intVal = function ( i ) {
@@ -540,9 +551,8 @@ function searchValue(){
       destroy: true,
       rowCallback: function( row, data, index ) {  
       $(row).addClass(data.row_color)
-      filterColumn (10)
     },
-    responsive: false
+    responsive: true
   })
   .on( 'error.dt', function ( e, settings, techNote, message ) {
     $('.w3-overlay').hide()
@@ -561,22 +571,22 @@ function searchValue(){
 
 
 function filterColumn ( i ) {
-
-    v = $('#col'+i+'_regex').is('checked') ? '^(?!'+$('#col'+i+'_filter').val()+')' : $('#col'+i+'_filter').val()
-    console.log(v)
-
+  v = $('#col'+i+'_regex').prop('checked') ? '^((?!'+$('#col'+i+'_filter').val()+').)*$' : $('#col'+i+'_filter').val()
   $('#dataTables').DataTable().column( i ).search(
-    
-  v
-
- //   $('#col'+i+'_filter').val(),
-//    $('#col'+i+'_regex').prop('checked'),
-
-
-
+    v,
+    //$('#col'+i+'_smart').prop('checked'),
+    $('#col'+i+'_regex').prop('checked')
   ).draw()
 }
 
+
+function filterGlobal () {
+  $('#dataTables').DataTable().search(
+    $('#global_filter').val(),
+    $('#global_regex').prop('checked'),
+    $('#global_smart').prop('checked')
+  ).draw()
+}
 
 
 function getStripeLogs(id){

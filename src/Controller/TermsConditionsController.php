@@ -111,28 +111,29 @@ class TermsConditionsController extends AbstractController
                     $em->persist($terms);
                     $em->flush();
 
-                    $response = array(
+                    $response = [
                         'status' => 1,
                         'message' => 'Sucesso',
-                        'data' => 'O registo '.$terms->getId().' foi gravado.');
+                        'data' => 'O registo '.$terms->getId().' foi gravado.'];
                 } 
                 catch(DBALException $e){
 
-                    $a = array("Contate administrador sistema sobre: ".$e->getMessage());
+                    $a = ["Contate administrador sistema sobre: ".$e->getMessage()];
 
-                    $response = array(
+                    $response = [
                         'status' => 0,
                         'message' => 'fail',
-                        'data' => $a);
+                        'data' => $a
+                    ];
                 }
             }
             
             else{   
-                $response = array(
+                $response = [
                     'result' => 0,
                     'message' => 'fail',
                     'data' => $this->getErrorMessages($form)
-                );
+                ];
             }
         }
         return new JsonResponse($response);
@@ -141,29 +142,36 @@ class TermsConditionsController extends AbstractController
 
     public function termsDelete(Request $request){
 
-        $response = array();
+        $response = [];
         $termsId = $request->request->get('id');
         $entity = $this->getDoctrine()->getManager();
         
         $terms = $entity->getRepository(TermsConditions::class)->find($termsId);
        
         if (!$terms) {
-            $response = array('message'=>'fail', 'status' => 'Termos & Condições #'.$termsId . ' não existe.');
+            $response = [
+                'status' => 0,
+                'message'=>'fail',
+                'data' => 'Termos & Condições #'.$termsId . ' não existe.'
+            ];
         }
         else{
             $entity->remove($terms);
             $entity->flush();
 
-            $response = array('message'=>'success', 'status' => $termsId);
+            $response = [
+                'status' => 1,
+                'message' =>'success', 
+                'data' => $termsId
+            ];
         }
         return new JsonResponse($response);
     }
 
 
-
     public function termsShow(Request $request){
 
-        $response = array();
+        $response = [];
 
         $em = $this->getDoctrine()->getManager(); 
 
@@ -172,16 +180,16 @@ class TermsConditionsController extends AbstractController
         $terms = $em->getRepository(TermsConditions::class)->findOneBy(['locales' => $locales]);
        
         $response = !$terms ?
-            array('status' => 0, 'message' => 'Termos & Condições não encontrado', 'data' => null)
+            ['status' => 0, 'message' => 'Termos & Condições não encontrado', 'data' => null]
             :
-            array('status' => 1, 'message' => $terms->getName(), 'data' => $terms->getTermsHtml());
+            ['status' => 1, 'message' => $terms->getName(), 'data' => $terms->getTermsHtml()];
         return new JsonResponse($response);
     }
 
 
     protected function getErrorMessages(\Symfony\Component\Form\Form $form) 
     {
-        $errors = array();
+        $errors = [];
         foreach ($form->getErrors() as $key => $error) {
             $errors[] = $error->getMessage();
         }

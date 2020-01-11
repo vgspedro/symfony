@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Service;
 
 class Menu
@@ -8,7 +9,7 @@ class Menu
 
         //company links
         $s[] = ['path' => '#', 'name'=> 'Editar', 'icon' => 'far fa-edit fa-fw', 'target' => '', 'id' => 'company', 'color' => 'w3-blue', 'submenu' => [] ];
-        $s[] = ['path' => '#', 'name'=> 'Texto Reservas', 'icon' => 'far fa-file-alt', 'target' => '', 'id' => 'about-us', 'color' => 'w3-blue', 'submenu' => [] ];
+        //$s[] = ['path' => '#', 'name'=> 'Texto Reservas', 'icon' => 'far fa-file-alt', 'target' => '', 'id' => 'about-us', 'color' => 'w3-blue', 'submenu' => [] ];
         $s[] = ['path' => '#', 'name'=> 'RGPD', 'icon' => 'far fa-file-alt', 'target' => '', 'id' => 'rgpd', 'color' => 'w3-blue', 'submenu' => [] ];
         $s[] = ['path' => '#', 'name'=> 'Termos & Condições', 'icon' => 'fas fa-asterisk', 'target' => '', 'id' => 'terms', 'color' => 'w3-blue', 'submenu' => [] ];
         $s[] = ['path' => '#', 'name'=> 'Logs Rotinas', 'icon' => 'fas fa-cogs', 'target' => '', 'id' => 'list-cron', 'color' => 'w3-blue', 'submenu' => [] ];
