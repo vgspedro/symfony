@@ -100,11 +100,19 @@ return array(
     'services_menu' => 'Services menu',
     'services_menu_txt' => 'We offer sightseeing tours through the Benagil Caves on the Algarve Coast.',
     'spectacular_tours' => 'Spectacular Tours',
+    'spectacular_tours_txt' => 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Necessitatibus ipsa, ad ratione quos distinctio unde.',
     'years_experience' => 'Years of Experience',
+    'years_experience_txt' => 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Necessitatibus ipsa, ad ratione quos distinctio unde.',
     'good_captain' => 'Good Captain',
+    'good_captain_txt' => 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Necessitatibus ipsa, ad ratione quos distinctio unde.',
     'pricing' => 'Pricing',
     'our_tours' => 'Our Tours',
     'our_tours_txt' => 'Come and enjoy the best Tour caves in Algarve only with ',
+
+
+    'video_txt' => 'A brief teaser video ....<br>What you can see on our Tours',
+    'video_head' => 'Watch ',
+    'video_sub' => 'video',
 
     'team' => 'Team',
     'our_team' => 'Our Team',

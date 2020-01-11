@@ -13,12 +13,11 @@
 			</div>
 		<div class="col-md-6 py-md-5 pb-5 wrap-about pb-md-5 ftco-animate fadeInUp ftco-animated">
 	    	<div class="heading-section mb-4 mt-md-5">
-	        	<span class="subheading">Video</span>
-	            <h2 class="mb-4">A video from {{company.name}}</h2>
+	        	<span class="subheading">{%trans%}video_sub{%endtrans%}</span>
+	            <h2 class="mb-4">{%trans%}video_head{%endtrans%} {{company.name}}</h2>
 	        </div>
 	    	<div class="pb-md-5">
-				<p>A video to show what you can see in our tours.</p>
-				<p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.</p>
+				<p>{%trans%}video_txt{%endtrans%}</p>
 			</div>
 		</div>
 		</div>
@@ -34,7 +33,7 @@
        <button type="button" class="btn-float" data-dismiss="modal" aria-label="Close">&times;</button>
         <!-- 16:9 aspect ratio -->
 		<div class="embed-responsive embed-responsive-16by9">
-  			<iframe class="embed-responsive-item" src="" id="video" allowscriptaccess="always" allow="autoplay"></iframe>
+  			<iframe class="embed-responsive-item" src="" id="video" allowscriptaccess="always" allowfullscreen='true' allow="autoplay"></iframe>
 		</div>
       </div>
     </div>

@@ -5,7 +5,7 @@ return array(
     'unavailable' => 'Indisponivel',
     'minutes' => 'minutos',
     'reminder_txt' => 'Olá, não se esqueça que ...',
-    'reminder_txt_body' => 'This is a reminder that your booking is scheduled for tomorrow with ',
+    'reminder_txt_body' => 'Olá a sua reserva está marcada para amanhã com ',
 
     'check_in_time' => 'O Check-in é feito 30 minutos antes na nossa Ticket Shop.',
     'at' => 'às',
@@ -47,11 +47,20 @@ return array(
     'services_menu_txt' => 'Oferecemos passeios turisticos, pelas Grutas de Benagil na Costa Algarvia.',
 
     'spectacular_tours' => 'Passeios Espetaculares',
+    'spectacular_tours_txt' => 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Necessitatibus ipsa, ad ratione quos distinctio unde.',
     'years_experience' => 'Anos de Experiência',
+    'years_experience_txt' => 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Necessitatibus ipsa, ad ratione quos distinctio unde.',
     'good_captain' => 'Bom Capitão',
+    'good_captain_txt' => 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Necessitatibus ipsa, ad ratione quos distinctio unde.',
     'pricing' => 'Preços',
     'our_tours' => 'Os Nossos Passeios',
     'our_tours_txt' => 'Venha e aprecie um passeio pelas Grutas com ',
+
+    'video_txt' => 'Um breve video ...<br> O que poderá ver nos passeios às grutas',
+    'video_head' => 'Veja ',
+    'video_sub' => 'video',
+
+
 
     'team' => 'Equipa',
     'our_team' => 'A Nossa Equipa',
