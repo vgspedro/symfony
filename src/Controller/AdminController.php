@@ -258,7 +258,7 @@ class AdminController extends AbstractController
                         'notes' => $booking->getNotes(),
                         'user_id' => $client->getId(),
                         'deposit' => $moneyFormatter->format($booking->getDepositAmount()),
-                        'payment_status' => strtolower($booking->getPaymentStatus()),
+                        'payment_status' => strtolower('p_'.$booking->getPaymentStatus()),
                         'payment_log' => $booking->getStripePaymentLogs() ? 1 : 0,
                         'payment_status_txt' => strtoupper($translator->trans($booking->getPaymentStatus())),
                         'username' => $client->getUsername(),

@@ -67,7 +67,28 @@ div.dataTables_length select {height: 50px}
 </div>
 
 <!-- TABLE  -->
-<div class="w3-row-padding w3-margin-top" style="min-height:40vh">
+
+<div class="w3-row-padding w3-margin-top" style="min-height:50vh">
+  <div class="w3-col l3 m1 s0 w3-hide-small">&nbsp;</div>
+  <div class="w3-col l6 m10 s12">
+    <table class="w3-border table table-striped hover table-bordered advanced-search w3-hide">
+      <thead class="w3-light-blue">
+        <tr>
+          <th>Coluna</th>
+          <th>Texto</th>
+          <th>Excluir</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr id="filter_col11" data-column="10">
+          <td> Pagamento</td>
+          <td align="center"><input type="text" class="column_filter w3-input w3-border w3-white" id="col10_filter" value="cancelada"></td>
+          <td align="center"><input type="checkbox" class="column_filter w3-check" id="col10_regex" checked></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
   <div class="w3-col s12">
     <div style="overflow-x:auto">
       <table id="dataTables" class="w3-border table table-striped hover table-bordered w3-hide" style="width:100%">
@@ -92,11 +113,10 @@ div.dataTables_length select {height: 50px}
   </div>
 </div>
 
-
 <div id="modal-data-validate" class="w3-modal" style="z-index: 99999;padding-bottom:32px">
   <div class="w3-modal-content w3-animate-zoom" style="max-width:450px">
     <div class="w3-container w3-blue w3-padding">
-      <span onclick="$('#modal-data-validate').hide(); $('.show-user-info').empty()" class="w3-button w3-display-topright w3-large">
+      <span onclick="$('#modal-data-validate').hide();$('.show-user-info').empty()" class="w3-button w3-display-topright w3-large">
         <i class="fa fa-times"></i>
       </span>
       <h1>
@@ -221,6 +241,11 @@ var table = ''
 var index = 0
 
   $(function(){
+
+    $('input.column_filter').on( 'keyup click', function () {
+      filterColumn( $(this).parents('tr').attr('data-column'))
+    })
+
 
     $( ".see-pass" ).hover(
     function() {
@@ -411,8 +436,15 @@ function searchValue(){
       { data: "posted_at"},
       { data: "wp"}
     ],
-     "lengthMenu": [[25, 50, -1, 10], [25, 50, "Todos", 10]],
-    buttons: [
+     lengthMenu: [[25, 50, -1, 10], [25, 50, "Todos", 10]],
+        buttons: [
+        {
+          text:'<i class="fas fa-filter"></i>',
+          titleAttr: 'Filtro Avançado', 
+          action: function ( e, dt, node, config ) {
+          $('.advanced-search').hasClass('w3-hide') ? $('.advanced-search').removeClass('w3-hide') : $('.advanced-search').addClass('w3-hide') 
+          }       
+        },
         {
         extend:    'excelHtml5',
         text:      '<i class="far fa-file-excel"></i>',
@@ -508,6 +540,7 @@ function searchValue(){
       destroy: true,
       rowCallback: function( row, data, index ) {  
       $(row).addClass(data.row_color)
+      filterColumn (10)
     },
     responsive: false
   })
@@ -525,6 +558,26 @@ function searchValue(){
   $('#dataTables_filter').addClass('w3-col s8 m12 l4 w3-center w3-section')
   }, 750)
 }
+
+
+function filterColumn ( i ) {
+
+    v = $('#col'+i+'_regex').is('checked') ? '^(?!'+$('#col'+i+'_filter').val()+')' : $('#col'+i+'_filter').val()
+    console.log(v)
+
+  $('#dataTables').DataTable().column( i ).search(
+    
+  v
+
+ //   $('#col'+i+'_filter').val(),
+//    $('#col'+i+'_regex').prop('checked'),
+
+
+
+  ).draw()
+}
+
+
 
 function getStripeLogs(id){
   $('.w3-overlay').show()
@@ -563,7 +616,7 @@ function setPayment(id){
       type: "POST",
       data:'id='+id+'&index='+index,
       success: function(data){
-        console.log(data)
+        //console.log(data)
         $('.w3-overlay').hide()
         if(data.status == 0){
           $('#info-client').show()                
@@ -618,114 +671,5 @@ function modalBookingSetStatus(bookingId){
   }, 500)
 }
 
-/*STRIPE*/
-
-/*
-x = $('input[name=stripe-pk]').val()
-
-
-
-//var stripe = Stripe(x)
-
-// Create an instance of Elements.
-//var elements = stripe.elements();
-
-// Custom styling can be passed to options when creating an Element.
-// (Note that this demo uses a wider set of styles than the guide below.)
-var style = {
-  base: {
-    color: '#32325d',
-    fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
-    fontSmoothing: 'antialiased',
-    fontSize: '16px',
-    '::placeholder': {
-      color: '#aab7c4'
-    }
-  },
-  invalid: {
-    color: '#fa755a',
-    iconColor: '#fa755a'
-  }
-};
-
-// Create an instance of the card Element.
-var card = elements.create('card', {style: style});
-
-// Add an instance of the card Element into the `card-element` <div>.
-card.mount('#card-element');
-
-// Handle real-time validation errors from the card Element.
-card.addEventListener('change', function(event) {
-  var displayError = document.getElementById('card-errors');
-  if (event.error) {
-    displayError.textContent = event.error.message;
-  } else {
-    displayError.textContent = '';
-  }
-});
-
-// Handle form submission.
-var form = document.getElementById('payment-form');
-form.addEventListener('submit', function(event) {
-  event.preventDefault();
-  $('.w3-overlay').show()
-
-  stripe.createToken(card).then(function(result) {
-    if (result.error) {
-        $('.w3-overlay').hide()
-      // Inform the user if there was an error.
-      var errorElement = document.getElementById('card-errors');
-      errorElement.textContent = result.error.message;
-    } else {
-      // Send the token to your server.
-      stripeTokenHandler(result.token);
-    }
-  });
-});
-
-// Submit the form with the token ID.
-function stripeTokenHandler(token) {
-  // Insert the token ID into the form so it gets submitted to the server
-  var form = document.getElementById('payment-form');
-  var hiddenInput = document.createElement('input');
-  hiddenInput.setAttribute('type', 'hidden');
-  hiddenInput.setAttribute('name', 'stripeToken');
-  hiddenInput.setAttribute('value', token.id);
-  form.appendChild(hiddenInput);
-  //submit form
-  //console.log($('#payment-form').serialize())
-
-  setTimeout(function(){
-     $.ajax({  
-        url: '{{ path('charge_payment') }}',
-        type: "POST",
-        data: $("#payment-form").serialize(),
-        cache: false,
-        success: function(data){
-          //console.log(data)
-          $('.w3-overlay').hide()
-          if (data.status == 1){
-            $('#modal-data-validate').hide()
-            $("#payment-form").trigger('reset')
-            $('#info-client').show()
-            $('#info-client-head').removeClass('w3-green w3-red w3-amber w3-blue').addClass('w3-green').html('<span onclick="$(\'#info-client\').hide()" class="w3-button w3-display-topright w3-large"><i class="fa fa-times"></i></span><h1><i class="fa fa-info-circle"></i> Sucesso</h1>')
-            $('#client-txt').html(data.message)
-          }
-          else{
-            $('#info-client').show()  
-            $('#info-client-head').removeClass('w3-green w3-red w3-amber').addClass('w3-blue').html('<span onclick="$(\'#info-client\').hide()" class="w3-button w3-display-topright w3-large"><i class="fa fa-times"></i></span><h1><i class="fa fa-info-circle"></i> Verifique</h1>')
-            $('#client-txt').html(data.message)
-          }
-        },
-        error:function(data){
-          $('.w3-overlay').hide()
-          $('#modal-error').show()
-        }
-      })
-  }, 500)
-}
-
-*/
-/*STRIPE*/
 
 </script>
