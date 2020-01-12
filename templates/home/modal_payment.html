@@ -97,10 +97,6 @@
               
               {% endif %}
 
-
-
-
-
             </div>
 
           </div>
@@ -182,8 +178,8 @@ function endBuy(){
           html += '<div class="required">'+data.message[k]+'</div>'
 
           $('#alerts').modal('show')
-          $('.alert-primary').removeClass('d-none').addClass('show')
-          $('.alert-primary span').html(html)
+          $('.alert-warning').removeClass('d-none').addClass('show')
+          $('.alert-warning span').html(html)
       }      
       else if (data.status == 4){
           $('#ftco-loader').css({'opacity' : 0,'visibility' : 'hidden','z-index' : 1000})
