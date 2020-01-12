@@ -23,7 +23,7 @@ class TermsConditions
     private $termsHtml;
 
     /**
-    * @ORM\Column(type="string", length=50)
+    * @ORM\Column(type="text")
     * @Assert\NotBlank(message="Titulo *")
     */
     private $name;

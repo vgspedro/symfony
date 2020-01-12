@@ -1,7 +1,3 @@
-<style type="text/css">
-.w3-input {border-bottom: 0px solid #05788d}
-.ql-snow{background: white}
-
 <style>
 .note-editor {border-radius: 0px}
 textarea {color: #FFF!important}
@@ -32,13 +28,13 @@ div.dataTables_filter label {float: right}
 
 <div class="w3-row-padding">
   {% for t in easyTexts%}
-  <div class="w3-col s4 m3 l2 w3-margin-bottom">
-    <div class="w3-card-2 w3-sand w3-border">
+  <div class="w3-col s6 m3 l2 w3-margin-bottom">
+    <div class="w3-card-2 w3-sand w3-border e-text e-text-{{t.id}}">
       <div class="w3-col s12 w3-padding-small">
       {{t.name}}
       </div>
       <div class="w3-row">
-        <div class="w3-col s12 text-right">
+        <div class="w3-col s12 text-right w3-padding-small">
           <input type="hidden" id='{{t.id}}-easy' value="{{t.easyTextHtml}}">
           <button class="w3-btn w3-border w3-blue" onclick="editEasyText('{{t.id}}','{{t.name}}')">
             <i class="far fa-edit fa-fw"></i>
@@ -99,6 +95,8 @@ function clearEasyText(){
 } 
 
 function editEasyText(id,name){
+  $('.e-text').removeClass('w3-pale-blue').addClass('w3-sand')
+  $('.e-text-'+id).addClass('w3-pale-blue').removeClass('w3-sand')
   $('#summernote').summernote('code', $('#'+id+'-easy').val())
   $('#easytext').val(id)
   $('#easy_text_name').val(name)

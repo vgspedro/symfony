@@ -23,7 +23,7 @@ class Faqs
     private $html;
 
     /**
-    * @ORM\Column(type="string", length=50)
+    * @ORM\Column(type="text")
     * @Assert\NotBlank(message="Titulo *")
     */
     private $name;
