@@ -394,12 +394,16 @@ class HomeNewController extends AbstractController
 
         //Create booking
         else{
-
             $em->getConnection()->beginTransaction();
-
+            
             $available = $em->getRepository(Available::class)->find($event);
+            $category = $em->getRepository(Category::class)->find($request->request->get('category'));
+            $tomorrow = new \DateTime('tomorrow');
 
-            if(!$available){
+            //Validate the Event with the Category and min Date, to prevent the user changing data on html injections (inspect elements)  
+            $valid = $available->getCategory() == $category && $available->getDatetimeStart()->format('Y-m-d') >= $tomorrow->format('Y-m-d') ? true : false;
+
+            if(!$valid){
                 //throw new Exception("Error Processing Request Available", 1);
                return new JsonResponse([
                     'status' => 4,
