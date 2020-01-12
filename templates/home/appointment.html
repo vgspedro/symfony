@@ -61,14 +61,6 @@ hr {margin-top: 0.5rem;margin-bottom: 0.5rem}
                 <input type="number" name="baby" min="0" step='1' onchange="clearInfo()" class="form-control" placeholder="{% trans %}part_seven.baby{%endtrans %}">
               </div>    
             </div>
-
-            <div class="col-md-12">
-              <div class="form-group">
-                <input type="hidden" name="next" value="">
-                <input type="hidden" name="event" value="">
-                <input type="hidden" name="date" value="">
-              </div>
-            </div>
           <div class="col-md-12 form-group">
             <span style="display:table" onclick="getAvailability()" class="btn btn-primary btn-outline-primary px-4 py-2">{% trans %}part_seven.get_available{% endtrans %}
             </span>
@@ -126,13 +118,13 @@ hr {margin-top: 0.5rem;margin-bottom: 0.5rem}
                 </div>
               </div>
             </div>
-
             <input type="hidden" name="_csrf_token" value="{{csrf_token('authenticate') }}">
-            
+            <input type="hidden" name="next" value="">
+            <input type="hidden" name="event" value="">
+            <input type="hidden" name="date" value="">
             <div class="col-sm-12 col-md-12 text-center">
               <span onclick="validateBookingData()" class="btn btn-outline-success px-4 py-2 confirm-btn">{%trans%}info.confirm{%endtrans%}</span>
             </div>
-
           </div>
         </form>
     	</div>
