@@ -63,7 +63,7 @@ class HomeNewController extends AbstractController
         
         if(!$this->session->get('_locale')){
             $this->session->set('_locale', $local);
-            return $this->redirectToRoute('index');
+            return $this->redirectToRoute('index_new');
         }
         
         $cS = array();
