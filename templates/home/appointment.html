@@ -16,6 +16,7 @@ hr {margin-top: 0.5rem;margin-bottom: 0.5rem}
 
 <section class="ftco-section ftco-booking bg-light">
   <div class="container ftco-relative">
+
     <div class="row justify-content-center pb-3">
       <div class="col-md-10 heading-section text-center ftco-animate">
         <span class="subheading">{%trans%} link.booking{% endtrans %}</span>
@@ -23,11 +24,14 @@ hr {margin-top: 0.5rem;margin-bottom: 0.5rem}
           <p>{%trans%} info.fill_all{% endtrans %}</p>
       </div>
     </div>
+    
     <h3 class="vr">{%trans%} info.call_us {% endtrans %}: {{company.telephone}}</h3>
+    
     <div class="row justify-content-center">
     	<div class="col-md-10 ftco-animate">
     		<form class="appointment-form">
           <div class="row">
+            
             <div class="col-sm-12">
               <div class="form-group">
                 <div class="select-wrap">
@@ -46,43 +50,51 @@ hr {margin-top: 0.5rem;margin-bottom: 0.5rem}
                 </div>
               </div>
             </div>
-			      <div class="col-sm-4">
+			      
+            <div class="col-sm-4">
               <div class="form-group">
                 <input type="number" name="adult" min="0" step='1' onchange="clearInfo()" class="form-control" placeholder="{% trans %}part_seven.adult{%endtrans %}">
               </div>
             </div>
+            
             <div class="col-sm-4">
               <div class="form-group">
                 <input type="number" name="children" min="0" step='1' onchange="clearInfo()" class="form-control" placeholder="{% trans %}part_seven.children{%endtrans %}">
               </div>
             </div>
+            
             <div class="col-sm-4">
               <div class="form-group">
                 <input type="number" name="baby" min="0" step='1' onchange="clearInfo()" class="form-control" placeholder="{% trans %}part_seven.baby{%endtrans %}">
               </div>    
             </div>
-          <div class="col-md-12 form-group">
-            <span style="display:table" onclick="getAvailability()" class="btn btn-primary btn-outline-primary px-4 py-2">{% trans %}part_seven.get_available{% endtrans %}
-            </span>
-          </div>
-        </div>
-        <div class="row personal-data d-none">
-          <div class="col-md-12 heading-section text-center ftco-animate fadeInUp ftco-animated">
-            <div class="text-right" style="margin:6px 0px -24px 0px">
-              {% trans %}countdown{% endtrans %} <div class="badge badge-danger f-14 timer text-center" style="width:2.7em"></div>
+            
+            <div class="col-md-12 form-group">
+              <span style="display:table" onclick="getAvailability()" class="btn btn-primary btn-outline-primary px-4 py-2">{% trans %}part_seven.get_available{% endtrans %}
+              </span>
             </div>
-            <h2 class="set-datetime mt-4"></h2>
           </div>
+
+          <div class="row personal-data d-none">
+            <div class="col-md-12 heading-section text-center ftco-animate fadeInUp ftco-animated">
+              <div class="text-right" style="margin:6px 0px -24px 0px">
+                {% trans %}countdown{% endtrans %} <div class="badge badge-danger f-14 timer text-center" style="width:2.7em"></div>
+              </div>
+              <h2 class="set-datetime mt-4"></h2>
+            </div>
+            
             <div class="col-sm-12 col-md-4">
               <div class="form-group">
                 <input type="text" name="name" class="form-control" placeholder="{% trans %}part_seven.name{%endtrans %}">
               </div>
             </div>
+            
             <div class="col-sm-12 col-md-4">
               <div class="form-group">
                 <input type="text" name="email" class="form-control" placeholder="{% trans %}part_seven.email{%endtrans %}">
               </div>    
             </div>
+            
             <div class="col-sm-12 col-md-4">
               <div class="form-group">
                 <input type="number" name="telephone" class="form-control" placeholder="{% trans %}part_seven.telephone{%endtrans %}">
@@ -100,31 +112,31 @@ hr {margin-top: 0.5rem;margin-bottom: 0.5rem}
               <label class="mb-0">{% trans %}part_seven.rgpd{% endtrans %}</label>
 
               <div id="accordionEx-rgpd" role="tablist" aria-multiselectable="true" class="pb-2">
+                
                 <div role="tab" id="heading-rgpd">
                   <a class="collapsed text-info" data-toggle="collapse" data-parent="#accordionEx-rgpd" href="#collapse-rgpd" aria-expanded="false" aria-controls="collapse-rgpd">
                     {% trans %}more_info{% endtrans %}
                   </a>
                 </div>
-                    
+                      
                 <div id="collapse-rgpd" style="border-top:1px solid #aaa;border-bottom:1px solid #aaa" class="collapse" role="tabpanel" aria-labelledby="heading-rgpd" data-parent="#accordionEx-rgpd" style="position:absolute;z-index:999">
-                  <p class="pt-2" style="font-size:11px;color:#000">
-                    {% trans %}part_seven.rgpd_txt{% endtrans %}
-                  </p>
+                  <p class="pt-2" style="font-size:11px;color:#000">{% trans %}part_seven.rgpd_txt{% endtrans %}</p>
                   <div class="text-right pb-2">
-                    <span onclick='showRgpd()' class="btn btn-info btn-outline-info px-4 py-2">
-                      {% trans %}read_gpdr{% endtrans %}
-                    </span>
+                    <span onclick='showRgpd()' class="btn btn-info btn-outline-info px-4 py-2">{% trans %}read_gpdr{% endtrans %}</span>
                   </div>
                 </div>
               </div>
             </div>
+
             <input type="hidden" name="_csrf_token" value="{{csrf_token('authenticate') }}">
             <input type="hidden" name="next" value="">
             <input type="hidden" name="event" value="">
             <input type="hidden" name="date" value="">
+
             <div class="col-sm-12 col-md-12 text-center">
               <span onclick="validateBookingData()" class="btn btn-outline-success px-4 py-2 confirm-btn">{%trans%}info.confirm{%endtrans%}</span>
             </div>
+            
           </div>
         </form>
     	</div>
