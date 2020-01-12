@@ -169,20 +169,13 @@ function initializeDateTimePicker(){
 
 }
 
-
   $('#datetimepicker').on('dp.change', function(e){
-
-    var ymd = $('#datetimepicker').val().split("/")    
-    if (ymd.length > 0)
-      $('[name=date]').val(ymd[2]+'-'+ymd[1]+'-'+ymd[0])
-    
-    if(flag == true){
-      availabilityModal()
+      $('[name=date]').val(dateToYmd(e.date))      
+      if(flag == true){
+        availabilityModal()
       $('.icon-chevron-left.previous').removeClass('d-none')    
     }
-
   })
-
 
   //b 1 = next week || -1 = previous week  
   function getWeek(b){
@@ -228,31 +221,6 @@ function initializeDateTimePicker(){
     $('#datetimepicker').val(date_picker).trigger('change')
   }
 
-
-function dateToTimestamp(date){
-  return new Date(date).getTime()
-}
-
-function dateToDmy(date){
-  d = new Date(date)
-  m = Number(d.getMonth())+1
-  day = d.getDate() <= 9 ? '0'+d.getDate() : d.getDate()
-  month = m <= 9 ? '0'+m : m
-
-  return day+'/'+month+'/'+d.getFullYear()
-}
-
-
-function dateToYmd(date){
-  d = new Date(date)
-  m = Number(d.getMonth())+1
-  day = d.getDate() <= 9 ? '0'+d.getDate() : d.getDate()
-  month = m <= 9 ? '0'+m : m
-
-  return d.getFullYear()+'-'+month+'-'+day
-}
-
-
   function setEvent(obj){
     $('.btn-primary').addClass('btn-outline-primary')
     e = $(obj).data('evt')
@@ -272,7 +240,6 @@ function availabilityModal(){
     pax = Number($('[name=adult]').val()) + Number($('[name=children]').val()) + Number($('[name=baby]').val())
 
     $('#ftco-loader').css({'opacity' : '0.7','visibility' : 'visible','z-index' : 9999})
-        
     setTimeout(function(){
       $.ajax({  
       url: '{{ path('available_by_period') }}',
@@ -281,13 +248,11 @@ function availabilityModal(){
       cache: false,
       success: function(data){ 
         
-        console.log(data)
+        //console.log(data)
 
         $('#ftco-loader').css({'opacity' : 0,'visibility' : 'hidden','z-index' : 1000})
         if (data.status == 1 && data.data.available_dates.length > 0){
           timeDecrease(data.data.expiration)
-          //$('[name=wp]').val(data.data.payment)
-          //$('#fsModal').modal('show')
           buildWeekTemplate(data.data.week)
         }
         else{

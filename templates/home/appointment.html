@@ -144,6 +144,29 @@ hr {margin-top: 0.5rem;margin-bottom: 0.5rem}
 </section>
 <script>
 
+
+function dateToTimestamp(date){
+  return new Date(date).getTime()
+}
+
+function dateToDmy(date){
+  d = new Date(date)
+  m = Number(d.getMonth())+1
+  day = d.getDate() <= 9 ? '0'+d.getDate() : d.getDate()
+  month = m <= 9 ? '0'+m : m
+
+  return day+'/'+month+'/'+d.getFullYear()
+}
+
+function dateToYmd(date){
+  d = new Date(date)
+  m = Number(d.getMonth())+1
+  day = d.getDate() <= 9 ? '0'+d.getDate() : d.getDate()
+  month = m <= 9 ? '0'+m : m
+
+  return d.getFullYear()+'-'+month+'-'+day
+}
+
 function clearInfo(){
   $('.personal-data, .show-datetime').addClass('d-none')
   $('[name=next], [name=date], [name=event]').val('') 
@@ -211,7 +234,7 @@ function getAvailability(){
     setMinValues()
 
  		$('#ftco-loader').css({'opacity' : '0.7','visibility' : 'visible','z-index' : 9999})
-    		
+
     setTimeout(function(){
     	$.ajax({
       url: '{{ path('available_by_period') }}',
@@ -225,13 +248,13 @@ function getAvailability(){
 
           timeDecrease(data.data.expiration)
           $('.icon-chevron-left.previous').addClass('d-none warning')
+
           available_dates = data.data.available_dates
           initializeDateTimePicker(data.data.available_dates)         
-          var ymd = data.data.available_dates[0].split("-")    
-          
-          if (ymd.length > 0)
-            $('#datetimepicker').val(ymd[2]+'/'+ymd[1]+'/'+ymd[0])
-          
+
+          first_date_ymd = new Date(data.data.available_dates[0])
+
+          $('#datetimepicker').val(dateToDmy(first_date_ymd))
           $('#fsModal').modal('show')
           buildWeekTemplate(data.data.week)
           flag = true
@@ -260,13 +283,6 @@ function getAvailability(){
       }
     })
   }, 500)
-
-	//}
-	/*else{
-    $('#alerts').modal('show')
-    $('.alert-primary').removeClass('d-none').addClass('show')
-    $('.alert-primary span').html('<br>{%trans%}tour_adults{%endtrans%}')
-	}*/
 }
 
 function buildWeekTemplate(days){
