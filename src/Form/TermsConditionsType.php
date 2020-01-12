@@ -27,7 +27,7 @@ class TermsConditionsType extends AbstractType
                     'choice_label' => 'name',
                     'placeholder' => 'Local',
                     'label' => 'Local',
-                    'attr' => ['class' => 'w3-input w3-select w3-border w3-white']
+                    'attr' => ['class' => 'w3-input w3-border w3-white']
 
             ))
             ->add('name', TextType::class,
