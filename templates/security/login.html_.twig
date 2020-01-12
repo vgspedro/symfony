@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{{ company.name }}</title>
+        <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+        <meta name="keywords" content="{{ company.metaKeywords }}">
+        <meta name="title" content="{{ company.metaDescription }}">
+        <meta name="description" content="{{ company.metaDescription }}">
+        {% include 'taruga/styles.html' %}
+        <link rel="stylesheet" href="{{ asset('font/css/font-awesome.min.css') }}">
+        <script src="{{ asset('js/jquery-11.0.min.js') }}"></script>
+    </head>
+    <body>
+        {% if host %} 
+            <div style="position:fixed;top:36px;left:calc(50% - 43px);z-index:999999999999999" class="blink w3-xxxlarge w3-text-red"> Demo </div>
+        {% endif %}
+
+        {% block content %}{% endblock %}
+    </body>
+</html>

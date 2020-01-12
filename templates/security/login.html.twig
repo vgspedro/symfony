@@ -1,21 +1,41 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{{ company.name }}</title>
-        <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
-        <meta name="keywords" content="{{ company.metaKeywords }}">
-        <meta name="title" content="{{ company.metaDescription }}">
-        <meta name="description" content="{{ company.metaDescription }}">
-        {% include 'taruga/styles.html' %}
-        <link rel="stylesheet" href="{{ asset('font/css/font-awesome.min.css') }}">
-        <script src="{{ asset('js/jquery-11.0.min.js') }}"></script>
-    </head>
-    <body>
-        {% if host %} 
-            <div style="position:fixed;top:36px;left:calc(50% - 43px);z-index:999999999999999" class="blink w3-xxxlarge w3-text-red"> Demo </div>
-        {% endif %}
+<html lang="en">
+<head>
+    <title>{{ company.name }}</title>
+    <meta charset="UTF-8">
+    <meta name="keywords" content="{{ company.metaKeywords }}">
+    <meta name="title" content="{{ company.metaDescription }}">
+    <meta name="description" content="{{ company.metaDescription }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{{ asset('vendor/bootstrap/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('vendor/animate/animate.css') }}">
+    <link rel="stylesheet" href="{{ asset('vendor/animsition/css/animsition.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('vendor/util.css') }}">
+    <link rel="stylesheet" href="{{ asset('vendor/main.css') }}">
+</head>
 
+<style>
+@keyframes fade{from{opacity:1}50%{opacity:.4}to{opacity:1}}@-webkit-keyframes fade{from{opacity:1}50%{opacity:.4}to{opacity:1}}
+.blink{animation:fade 3000ms infinite;-webkit-animation:fade 3000ms infinite}
+.btn.btn-primary.btn-outline-primary {border: 1px solid #1089ff !important;background: transparent !important;color: #1089ff !important;border-radius: 0px}
+</style>
+    <body>
+        {% if host %}
+
+        <div style="position:fixed;top:36px;left: 43px;z-index:9999999999" class="blink text-danger">
+            <h1>Demo</h1>
+        </div>
+    {% endif %}
         {% block content %}{% endblock %}
-    </body>
+
+    <script src="{{ asset('vendor/jquery/jquery-3.2.1.min.js') }}"></script>
+    <script src="{{ asset('vendor/animsition/js/animsition.min.js') }}"></script>
+    <script src="{{ asset('vendor/bootstrap/js/popper.min.js') }}"></script>
+    <script src="{{ asset('vendor/bootstrap/js/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('vendor/main.js') }}"></script>
+
+</body>
 </html>
+
+
+

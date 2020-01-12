@@ -1,0 +1,63 @@
+{% extends "security/login.html.twig" %}
+
+{% block content %}
+<style>
+::-webkit-input-placeholder {opacity: 0.3}
+::-moz-placeholder {opacity: 0.3}
+:-ms-input-placeholder{opacity: 0.3}
+:-moz-placeholder {opacity: 0.3}
+.logo{position: absolute;left: 0;margin-top:-74px;width:120px}
+.bgimg-login{background-image:url(../images/login.jpg)}
+</style>
+
+<div class="w3-overlay w3-animate-opacity" onclick="w3_close()" style="cursor:pointer" id="myOverlay">
+    <div class="w3-display-container" style="height:100vh">
+      <div class="w3-display-middle">
+        <i class="w3-text-white fa fa-4x fa-spinner fa-pulse"></i>
+      </div>
+    </div>
+</div>
+
+<section class="bgimg-login" style="min-height:400px;height:100vh">
+  <div class="w3-padding-32"> 
+    <div class="w3-row-padding">
+      <div class="w3-col l3 m1 s0">&nbsp;</div>
+    </div>
+  </div>
+
+  <div class="w3-content w3-card-8 w3-border w3-display-middle" style="min-width:300px;max-width:600px">
+    <div class="w3-white w3-center">
+      <form action="{{ path('login') }}" method="post">
+      <img class="w3-animate-zoom logo" src="{{ asset('upload/gallery/') }}{{company.logo}}">
+
+        <div class="w3-padding-8 w3-sand w3-padding-small w3-xlarge w3-border-bottom">Acesso</div>
+        <div class="w3-content w3-padding-16 w3-row-padding w3-large">
+          <div class="w3-col m6 s12 w3-left-align w3-large">
+            <label for="username">Nome *</label>
+            <input type="text" id="username" placeholder="Nome *" class="w3-input w3-padding-16" autofocus value="{{ last_username }}" name="username"/>
+          </div>
+          <div class="w3-col m6 s12 w3-left-align w3-large">
+            <label for="password">Password *</label>
+            <input type="password" id="password" class="w3-input w3-padding-16" placeholder="Password *" name="_password" />
+          </div>
+          {% if error %}
+          <div class="w3-col s12">
+            <div class="w3-center w3-animate-left w3-text-red">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+          </div>
+          {% endif %}
+          <div class="w3-col s6 w3-margin-top">
+            <button type="reset" class="w3-btn-block w3-button w3-border w3-white"><i class="fa fa-eraser"></i> Limpar</button>
+          </div>
+          <div class="w3-col s6 w3-margin-top">
+            <button type="submit" onclick="$('.w3-overlay').show()" class="w3-btn-block w3-button w3-border w3-green"><i class="fa fa-check"></i> Login</button>
+          </div>
+        </div>
+        <input type="hidden" name="_target_path" value="/admin/" />
+        <input type="hidden" name="_csrf_token" value="{{csrf_token('authenticate') }}">
+      </form>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+
