@@ -3,9 +3,9 @@
 {% block content %}
 	<div class="limiter">
 		<div class="container-login100">
-			<div class="wrap-login100 p-t-85 p-b-20">
+			<div class="wrap-login100 p-b-20">
 				
-        <form class="login100-form validate-form" action="{{ path('login') }}" method="post">
+        		<form class="login100-form validate-form" action="{{ path('login') }}" method="post">
 					<span class="login100-form-title p-b-70">
 						Welcome
 					</span>
@@ -13,7 +13,7 @@
 						<img src="{{ asset('upload/gallery/') }}{{company.logo}}" alt="{{company.name}}">
 					</span>
 
-					<div class="wrap-input100 validate-input m-t-85 m-b-35" data-validate="Enter username">
+					<div class="wrap-input100 validate-input m-t-85 m-b-35 " data-validate="Enter username">
 						<input class="input100" type="text" autofocus value="{{ last_username }}" name="username"/>
 						<span class="focus-input100" data-placeholder="Username"></span>
 					</div>
@@ -24,12 +24,16 @@
 					</div>
 
 					<div class="container-login100-form-btn">
-          {% if error %}
-            <div class="text-center text-danger" style="position:absolute;margin-top: -36px"><b>{{ error.messageKey|trans(error.messageData, 'security') }}</b></div>
-          {% endif %}
-            <input type="hidden" name="_target_path" value="/admin/" />
-            <input type="hidden" name="_csrf_token" value="{{csrf_token('authenticate') }}">
-						<button class="px-4 py-2 btn btn-primary btn-outline-primary">
+		          	
+		          	{% if error %}
+		            
+		            	<div class="text-center text-danger" style="position:absolute;margin-top: -36px"><b>{{ error.messageKey|trans(error.messageData, 'security') }}</b></div>
+		          	
+		          	{% endif %}
+		            
+		            	<input type="hidden" name="_target_path" value="/admin/" />
+		            	<input type="hidden" name="_csrf_token" value="{{csrf_token('authenticate') }}">
+						<button class="px-5 py-2 btn btn-primary btn-outline-primary">
 							Login
 						</button>
 					</div>

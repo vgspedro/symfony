@@ -9,6 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="{{ asset('vendor/bootstrap/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('vendor/animate/animate.css') }}">
+    <link rel="stylesheet" href="{{ asset('fonts/font-awesome/css/font-awesome.min.css') }}">
     <link rel="stylesheet" href="{{ asset('vendor/animsition/css/animsition.min.css') }}">
     <link rel="stylesheet" href="{{ asset('vendor/util.css') }}">
     <link rel="stylesheet" href="{{ asset('vendor/main.css') }}">
@@ -17,15 +18,18 @@
 <style>
 @keyframes fade{from{opacity:1}50%{opacity:.4}to{opacity:1}}@-webkit-keyframes fade{from{opacity:1}50%{opacity:.4}to{opacity:1}}
 .blink{animation:fade 3000ms infinite;-webkit-animation:fade 3000ms infinite}
-.btn.btn-primary.btn-outline-primary {border: 1px solid #1089ff !important;background: transparent !important;color: #1089ff !important;border-radius: 0px}
+.btn.btn-primary.btn-outline-primary {border: 1px solid #1089ff !important;background: transparent;color: #1089ff;border-radius: 0px}
+.btn.btn-primary.btn-outline-primary:hover{background: #1089ff;color: #FFF}
+@media (max-width:769px){
+.m-t-85{margin-top: 35px}
+.p-b-70{padding-bottom:30px}}
 </style>
     <body>
         {% if host %}
-
-        <div style="position:fixed;top:36px;left: 43px;z-index:9999999999" class="blink text-danger">
-            <h1>Demo</h1>
-        </div>
-    {% endif %}
+        
+        <div style="position:fixed;top:-12px;left:6px;z-index:999999;font-size:3em" class="blink text-danger"><b>Demo</b></div>
+        
+        {% endif %}
         {% block content %}{% endblock %}
 
     <script src="{{ asset('vendor/jquery/jquery-3.2.1.min.js') }}"></script>
