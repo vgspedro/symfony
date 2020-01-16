@@ -28,7 +28,7 @@ class TermsConditions
     */
     private $name;
     /**
-     *@ORM\ManyToOne(targetEntity="Locales", inversedBy="terms_conditions") */
+     *@ORM\ManyToOne(targetEntity="Locales") */
     private $locales;
     
     public function getId()

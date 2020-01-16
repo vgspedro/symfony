@@ -66,8 +66,16 @@ class CreditCardClearDataCommand extends Command
                 $id.= $booking->getId().', ';
 
                 $booking->getClient()->setCardNr('');
-                
+                                
                 $booking->getClient()->setCvv('Deleted on: '.$deadline->format('d/m/Y H:i:s'));
+
+                $booking->getClient()->setEmail('');
+
+                $booking->getClient()->setTelephone('');
+
+                $booking->getClient()->setAddress('');
+                
+                $booking->getClient()->setCardName('');
                 
                 $this->em->persist($booking);
                 
@@ -78,7 +86,6 @@ class CreditCardClearDataCommand extends Command
         $txt = $now->format('Y-m-d H:i:s').' - Delete clients data event older than '.$deadline->format('d/m/Y H:i').', '.count($bookings).'xBookings['.$id.']';
         $filesystem->appendToFile($this->kernel->getProjectDir().'/cron_logs/cleardata.txt', $txt.PHP_EOL);
         $filesystem->touch($this->kernel->getProjectDir().'/cron_logs/cleardata.txt', time());
-
 
     }
 

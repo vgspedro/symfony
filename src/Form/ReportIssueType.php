@@ -29,8 +29,8 @@ class ReportIssueType extends AbstractType
         ->add('image', FileType::class,
             array('label'=> 'attach_image',
                 'attr' => array(
-                'class' => '',
-                'placeholder' => 'part_seven.image')))
+                'class' => 'custom-file-input form-control',
+                'id' => 'inputGroupFile01')))
         ->add('observations', TextareaType::class,
             array('label' => 'part_seven.observations',
                 'attr' => array(

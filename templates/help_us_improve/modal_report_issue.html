@@ -1,7 +1,8 @@
 <style>
-input[type='file']{border: 2px solid #FFF!important}
+/*input[type='file']{padding: 12px 14px;font-size:12px;}*/
 .required-txt{margin-top: -18px}
 .modal-dialog{padding-bottom: 9em}
+.custom-file-label::after {height: auto!important}
 </style>
 
 <div class="modal" id="modal-issue">
@@ -42,9 +43,14 @@ input[type='file']{border: 2px solid #FFF!important}
           <div class="col-lg-12">
             <div class="py-4">
               <span class="text-danger f-10 d-none float-right invalid_attach_image required-txt"><b>{%trans%}invalid_attach_image{%endtrans%}</b></span>
+
               <b><span class="text-danger f-10 d-none float-right js_attach_image bold required-txt"></span></b>
-              {{ form_widget(reportIssueForm.image)}} 
+               <div class="custom-file">
+                {{ form_widget(reportIssueForm.image)}} 
+                <label class="custom-file-label form-control" style="font-size:16px;padding: 0.75em 0.75em" for="inputGroupFile01">{%trans%}part_seven.image{%endtrans%}</label>
+              </div>
             </div>
+          
           </div>
           <div class="col-lg-12">
             <div class="form-group">
