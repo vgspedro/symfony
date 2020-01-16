@@ -1,5 +1,17 @@
 {% if categories %}
 
+<style>
+.accordian i{
+  transition: .5s transform ease-in-out;
+  -webkit-transition: .5s transform ease-in-out;
+  -ms-transition: .5s transform ease-in-out}
+.accordian .collapsed i{
+  transform: rotate(90deg);
+  -ms-transform: rotate(90deg); /* IE 9 */
+  -webkit-transform: rotate(90deg)}
+
+</style>
+
 <section class="ftco-section ftco-pricing">
   <div class="container">
      <div class="row justify-content-center pb-3">
@@ -39,17 +51,16 @@
                 <div class="d-flex">
                                   
 
-                <div id="accordionEx-{{category.id}}" role="tablist" aria-multiselectable="true">
-
-                  <div style="border-bottom: 1px solid #e0e0e0_">
-
+                <div id="accordionEx-{{category.id}}" role="tablist" aria-multiselectable="true" style="width:100%" class="accordian">                    
                     <div role="tab" id="heading-{{category.id}}">
-                      <a class="collapsed" data-toggle="collapse" data-parent="#accordionEx-{{category.id}}" href="#collapse-{{category.id}}"
-                        aria-expanded="false" aria-controls="collapse-{{category.id}}">
-                        <h5 class="text-info mb-0">
+
+                      <h5 class="mb-0 text-center">
+                        <a class="collapsed text-info" style="width:100%" data-toggle="collapse" data-parent="#accordionEx-{{category.id}}" href="#collapse-{{category.id}}" aria-expanded="false" aria-controls="collapse-{{category.id}}">
                           {% trans %}more_info{% endtrans %}
-                        </h5>
-                      </a>
+                          <i class="pull-right icon-chevron-down text-info" style="display:inline-block;float: right"></i>
+                        </a>
+                      </h5>
+
                     </div>
                     <div id="collapse-{{category.id}}"  style="border-top:1px solid #aaa" class="collapse" role="tabpanel" aria-labelledby="heading-{{category.id}}" data-parent="#accordionEx-{{category.id}}" style="position:absolute;z-index:999">
                       <div class="p-1" style="color: #000">
@@ -63,8 +74,6 @@
                       {% endif %}
                       </div>
                     </div>
-
-                  </div>
                 </div>
 
 
