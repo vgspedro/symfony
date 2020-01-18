@@ -37,14 +37,13 @@ class BookingRepository extends ServiceEntityRepository
     } 
 
     /**
-    * Get the clients with credit card that pass 15 days after the event
+    * Get the clients with email that pass 15 days after the event
     */
     public function getClientCreditCardData($deadline){
         $dql = 'SELECT c, b
             FROM App\Entity\Booking b
             JOIN b.client c
-            WHERE c.cardNr IS NOT NULL 
-            AND c.cardNr <> :empty
+            WHERE c.email <> :empty
             AND b.dateEvent <= :end';
         
         $query = $this->getEntityManager()->createQuery($dql)
