@@ -48,7 +48,7 @@
       </div>
       <div class="w3-col l4 m4 s12">
         <label><i class="fas fa-user-cog"></i> Alterar Estado</label>
-        <select id='bookingstatus_status' name="status" class="w3-input w3-white w3-border" style="height:45px">
+        <select id='bookingstatus_status' name="status" class="form-control">
           <option value='{{ seeBooking.status }}'>{{ seeBooking.status }}</option>
           <option class="w3-text-blue bolder" value='CANCELED'>CANCELED</option>
           <option class="w3-text-green bolder" value='CONFIRMED'>CONFIRMED</option>
@@ -63,7 +63,7 @@
       </div>
       <div class="w3-col l3 m6 s12">
         <label><i class="fas fa-paste"></i> Texto Fácil</label>
-        <select id="booking_easy_text" onchange="setEasyText($(this).find(':selected').data('html'))" class="w3-input w3-white NOTES w3-border" style="height:45px">
+        <select id="booking_easy_text" onchange="setEasyText($(this).find(':selected').data('html'))" class="form-control">
           <option data-html=''>Escolha </option>
          {% for easytext in seeBooking.easyText%}
           <option value="{{ easytext.id }}" data-html="{{ easytext.easytexthtml }}">{{easytext.name}}</option>

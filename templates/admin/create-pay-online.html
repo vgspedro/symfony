@@ -29,7 +29,7 @@
     <div class="w3-col s12 w3-xlarge validate-no-show">
       <label>{{translator.local}}</label>
       <label class="w3-small required w3-hide w3-right w3-text-red">Local</label>
-      <select name="locale" class="w3-input">
+      <select name="locale" class="form-control">
       {%for local in locales%}
       <option value="{{local.name}}">{{local.name}}</option>
       {%endfor%}

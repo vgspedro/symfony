@@ -13,12 +13,12 @@
 						<img src="{{ asset('upload/gallery/') }}{{company.logo}}" alt="{{company.name}}">
 					</span>
 
-					<div class="wrap-input100 validate-input m-t-85 m-b-35 " data-validate="Enter username">
+					<div class="wrap-input100 validate-input m-t-85 m-b-35 " data-validate="Enter Username">
 						<input class="input100" type="text" autofocus value="{{ last_username }}" name="username"/>
 						<span class="focus-input100" data-placeholder="Username"></span>
 					</div>
 
-					<div class="wrap-input100 validate-input m-b-50" data-validate="Enter password">
+					<div class="wrap-input100 validate-input m-b-50" data-validate="Enter Password">
 						<input class="input100" type="password" name="_password" />
 						<span class="focus-input100" data-placeholder="Password"></span>
 					</div>
@@ -33,7 +33,7 @@
 		            
 		            	<input type="hidden" name="_target_path" value="/admin/" />
 		            	<input type="hidden" name="_csrf_token" value="{{csrf_token('authenticate') }}">
-						<button class="px-5 py-2 btn btn-primary btn-outline-primary">
+						<button class="px-5 py-3 btn btn-primary btn-outline-primary">
 							Login
 						</button>
 					</div>

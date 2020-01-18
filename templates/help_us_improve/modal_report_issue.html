@@ -33,7 +33,7 @@
             </div>
           </div>
 
-          <div class="col-lg-12">
+          <div class="col-lg-12 mb-4">
              <div class="form-group">
              <span class="text-danger f-10 d-none float-right observations required-txt"><b>{%trans%}required{%endtrans%}</b></span> 
             {{ form_widget(reportIssueForm.observations)}} 
@@ -41,17 +41,15 @@
           </div>
           
           <div class="col-lg-12">
-            <div class="py-4">
-              <span class="text-danger f-10 d-none float-right invalid_attach_image required-txt"><b>{%trans%}invalid_attach_image{%endtrans%}</b></span>
-
-              <b><span class="text-danger f-10 d-none float-right js_attach_image bold required-txt"></span></b>
-               <div class="custom-file">
-                {{ form_widget(reportIssueForm.image)}} 
-                <label class="custom-file-label form-control" style="font-size:16px;padding: 0.75em 0.75em" for="inputGroupFile01">{%trans%}part_seven.image{%endtrans%}</label>
+            <div class="form-control">
+             <span class="text-danger f-10 d-none float-right invalid_attach_image required-txt"><b>{%trans%}invalid_attach_image{%endtrans%}</b></span>
+              <div class="text-center set-image-container" style="cursor:pointer" onclick="$('.custom-file-input').trigger('click')">
+                <i class="icon-camera" style="font-size:2em;color:#495057"></i>
               </div>
+              {{ form_widget(reportIssueForm.image)}}
             </div>
-          
-          </div>
+          </div>         
+
           <div class="col-lg-12">
             <div class="form-group">
               <b>
@@ -73,7 +71,14 @@
 
 <script>
 
+  var loadFile = function(event) {
+    $('.set-image-container').html('<img id="output" style="height:45px;margin-top:-4px">')
+    var output = document.getElementById('output')
+    output.src = URL.createObjectURL(event.target.files[0])
+  }
+
   function clearReportIssue(){
+    $('.set-image-container').html('<i class="icon-camera" style="font-size:2em;color:#495057"></i>')
     $('.required').addClass('d-none')
     $('#report-issue-form').trigger('reset')
     $('.required').addClass('d-none')
@@ -103,7 +108,7 @@
             $('#ftco-loader').css({'opacity' : 0,'visibility' : 'hidden','z-index' : 1000})
                 if(data.status == 1)
                 {
-                    $('#report-issue-form').trigger('reset')
+                    clearReportIssue()
                     $('.user-message-report-issue').removeClass('d-none').html('{% trans %}reported_issue_submited{% endtrans %}');
                     setTimeout(function(){$('.user-message-report-issue').addClass('d-none')}, 10000)
                   }
