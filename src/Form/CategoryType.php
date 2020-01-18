@@ -108,19 +108,19 @@ class CategoryType extends AbstractType
                 'attr' => ['class' => 'w3-check']
             ))
             ->add('warranty_payment', CheckboxType::class, array(
-                'label'    => 'Garantia Pagamento',
+                'label'    => 'Pagamento Online',
                 'required' => false,
                 'attr' => ['class' => 'w3-check']
             ))
             ->add('warranty_payment_pt', TextareaType::class,
             array(
                 'required' => false,
-                'label' => 'Garantia Pagamento (PT)',
+                'label' => 'Texto Pagamento (PT)',
                 'attr' => ['class' => 'w3-input w3-border w3-white','placeholder'=>'Garantia Pagamento (PT)', 'rows' => 5 ]
             ))
             ->add('warranty_payment_en', TextareaType::class, array(
                 'required' => false,
-                'label' => 'Garantia Pagamento (EN)',
+                'label' => 'Texto Pagamento (EN)',
                 'attr' => ['class' => 'w3-input w3-border w3-white','placeholder'=>'Garantia Pagamento (EN)', 'rows' => 5 ]
             ))
             ->add('submit', SubmitType::class,
