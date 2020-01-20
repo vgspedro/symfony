@@ -66,6 +66,10 @@ class HomeNewController extends AbstractController
             return $this->redirectToRoute('index_new');
         }
         
+        $today = new \DateTime('now');
+
+        $whatsapp = $today->format('m') <= 4 || $today->format('m') >= 10  ? true : false;
+
         $cS = array();
         $comments = $em->getRepository(Feedback::class)->findBy(['visible' => true,'active' => true]);
         $locales = $em->getRepository(Locales::class)->findAll();
@@ -154,7 +158,8 @@ class HomeNewController extends AbstractController
                 'feedback' => $feedback,
                 'comments' => $comments,
                 'staffs' => $staffs,
-                'menu' => $menu->site('index_new', $translator)
+                'menu' => $menu->site('index_new', $translator),
+                'whatsapp' => $whatsapp
             ]);
     }
 
