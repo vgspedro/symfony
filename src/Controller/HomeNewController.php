@@ -68,7 +68,7 @@ class HomeNewController extends AbstractController
         
         $today = new \DateTime('now');
 
-        $whatsapp = $today->format('m') <= 4 || $today->format('m') >= 10  ? true : false;
+        $whatsapp = $today->format('m') > 4 && $today->format('m') < 10  ? false : true;
 
         $cS = array();
         $comments = $em->getRepository(Feedback::class)->findBy(['visible' => true,'active' => true]);

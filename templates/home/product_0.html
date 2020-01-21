@@ -9,14 +9,8 @@
   transform: rotate(90deg);
   -ms-transform: rotate(90deg); /* IE 9 */
   -webkit-transform: rotate(90deg)}
-
-span.sp a {height: 50px;width: 50px;
-    /*background: rgba(0,0,0, 0.50);*/
-    border-radius: 50%;
-    position:absolute;
-    margin-top:0.3em;
-    margin-left:0.3em}
-.icon-whatsapp{font-size: 2.2em;position: absolute;padding: 0.19em 0.3em;opacity:0.6;color:#FFF}
+span.sp a {height: 50px;width: 50px;border-radius: 50%;position:absolute;margin-top:0.3em;margin-left:0.3em}
+.icon-whatsapp{font-size: 2.2em;position: absolute;padding: 0.19em 0.3em;opacity:0.65;color:#FFF}
 .icon-whatsapp:hover{color:#28a745;background: #000; border-radius: 50%}
 </style>
 
@@ -38,7 +32,7 @@ span.sp a {height: 50px;width: 50px;
             <div class="service-39381">
               {%if whatsapp%}
               
-              <span class="sp" title="Send Message">
+              <span class="sp d-block d-sm-none" title="Send Message">
                 <a href="https://api.whatsapp.com/send?phone={{company.telephone}}&text={{category.name}}" target="_blank">
                   <i class='icon-whatsapp'></i>
                 </a>

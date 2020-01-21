@@ -16,6 +16,14 @@
         <div class="w3-left"><i class="far fa-hand-point-up w3-xxxlarge"></i></div>
         <div class="w3-right">
           <h3>
+            
+            {% set total = 0 %}
+            {% for bookings in booking.day0  %}
+            {%if bookings.status == "pending"  %}
+              {% set total = total + bookings.count %}
+            {% endif %}
+            {% endfor %}
+            {{ total }}
 
           </h3>
         </div>
@@ -29,6 +37,14 @@
         <div class="w3-right">
           <h3>
 
+            {% set total = 0 %}
+            {% for bookings in booking.day0 %}
+            {% if bookings.status == "canceled" %}
+              {% set total = total + bookings.count %}
+            {% endif %}
+            {% endfor %}
+            {{ total }}
+
           </h3>
         </div>
         <div class="w3-clear"></div>
@@ -40,6 +56,14 @@
         <div class="w3-left"><i class="far fa-thumbs-up w3-xxxlarge"></i></div>
         <div class="w3-right">
           <h3>
+
+            {% set total = 0 %}
+            {% for bookings in booking.day0 %}
+            {% if bookings.status == "confirmed"  %}
+              {% set total = total + bookings.count %}
+            {% endif %}
+            {% endfor %}
+            {{ total }}
 
           </h3>
         </div>
@@ -53,6 +77,14 @@
         <div class="w3-right">
           <h3>
 
+            {% set total = 0 %}
+            {% for bookings in booking.day0%}
+            {%if bookings.total %}
+              {% set total = total + bookings.total %}
+            {% endif %}
+            {% endfor %}
+            {{ total}}
+
           </h3>
         </div>
         <div class="w3-clear"></div>
@@ -61,15 +93,22 @@
     </div>
   </div>
 
+
   <div class="w3-row-padding w3-opacity-min">
     <div class="w3-col l3 m6 s6 w3-margin-bottom">
       <div class="w3-container w3-card w3-pale-yellow w3-padding-16">
         <div class="w3-left"><i class="far fa-money-bill-alt w3-xxxlarge w3-text-green"></i></div>
         <div class="w3-right">
           <h3>
-
-
-
+            
+            {% set total = 0 %}
+            {% for bookings in booking.day_p0 %}
+            {%if bookings.payment_status == "processing"%}
+              {% set total = total + bookings.count %}
+            {% endif %}
+            {% endfor %}
+            {{ total }}
+          
           </h3>
         </div>
         <div class="w3-clear"></div>
@@ -82,7 +121,14 @@
         <div class="w3-right">
           <h3>
 
-
+            {% set total = 0 %}
+            {% for bookings in booking.day_p0 %}
+            {%if bookings.payment_status == "canceled" %}
+              {% set total = total + bookings.count %}
+            {% endif %}
+            {% endfor %}
+            {{ total }}
+          
           </h3>
         </div>
         <div class="w3-clear"></div>
@@ -94,7 +140,14 @@
         <div class="w3-left"><i class="far fa-money-bill-alt w3-xxxlarge w3-text-green"></i></div>
         <div class="w3-right">
           <h3>
-
+          
+            {% set total = 0 %}
+            {% for bookings in booking.day_p0 %}
+            {%if bookings.payment_status == "succeeded"  %}
+              {% set total = total + bookings.count %}
+            {% endif %}
+            {% endfor %}
+            {{ total }}
 
           </h3>
         </div>
@@ -107,8 +160,15 @@
         <div class="w3-left"><i class="far fa-money-bill-alt w3-xxxlarge w3-text-green"></i></div>
         <div class="w3-right">
           <h3>
-
-
+          
+            {% set total = 0 %}
+            {% for bookings in booking.day_p0 %}
+              {%if bookings.payment_status == "refunded" or bookings.payment_status == "partial_refund" %}
+                {% set total = total + bookings.count %}
+              {% endif %}
+            {% endfor %}
+            {{ total }}
+          
           </h3>
         </div>
         <div class="w3-clear"></div>
@@ -117,9 +177,8 @@
     </div>
   </div>
 
-
    <header class="w3-container">
-    <h3><b>Amanhã {{ "now"|date_modify("+1 day")|date("d/m/Y") }}</b></h3>
+    <h3><b>Amanhã {{ "tomorrow"|date("d/m/Y") }}</b></h3>
   </header>
   <div class="w3-row-padding w3-opacity">
     <div class="w3-col l3 m6 s6 w3-margin-bottom">
@@ -127,8 +186,15 @@
         <div class="w3-left"><i class="far fa-hand-point-up w3-xxxlarge"></i></div>
         <div class="w3-right">
           <h3>
-            
-
+          
+            {% set total = 0 %}
+            {% for bookings in booking.day1 %}
+            {% if bookings.status == "pending"  %}
+              {% set total = total + bookings.count %}
+            {% endif %}
+            {% endfor %}
+            {{ total }}
+          
           </h3>
         </div>
         <div class="w3-clear"></div>
@@ -141,8 +207,14 @@
         <div class="w3-right">
           <h3>
             
+            {% set total = 0 %}
+            {% for bookings in booking.day1 %}
+            {% if bookings.status == "canceled"  %}
+              {% set total = total + bookings.count %}
+            {% endif %}
+            {% endfor %}
+            {{ total }}
 
-          
           </h3>
         </div>
         <div class="w3-clear"></div>
@@ -154,6 +226,14 @@
         <div class="w3-left"><i class="far fa-thumbs-up w3-xxxlarge"></i></div>
         <div class="w3-right">
           <h3>
+            
+            {% set total = 0 %}
+            {% for bookings in booking.day1 %}
+            {%if bookings.status == "confirmed"  %}
+              {% set total = total + bookings.count %}
+            {% endif %}
+            {% endfor %}
+            {{ total }}
 
           </h3>
         </div>
@@ -167,6 +247,14 @@
         <div class="w3-right">
           <h3>
 
+            {% set total = 0 %}
+            {% for bookings in booking.day1 %}
+            {% if bookings.total %}
+              {% set total = total + bookings.total %}
+            {% endif %}
+            {% endfor %}
+            {{ total }}
+          
           </h3>
         </div>
         <div class="w3-clear"></div>
@@ -185,6 +273,14 @@
         <div class="w3-right">
           <h3>
 
+            {% set total = 0 %}
+            {% for bookings in booking.day_p1 %}
+            {% if bookings.payment_status == "processing"  %}
+              {% set total = total + bookings.count %}
+            {% endif %}
+            {% endfor %}
+            {{ total }}
+  
           </h3>
         </div>
         <div class="w3-clear"></div>
@@ -197,6 +293,14 @@
         <div class="w3-right">
           <h3>
 
+            {% set total = 0 %}
+            {% for bookings in booking.day_p1 %}
+            {%if bookings.payment_status == "canceled"  %}
+              {% set total = total + bookings.count %}
+            {% endif %}
+            {% endfor %}
+            {{ total }}
+          
           </h3>
         </div>
         <div class="w3-clear"></div>
@@ -209,6 +313,14 @@
         <div class="w3-right">
           <h3>
 
+            {% set total = 0 %}
+            {% for bookings in booking.day_p1 %}
+            {%if bookings.payment_status == "succeeded"  %}
+              {% set total = total + bookings.count %}
+            {% endif %}
+            {% endfor %}
+            {{ total }}
+
           </h3>
         </div>
         <div class="w3-clear"></div>
@@ -220,6 +332,15 @@
         <div class="w3-left"><i class="far fa-money-bill-alt w3-xxxlarge w3-text-green"></i></div>
         <div class="w3-right">
           <h3>
+
+            {% set total = 0 %}
+            {% for bookings in booking.day_p1 %}
+            {%if bookings.payment_status == "refunded" or bookings.payment_status == "partial_refund" %}
+              {% set total = total + bookings.count %}
+            {% endif %}
+            {% endfor %}
+            {{ total}}
+          
           </h3>
         </div>
         <div class="w3-clear"></div>
@@ -227,13 +348,6 @@
       </div>
     </div>
   </div>
-
-
-
-
-
-
-
 
 
   <div class="w3-row-padding w3-opacity-min">
