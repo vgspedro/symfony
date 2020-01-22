@@ -312,7 +312,7 @@
 	};
 	OnePageNav();
 
-
+/*
 	// magnific popup
 	$('.image-popup').magnificPopup({
     type: 'image',
@@ -334,7 +334,7 @@
     }
   });
 
-/*
+
   $('.popup-youtube, .popup-vimeo, .popup-gmaps').magnificPopup({
     disableOn: 700,
     type: 'iframe',
