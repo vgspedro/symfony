@@ -13,20 +13,21 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Twig\Environment;
 
 class Booking24HoursReminderCommand extends Command
 {
     private $em;
     private $mailer;
-    private $templating;
+    private $twig;
     private $translator;
     private $kernel;
 
-    public function __construct(EntityManagerInterface $em, \Swift_Mailer $mailer, \Twig_Environment $templating, TranslatorInterface $translator, KernelInterface $kernel)
+    public function __construct(EntityManagerInterface $em, \Swift_Mailer $mailer, Environment $twig, TranslatorInterface $translator, KernelInterface $kernel)
     {
         $this->em = $em;
         $this->mailer = $mailer;
-        $this->templating = $templating;
+        $this->twig = $twig;
         $this->translator = $translator;
         $this->kernel = $kernel;
 
@@ -63,8 +64,7 @@ class Booking24HoursReminderCommand extends Command
         foreach ($bookings as $booking) {
         
            $this->sendEmail($booking, $company);
-            $id.= $booking->getId().', ';
-            
+            $id.= $booking->getId().', ';  
         }
 
         $txt = $now->format('Y-m-d H:i:s').' - Next day booking reminder '.$tomorrow->format('d/m/Y').', '.count($bookings).'xBookings['.$id.']';
@@ -95,7 +95,8 @@ class Booking24HoursReminderCommand extends Command
                  'text/plain')
                 ->setBody(
 
-                $this->templating->render(
+                $this->twig->render(
+                //$this->twig->load(
                     'emails/booking-reminder.html',
                     array(
                         'id' => $booking->getId(),
