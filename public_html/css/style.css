@@ -8138,12 +8138,13 @@ body {
   font-size: 16px;
   line-height: 1.8;
   font-weight: 400;
-  color: gray; }
+  color: gray; 
+  min-width: 300px!important}
   body.menu-show {
     overflow: hidden;
     position: fixed;
     height: 100%;
-    width: 100%; }
+    width: 100%;}
 
 a {
   -webkit-transition: .3s all ease;
@@ -9865,4 +9866,4 @@ textarea.form-control {
     stroke-dasharray: 89, 200;
     stroke-dashoffset: -136px; } }
 
-
+@media (max-width: 991.98px){.zoom-75{zoom:75%}}

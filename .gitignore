@@ -21,5 +21,7 @@
 ###< symfony/web-server-bundle ###
 
 ###> routines files  ###
-/cron_logs/
+/cron_logs/cleardata.txt
+/cron_logs/paytimeout.txt
+/cron_logs/reminder.txt
 ###< routines files ###
