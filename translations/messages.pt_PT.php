@@ -51,7 +51,7 @@ return array(
     'years_experience' => 'Anos de Experiência',
     'years_experience_txt' => 'Fazer de cada passeio uma experiência única com o conhecimento aquirido ao longo dos anos.',
     'good_captain' => 'Bom Capitão',
-    'good_captain_txt' => 'Pessoa madura e experiente com capacidade de iniciativa e reação na resolução de problemas.',
+    'good_captain_txt' => 'Pessoas maduras e experientes, com capacidade de iniciativa e reação na resolução de problemas.',
     'pricing' => 'Preços',
     'our_tours' => 'Os Nossos Passeios',
     'our_tours_txt' => 'Venha e aprecie um passeio pelas Grutas com ',
