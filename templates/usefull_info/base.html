@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="{{ asset('css/animate.css') }}">
     <link rel="stylesheet" href="{{ asset('css/owl.carousel.min.css') }}">
     <link rel="stylesheet" href="{{ asset('css/aos.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/magnific-popup.css') }}">
     <link rel="stylesheet" href="{{ asset('css/flaticon.css') }}">
     <link rel="stylesheet" href="{{ asset('css/icomoon.css') }}">
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
@@ -74,9 +75,31 @@
   <script src="{{asset('js/jquery.waypoints.min.js') }}"></script>
   <script src="{{asset('js/jquery.stellar.min.js') }}"></script>
   <script src="{{asset('js/owl.carousel.min.js') }}"></script>
+  <script src="{{asset('js/jquery.magnific-popup.min.js')}}"></script>
   <script src="{{asset('js/aos.js') }}"></script>
   <script src="{{asset('js/jquery.animateNumber.min.js') }}"></script>
   <script src="{{asset('js/scrollax.min.js') }}"></script>
-  <script src="{{asset('js/main.js') }}"></script>
+  <script src="{{asset('js/main.js') }}"></script> 
+  <script>
+    $('.image-popup').magnificPopup({
+      type: 'image',
+      closeOnContentClick: true,
+      closeBtnInside: false,
+      fixedContentPos: true,
+      mainClass: 'mfp-no-margins mfp-with-zoom', // class to remove default margin from left and right side
+       gallery: {
+        enabled: true,
+        navigateByImgClick: true,
+        preload: [0,1] // Will preload 0 - before current, and 1 after the current image
+      },
+      image: {
+        verticalFit: true
+      },
+      zoom: {
+        enabled: true,
+        duration: 300 // don't foget to change the duration also in CSS
+      }
+    });
+  </script>
   </body>
 </html>
