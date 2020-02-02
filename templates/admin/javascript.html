@@ -1,6 +1,10 @@
 <script>
 
 function ajaxUpload(block){
+
+    $("a").trigger("focusout")
+    $('.note-popover').hide()
+
     block == 'category-new' || block == 'category-list' ? false : $('#category').removeClass('w3-show')
 
     switch (block){
