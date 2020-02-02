@@ -135,6 +135,8 @@ $('#easytext-form').on('submit',function(e){
   e.preventDefault()
   $('.required').addClass('w3-hide')
   $('.w3-overlay').show()
+  $("a").trigger("focusout")
+  $('.note-popover').hide()
   $('#easy_text_easytexthtml').val($('#summernote').summernote('code'))
   setTimeout(function(){
     $.ajax({  
