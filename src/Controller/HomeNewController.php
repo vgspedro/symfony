@@ -1,4 +1,6 @@
 <?php
+
+
 namespace App\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -39,7 +41,7 @@ use Money\Money;
 
 class HomeNewController extends AbstractController
 {
-    /*set expiration on home page 15 minutes*/
+
     private $expiration = 900;
 
     private $session;
@@ -327,12 +329,7 @@ class HomeNewController extends AbstractController
             [
                 'data' => $temp_booking
             ]);
-/*
-        return new JsonResponse([
-            'status' => 1,
-            'message' => 'success',
-            'data' => $temp_booking
-        ]);*/
+
     }
 
     public function setNewBooking(Request $request, MoneyFormatter $moneyFormatter, RequestInfo $reqInfo, FieldsValidator $fieldsValidator, TranslatorInterface $translator, Stripe $stripe){
@@ -537,11 +534,7 @@ class HomeNewController extends AbstractController
     }
 
 
-  /**
-    *Get the receipt url to show on email
-    *@param $request
-    *@return json response of Request
-    **/
+
     public function onlineGetCharge(Request $request, Stripe $stripe, TranslatorInterface $translator)
     {
         
@@ -665,7 +658,6 @@ class HomeNewController extends AbstractController
 
         return $expired;
     }
-
 }
 
 
