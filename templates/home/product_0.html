@@ -9,10 +9,14 @@
   transform: rotate(90deg);
   -ms-transform: rotate(90deg); /* IE 9 */
   -webkit-transform: rotate(90deg)}
+
+/*
 .sp{margin-top: 8px;position: absolute;margin-left: 8px;opacity:0.75}
 span.sp a {height:32px;width: 32px;border-radius: 50%;background:#01e675; position: absolute}
 .icon-whatsapp{font-size: 39px;color: #FFF;margin-top: -4px;position: absolute;margin-left: -1px}
 .sp:hover{opacity:1}
+*/
+
 </style>
 
 
@@ -31,15 +35,7 @@ span.sp a {height:32px;width: 32px;border-radius: 50%;background:#01e675; positi
 
           <div class="col-md-6 col-lg-4 mb-4 col-sm-12 no-pd-l-r" id='category-{{category.id}}'>
             <div class="service-39381">
-              {%if whatsapp%}
-              
-              <span class="sp d-block d-sm-none">
-                <a href="https://api.whatsapp.com/send?phone={{company.telephone}}&text={{category.name}}" target="_blank">
-                  <i class='icon-whatsapp'></i>
-                </a>
-              </span>
 
-              {%endif%}
 
               <img src="upload/category/{{ category.image }}" onerror="this.src='/upload/category/no-image.png'" alt="{{category.name}}" class="img-fluid">
               <div class="p-4">
@@ -90,9 +86,8 @@ span.sp a {height:32px;width: 32px;border-radius: 50%;background:#01e675; positi
                     </div>
                 </div>
 
-
-                  </div>
-                  <div class="d-flex" style="border-top:1px solid #aaa">
+                </div>
+                <div class="d-flex" style="border-top:1px solid #aaa">
                   <div class="mr-auto">
                     {% trans %}part_tree.adult{% endtrans %} <b>{{category.adultAmount}}</b><span class="f-10">{{company.currency.currency}}</span><br>
                     {% trans %}part_tree.children{% endtrans %} <b>{{category.childrenAmount}}</b><span class="f-10">{{company.currency.currency}}</span><br>
@@ -109,7 +104,18 @@ span.sp a {height:32px;width: 32px;border-radius: 50%;background:#01e675; positi
                     <span onclick="navigation('.ftco-booking', {{ category.id }})" class="btn btn-primary btn-outline-primary px-4 py-2"> 
                       {% trans %}book_now{% endtrans %}
                     </span>
+
                     {% endif %}
+                    {%if whatsapp%}
+                    
+                    <span class="d-block d-sm-none float-left" style="margin-top:-10px">
+                      <a  style="font-size:2.4em" href="https://api.whatsapp.com/send?phone={{company.telephone}}&text={{category.name}}" target="_blank">
+                        <i class='icon-whatsapp' style="color:#01e675"></i>
+                      </a>
+                    </span>
+
+                    {%endif%}
+
                   </div>
               </div>
             </div>
