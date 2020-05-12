@@ -47,6 +47,7 @@ class AdminController extends AbstractController
             'browser' => $reqInfo->browserInfo($request),
             'booking' => $booking,
             'booking_month' => $booking_month,
+            'sf_v' => \Symfony\Component\HttpKernel\Kernel::VERSION,
             'company' => $company,
             'host' => $reqInfo->getHost($request),
             'url' => 'https://'.$reqInfo->getHost($request)

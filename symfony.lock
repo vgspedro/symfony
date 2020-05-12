@@ -62,9 +62,6 @@
     "evenement/evenement": {
         "version": "v3.0.1"
     },
-    "eventviva/php-image-resize": {
-        "version": "1.6.8"
-    },
     "friendsofsymfony/ckeditor-bundle": {
         "version": "2.0",
         "recipe": {
@@ -77,6 +74,9 @@
             "./config/packages/fos_ckeditor.yaml"
         ]
     },
+    "gumlet/php-image-resize": {
+        "version": "1.9.2"
+    },
     "guzzlehttp/psr7": {
         "version": "1.4.2"
     },
@@ -85,6 +85,9 @@
     },
     "jdorn/sql-formatter": {
         "version": "v1.2.17"
+    },
+    "laminas/laminas-zendframework-bridge": {
+        "version": "1.0.3"
     },
     "moneyphp/money": {
         "version": "v3.2.0"
@@ -293,9 +296,6 @@
     "symfony/lock": {
         "version": "v4.2.3"
     },
-    "symfony/lts": {
-        "version": "4-dev"
-    },
     "symfony/maker-bundle": {
         "version": "1.0",
         "recipe": {
@@ -464,14 +464,24 @@
             "ref": "c72d107d077f1654428edaed69415d0228c1aefe"
         }
     },
-    "symfony/webpack-encore-pack": {
-        "version": "1.0",
+    "symfony/webpack-encore-bundle": {
+        "version": "1.6",
         "recipe": {
             "repo": "github.com/symfony/recipes",
             "branch": "master",
-            "version": "1.0",
-            "ref": "a2f276eff6e95ca94be135d2d3e5c1247c6f8807"
-        }
+            "version": "1.6",
+            "ref": "69e1d805ad95964088bd510c05995e87dc391564"
+        },
+        "files": [
+            "./assets/css/app.css",
+            "./assets/js/app.js",
+            "./config/packages/assets.yaml",
+            "./config/packages/prod/webpack_encore.yaml",
+            "./config/packages/test/webpack_encore.yaml",
+            "./config/packages/webpack_encore.yaml",
+            "./package.json",
+            "./webpack.config.js"
+        ]
     },
     "symfony/yaml": {
         "version": "v4.0.4"
