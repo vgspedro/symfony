@@ -1,0 +1,60 @@
+<page format="210x114" orientation="L" style="font: arial">
+
+	<div style="height:7mm;background-color:#2F70C5"></div>
+
+	<div style="padding-top:6mm;padding-bottom:6mm">
+		<div>
+			<span style="line-height:20px; font-size:14px;font-weight:bold">{{company.name}}</span><br>
+			<span style="line-height:14px;font-size:12px">{{company.address}}</span><br>
+			<span style="line-height:14px;font-size:12px">{{company.Pcode}} {{company.city}}, {{company.country.name}}</span><br>
+			<span style="line-height:14px;font-size:12px">{{company.fiscalNumber}}</span><br>
+			<span style="line-height:14px;font-size:12px">{{company.email}}</span><br>
+			<span style="line-height:14px;font-size:12px">{{company.telephone}}</span><br>
+		</div>
+		<div style="position:absolute;right:-1mm; top:17mm">
+			<img style="height:25mm" src="{{logo}}">
+		</div>
+	</div>
+
+
+	<table style="padding-bottom:6mm">
+	  <tr>
+	    <th style="padding:2mm:0mm; font-size:14px;width:140mm;text-transform:uppercase">Recebido de:</th>
+	    <th style="padding:2mm:0mm;font-size:14px;width:30mm;text-transform:uppercase">Recibo</th>
+	    <th style="padding:2mm:0mm;font-size:14px;width:28mm;text-align:right">{{payment.id}}</th>
+	  </tr>
+	  <tr>
+	    <td>{{payment.flat.ownerName}}</td>
+	    <td style="font-weight:bold;text-transform:uppercase">Data Emissão</td>
+	    <td style="text-align:right">{{payment.payDate.format('d/m/Y')}}</td>
+	  </tr>
+	  <tr>
+	    <td>{{payment.flat.fiscalNumber}}</td>
+	    <td style="font-weight:bold;text-transform:uppercase">Fracção</td>
+	    <td style="text-align:right">{{payment.flat.title}}</td>
+	  </tr>
+	</table>
+
+	<div style="border-top: 0.5mm solid #000"></div>
+		<div style="margin-bottom:3mm; font-weight:bold;font-size:22px;width:200mm">
+			<div style="width:100mm;float:left">Montante Pago:</div> 
+			<div style="margin-top:-6.25mm;margin-left:100mm;width:99mm;text-align:right">{{payment.amount|number_format(2, '.', ',')}}€</div>
+		</div>
+	<div style="border-top: 0.5mm solid #000"></div>
+
+	<table>
+	  <tr>
+	    <th style="padding:2mm:0mm; font-size:14px;width:10mm;text-transform:uppercase">Qt.</th>
+	    <th style="padding:2mm:0mm;font-size:14px;width:140mm;text-transform:uppercase">Descrição</th>
+	    <th style="padding:2mm:0mm;font-size:14px;width:25mm;text-transform:uppercase;text-align:right">Preço unid.</th>
+	    <th style="padding:2mm:0mm;font-size:14px;width:23mm;text-transform:uppercase;text-align:right">Total</th>
+	  </tr>
+	  <tr>
+	    <td>{{payment.monthPayed}}</td>
+	    <td>{{payment.startDate.format('d/m/Y')}} a {{payment.endDate.format('d/m/Y')}}</td>
+	    <td style="text-align:right">{{payment.perMonth|number_format(2, '.', ',')}}€</td>
+	    <td style="text-align:right">{{payment.amount|number_format(2, '.', ',')}}€</td>
+	  </tr>
+	</table>
+	<div style="height:7mm;background-color:#2F70C5;position:absolute;top:97.5mm; width:200mm"></div>
+</page>
