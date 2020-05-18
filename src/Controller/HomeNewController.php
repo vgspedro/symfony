@@ -524,7 +524,7 @@ class HomeNewController extends AbstractController
 
         $terms = $em->getRepository(TermsConditions::class)->findOneBy(['locales' => $booking->getClient()->getLocale()]);
         //Send email with pdf to client
-        //$send = $this->sendBooking($company, $booking, $terms, $translator);
+/*        
         $send = $this->sendEmail($booking, $request->getHost(), $translator, $terms);
             return new JsonResponse([
                 'status' => 1,
@@ -533,7 +533,7 @@ class HomeNewController extends AbstractController
                 'mail' => 1, //$send,
                 'expiration' => 0
             ]);
-/*
+*/
         //Send email with pdf to client
         $send = $this->emailer->sendBooking($company, $booking, $terms);
         //remove the session start_time
