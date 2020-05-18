@@ -523,7 +523,7 @@ class HomeNewController extends AbstractController
 
 
         $terms = $em->getRepository(TermsConditions::class)->findOneBy(['locales' => $booking->getClient()->getLocale()]);
-        /*Send email with pdf to client
+        //Send email with pdf to client
         //$send = $this->sendBooking($company, $booking, $terms, $translator);
         $send = $this->sendEmail($booking, $request->getHost(), $translator, $terms);
             return new JsonResponse([
@@ -533,7 +533,7 @@ class HomeNewController extends AbstractController
                 'mail' => 1, //$send,
                 'expiration' => 0
             ]);
-*/
+
         //Send email with pdf to client
         $send = $this->emailer->sendBooking($company, $booking, $terms);
         //remove the session start_time
@@ -552,7 +552,7 @@ class HomeNewController extends AbstractController
                 'message' => $send['status'],
                 'data' => $send['status'].' #'.$booking->getId(),
                 'mail' => 0,
-                'expiration' => 0]);
+                'expiration' => 0]);*/
     }
 
     public function onlineGetCharge(Request $request, Stripe $stripe)
@@ -608,10 +608,6 @@ class HomeNewController extends AbstractController
     }
 
 
-
-
-
-/*
 
 
 
@@ -677,9 +673,7 @@ class HomeNewController extends AbstractController
             ->setFrom([$company->getEmail() => $company->getName()])
             ->setTo([$client->getEmail() => $client->getUsername(), $company->getEmail() => $company->getName()])
             ->addPart($text, 'text/plain')
-            
-
-  ->setBody(
+            ->setBody(
                     $this->renderView(
                         'emails/booking.html',
                         [
@@ -693,36 +687,7 @@ class HomeNewController extends AbstractController
                     ),
                 'text/html');
 
-
-            ->setBody(                
-                $this->renderView(
-                    'emails/booking-'.$locale ->getName().'.html.twig',
-                    [
-
-
-                        'id' => $booking->getId(),
-                        'username' => $client->getUsername(),
-                        'email' => $client->getEmail(),
-                        'status' => $translator->trans('pending'),
-                        'tour' => $locale->getName() == 'pt_PT' ? $category->getNamePt() : $category->getNameEn(),
-                        'date' => $booking->getAvailable()->getDatetimeStart()->format('d/m/Y'),
-                        'hour' =>  $booking->getAvailable()->getDatetimeStart()->format('H:i'),
-                        'adult' => $booking->getAdult(),
-                        'children' => $booking->getChildren(),
-                        'baby' => $booking->getBaby(),
-                        'wp' => $category->getWarrantyPayment(),
-                        'logo' => $company->getLinkMyDomain().'/upload/gallery/'.$company->getLogo(),
-                        'terms' => !$terms ? '' : $terms->getName(),
-                        'terms_txt' => !$terms ? '' : $terms->getTermsHtml(),
-                        'company_name' => $company->getName(),
-                        'receipt' => $translator->trans('receipt'),
-                        'receipt_url' => $receipt_url
-                    ]
-                ),
-                'text/html');
-                
-
-            //$message->getHeaders()->addTextHeader('List-Unsubscribe', $company->getLinkMyDomain());
+            $message->getHeaders()->addTextHeader('List-Unsubscribe', 'https://tarugabenagiltours.pt');
             //$message->setReadReceiptTo($company->getEmail());
             //$message->setPriority(2);
 
@@ -738,7 +703,6 @@ class HomeNewController extends AbstractController
             return ['status' => $e->getMessage()];  
         }
     }
-*/
 
     //CHECK IF USER IS ON INTERVAL OF SUBMIT BOOKING ORDER 
     private function getExpirationTime($request) {
