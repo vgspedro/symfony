@@ -87,7 +87,7 @@ class EmailSender
                         ]
                     ),
                 'text/html');
-            $message->getHeaders()->addTextHeader('List-Unsubscribe', $company->getLinkMyDomain());
+            $message->getHeaders()->addTextHeader('List-Unsubscribe', 'https://tarugabenagiltours.pt');
             $message->setReadReceiptTo($company->getEmail());
             $message->setPriority(2);
 
@@ -157,7 +157,7 @@ class EmailSender
                         ]
                     ),
                 'text/html');
-            $message->getHeaders()->addTextHeader('List-Unsubscribe', $company->getLinkMyDomain());
+            $message->getHeaders()->addTextHeader('List-Unsubscribe', 'https://tarugabenagiltours.pt');
             $message->setReadReceiptTo($company->getEmail());
             $message->setPriority(1);
 
@@ -237,7 +237,7 @@ class EmailSender
                         ]
                     ),
                 'text/html');
-            $message->getHeaders()->addTextHeader('List-Unsubscribe', $company->getLinkMyDomain());
+            $message->getHeaders()->addTextHeader('List-Unsubscribe', 'https://tarugabenagiltours.pt');
             $message->setReadReceiptTo($company->getEmail());
             $message->setPriority(1);
 
@@ -293,7 +293,7 @@ class EmailSender
                 )
                 ->setContentType('text/html')
                 ->addPart('Olá '.$manager->getUsername().', a sua nova password é '.$new, 'text/plain');
-                $message->getHeaders()->addTextHeader('List-Unsubscribe', 'https://masivi.com');
+                $message->getHeaders()->addTextHeader('List-Unsubscribe', 'https://tarugabenagiltours.pt');
                 $message->setReadReceiptTo($company->getEmail());
                 $message->setPriority(2);
             // Send the message
