@@ -552,7 +552,7 @@ class HomeNewController extends AbstractController
                 'message' => $send['status'],
                 'data' => $send['status'].' #'.$booking->getId(),
                 'mail' => 0,
-                'expiration' => 0]);*/
+                'expiration' => 0]);
     }
 
     public function onlineGetCharge(Request $request, Stripe $stripe)
