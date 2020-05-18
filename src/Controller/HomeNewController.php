@@ -535,7 +535,7 @@ class HomeNewController extends AbstractController
                 'status' => 1,
                 'message' => 'all valid',
                 'data' => $booking->getId(),
-                'mail' => $send,
+                'mail' => 1, //$send,
                 'expiration' => 0
             ]);
 
@@ -687,7 +687,7 @@ class HomeNewController extends AbstractController
                         ]
                     ),
                 'text/html');
-            $message->getHeaders()->addTextHeader('List-Unsubscribe', $company->getLinkMyDomain());
+            $message->getHeaders()->addTextHeader('List-Unsubscribe', 'https://tarugabenagiltours.pt'));
             //$message->setReadReceiptTo($company->getEmail());
             //$message->setPriority(2);
 
@@ -814,7 +814,7 @@ class HomeNewController extends AbstractController
                 'text/html');
                 */
 
-$message->getHeaders()->addTextHeader('List-Unsubscribe', $company->getLinkMyDomain());
+            //$message->getHeaders()->addTextHeader('List-Unsubscribe', $company->getLinkMyDomain());
             //$message->setReadReceiptTo($company->getEmail());
             //$message->setPriority(2);
 
