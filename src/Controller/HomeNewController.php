@@ -516,7 +516,7 @@ class HomeNewController extends AbstractController
             'expiration' => 0
         ]);
 
-
+/*
 
             $send = $this->sendEmail($booking, $request->getHost(), $translator);
             return new JsonResponse([
@@ -526,7 +526,7 @@ class HomeNewController extends AbstractController
                 'mail' => $send,
                 'expiration' => 0
             ]);
-
+*/
 
         $terms = $em->getRepository(TermsConditions::class)->findOneBy(['locales' => $booking->getClient()->getLocale()]);
         //Send email with pdf to client
