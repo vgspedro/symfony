@@ -336,7 +336,7 @@ ou a qualquer uma das entidades devidamente indicadas na lista disponibilizada p
 ],
 
 'your_booking' => 'A sua reserva', 
-'welcome_purchase' => 'um grande obrigado por efetuar a sua comprar na ',
+'welcome_purchase' => 'um grande obrigado por efetuar a sua compra na ',
 'soon_new_email_status' => 'brevemente, dentro de 12 Horas receberá um email com o novo estado da sua reserva.',
 'booking_details' => 'Detalhes da Reserva',
 'is'  => 'está',
