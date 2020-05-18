@@ -757,7 +757,26 @@ class HomeNewController extends AbstractController
             ->setFrom([$company->getEmail() => $company->getName()])
             ->setTo([$client->getEmail() => $client->getUsername(), $company->getEmail() => $company->getName()])
             ->addPart($subject, 'text/plain')
-            ->setBody(
+            
+
+  ->setBody(
+                    $this->renderView(
+                        'emails/booking.html',
+                        [
+                            'tour' => $tour,
+                            'booking' => $booking,
+                            'client' => $booking->getClient(),
+                            'status' => 'pending',
+                            'company' => $company,
+                            'receipt_url' => $receipt_url
+                        ]
+                    ),
+                'text/html');
+
+
+/*
+
+            ->setBody(                
                 $this->renderView(
                     'emails/booking-'.$locale ->getName().'.html.twig',
                     [
@@ -782,8 +801,8 @@ class HomeNewController extends AbstractController
                         'receipt_url' => $receipt_url
                     ]
                 ),
-                'text/html'
-            );
+                'text/html');
+                */
         $attachment ? $message->attach($attachment) : false;
         $send = $mailer->send($message);
     }
