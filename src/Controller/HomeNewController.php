@@ -656,8 +656,7 @@ class HomeNewController extends AbstractController
             
             $receipt_url = '';
 
-            $text ='';
-            $translator->trans('hello').' '.$booking->getClient()->getUsername().', \n'.
+            $text = $translator->trans('hello').' '.$booking->getClient()->getUsername().', \n'.
                 $translator->trans('your_booking').' #'.$booking->getId().' - '. $tour.' '.
                 $translator->trans('is').' '.$translator->trans('pending').', '.
                 $translator->trans('soon_new_email_status').'\n'.
@@ -702,6 +701,15 @@ class HomeNewController extends AbstractController
             return ['status' => $e->getMessage()];  
         }
     }
+
+
+
+
+
+
+
+
+
 
 
 
