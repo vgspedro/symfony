@@ -56,7 +56,7 @@ return array(
     'required'=>'Required *',
     'wifi_error' =>'Please check Wi-fi/Internet connection, and try again!',
     'order' => 'Booking Nr.',
-    'thank_you' => 'In <b class="f-24">12 hours</b> we will confirm your booking.<br>Thank you, Taruga Benagil Tours.',
+    'thank_you' => 'In 12 hours we will confirm your booking. Thank you, Taruga Benagil Tours.',
     'session' => 'Session timeout reached!!<br> Please, refresh the page!',
     'check' => 'Check',
     'session_info' => 'Please, refresh the page!',
@@ -140,7 +140,7 @@ return array(
     'date' => 'Date',
     'payment' => 'Payment',
     'refund' => 'Refund',
-    'refund_txt' => 'We are sorry for the inconvenience, but the weather conditions don´t allow the realization of the Tour.<br><br>A refund was issued, please click on the button "Refund", to see it',
+    'refund_txt' => 'We are sorry for the inconvenience, but the weather conditions don´t allow the realization of the Tour.<br><br>A refund was issued, please click on the button "Refund", to see it.',
     'name' => 'Name',
     'adults' => 'Adults',
     'childrens' => 'Children',
@@ -317,6 +317,16 @@ www.consumoalgarve.pt or to any of the entities duly indicated in the list avail
 ),
 
 
-
-
+'your_booking' => 'Your booking',  
+'soon_new_email_status' => 'soon in 12 hours, you´ll receive an email with the new status.',
+'booking_details' => 'Booking details',
+'is'  => 'is',
+'in_attach_info' => 'Attached is a file with all the information about, your booking and our terms & conditions, please take a look.',
+'your_data' => 'Your data',
+'by_unit' => 'Unit',
+'amount_paid' => 'Amount Paid',
+'amount_to_be_paid' => 'Amount to be paid',
+'has_changed_to' => 'has changed to',
+'notes' => 'Notes',
+'about_your_booking' => 'about your booking',
 );

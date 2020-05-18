@@ -16,6 +16,7 @@ use App\Entity\StripePaymentLogs;
 
 use App\Service\RequestInfo;
 use App\Service\MoneyParser;
+use App\Service\EmailSender;
 
 use Money\Money;
 
@@ -23,6 +24,14 @@ use Money\Money;
 class OnlineController extends AbstractController
 
 {
+
+    private $emailer;
+
+    public function __construct(EmailSender $emailer)
+    {
+        $this->emailer = $emailer;
+    }
+
 
     public function index(Request $request, TranslatorInterface $translator)
     {
@@ -333,18 +342,63 @@ class OnlineController extends AbstractController
         $em->persist($booking);
         $em->flush();
         
-        //send email
+        /*send email
         $send = $this->sendEmail($booking, $translator);
 
         return new JsonResponse([
             'status' => 1,
             'message' => 'Reembolso efetuado',
             'data' => [
-                'txt' =>$translator->trans($booking->getPaymentStatus()),
+                'txt' => $translator->trans($booking->getPaymentStatus()),
                 'status' => $booking->getPaymentStatus(),
                 'email' => $send
             ]
         ]);
+        */
+        
+        if($booking->getClient()->getEmail()){
+
+            //$terms = $em->getRepository(TermsConditions::class)->findOneBy(['locales' => $booking->getClient()->getLocale()]);
+            
+            //Send email to client
+            $send = $this->emailer->sendBookingRefund($company, $booking);
+
+            return $send['status'] == 1 ?
+                new JsonResponse([ 
+                    'status' => 1,
+                    'message' => 'Reembolso efetuado e email enviado ao Cliente.',
+                    'data' => [
+                        'txt' => $translator->trans($booking->getPaymentStatus()),
+                        'status' => $booking->getPaymentStatus(),
+                        'email' => $send]
+                    ])
+                :
+                new JsonResponse([
+                    'status' => 1,
+                    'message' => 'Reembolso efetuado, mas email não foi enviado ao Cliente!',
+                    'data' => [
+                        'txt' => $translator->trans($booking->getPaymentStatus()),
+                        'status' => $booking->getPaymentStatus(),
+                        'email' => $send]
+                    ]);
+
+        }
+
+        return new JsonResponse([
+            'status' => 1,
+            'message' => 'Reembolso efetuado, mas o cliente não tem email associado, logo email não foi enviado',
+            'data' => [
+                'txt' => $translator->trans($booking->getPaymentStatus()),
+                'status' => $booking->getPaymentStatus(),
+                'email' => $send
+            ]
+        ]);
+
+
+
+
+
+
     }
 
     /**
@@ -424,6 +478,11 @@ class OnlineController extends AbstractController
             'booking' => $booking
             ]);
     }
+
+
+
+
+
 
 
     private function sendEmail(Booking $booking,  $translator){

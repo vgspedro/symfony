@@ -402,24 +402,23 @@ function searchValue(){
       { data: "id"},
       { data: "status_txt", render: function(data, type,row){
 
-
         if (row.status == 'pending') color = 'w3-red'
         else if (row.status == 'canceled') color = 'w3-blue'
         else if (row.status == 'confirmed') color = 'w3-green'
-        
+
+      pdf = '<button class="w3-small w3-btn w3-text-red w3-border" title="Reserva (PDF)" onclick="viewBooking('+row.id+')"><i class="fa fa-file-pdf-o"></i></butotn>'
 
       o_status = '<button id="btn-'+row.id+'" title="Estado da Reserva" style="padding:8px 4px!important; margin-right:4px" class="'+color+' w3-btn w3-border" onclick="modalBookingSetStatus('+row.id+')">#'+row.id+' '+data.substring(0, 3)+'</button>' 
 
       paylogs = row.payment_status ? '<button style="margin-right:4px" title="Logs Pagamentos/Reembolsos" class="w3-small w3-btn w3-blue w3-border" onclick="getStripeLogs('+row.id+')"><i class="fa fa-cogs"></i></button>' : '';
 
+      payment = !row.payment_status ? '<button style="margin-right:4px" title="Pagamento" onclick="setPayment('+row.id+')" class=" w3-btn w3-border"><i class="fa fa-cc-stripe"></i></button>' : ''
 
-      payment = !row.payment_status ? '<button title="Pagamento" onclick="setPayment('+row.id+')" class=" w3-btn w3-border"><i class="fa fa-cc-stripe"></i></button>' : ''
-
-      refund =  row.payment_status ? '<button title="Reembolso" onclick="modalRefund('+row.id+')" class="w3-btn w3-border w3-orange"><i class="fa fa-reply"></i></button>'  : ''
-
-      wp = row.wp ? '<button title="Ver Dados Cartão Cliente" class="w3-btn w3-border w3-indigo" onclick="modalToCardData('+row.id+',\''+row.total+'\')"><i class="far fa-credit-card"></i></button>'
+      refund =  row.payment_status ? '<button style="margin-right:4px" title="Reembolso" onclick="modalRefund('+row.id+')" class="w3-btn w3-border w3-orange"><i class="fa fa-reply"></i></button>'  : ''
+/*
+      wp =  row.wp ? '<button title="Ver Dados Cartão Cliente" class="w3-btn w3-border w3-indigo" onclick="modalToCardData('+row.id+',\''+row.total+'\')"><i class="far fa-credit-card"></i></button>'
       : ''
-
+*/
       if(row.payment_status == 'processing')
         return '<div class="w3-large">#'+row.id+'</div>'
       
@@ -427,7 +426,7 @@ function searchValue(){
         return '<div class="w3-large">#'+row.id+'&nbsp;'+paylogs+'</div>'
       
       else
-        return '<div class="w3-small" style="display:flex">'+o_status+''+paylogs+''+payment+''+refund+''+wp+'</div>'
+        return '<div class="w3-small" style="display:flex">'+o_status+''+paylogs+''+payment+''+refund+''+pdf+'</div>'
        
       }},
       { data: "tour"},
@@ -681,5 +680,13 @@ function modalBookingSetStatus(bookingId){
   }, 500)
 }
 
+
+  function viewBooking(id){
+    $('.w3-overlay').show()
+    window.open('/admin-booking-pdf/'+id,'window','toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,directories=no,width=550,height=450');
+    setTimeout(function(){ 
+      $('.w3-overlay').hide()
+    }, 1000)
+  }
 
 </script>

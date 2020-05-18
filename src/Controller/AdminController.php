@@ -7,6 +7,7 @@ use App\Entity\Blockdates;
 use App\Entity\Booking;
 use App\Entity\Event;
 use App\Entity\User;
+use App\Entity\TermsConditions;
 use App\Entity\Client;
 use App\Entity\Company;
 use App\Entity\EasyText;
@@ -25,11 +26,21 @@ use App\Service\MoneyFormatter;
 use App\Service\MoneyParser;
 use App\Service\Menu;
 use App\Service\RequestInfo;
+use App\Service\PdfGenerator;
+use App\Service\EmailSender;
+
 use Money\Money;
 
 class AdminController extends AbstractController
 {
 
+    private $emailer;
+
+    public function __construct(EmailSender $emailer)
+    {
+        $this->emailer = $emailer;
+    }
+    
     public function html(Request $request, RequestInfo $reqInfo, Menu $menu)
     {
         $em = $this->getDoctrine()->getManager();
@@ -38,7 +49,7 @@ class AdminController extends AbstractController
         $start = new \DateTime('first day of this month');
         $end = new \DateTime('last day of this month');
         $booking_month = $em->getRepository(Booking::class)->dashboardCurrentMonth($start, $end);
-        
+        $bookings_today = $em->getRepository(Booking::class)->getToday(new \DateTime('now'));
 
         $company = $em->getRepository(Company::class)->find(1);
         
@@ -50,7 +61,8 @@ class AdminController extends AbstractController
             'sf_v' => \Symfony\Component\HttpKernel\Kernel::VERSION,
             'company' => $company,
             'host' => $reqInfo->getHost($request),
-            'url' => 'https://'.$reqInfo->getHost($request)
+            'url' => 'https://'.$reqInfo->getHost($request),
+            'today' => $bookings_today
 
         ]);
     }
@@ -62,11 +74,46 @@ class AdminController extends AbstractController
         $start = new \DateTime('first day of this month');
         $end = new \DateTime('last day of this month');
         $booking_month = $em->getRepository(Booking::class)->dashboardCurrentMonth($start, $end);
-        return $this->render('admin/dashboard.html', 
-            [
-                'booking' => $booking,
-                'booking_month' => $booking_month
+        $bookings_today = $em->getRepository(Booking::class)->getToday(new \DateTime('now'));
+        
+        return $this->render('admin/dashboard.html', [
+            'booking' => $booking,
+            'booking_month' => $booking_month,
+            'today' => $bookings_today
             ]);
+    }
+
+    public function calendar(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        if(!$request->query->get('start') || !$request->query->get('end'))
+
+            return new JsonResponse([
+                'status' => 0,
+                'data' => []
+            ]);
+            
+        $st = \DateTime::createFromFormat('U', $request->query->get('start'), new \DateTimeZone('Europe/Lisbon'));
+        $en = \DateTime::createFromFormat('U', $request->query->get('end'), new \DateTimeZone('Europe/Lisbon'));
+
+        $bookings = $em->getRepository(Booking::class)->findOrdersGroupByDay($st, $en);
+        $booking= [];
+
+        foreach ($bookings as $b) {
+            $booking[] = [
+            'title'          => $b['total'].'x',
+            'start'          => $b['booking']->getDateEvent()->format('Y-m-d'),
+            'allDay'         => false,
+            'description'    => 'Ver as Reservas do dia '.$b['booking']->getDateEvent()->format('Y-m-d'),
+            'backgroundColor'=> '#3c8dbc',
+            'borderColor'    => '#444'
+            ];
+        }
+        return new JsonResponse([
+            'status' => 1,
+            'data' => $booking
+        ]);
     }
 
     public function adminBookingSetStatus(Request $request){
@@ -127,20 +174,28 @@ class AdminController extends AbstractController
                 'mail' => null
             ]);
 
+/*
+        //If booking status is the same dont send email
+        if(strtolower($booking->getStatus()) == $status)
+            return new JsonResponse([
+                'status' => 0,
+                'message' => 'O Estado da reserva estava: '.$booking->getStatus().' e foi alterado para '.$status.' está igual. <br>O email só será enviado, se o estado for diferente do inicial.',
+                'data' => null,
+                'mail' => null
+            ]);
+
+*/
         //if order canceled and previous status is not canceled lets put the stock back in the available
         $stockIt = 0;
-        if(strtolower($status) == 'canceled' && strtolower($booking->getStatus()) != 'canceled'){
-            
+
+        if(strtolower($status) == 'canceled' && strtolower($booking->getStatus()) != 'canceled'){            
             $stockIt = 1;
             $booking->getAvailable()->setStock((int)$booking->getAvailable()->getStock() + (int)$booking->getCountPax());
-        
         }
 
         $company = $em->getRepository(Company::class)->find(1);
-
         $booking->setStatus($status);
         $booking->setNotes($notes);
-
         $client = $booking->getClient();
         //only change the cleint email if is diferent form the request
         //some mail could be wrong 
@@ -149,6 +204,30 @@ class AdminController extends AbstractController
             $client->setEmail($email);
         
         $em->flush();
+
+        $terms = $em->getRepository(TermsConditions::class)->findOneBy(['locales' => $booking->getClient()->getLocale()]);
+        
+        //Send email with pdf to client
+        $send = $this->emailer->sendBookingStatus($company, $booking, $terms);
+
+        return $send['status'] == 1 ?
+            new JsonResponse([ 
+                'status' => 1,
+                'message' => 'Sucesso',
+                'data' => ['id' => $booking->getId(), 'index' => (int)$index, 'status' => strtoupper($booking->getStatus())],
+                'mail' => $send,
+                'stock_it' => $stockIt])
+            :
+            new JsonResponse([
+                'status' => 0,
+                'message' => $send['status'],
+                'data' => $send['status'].' #'.$booking->getId(),
+                'mail' => 0,
+                'stock_it' => $stockIt]);
+    }
+
+
+/*
 
         $categoryName = $client->getLocale()->getName() =='en' ? $booking->getAvailable()->getCategory()->getNameEn() : 
             $booking->getAvailable()->getCategory()->getNamePt();
@@ -197,8 +276,10 @@ class AdminController extends AbstractController
             'mail' => $send,
             'stock_it' => $stockIt
         ]);
-    }
 
+
+    }
+*/
 
     public function adminBooking(Request $request, TranslatorInterface $translator)
     {
@@ -402,6 +483,50 @@ class AdminController extends AbstractController
             'data' =>['info' => null]
         ]);
     }
+
+    public function adminBookingPdf($id, PdfGenerator $pdf_gen)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $company = $em->getRepository(Company::class)->find(1);
+        $booking = $em->getRepository(Booking::class)->find($id);
+
+        if (!$booking)
+            return new JsonResponse(['status' => 0 , 'message'=> 'Booking #'.$id.' não existe.', 'data' => null]);
+
+        $terms = $em->getRepository(TermsConditions::class)->findOneBy(['locales' => $booking->getClient()->getLocale()]);
+
+        $pdf = $pdf_gen->voucher($company, $booking, $terms, 'S');
+
+        if($pdf['status'] == 1){
+            $response = new Response($pdf['pdf']);
+            $response->headers->set('Content-Type', 'application/pdf');   
+            return $response;
+        }
+        else    
+            return new JsonResponse(['status' => 0, 'message' => $pdf['pdf'], 'data' => $id]);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     /*

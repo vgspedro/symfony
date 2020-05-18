@@ -36,6 +36,12 @@ validate_booking_data:
     condition: 'request.isXmlHttpRequest()'
     methods: [POST]
 
+home_get_charge:
+    path: /home-get-charge
+    controller: App\Controller\HomeNewController::onlineGetCharge
+    methods: [POST]
+
+
 ###
 # site
 ###
@@ -43,33 +49,32 @@ validate_booking_data:
 #    path: /
 #    controller: App\Controller\HomeController::html
 
-index_info:
-    path: /info/
-    controller: App\Controller\HomeController::info
+#index_info:
+#    path: /info/
+#    controller: App\Controller\HomeController::info
 
-index_translate:
-    path: /translate
-    controller: App\Controller\TranslationController::translate
+#index_translate:
+#    path: /translate
+#    controller: App\Controller\TranslationController::translate
 
 index_user_translate:
     path: /userTranslation/{lang}/{page}
     controller: App\Controller\HomeController::userTranslation
 
+#index_help_improve:
+#    path: /help-improve/
+#    controller: App\Controller\HelpImproveController::helpImprove
 
-index_help_improve:
-    path: /help-improve/
-    controller: App\Controller\HelpImproveController::helpImprove
-
-set_booking:
-    path: /booking
-    controller: App\Controller\HomeController::setBooking
+#set_booking:
+#    path: /booking
+#    controller: App\Controller\HomeController::setBooking
     #condition: 'request.isXmlHttpRequest()'
     #methods: [POST]
 
-home_get_charge:
-    path: /home-get-charge
-    controller: App\Controller\HomeController::onlineGetCharge
-    methods: [POST]
+#home_get_charge:
+#    path: /home-get-charge
+#    controller: App\Controller\HomeController::onlineGetCharge
+#    methods: [POST]
 
 ###
 # FEEDBACK
@@ -132,6 +137,11 @@ index_admin:
 admin_dashboard:
     path: /admin-dashboard/
     controller: App\Controller\AdminController::adminDashboard
+
+
+admin_calendar:
+    path: /admin-calendar/
+    controller: App\Controller\AdminController::calendar
 
 
 ##
@@ -240,6 +250,10 @@ charge_payment:
     controller: App\Controller\AdminController::paymentStripe
     condition: 'request.isXmlHttpRequest()'
     methods: [POST]
+
+admin_booking_pdf:
+    path: /admin-booking-pdf/{id}
+    controller: App\Controller\AdminController::adminBookingPdf
 
 ##
 # AVAILABLE

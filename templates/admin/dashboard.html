@@ -1,12 +1,95 @@
 
+<link rel="stylesheet" href="{{ asset('css/full-calendar.min.css') }}">
+<link rel="stylesheet" href="{{ asset('css/day-grid-main.min.css') }}">
+<script src="{{ asset('js/full-calendar-main.min.js') }}"></script>
+<script src="{{ asset('js/day-grid-main.min.js') }}"></script>
+
 <style>
 .chart_wrap {position: relative; padding-bottom: inherit;height: 300px}
 .chart-container {position: absolute;top: 0;left: 0;width:100%; height:300px}
+.fc-unthemed td.fc-today{background:#ddffff}
+.fc-day-grid-event .fc-time{display:none}
+.fc-event{border-radius:0px}
+.fc-event-container{cursor: pointer}
+.fc-event, .fc-event:hover{color: #fff!important;padding:2px;font-size: 1em}
+.fc-toolbar.fc-header-toolbar {padding: 12px}
+.fc-button{border-radius:0px}
+.table td, .table th {padding: .3em .4em}
+
 </style>
 
   <header class="w3-container" style="padding-top:22px">
     <h5><b><i class="fas fa-tachometer-alt"></i> Painel Controlo</b></h5>
   </header>
+
+  <div class="w3-row-padding">
+    <div class="w3-col l6 w3-margin-bottom">
+      <header>
+        <h3><b>Agendamento Mensal</b></h3>
+      </header>
+
+      <div class="w3-card">
+        <div id="calendar"></div>
+      </div>
+    </div>
+
+
+    <div class="w3-col l6 w3-margin-bottom">
+      <header>
+        <h3><b>Reservas hoje {{ "now"|date("d/m/Y") }}</b></h3>
+      </header>
+      <div class="w3-card">
+        <div class="table-responsive">
+          <table class="table" style="font-size:13px">
+            <thead>
+              <tr>
+                <th class="text-center">#</th>
+                <th class="text-center">Estado</th>
+                <th class="text-center">Pagamento</th>
+                <th class="text-center">Cliente</th>
+                <th class="text-center">Pax</th>
+                <th class="text-center">Total</th>
+
+              </tr>
+            </thead>
+            <tbody>
+          
+            {% for b in today %}
+
+              {% if b.paymentStatus == 'canceled' or b.paymentStatus == '' %}
+              {%set style="color:#F44336" %}
+              {% elseif b.paymentStatus == 'refunded' or b.paymentStatus == 'partial_refund' %}
+              {%set style="color:#2196F3" %}
+              {% elseif b.paymentStatus == 'succeeded' %}
+              {%set style="color:#4CAF50" %}
+              {% endif %}
+
+              {% if b.status == 'pending' %}
+              {%set bstyle="background:#F44336" %}
+              {% elseif b.status == 'canceled' %}
+              {%set bstyle="background:#2196F3" %}
+              {% else %}
+              {%set bstyle="background:#4CAF50" %}
+              {% endif %}
+
+              <tr>
+                <td class="text-center">{{b.id}}</td>
+                <td class="text-center w3-text-white w3-opacity-min" style="{{bstyle}}">{{b.status|trans}}</td>
+                <td class="text-center" style="{{style}}">{{b.paymentStatus ? b.paymentStatus|trans : 'Por pagar'}}</td>
+                <td class="text-center">{{b.client.username}}</td>
+                <td class="text-center">{{b.countPax}}</td>
+                <td class="text-center">{{(b.amount.amount/100)|number_format(2, '.', ',')}}€</td>
+              </tr>
+            
+            {% endfor %}
+                  
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <header class="w3-container">
     <h3><b>Hoje {{ "now"|date("d/m/Y") }}</b></h3>
   </header>
@@ -389,6 +472,8 @@
     </div>
   </div>
 
+
+
 <script type="text/javascript">
 
 google.charts.load('current', {'packages':['corechart']})
@@ -461,4 +546,71 @@ google.charts.setOnLoadCallback(function() { drawChart(a[1],3) })
     chart.draw(data, options)
   }
 
+  function goToDate(dmy){
+    $('.w3-overlay').show() 
+    setTimeout(function(){
+      $.ajax({
+        url: '{{ path("admin_booking") }}',
+        type: "POST",
+        cache: false,
+        success: function (data){
+          $('#add').html(data)
+          $('.w3-sidebar').addClass('w3-hide')
+          $('#startDate').val(dmy)
+          searchValue()
+        },
+        error: function (data){
+          $('.w3-overlay').hide() 
+          $('#modal-error').show()
+        }
+      })
+    }, 500) 
+  }
+
+  $(function () {
+
+    var Calendar = FullCalendar.Calendar;
+    //var Draggable = FullCalendarInteraction.Draggable;
+    var calendarEl = document.getElementById('calendar');
+
+    var calendar = new Calendar(calendarEl, {
+      plugins: ['interaction', 'dayGrid'],
+      header    : {
+        left  : 'prev,next, today',
+        center: 'title',
+        right : false//'dayGridMonth'
+      },
+      locale: 'pt',
+      events : function(info, successCallback, failureCallback) {
+        $.ajax({
+          url:'{{path("admin_calendar")}}',
+          data:'start='+info.start.valueOf()/1000+'&end='+info.end.valueOf()/1000,
+          dataType: 'json',
+          cache: false,
+          success: function(data) {
+            if(data.status == 1){
+              successCallback(data.data)
+            }
+          },
+          error: function(data){
+            console.log(data)
+          } 
+        })
+      },
+      height: 'auto',
+      eventClick : function(info) {
+        var d = new Date(info.event.start);
+        month = d.getMonth() + 1;
+        dmy = (d.getDate() <= 9 ? '0'+d.getDate() : d.getDate()+'/'+(month <= 9 ? '0'+month : month) +'/'+d.getFullYear() );
+        goToDate(dmy)
+      },  
+      editable : false,
+      firstDay : 1
+    
+    });
+    calendar.render();
+  })
+
 </script>
+
+

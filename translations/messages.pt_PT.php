@@ -113,7 +113,7 @@ return array(
     'required' => 'Obrigatório *',
     'wifi_error' =>'Por favor verifique a ligação Wi-fi/Internet, e tente novamente!',
     'order' => 'Reserva Nº',
-    'thank_you' => 'Dentro de <b class="f-24">12 horas</b> confirmaremos a sua reserva.<br>Obrigado, Taruga Benagil Tours.',
+    'thank_you' => 'Dentro de 12 horas confirmaremos a sua reserva. Obrigado, Taruga Benagil Tours.',
     'session' => 'Sessão expirou!!',
     'check' => 'Verifique',
     'session_info' => 'Por favor, atualize a página!',
@@ -159,7 +159,7 @@ return array(
     'date' => 'Data',
     'payment' => 'Pagamento',
     'refund' => 'Reembolso',
-    'refund_txt' => 'Lamentamos o inconveniente, mas as condições climáticas não permitem a realização do Passeio.<br><br> Foi efetuado um reembolso, por favor clique no botão "Refund", para ver',
+    'refund_txt' => 'Lamentamos o inconveniente, mas as condições climáticas não permitem a realização do Passeio.<br><br> Foi efetuado um reembolso, por favor clique no botão "Reembolso", para ver.',
     'name' => 'Nome',
     'adults' => 'Adultos',
     'childrens' => 'Crianças',
@@ -329,11 +329,26 @@ www.consumoalgarve.pt
 ou a qualquer uma das entidades devidamente indicadas na lista disponibilizada pela Direcção Geral do Consumidor em http://www.consumidor.pt cuja consulta desde já aconselhamos.'
 ),
 
-'cookies' => array(
+'cookies' => [
     'txt'=>'Este site utiliza cookies. Ao navegar no site estará a consentir a sua utilização.',
     'link'=>'Saiba mais sobre o uso de cookies.',
     'btn' =>'Aceitar'
-)
+],
+
+'your_booking' => 'A sua reserva',  
+'soon_new_email_status' => 'brevemente, dentro de 12 Horas receberá um email com o novo estado da sua reserva.',
+'booking_details' => 'Detalhes da Reserva',
+'is'  => 'está',
+'in_attach_info' => 'Em anexo, toda a informação sobre a reserva e os termos e condições, por favor lêr.',
+'your_data' => 'Os seus dados', 
+'by_unit' => 'Unid.',
+'amount_paid' => 'Pago',
+'amount_to_be_paid' => 'A pagar',
+'has_changed_to' => 'mudou para',
+'notes' => 'Observações', 
+'about_your_booking' => 'sobre a sua reserva',
+
 
 );
+
 ?>

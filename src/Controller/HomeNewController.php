@@ -36,6 +36,7 @@ use App\Service\FieldsValidator;
 use App\Service\Stripe;
 use App\Service\Menu;
 
+use App\Service\EmailSender;
 
 use Money\Money;
 
@@ -45,10 +46,13 @@ class HomeNewController extends AbstractController
     private $expiration = 900;
 
     private $session;
+    private $emailer;
+
     
-    public function __construct(SessionInterface $session)
+    public function __construct(SessionInterface $session, EmailSender $emailer)
     {
-        $this->session = $session; 
+        $this->emailer = $emailer;
+        $this->session = $session;
     }
     
     public function index(Request $request, MoneyFormatter $moneyFormatter, RequestInfo $reqInfo, Menu $menu, TranslatorInterface $translator)
@@ -334,18 +338,7 @@ class HomeNewController extends AbstractController
 
     public function setNewBooking(Request $request, MoneyFormatter $moneyFormatter, RequestInfo $reqInfo, FieldsValidator $fieldsValidator, TranslatorInterface $translator, Stripe $stripe){
 
-
         $err = [];
-        $em = $this->getDoctrine()->getManager();
-
-        $local = $request->getLocale();
-
-        $locales = $em->getRepository(Locales::class)->findOneBy(['name' => $local]);
-
-        if(!$locales)
-             $locales = $em->getRepository(Locales::class)->findOneBy(['name' => 'pt_PT']);
-
-        $locale = $locales->getName();
 
         if($this->getExpirationTime($request) == 1){ 
             $err[] = $translator->trans('session');
@@ -355,6 +348,15 @@ class HomeNewController extends AbstractController
                 'expiration' => 1
             ]);
         }
+
+
+        $em = $this->getDoctrine()->getManager();
+        $locales = $em->getRepository(Locales::class)->findOneBy(['name' => $request->getLocale()]);
+
+        if(!$locales)
+             $locales = $em->getRepository(Locales::class)->findOneBy(['name' => 'pt_PT']);
+
+        $locale = $locales->getName();
 
         //First part of validation 
         //the required fields on form, if empty send array to inform user what happen 
@@ -395,147 +397,150 @@ class HomeNewController extends AbstractController
 
 
         //Create booking
-        else{
-            $em->getConnection()->beginTransaction();
+        $em->getConnection()->beginTransaction();
             
-            $available = $em->getRepository(Available::class)->find($event);
-            $category = $em->getRepository(Category::class)->find($request->request->get('category'));
-            $tomorrow = new \DateTime('tomorrow');
+        $available = $em->getRepository(Available::class)->find($event);
+        $category = $em->getRepository(Category::class)->find($request->request->get('category'));
+        $company = $em->getRepository(Company::class)->find(1);
+        $tomorrow = new \DateTime('tomorrow');
 
-            //Validate the Event with the Category and min Date, to prevent the user changing data on html injections (inspect elements)  
-            $valid = $available->getCategory() == $category && $available->getDatetimeStart()->format('Y-m-d') >= $tomorrow->format('Y-m-d') ? true : false;
+        //Validate the Event with the Category and min Date, to prevent the user changing data on html injections (inspect elements)  
+        $valid = $available->getCategory() == $category && $available->getDatetimeStart()->format('Y-m-d') >= $tomorrow->format('Y-m-d') ? true : false;
 
-            if(!$valid){
-                //throw new Exception("Error Processing Request Available", 1);
-               return new JsonResponse([
-                    'status' => 4,
-                    'message' => $translator->trans('event_not_found'),
-                    'expiration' => 0
-                ]);
-            }
 
-            try {           
-                $em->lock($available, LockMode::PESSIMISTIC_WRITE);
-    
-                //Get the total number of Pax.
-                $paxCount = $adult + $children + $baby; 
-
-                // When there is no availability for the number of Pax...
-                if ($available->getStock() < $paxCount) {
-                    // Abort and inform user.
-                    return new JsonResponse([
-                        'status' => 4,
-                        'message' => $translator->trans('part_seven.other_buy_it'),
-                        'expiration' => 0
-                    ]);
-                }
-           
-                // Create Client
-                $client = new Client();
-                $client->setEmail($email);
-                $client->setUsername($name);
-                $client->setAddress($address);
-                $client->setTelephone($telephone);
-                $client->setRgpd($rgpd);
-                $client->setLocale($locales);
-
-                //total amount of booking
-                $amountA = Money::EUR(0);
-                $amountC = Money::EUR(0);
-                $total = Money::EUR(0);
-
-                $amountA = $available->getCategory()->getAdultPrice();
-                $amountA = $amountA->multiply($adult);
-                $amountC = $available->getCategory()->getChildrenPrice();
-                $amountC = $amountC->multiply($children);
-                $total = $amountA->add($amountC);   
-            
-                // Create Booking.
-                $booking = new Booking();
-                $booking->setAvailable($available);
-                $booking->setAdult($adult);
-                $booking->setChildren($children);
-                $booking->setBaby($baby);
-                $booking->setPostedAt(new \DateTime());
-                $booking->setAmount($total);
-                $booking->setClient($client);
-                $booking->setDateEvent($available->getDatetimeStart());
-                $booking->setTimeEvent($available->getDatetimeStart());
-                $available->setStock($available->getStock() - $paxCount);
-
-                $em->persist($available);
-                $em->persist($client);
-                $em->persist($booking);
-                $em->flush();
-
-                if($available->getCategory()->getWarrantyPayment()){
-                
-                    $company = $em->getRepository(Company::class)->find(1);
-
-                    $i = $stripe->createUpdatePaymentIntent($company, $request, $booking);
-                    
-                    if($i['status'] == 1){
-                        
-                        $payLogs = new StripePaymentLogs();
-                        $payLogs->setLog(json_encode($i['data']));
-                        $payLogs->setBooking($booking);
-                        $em->persist($payLogs);
-
-                        $em->flush();
-                        
-                        $booking->setPaymentStatus(Booking::STATUS_PROCESSING);
-                        $booking->setStatus(Booking::STATUS_CANCELED);
-                        $booking->setStripePaymentLogs($payLogs);
-                        $em->persist($booking);
-                        $em->flush();
-                    }
-                }
-
- //               $em->flush();
-
-                $em->getConnection()->commit();
-            
-            } 
-
-            catch (\Exception $e) {
-                //echo $e->getMessage();
-                $em->getConnection()->rollBack();
-            
-                //throw $e;
-                return new JsonResponse([
-                    'status' => 4,
-                    'message' => $translator->trans('opps_something_wrong').' '.$e->getMessage(),
-                    'data' => $e->getMessage(),
-                    'mail' => null,
-                    'expiration' => 0,
-                ]);
-            }
-
-            if($available->getCategory()->getWarrantyPayment())
-                return new JsonResponse([
-                'status' => 99,
-                'message' => 'waiting payment',
-                'data' => $booking->getId(),
-                'mail' => null,
+        if(!$valid)
+            //throw new Exception("Error Processing Request Available", 1);
+            return new JsonResponse([
+                'status' => 4,
+                'message' => $translator->trans('event_not_found'),
                 'expiration' => 0
             ]);
+
+        try {           
+            $em->lock($available, LockMode::PESSIMISTIC_WRITE);
+    
+            //Get the total number of Pax.
+            $paxCount = $adult + $children + $baby; 
             
-            //remove the session start_time
-            $this->session->remove('start_time');
-            $send = $this->sendEmail($booking, $request->getHost(), $translator);
+            // When there is no availability for the number of Pax...
+            if ($available->getStock() < $paxCount)
+                // Abort and inform user.
+                return new JsonResponse([
+                    'status' => 4,
+                    'message' => $translator->trans('part_seven.other_buy_it'),
+                    'expiration' => 0
+                ]);
+           
+            // Create Client
+            $client = new Client();
+            $client->setEmail($email);
+            $client->setUsername($name);
+            $client->setAddress($address);
+            $client->setTelephone($telephone);
+            $client->setRgpd($rgpd);
+            $client->setLocale($locales);
+
+            //total amount of booking
+            $amountA = Money::EUR(0);
+            $amountC = Money::EUR(0);
+            $total = Money::EUR(0);
+
+            $amountA = $available->getCategory()->getAdultPrice();
+            $amountA = $amountA->multiply($adult);
+            $amountC = $available->getCategory()->getChildrenPrice();
+            $amountC = $amountC->multiply($children);
+            $total = $amountA->add($amountC);   
+            
+            // Create Booking.
+            $booking = new Booking();
+            $booking->setAvailable($available);
+            $booking->setAdult($adult);
+            $booking->setChildren($children);
+            $booking->setBaby($baby);
+            $booking->setPostedAt(new \DateTime());
+            $booking->setAmount($total);
+            $booking->setClient($client);
+            $booking->setDateEvent($available->getDatetimeStart());
+            $booking->setTimeEvent($available->getDatetimeStart());
+            $available->setStock($available->getStock() - $paxCount);
+
+            $em->persist($available);
+            $em->persist($client);
+            $em->persist($booking);
+            
+            $em->flush();
+
+            if($available->getCategory()->getWarrantyPayment()){
+            
+                $i = $stripe->createUpdatePaymentIntent($company, $request, $booking);
+                    
+                if($i['status'] == 1){
+                        
+                    $payLogs = new StripePaymentLogs();
+                    $payLogs->setLog(json_encode($i['data']));
+                    $payLogs->setBooking($booking);
+                    $em->persist($payLogs);
+
+                    $em->flush();
+                        
+                    $booking->setPaymentStatus(Booking::STATUS_PROCESSING);
+                    $booking->setStatus(Booking::STATUS_CANCELED);
+                    $booking->setStripePaymentLogs($payLogs);
+                    $em->persist($booking);
+                    $em->flush();
+                }
+            }
+                $em->getConnection()->commit();
+
+        } 
+        catch (\Exception $e) {
+            //echo $e->getMessage();
+            $em->getConnection()->rollBack();
+            
+            //throw $e;
             return new JsonResponse([
+                'status' => 4,
+                'message' => $translator->trans('opps_something_wrong').' '.$e->getMessage(),
+                'data' => $e->getMessage(),
+                'mail' => null,
+                'expiration' => 0,
+            ]);
+        }
+
+        if($available->getCategory()->getWarrantyPayment())
+            return new JsonResponse([
+            'status' => 99,
+            'message' => 'waiting payment',
+            'data' => $booking->getId(),
+            'mail' => null,
+            'expiration' => 0
+        ]);
+
+
+        $terms = $em->getRepository(TermsConditions::class)->findOneBy(['locales' => $booking->getClient()->getLocale()]);
+        //Send email with pdf to client
+        $send = $this->emailer->sendBooking($company, $booking, $terms);
+
+        //remove the session start_time
+        $this->session->remove('start_time');
+
+        return $send['status'] == 1 ?
+            new JsonResponse([ 
                 'status' => 1,
                 'message' => 'all valid',
                 'data' => $booking->getId(),
-                'mail' => $send,
-                'expiration' => 0
-            ]);
-        }
+                'mail' => 1,
+                'expiration' => 0])
+            :
+            new JsonResponse([
+                'status' => 0,
+                'message' => $send['status'],
+                'data' => $send['status'].' #'.$booking->getId(),
+                'mail' => 0,
+                'expiration' => 0]);
     }
 
-
-
-    public function onlineGetCharge(Request $request, Stripe $stripe, TranslatorInterface $translator)
+    public function onlineGetCharge(Request $request, Stripe $stripe)
     {
         
         $em = $this->getDoctrine()->getManager();
@@ -559,7 +564,11 @@ class HomeNewController extends AbstractController
             $em->persist($booking);
             $em->flush();
 
-            $send = $this->sendEmail($booking, $request->getHost(), $translator);
+            $terms = $em->getRepository(TermsConditions::class)->findOneBy(['locales' => $booking->getClient()->getLocale()]);
+
+            $send = $this->emailer->sendBooking($company, $booking, $terms);
+
+            //$send = $this->sendEmail($booking, $request->getHost(), $translator);
 
             return new JsonResponse([
                 'status' => 1,

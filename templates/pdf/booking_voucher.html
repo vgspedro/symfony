@@ -1,0 +1,147 @@
+
+{% set height = booking.adult > 0 and booking.children > 0 and booking.baby > 0 ? 124 : 120 %}
+
+{% if booking.paymentStatus == 'canceled' or booking.paymentStatus == '' %}
+{%set style="color:#F44336" %}
+{% elseif booking.paymentStatus == 'refunded' or booking.paymentStatus == 'partial_refund' %}
+{%set style="color:#2196F3" %}
+{% elseif booking.paymentStatus == 'succeeded' %}
+{%set style="color:#4CAF5" %}
+{% endif %}
+
+{% if booking.status == 'pending' %}
+{%set bstyle="color:#F44336" %}
+{% elseif booking.status == 'canceled' %}
+{%set bstyle="color:#2196F3" %}
+{% else %}
+{%set bstyle="color:#4CAF50" %}
+{% endif %}
+
+{% set p = booking.paymentStatus ? booking.paymentStatus|trans : 'amount_to_be_paid'|trans %}
+{% set t = booking.client.locale.name == 'pt_PT' ? booking.available.category.namePt : booking.available.category.nameEn %}
+
+{% if booking.depositAmount.amount == booking.amount.amount %}
+{% set amount = (booking.amount.amount/100)|number_format(2, '.', ',') %}
+{%set paid = true %}
+{% else %}
+{%set paid = false %}
+{% set amount = ((booking.amount.amount - booking.depositAmount.amount)/100)|number_format(2, '.', ',')%}
+{% endif %}
+
+{% set locale = booking.client.locale.name %}
+
+<page format="210x{{height}}" orientation="L" style="font: arial">
+
+	<div style="height:7mm;background-color:#EEAD2D"></div>
+
+	<div style="padding-top:6mm;padding-bottom:6mm">
+		<div>
+			<span style="line-height:26px; font-size:20px;font-weight:bold">{{company.name}}</span><br>
+			<span style="line-height:16px;font-size:12px">{{company.address}}</span><br>
+			<span style="line-height:16px;font-size:12px">{{company.Pcode}} {{company.city}}, {{company.country.name}}</span><br>
+			<span style="line-height:16px;font-size:12px">{{company.email}}</span><br>
+			<span style="line-height:16px;font-size:12px">{{company.telephone}}</span><br>
+		</div>
+		<div style="position:absolute;right:1mm; top:1mm">
+			<img style="height:45mm" src="{{logo}}">
+		</div>
+	</div>
+
+	<table style="padding-bottom:3mm">
+	  <tr>
+	    <th style="padding:2mm:0mm; font-size:14px;width:120mm;text-transform:uppercase">{{ 'your_data' | trans({}, "messages", locale) }}</th>
+	    <th style="padding:2mm:0mm;font-size:14px;width:30mm;text-transform:uppercase">{{ 'booking' | trans({}, "messages", locale) }}</th>
+	    <th style="padding:2mm:0mm;font-size:14px;width:48mm;text-align:right">{{booking.id}}</th>
+	  </tr>
+	  <tr>
+	    <td>{{booking.client.username}}</td>
+	    <td style="font-weight:bold;text-transform:uppercase">{{ 'tour' | trans({}, "messages", locale) }}</td>
+	    <td style="text-align:right">{{t}}</td>
+	  </tr>
+	  <tr>
+	    <td>{{booking.client.email}}</td>
+	    <td style="font-weight:bold;text-transform:uppercase">{{ 'date' | trans({}, "messages", locale) }} </td>
+	    <td style="text-align:right">{{ booking.available.datetimeStart|date("d/m/Y")}}</td>
+	  </tr>
+	 <tr>
+	    <td>{{booking.client.telephone}}</td>
+	    <td style="font-weight:bold;text-transform:uppercase">{{ 'hour' | trans({}, "messages", locale) }}</td>
+	    <td style="text-align:right">{{ booking.available.datetimeStart|date("H:i")}}</td>
+	  </tr>
+	 <tr>
+	    <td>{{booking.client.address}}</td>
+	    <td style="font-weight:bold;text-transform:uppercase">{{ 'status' | trans({}, "messages", locale) }}</td>
+	    <td style="text-transform:uppercase;text-align:right;{{bstyle}}"><b>{{ booking.status | trans({}, "messages", locale) }}</b></td>
+	  </tr>
+
+	</table>
+
+	<div style="border-top: 0.5mm solid #000"></div>
+		{% if paid %}
+		
+		<div style="margin-bottom:3mm; font-weight:bold;font-size:22px;width:200mm">
+			<div style="width:100mm;float:left"> {{ 'amount_paid' | trans({}, "messages", locale) }} </div> 
+			<div style="margin-top:-6.25mm;margin-left:100mm;width:99mm;text-align:right">
+			{{amount}}€</div>
+		</div>
+		
+		{% else %}
+		
+		{% set line = booking.status == 'canceled' ? 'text-decoration:line-through' : '' %} 
+
+		<div style="margin-bottom:3mm; font-weight:bold;font-size:22px;width:200mm;color:#F44336;{{line}}">
+			<div style="width:100mm;float:left">{{ 'amount_to_be_paid' | trans({}, "messages", locale) }}</div> 
+			<div style="margin-top:-6.25mm;margin-left:100mm;width:99mm;text-align:right">
+			{{amount}}€	
+			</div>
+		</div>
+
+		{% endif %}
+
+	<div style="border-top: 0.5mm solid #000"></div>
+
+	<table>
+	  	<tr>
+		    <th style="padding:2mm:0mm; font-size:14px;width:10mm;text-transform:uppercase">Qt.</th>
+		    <th style="padding:2mm:0mm;font-size:14px;width:140mm;text-transform:uppercase">{{ 'description' | trans({}, "messages", locale) }}</th>
+		    <th style="padding:2mm:0mm;font-size:14px;width:25mm;text-transform:uppercase;text-align:right">{{ 'by_unit' | trans({}, "messages", locale) }}</th>
+		    <th style="padding:2mm:0mm;font-size:14px;width:23mm;text-transform:uppercase;text-align:right">Total</th>
+		</tr>
+
+	  	<tr>
+	    	<td style="text-align:center">{{booking.adult}}</td>
+	    	<td>{{ 'adults' | trans({}, "messages", locale) }}</td>
+	    	<td style="text-align:right">{{(booking.available.category.adultPrice.amount/100)|number_format(2, '.', ',')}}€</td>
+	    	<td style="text-align:right">{{(booking.available.category.adultPrice.amount/100 * booking.adult)|number_format(2, '.', ',')}}€</td>
+	  	</tr>
+	  	
+	  	{%if booking.children > 0 %}
+		
+		<tr>
+	    	<td style="text-align:center">{{booking.children}}</td>
+	    	<td>{{ 'childrens' | trans({}, "messages", locale) }}</td>
+	    	<td style="text-align:right">{{(booking.available.category.childrenPrice.amount/100)|number_format(2, '.', ',')}}€</td>
+	    	<td style="text-align:right">{{(booking.available.category.childrenPrice.amount/100 * booking.children)|number_format(2, '.', ',')}}€</td>
+		</tr>
+
+		{% endif %}
+		{%if booking.baby > 0 %}
+		
+		<tr>
+	    	<td style="text-align:center">{{booking.baby}}</td>
+	    	<td>{{ 'babies' | trans({}, "messages", locale) }}</td>
+	    	<td style="text-align:right">0.00€</td>
+	    	<td style="text-align:right">0.00€</td>
+	  	</tr>
+		
+		{% endif %}
+
+	</table>
+	<div style="height:7mm;background-color:#EEAD2D;position:absolute;bottom:-2.5mm; width:200mm"></div>
+</page>
+
+<page format="210x297" orientation="P" style="font: arial">
+	<h3 style="text-align:center">{{ 'terms' | trans({}, "messages", locale) }}</h3>
+	<p style="text-align:center">{{terms.name}}</p>
+	<p>{{terms.termsHtml|raw}}</p>
+</page>

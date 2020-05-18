@@ -36,6 +36,24 @@ class BookingRepository extends ServiceEntityRepository
         return $query->getResult();
     } 
 
+
+    public function findOrdersGroupByDay($s, $e)
+    {
+        $dql = 'SELECT count(b) AS total, b AS booking
+        FROM App\Entity\Booking b
+        WHERE b.dateEvent >= :start
+        AND b.dateEvent <= :end
+        AND (b.paymentStatus <> :status_1 OR b.paymentStatus IS NULL)
+        GROUP BY b.dateEvent';
+        
+        $query = $this->getEntityManager()->createQuery($dql)
+        ->setParameter('start', $s)
+        ->setParameter('end', $e)
+        ->setParameter('status_1', 'canceled');
+        return $query->getResult();
+    }
+
+
     /**
     * Get the clients with email that pass 15 days after the event
     */
@@ -73,6 +91,20 @@ class BookingRepository extends ServiceEntityRepository
         return $query->getResult();
     }
 
+
+    public function getToday($today){
+        $dql = 'SELECT c, b
+            FROM App\Entity\Booking b
+            JOIN b.client c
+            WHERE b.dateEvent = :today
+            AND (b.paymentStatus <> :status_1 OR b.paymentStatus IS NULL)';
+
+        $query = $this->getEntityManager()->createQuery($dql)
+            ->setParameter('today', $today->format('Y-m-d'))
+            ->setParameter('status_1', 'canceled');
+
+        return $query->getResult();
+    }
 
 
     public function dashboardValues()

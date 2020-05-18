@@ -31,6 +31,7 @@ use App\Service\MoneyFormatter;
 use App\Service\RequestInfo;
 use App\Service\FieldsValidator;
 use App\Service\Stripe;
+use App\Service\EmailSender;
 
 use Money\Money;
 
@@ -377,7 +378,7 @@ class HomeController extends AbstractController
     *@param $request
     *@return json response of Request
     **/
-    public function onlineGetCharge(Request $request, Stripe $stripe, TranslatorInterface $translator)
+    public function onlineGetCharge(Request $request, Stripe $stripe, TranslatorInterface $translator, EmailSender $emailer)
     {
         
         $em = $this->getDoctrine()->getManager();
@@ -393,6 +394,8 @@ class HomeController extends AbstractController
 
             $booking = $em->getRepository(Booking::class)->find(str_replace('#','',$b_id[0]));
             
+            $terms = $em->getRepository(TermsConditions::class)->findOneBy(['locales' => $booking->getClient()->getLocale()]);
+
             $booking->getStripePaymentLogs()->setLog(json_encode($ch['data']->data[0]));
             $booking->setPaymentStatus($ch['data']->data[0]->status);
             $booking->setStatus(Booking::STATUS_PENDING);
@@ -401,7 +404,8 @@ class HomeController extends AbstractController
             $em->persist($booking);
             $em->flush();
 
-            $send = $this->sendEmail($booking, $request->getHost(), $translator);
+            $send = $emailer->sendBooking($company, $booking, $terms);
+            //$send = $this->sendEmail($booking, $request->getHost(), $translator);
 
             return new JsonResponse([
                 'status' => 1,
@@ -415,6 +419,8 @@ class HomeController extends AbstractController
                 'message' => 'Unable to get Charge',
                 'data' => null]);
     }
+
+
 
     public function userTranslation($lang, $page)
     {    
