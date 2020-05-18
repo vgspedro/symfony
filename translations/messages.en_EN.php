@@ -319,9 +319,10 @@ www.consumoalgarve.pt or to any of the entities duly indicated in the list avail
 
 'your_booking' => 'Your booking',  
 'soon_new_email_status' => 'soon in 12 hours, you´ll receive an email with the new status.',
+'welcome_purchase' => 'a big thank you for shopping with ',
 'booking_details' => 'Booking details',
 'is'  => 'is',
-'in_attach_info' => 'Attached is a file with all the information about, your booking and our terms & conditions, please take a look.',
+'in_attach_info' => 'Attached is a file in pdf format, with all the information regarding your booking, and the Terms and Conditions that we apreciate reading.',
 'your_data' => 'Your data',
 'by_unit' => 'Unit',
 'amount_paid' => 'Amount Paid',

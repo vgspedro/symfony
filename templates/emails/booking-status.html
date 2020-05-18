@@ -1,35 +1,33 @@
 {% set locale = booking.client.locale.name %}
 
 <body>
-	<div>
-		<div style="padding:16px 8px">
-			<img src="{{ company.linkMyDomain~'/upload/gallery/'~company.logo }}" alt="{{company.name}}" width="80">
-			<p>
-				{{ 'hello' | trans({}, "messages", locale) }} {{ client.username }}.
-				<br>
-				{{ 'your_booking' | trans({}, "messages", locale) }} #{{ booking.id }} {{ 'has_changed_to' | trans({}, "messages", locale) }} {{ booking.status | trans({}, "messages", locale) }}.
-			</p>			
-			<p>
-				{{ 'booking_details' | trans({}, "messages", locale) }}:
-			</p>
-			<hr>
-			<p>
-				{% if booking.notes > 0 %}
-					{{ 'notes' | trans({}, "messages", locale) }}: {{ booking.notes|raw }}
-				{% endif %}
+	<div style="padding:16px 8px;max-width:500px;margin:0 auto">
+		<img src="{{ company.linkMyDomain~'/upload/gallery/'~company.logo }}" alt="{{company.name}}" width="80">
+		<p>
+			{{ 'hello' | trans({}, "messages", locale) }} {{ client.username }}.
+			<br>
+			{{ 'your_booking' | trans({}, "messages", locale) }} #{{ booking.id }} {{ 'has_changed_to' | trans({}, "messages", locale) }} {{ booking.status | trans({}, "messages", locale) }}.
+		</p>			
+		<p>
+			{{ 'booking_details' | trans({}, "messages", locale) }}:
+		</p>
+		<hr>
+		<p>
+			{% if booking.notes > 0 %}
+				{{ 'notes' | trans({}, "messages", locale) }}: {{ booking.notes|raw }}
+			{% endif %}
 
-				{{ 'tour' | trans({}, "messages", locale) }}: {{ tour }}<br>
-				{{ 'date' | trans({}, "messages", locale) }}: {{ booking.available.datetimeStart|date("d/m/Y")}}<br>
-				{{ 'hour' | trans({}, "messages", locale) }}: {{ booking.available.datetimeStart|date("H:i")}}<br>
-				{{ 'adults' | trans({}, "messages", locale) }}: {{ booking.adult }}<br>
-				{{ 'childrens' | trans({}, "messages", locale) }}: {{ booking.children }}<br>
-				{{ 'babies' | trans({}, "messages", locale) }}: {{ booking.baby }}<br>
-			</p>
-			<hr>
-			<p>
-				{{ 'thanks' | trans({}, "messages", locale) }}, {{company.name}}.
-			</p>
-		</div>
+			{{ 'tour' | trans({}, "messages", locale) }}: {{ tour }}<br>
+			{{ 'date' | trans({}, "messages", locale) }}: {{ booking.available.datetimeStart|date("d/m/Y")}}<br>
+			{{ 'hour' | trans({}, "messages", locale) }}: {{ booking.available.datetimeStart|date("H:i")}}<br>
+			{{ 'adults' | trans({}, "messages", locale) }}: {{ booking.adult }}<br>
+			{{ 'childrens' | trans({}, "messages", locale) }}: {{ booking.children }}<br>
+			{{ 'babies' | trans({}, "messages", locale) }}: {{ booking.baby }}<br>
+		</p>
+		<hr>
+		<p>
+			{{ 'thanks' | trans({}, "messages", locale) }}, {{company.name}}.
+		</p>
 	</div>
 </body>
 

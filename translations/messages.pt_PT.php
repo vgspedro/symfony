@@ -335,12 +335,13 @@ ou a qualquer uma das entidades devidamente indicadas na lista disponibilizada p
     'btn' =>'Aceitar'
 ],
 
-'your_booking' => 'A sua reserva',  
+'your_booking' => 'A sua reserva', 
+'welcome_purchase' => 'um grande obrigado por efetuar a sua comprar na ',
 'soon_new_email_status' => 'brevemente, dentro de 12 Horas receberá um email com o novo estado da sua reserva.',
 'booking_details' => 'Detalhes da Reserva',
 'is'  => 'está',
-'in_attach_info' => 'Em anexo, toda a informação sobre a reserva e os termos e condições, por favor lêr.',
-'your_data' => 'Os seus dados', 
+'in_attach_info' => 'Em anexo um ficheiro em formato pdf, com toda a informação referente a sua reserva, e os Termos e Condições que agradeçemos a leitura.',
+'your_data' => 'Os seus dados',
 'by_unit' => 'Unid.',
 'amount_paid' => 'Pago',
 'amount_to_be_paid' => 'A pagar',

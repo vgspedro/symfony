@@ -2,11 +2,11 @@
 {% set height = booking.adult > 0 and booking.children > 0 and booking.baby > 0 ? 124 : 120 %}
 
 {% if booking.paymentStatus == 'canceled' or booking.paymentStatus == '' %}
-{%set style="color:#F44336" %}
+{% set style="color:#F44336" %}
 {% elseif booking.paymentStatus == 'refunded' or booking.paymentStatus == 'partial_refund' %}
-{%set style="color:#2196F3" %}
+{% set style="color:#2196F3" %}
 {% elseif booking.paymentStatus == 'succeeded' %}
-{%set style="color:#4CAF5" %}
+{% set style="color:#4CAF5" %}
 {% endif %}
 
 {% if booking.status == 'pending' %}
@@ -17,16 +17,7 @@
 {%set bstyle="color:#4CAF50" %}
 {% endif %}
 
-{% set p = booking.paymentStatus ? booking.paymentStatus|trans : 'amount_to_be_paid'|trans %}
 {% set t = booking.client.locale.name == 'pt_PT' ? booking.available.category.namePt : booking.available.category.nameEn %}
-
-{% if booking.depositAmount.amount == booking.amount.amount %}
-{% set amount = (booking.amount.amount/100)|number_format(2, '.', ',') %}
-{%set paid = true %}
-{% else %}
-{%set paid = false %}
-{% set amount = ((booking.amount.amount - booking.depositAmount.amount)/100)|number_format(2, '.', ',')%}
-{% endif %}
 
 {% set locale = booking.client.locale.name %}
 
@@ -77,26 +68,12 @@
 	</table>
 
 	<div style="border-top: 0.5mm solid #000"></div>
-		{% if paid %}
-		
+
 		<div style="margin-bottom:3mm; font-weight:bold;font-size:22px;width:200mm">
-			<div style="width:100mm;float:left"> {{ 'amount_paid' | trans({}, "messages", locale) }} </div> 
+			<div style="width:100mm;float:left"> Total </div> 
 			<div style="margin-top:-6.25mm;margin-left:100mm;width:99mm;text-align:right">
-			{{amount}}€</div>
+			{{(booking.amount.amount/100)|number_format(2, '.', ',')}}€</div>
 		</div>
-		
-		{% else %}
-		
-		{% set line = booking.status == 'canceled' ? 'text-decoration:line-through' : '' %} 
-
-		<div style="margin-bottom:3mm; font-weight:bold;font-size:22px;width:200mm;color:#F44336;{{line}}">
-			<div style="width:100mm;float:left">{{ 'amount_to_be_paid' | trans({}, "messages", locale) }}</div> 
-			<div style="margin-top:-6.25mm;margin-left:100mm;width:99mm;text-align:right">
-			{{amount}}€	
-			</div>
-		</div>
-
-		{% endif %}
 
 	<div style="border-top: 0.5mm solid #000"></div>
 

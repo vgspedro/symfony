@@ -1,38 +1,35 @@
 {% set locale = booking.client.locale.name %}
 
 <body>
-	<div>
-		<div style="padding:16px 8px">
-			<img src="{{ company.linkMyDomain~'/upload/gallery/'~company.logo }}" alt="{{company.name}}" width="80">
-			<p>
-				{{ 'hello' | trans({}, "messages", locale) }} {{ client.username }}, {{ 'about_your_booking' | trans({}, "messages", locale) }} #{{ booking.id }}.
-			</p>
-			<p>
-				{% autoescape %}
-    			{{ refund_txt|raw }}
-				{% endautoescape %}
-			</p>
-			<p>
-				{{ 'booking_details' | trans({}, "messages", locale) }}:
-			</p>
-			<hr>
-			<p>
+	<div style="padding:16px 8px;max-width:500px;margin:0 auto">
+		<img src="{{ company.linkMyDomain~'/upload/gallery/'~company.logo }}" alt="{{company.name}}" width="80">
+		<p>
+			{{ 'hello' | trans({}, "messages", locale) }} {{ client.username }}, {{ 'about_your_booking' | trans({}, "messages", locale) }} #{{ booking.id }}.
+		</p>
+		<p>
+			{% autoescape %}
+    		{{ refund_txt|raw }}
+			{% endautoescape %}
+		</p>
+		<p>
+			{{ 'booking_details' | trans({}, "messages", locale) }}:
+		</p>
+		<hr>
+		<p>
 			{{ 'tour' | trans({}, "messages", locale) }}: {{ tour }}<br>
 			{{ 'date' | trans({}, "messages", locale) }}: {{ booking.available.datetimeStart|date("d/m/Y")}}<br>
 			{{ 'hour' | trans({}, "messages", locale) }}: {{ booking.available.datetimeStart|date("H:i")}}<br>
 			{{ 'adults' | trans({}, "messages", locale) }}: {{ booking.adult }}<br>
 			{{ 'childrens' | trans({}, "messages", locale) }}: {{ booking.children }}<br>
 			{{ 'babies' | trans({}, "messages", locale) }}: {{ booking.baby }}<br>
+		</p>
 
-			<div style="text-align:center">
-				<a style="text-decoration:none;padding: 6px 16px; color: #fff; text-align: center;cursor: pointer;white-space: nowrap;border: 1px solid #ccc;border-radius: 4px;font-size: 18px;background-color: #2196F3" target="_blank" href="{{receipt_url}}"> {{ 'refund' | trans({}, "messages", locale) }}</a>
-			</div>
-			
-			</p>
-			<hr>
-			<p>
-				{{ 'thanks' | trans({}, "messages", locale) }}, {{company.name}}.
-			</p>
-		</div>
+		<p style="text-align:center">
+			<a style="text-decoration:none;padding: 6px 16px; color: #fff; text-align: center;cursor: pointer;white-space: nowrap;border: 1px solid #ccc;border-radius: 4px;font-size: 18px;background-color: #2196F3" target="_blank" href="{{receipt_url}}"> {{ 'refund' | trans({}, "messages", locale) }}</a>
+		</p>
+		<hr>
+		<p>
+			{{ 'thanks' | trans({}, "messages", locale) }}, {{company.name}}.
+		</p>
 	</div>
 </body>
