@@ -529,6 +529,8 @@ class HomeNewController extends AbstractController
         
         $send = $this->sendEmail($booking, $request->getHost(), $translator, $terms);
         
+        $this->session->remove('start_time');
+        
             return new JsonResponse([
                 'status' => 1,
                 'message' => 'all valid',
@@ -543,7 +545,7 @@ class HomeNewController extends AbstractController
         $send = $this->emailer->sendBookingTwo($company, $booking, $terms);
 
         //remove the session start_time
-        //$this->session->remove('start_time');
+        
 
         return $send['status'] == 1 ?
             new JsonResponse([ 
@@ -703,16 +705,6 @@ class HomeNewController extends AbstractController
 
 
 
-
-
-
-
-
-
-
-
-
-
     private function sendEmail(Booking $booking, $domain, TranslatorInterface $translator, TermsConditions $terms){
 
         $em = $this->getDoctrine()->getManager();
@@ -727,8 +719,7 @@ class HomeNewController extends AbstractController
             : 
             false;
 
-
-  $tour = $booking->getClient()->getLocale()->getName() == 'pt_PT' 
+        $tour = $booking->getClient()->getLocale()->getName() == 'pt_PT' 
         ? 
             $booking->getAvailable()->getCategory()->getNamePt()
         :

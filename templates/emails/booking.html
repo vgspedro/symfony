@@ -6,7 +6,7 @@
 		<img src="{{ company.linkMyDomain~'/upload/gallery/'~company.logo }}" alt="{{company.name}}" width="80">
 		<p>
 			{{ 'hello' | trans({}, "messages", locale) }} {{ client.username }}, {{ 'welcome_purchase' | trans({}, "messages", locale) }} {{company.name}}!
-		<br>
+		<br><br>
 			{{ 'your_booking' | trans({}, "messages", locale) }} #{{ booking.id }} 
 			{{ 'is' | trans({}, "messages", locale) }} {{ status | trans({}, "messages", locale) }}, {{ 'soon_new_email_status' | trans({}, "messages", locale) }}
 		</p>
