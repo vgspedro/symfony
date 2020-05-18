@@ -568,13 +568,16 @@ class HomeNewController extends AbstractController
 
             $send = $this->emailer->sendBooking($company, $booking, $terms);
 
-            //$send = $this->sendEmail($booking, $request->getHost(), $translator);
-
-            return new JsonResponse([
-                'status' => 1,
-                'message' => $booking->getId(),
-                'data' => $ch
-            ]);
+            return $send['status'] == 1 ?
+                new JsonResponse([ 
+                     'status' => 1,
+                    'message' => $booking->getId(),
+                    'data' => $ch])
+                :
+                new JsonResponse([
+                    'status' => 1,
+                    'message' => $booking->getId(),
+                    'data' => $ch]);
         }
         else
             return new JsonResponse([
