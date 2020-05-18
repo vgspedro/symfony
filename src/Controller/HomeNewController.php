@@ -736,6 +736,8 @@ class HomeNewController extends AbstractController
         
         $terms = $em->getRepository(TermsConditions::class)->findOneBy(['locales' => $locale]);
 
+        try {
+
         $transport = (new \Swift_SmtpTransport($company->getEmailSmtp(), $company->getEmailPort(), $company->getEmailCertificade()))
             ->setUsername($company->getEmail())
             ->setPassword($company->getEmailPass());       
@@ -811,8 +813,25 @@ class HomeNewController extends AbstractController
                 ),
                 'text/html');
                 */
+
+$message->getHeaders()->addTextHeader('List-Unsubscribe', $company->getLinkMyDomain());
+            //$message->setReadReceiptTo($company->getEmail());
+            //$message->setPriority(2);
+
         $attachment ? $message->attach($attachment) : false;
-        $send = $mailer->send($message);
+        
+        $mailer->send($message);
+
+        return ['status' => 1];
+
+        }
+
+        catch(Exception $e) {
+            return ['status' => $e->getMessage()];  
+        }
+
+
+
     }
 
 
