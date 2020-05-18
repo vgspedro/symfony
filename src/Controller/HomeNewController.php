@@ -467,6 +467,8 @@ class HomeNewController extends AbstractController
             $booking->setTimeEvent($available->getDatetimeStart());
             $available->setStock($available->getStock() - $paxCount);
 
+            $booking->setDepositAmount(Money::EUR(0));
+            
             $em->persist($available);
             $em->persist($client);
             $em->persist($booking);
@@ -522,9 +524,11 @@ class HomeNewController extends AbstractController
 
         $terms = $em->getRepository(TermsConditions::class)->findOneBy(['locales' => $booking->getClient()->getLocale()]);
         //Send email with pdf to client
-        $send = $this->sendBooking($company, $booking, $terms, $translator);
+        //$send = $this->sendBooking($company, $booking, $terms, $translator);
 
-            //$send = $this->sendEmail($booking, $request->getHost(), $translator);
+        
+        $send = $this->sendEmail($booking, $request->getHost(), $translator, $terms);
+        
             return new JsonResponse([
                 'status' => 1,
                 'message' => 'all valid',
@@ -534,7 +538,7 @@ class HomeNewController extends AbstractController
             ]);
 
 
-        $terms = $em->getRepository(TermsConditions::class)->findOneBy(['locales' => $booking->getClient()->getLocale()]);
+
         //Send email with pdf to client
         $send = $this->emailer->sendBookingTwo($company, $booking, $terms);
 
@@ -623,7 +627,7 @@ class HomeNewController extends AbstractController
     **/
     public function sendBooking(Company $company, Booking $booking, TermsConditions $terms, TranslatorInterface $translator){
 
-/*
+
         $pdf = $this->pdf_gen->voucher($company, $booking, $terms, 'S');
 
         $attachment = $pdf['status'] == 1
@@ -637,7 +641,7 @@ class HomeNewController extends AbstractController
             $booking->getAvailable()->getCategory()->getNamePt()
         :
             $booking->getAvailable()->getCategory()->getNameEn();
-*/
+
         try {
             // Create the Transport
             $transport = (new \Swift_SmtpTransport($company->getEmailSmtp(), $company->getEmailPort(), $company->getEmailCertificade()))
@@ -709,14 +713,24 @@ class HomeNewController extends AbstractController
 
 
 
-    private function sendEmail(Booking $booking, $domain, TranslatorInterface $translator){
+    private function sendEmail(Booking $booking, $domain, TranslatorInterface $translator, TermsConditions $terms){
+
+        $em = $this->getDoctrine()->getManager();
+
+        $company = $em->getRepository(Company::class)->find(1);
+
+        $pdf = $this->pdf_gen->voucher($company, $booking, $terms, 'S');
+
+        $attachment = $pdf['status'] == 1
+            ? 
+            new \Swift_Attachment($pdf['pdf'], $translator->trans('booking').'#'.$booking->getId().'.pdf', 'application/pdf')
+            : 
+            false;
 
         $em = $this->getDoctrine()->getManager();
 
         $category = $booking->getAvailable()->getCategory();
-        
-        $company = $em->getRepository(Company::class)->find(1);
-        
+                
         $client = $booking->getClient();
         
         $locale = $client->getLocale();
@@ -747,6 +761,8 @@ class HomeNewController extends AbstractController
                 $this->renderView(
                     'emails/booking-'.$locale ->getName().'.html.twig',
                     [
+
+
                         'id' => $booking->getId(),
                         'username' => $client->getUsername(),
                         'email' => $client->getEmail(),
@@ -768,7 +784,7 @@ class HomeNewController extends AbstractController
                 ),
                 'text/html'
             );
-        
+        $attachment ? $message->attach($attachment) : false;
         $send = $mailer->send($message);
     }
 
