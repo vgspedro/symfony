@@ -623,6 +623,7 @@ class HomeNewController extends AbstractController
     **/
     public function sendBooking(Company $company, Booking $booking, TermsConditions $terms, TranslatorInterface $translator){
 
+/*
         $pdf = $this->pdf_gen->voucher($company, $booking, $terms, 'S');
 
         $attachment = $pdf['status'] == 1
@@ -636,7 +637,7 @@ class HomeNewController extends AbstractController
             $booking->getAvailable()->getCategory()->getNamePt()
         :
             $booking->getAvailable()->getCategory()->getNameEn();
-
+*/
         try {
             // Create the Transport
             $transport = (new \Swift_SmtpTransport($company->getEmailSmtp(), $company->getEmailPort(), $company->getEmailCertificade()))
@@ -666,7 +667,7 @@ class HomeNewController extends AbstractController
                 ->setTo([
                     $booking->getClient()->getEmail() => $booking->getClient()->getUsername(),
                     $company->getEmail() => $company->getName()])
-                ->addPart($text, 'text/plain')
+                ->addPart($subject, 'text/plain')
                 ->setBody(
                     $this->renderView(
                         'emails/booking.html',
@@ -681,10 +682,10 @@ class HomeNewController extends AbstractController
                     ),
                 'text/html');
             $message->getHeaders()->addTextHeader('List-Unsubscribe', $company->getLinkMyDomain());
-            $message->setReadReceiptTo($company->getEmail());
-            $message->setPriority(2);
+            //$message->setReadReceiptTo($company->getEmail());
+            //$message->setPriority(2);
 
-            $attachment ? $message->attach($attachment) : false;
+            //$attachment ? $message->attach($attachment) : false;
 
             $mailer->send($message);
 
