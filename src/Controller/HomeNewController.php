@@ -38,20 +38,23 @@ use App\Service\Menu;
 
 use App\Service\EmailSender;
 
+use App\Service\PdfGenerator;
+
 use Money\Money;
 
 class HomeNewController extends AbstractController
 {
 
     private $expiration = 900;
-
+    private $pdf_gen;
     private $session;
     private $emailer;
 
     
-    public function __construct(SessionInterface $session, EmailSender $emailer)
+    public function __construct(SessionInterface $session, EmailSender $emailer, PdfGenerator $pdf_gen)
     {
         $this->emailer = $emailer;
+        $this->pdf_gen = $pdf_gen;
         $this->session = $session;
     }
     
@@ -516,9 +519,12 @@ class HomeNewController extends AbstractController
             'expiration' => 0
         ]);
 
-/*
 
-            $send = $this->sendEmail($booking, $request->getHost(), $translator);
+        $terms = $em->getRepository(TermsConditions::class)->findOneBy(['locales' => $booking->getClient()->getLocale()]);
+        //Send email with pdf to client
+        $send = $this->sendBooking($company, $booking, $terms, $translator);
+
+            //$send = $this->sendEmail($booking, $request->getHost(), $translator);
             return new JsonResponse([
                 'status' => 1,
                 'message' => 'all valid',
@@ -526,14 +532,14 @@ class HomeNewController extends AbstractController
                 'mail' => $send,
                 'expiration' => 0
             ]);
-*/
+
 
         $terms = $em->getRepository(TermsConditions::class)->findOneBy(['locales' => $booking->getClient()->getLocale()]);
         //Send email with pdf to client
-        $send = $this->emailer->sendBooking($company, $booking, $terms);
+        $send = $this->emailer->sendBookingTwo($company, $booking, $terms);
 
         //remove the session start_time
-        $this->session->remove('start_time');
+        //$this->session->remove('start_time');
 
         return $send['status'] == 1 ?
             new JsonResponse([ 
@@ -602,6 +608,104 @@ class HomeNewController extends AbstractController
         $this->session->set('_locale', $lang);
         return $this->redirectToRoute($page);
     }
+
+
+
+
+
+
+
+
+/**
+    * Send email of Booking to Client with a pdf
+    *@param Company Object, Booking Object, Terms Conditions Object
+    *@return array
+    **/
+    public function sendBooking(Company $company, Booking $booking, TermsConditions $terms, TranslatorInterface $translator){
+
+        $pdf = $this->pdf_gen->voucher($company, $booking, $terms, 'S');
+
+        $attachment = $pdf['status'] == 1
+            ? 
+            new \Swift_Attachment($pdf['pdf'], $translator->trans('booking').'#'.$booking->getId().'.pdf', 'application/pdf')
+            : 
+            false;
+
+        $tour = $booking->getClient()->getLocale()->getName() == 'pt_PT' 
+        ? 
+            $booking->getAvailable()->getCategory()->getNamePt()
+        :
+            $booking->getAvailable()->getCategory()->getNameEn();
+
+        try {
+            // Create the Transport
+            $transport = (new \Swift_SmtpTransport($company->getEmailSmtp(), $company->getEmailPort(), $company->getEmailCertificade()))
+            ->setUsername($company->getEmail())
+            ->setPassword($company->getEmailPass());       
+        
+            $mailer = new \Swift_Mailer($transport);
+                    
+            $subject = $tour.' '.$translator->trans('booking').' #'.$booking->getId().' ('.$translator->trans('pending').')';
+            
+            $receipt_url = '';
+
+            $text ='';
+            /* $this->translator->trans('hello').' '.$booking->getClient()->getUsername().'! \n'.
+                $this->translator->trans('your_booking').' #'.$booking->getId().' - '. $tour.' '.
+                $this->translator->trans('is').' '.$this->translator->trans('pending').', '.
+                $this->translator->trans('soon_new_email_status').'\n'.
+                $this->translator->trans('in_attach_info');
+*/
+            //Get the Receipt url if exits
+            if($booking->getStripePaymentLogs())
+                if($booking->getStripePaymentLogs()->getLogObj())
+                    $receipt_url = $booking->getStripePaymentLogs()->getLogObj()->receipt_url;
+
+            $message = (new \Swift_Message($subject))
+                ->setFrom([$company->getEmail() => $company->getName()])
+                ->setTo([
+                    $booking->getClient()->getEmail() => $booking->getClient()->getUsername(),
+                    $company->getEmail() => $company->getName()])
+                ->addPart($text, 'text/plain')
+                ->setBody(
+                    $this->renderView(
+                        'emails/booking.html',
+                        [
+                            'tour' => $tour,
+                            'booking' => $booking,
+                            'client' => $booking->getClient(),
+                            'status' => 'pending',
+                            'company' => $company,
+                            'receipt_url' => $receipt_url
+                        ]
+                    ),
+                'text/html');
+            $message->getHeaders()->addTextHeader('List-Unsubscribe', $company->getLinkMyDomain());
+            $message->setReadReceiptTo($company->getEmail());
+            $message->setPriority(2);
+
+            $attachment ? $message->attach($attachment) : false;
+
+            $mailer->send($message);
+
+            return ['status' => 1];
+        }
+
+        catch(Exception $e) {
+            return ['status' => $e->getMessage()];  
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
 
 
     private function sendEmail(Booking $booking, $domain, TranslatorInterface $translator){
