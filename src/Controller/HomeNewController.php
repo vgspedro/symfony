@@ -657,7 +657,7 @@ class HomeNewController extends AbstractController
             $receipt_url = '';
 
             $text ='';
-            $this->translator->trans('hello').' '.$booking->getClient()->getUsername()',' \n'.
+            $this->translator->trans('hello').' '.$booking->getClient()->getUsername().', \n'.
                 $this->translator->trans('your_booking').' #'.$booking->getId().' - '. $tour.' '.
                 $this->translator->trans('is').' '.$this->translator->trans('pending').', '.
                 $this->translator->trans('soon_new_email_status').'\n'.
