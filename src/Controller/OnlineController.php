@@ -342,24 +342,8 @@ class OnlineController extends AbstractController
         $em->persist($booking);
         $em->flush();
         
-        /*send email
-        $send = $this->sendEmail($booking, $translator);
-
-        return new JsonResponse([
-            'status' => 1,
-            'message' => 'Reembolso efetuado',
-            'data' => [
-                'txt' => $translator->trans($booking->getPaymentStatus()),
-                'status' => $booking->getPaymentStatus(),
-                'email' => $send
-            ]
-        ]);
-        */
-        
         if($booking->getClient()->getEmail()){
 
-            //$terms = $em->getRepository(TermsConditions::class)->findOneBy(['locales' => $booking->getClient()->getLocale()]);
-            
             //Send email to client
             $send = $this->emailer->sendBookingRefund($company, $booking);
 
@@ -478,63 +462,5 @@ class OnlineController extends AbstractController
             'booking' => $booking
             ]);
     }
-
-
-
-
-
-
-
-    private function sendEmail(Booking $booking,  $translator){
-
-        $em = $this->getDoctrine()->getManager();
-
-        $category = $booking->getAvailable()->getCategory();
-        $company = $em->getRepository(Company::class)->find(1);
-        $client = $booking->getClient();
-        $locale = $client->getLocale();
-
-        $transport = (new \Swift_SmtpTransport($company->getEmailSmtp(), $company->getEmailPort(), $company->getEmailCertificade()))
-            ->setUsername($company->getEmail())
-            ->setPassword($company->getEmailPass());       
-        
-        $locale->getName() == 'pt_PT' ? $category->getNamePt() : $category->getNameEn();
-        
-        $mailer = new \Swift_Mailer($transport);
-                    
-        $subject =  $translator->trans('booking').' #'.$booking->getId().' ('.$translator->trans('refund', [], 'messages', $locale->getName()).')';
-        
-        if($booking->getStripePaymentLogs())
-            if($booking->getStripePaymentLogs()->getLogObj())
-                $receipt_url = $booking->getStripePaymentLogs()->getLogObj()->receipt_url;
-
-        $message = (new \Swift_Message($subject))
-            ->setFrom([$company->getEmail() => $company->getName()])
-            ->setTo([$client->getEmail() => $client->getUsername(), $company->getEmail() => $company->getName()])
-            ->addPart($subject, 'text/plain')
-            ->setBody(
-                $this->renderView(
-                    'emails/refund.html',
-                    [
-                        'id' => $booking->getId(),
-                        'hello' => $translator->trans('hello', [], 'messages', $locale->getName()),
-                        'name' => $client->getUsername(),
-                        'thanks' => $translator->trans('thanks', [], 'messages', $locale->getName()),
-                        'company_name' => $company->getName(),
-                        'logo' => $company->getLinkMyDomain().'/upload/gallery/'.$company->getLogo(),
-                        'receipt' => $translator->trans('receipt', [], 'messages', $locale->getName()),
-                        'refund_txt' => $translator->trans('refund_txt', [], 'messages', $locale->getName()),
-                        'receipt_url' => $receipt_url ? $receipt_url : '',
-                        'local' => $locale->getName()
-                    ]
-                ),
-                'text/html'
-            );
-        
-        return $mailer->send($message);
-    }
-
-
-
 
 }
