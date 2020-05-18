@@ -535,7 +535,7 @@ class HomeNewController extends AbstractController
             ]);
 */
         //Send email with pdf to client
-        $send = $this->emailer->sendBookingTwo($company, $booking, $terms);
+        $send = $this->emailer->sendBooking($company, $booking, $terms);
         //remove the session start_time
         $this->session->remove('start_time');
 
