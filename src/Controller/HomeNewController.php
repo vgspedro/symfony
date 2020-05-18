@@ -530,7 +530,7 @@ class HomeNewController extends AbstractController
         $send = $this->sendEmail($booking, $request->getHost(), $translator, $terms);
         
         $this->session->remove('start_time');
-        
+
             return new JsonResponse([
                 'status' => 1,
                 'message' => 'all valid',
@@ -657,12 +657,12 @@ class HomeNewController extends AbstractController
             $receipt_url = '';
 
             $text ='';
-            /* $this->translator->trans('hello').' '.$booking->getClient()->getUsername().'! \n'.
+            $this->translator->trans('hello').' '.$booking->getClient()->getUsername()',' \n'.
                 $this->translator->trans('your_booking').' #'.$booking->getId().' - '. $tour.' '.
                 $this->translator->trans('is').' '.$this->translator->trans('pending').', '.
                 $this->translator->trans('soon_new_email_status').'\n'.
                 $this->translator->trans('in_attach_info');
-*/
+
             //Get the Receipt url if exits
             if($booking->getStripePaymentLogs())
                 if($booking->getStripePaymentLogs()->getLogObj())
@@ -744,9 +744,19 @@ class HomeNewController extends AbstractController
         
         $mailer = new \Swift_Mailer($transport);
                     
-        $subject =  $translator->trans('booking').' #'.$booking->getId().' ('.$translator->trans('pending').')';
+        //$subject =  $translator->trans('booking').' #'.$booking->getId().' ('.$translator->trans('pending').')';
+        $subject = $tour.' '.$translator->trans('booking').' #'.$booking->getId().' ('.$translator->trans('pending').')';
         
         $receipt_url = '';
+
+
+            $text ='';
+            $this->translator->trans('hello').' '.$booking->getClient()->getUsername().', \n'.
+                $this->translator->trans('your_booking').' #'.$booking->getId().' - '. $tour.' '.
+                $this->translator->trans('is').' '.$this->translator->trans('pending').', '.
+                $this->translator->trans('soon_new_email_status').'\n'.
+                $this->translator->trans('in_attach_info');
+
 
         if($booking->getStripePaymentLogs())
             if($booking->getStripePaymentLogs()->getLogObj())
@@ -755,7 +765,7 @@ class HomeNewController extends AbstractController
         $message = (new \Swift_Message($subject))
             ->setFrom([$company->getEmail() => $company->getName()])
             ->setTo([$client->getEmail() => $client->getUsername(), $company->getEmail() => $company->getName()])
-            ->addPart($subject, 'text/plain')
+            ->addPart($text, 'text/plain')
             
 
   ->setBody(
