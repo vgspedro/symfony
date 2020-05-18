@@ -687,7 +687,7 @@ class HomeNewController extends AbstractController
                         ]
                     ),
                 'text/html');
-            $message->getHeaders()->addTextHeader('List-Unsubscribe', 'https://tarugabenagiltours.pt'));
+            $message->getHeaders()->addTextHeader('List-Unsubscribe', 'https://tarugabenagiltours.pt');
             //$message->setReadReceiptTo($company->getEmail());
             //$message->setPriority(2);
 
