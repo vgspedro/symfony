@@ -727,6 +727,14 @@ class HomeNewController extends AbstractController
             : 
             false;
 
+
+  $tour = $booking->getClient()->getLocale()->getName() == 'pt_PT' 
+        ? 
+            $booking->getAvailable()->getCategory()->getNamePt()
+        :
+            $booking->getAvailable()->getCategory()->getNameEn();
+
+
         $em = $this->getDoctrine()->getManager();
 
         $category = $booking->getAvailable()->getCategory();
