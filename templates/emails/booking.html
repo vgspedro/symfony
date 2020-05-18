@@ -6,12 +6,14 @@
 		<img src="{{ company.linkMyDomain~'/upload/gallery/'~company.logo }}" alt="{{company.name}}" width="80">
 		<p>
 			{{ 'hello' | trans({}, "messages", locale) }} {{ client.username }}, {{ 'welcome_purchase' | trans({}, "messages", locale) }} {{company.name}}!
-		<br><br>
+		<br>
 			{{ 'your_booking' | trans({}, "messages", locale) }} #{{ booking.id }} 
 			{{ 'is' | trans({}, "messages", locale) }} {{ status | trans({}, "messages", locale) }}, {{ 'soon_new_email_status' | trans({}, "messages", locale) }}
-		<br><br>
+		</p>
+		<p>
 			{{ 'in_attach_info' | trans({}, "messages", locale) }}
-		<br><br>
+		</p>
+		<p>
 			{{ 'booking_details' | trans({}, "messages", locale) }}:
 		</p>
 		<hr>
@@ -27,7 +29,7 @@
 		{% if booking.available.category.warrantyPayment %}
 
 		<p style="text-align:center">
-			<a style="text-decoration:none;padding: 6px 16px;color:#fff;text-align:center;cursor:pointer;white-space:nowrap;border:1px solid #ccc;border-radius:4px;font-size:18px;background-color:#2196F3" target="_blank" href="{{receipt_url}}"> {{ 'receipt' | trans({}, "messages", locale) }}</a>
+			<a style="text-decoration:none;padding: 6px 16px;color:#fff;text-align:center;cursor:pointer;white-space:nowrap;border:1pxsolid #ccc;border-radius:4px;font-size:18px;background-color:#2196F3" target="_blank" href="{{receipt_url}}"> {{ 'receipt' | trans({}, "messages", locale) }}</a>
 		</p>
 
 		{% endif %}
