@@ -20,9 +20,7 @@ use App\Service\EmailSender;
 
 use Money\Money;
 
-
 class OnlineController extends AbstractController
-
 {
 
     private $emailer;

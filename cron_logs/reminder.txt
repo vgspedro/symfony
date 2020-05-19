@@ -71,3 +71,8 @@
 2020-01-24 19:48:24 - Next day booking reminder 25/01/2020, 1xBookings[4993, ]
 2020-01-24 19:48:46 - Next day booking reminder 25/01/2020, 1xBookings[4993, ]
 2020-01-24 20:01:58 - Next day booking reminder 25/01/2020, 2xBookings[300, 301, ]
+2020-05-19 10:03:10 - Next day booking reminder 20/05/2020, 0xBookings[]
+2020-05-19 10:03:42 - Next day booking reminder 20/05/2020, 0xBookings[]
+2020-05-19 10:08:16 - Next day booking reminder 20/05/2020, 0xBookings[]
+2020-05-19 10:10:18 - Next day booking reminder 20/05/2020, 2xBookings[278, 279, ]
+2020-05-19 10:15:48 - Next day booking reminder 20/05/2020, 2xBookings[278, 279, ]

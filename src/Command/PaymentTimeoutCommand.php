@@ -97,6 +97,8 @@ class PaymentTimeoutCommand extends Command
         $filesystem->touch($this->kernel->getProjectDir().'/cron_logs/paytimeout.txt', time());
 
         $output->writeln($txt); 
+
+        return 0;
     
     }
 }

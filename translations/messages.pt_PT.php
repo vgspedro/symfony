@@ -5,7 +5,7 @@ return array(
     'unavailable' => 'Indisponivel',
     'minutes' => 'minutos',
     'reminder_txt' => 'Olá, não se esqueça que ...',
-    'reminder_txt_body' => 'Olá a sua reserva está marcada para amanhã com ',
+    'reminder_txt_body' => 'A sua reserva está marcada para amanhã com ',
 
     'check_in_time' => 'O Check-in é feito 30 minutos antes na nossa Ticket Shop.',
     'at' => 'às',

@@ -607,7 +607,7 @@ class HomeNewController extends AbstractController
         return $this->redirectToRoute($page);
     }
 
-
+/*
 
 
 
@@ -703,7 +703,8 @@ class HomeNewController extends AbstractController
             return ['status' => $e->getMessage()];  
         }
     }
-
+*/
+    
     //CHECK IF USER IS ON INTERVAL OF SUBMIT BOOKING ORDER 
     private function getExpirationTime($request) {
 
