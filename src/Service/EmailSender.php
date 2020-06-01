@@ -152,7 +152,7 @@ class EmailSender
                             'tour' => $tour,
                             'booking' => $booking,
                             'client' => $booking->getClient(),
-                            'status' => 'pending',
+                            'status' => $this->translator->trans($booking->getStatus(), [], 'messages', $booking->getClient()->getLocale()->getName()),
                             'company' => $company,
                         ]
                     ),
@@ -161,7 +161,8 @@ class EmailSender
             $message->setReadReceiptTo($company->getEmail());
             $message->setPriority(1);
 
-            $attachment ? $message->attach($attachment) : false;
+            if($attachment)
+                $message->attach($attachment);
 
             $mailer->send($message);
 
