@@ -1,0 +1,3 @@
+RewriteEngine On
+#RewriteCond %{HTTP_HOST} ^demo.tarugabenagiltours.pt$ [NC]
+RewriteRule ^(.*)$ https://demo.tarugabenagiltours.pt%{REQUEST_URI} [R=301,NC,L,QSA]
