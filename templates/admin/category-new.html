@@ -21,101 +21,97 @@ input, select{color: #000!important}
 
   <div class="w3-row w3-border w3-sand">
 
-<div class="w3-row-padding">
-    <div class="w3-col s6 l2 m2" title="Em destaque no banner">
-      {{ form_label(form.highlight)}}<br>
-      {{ form_widget(form.highlight)}}
-    </div>
-
-    <div class="w3-col s6 l2 m2" title="Vamos mostrar esta Categoria aos clientes no site">
-      {{ form_label(form.is_active)}}<br>
-      {{ form_widget(form.is_active)}} 
-    </div>
-
-    <div class="w3-col s6 l2 m2" title="Veiculo é partilhado por compras individuais?">
-      {{ form_label(form.shared)}}<br>
-      {{ form_widget(form.shared)}}
-    </div>
-
-    <div class="w3-col s6 l2 m3" title="A duração desta Categoria">
-      <div style="position:relative">
-      {{ form_label(form.duration) }}
-      {{ form_widget(form.duration) }}
-    </div>
-    </div>
-
-    <div class="w3-col s6 l2 m3" title="A lotação desta Categoria">
-      {{ form_label(form.availability) }}
-      {{ form_widget(form.availability) }}
-    </div>
-
-    <div class="w3-col s12 l4 m12 w3-center" title="Vamos meter uma imagem para esta categoria">
-      <div class="w3-white w3-center w3-margin-bottom w3-border w3-imput w3-section set-image-container w3-padding" style="cursor:pointer" onclick="$('.set-image').trigger('click')">
-        <i class="fa fa-camera w3-jumbo" style="color:#05788d"></i>
+    <div class="w3-row-padding">
+      <div class="w3-col s12 w3-center w3-text-indigo"><h3>Especificações</h3></div>
+      <div class="w3-col s4 l2 m2" title="Em destaque no banner">
+        {{ form_label(form.highlight)}}<br>
+        {{ form_widget(form.highlight)}}
       </div>
-      {{ form_widget(form.image)}}
-    </div>
-</div>
-
-<div class="w3-row-padding">
-
-    <div class="w3-col l6 m6 s12 w3-margin-bottom">
-      {{ form_label(form.name_pt) }}
-      {{ form_widget(form.name_pt) }}
-    </div>
-      
-    <div class="w3-col l6 m6 s12 w3-margin-bottom">
-      {{ form_label(form.name_en) }}
-      {{ form_widget(form.name_en)}}
-    </div>
-      
-    <div class="w3-col l6 m6 s6 w3-margin-bottom shared">
-      {{ form_label(form.children_price)}}
-      {{ form_widget(form.children_price)}}
-    </div>
-      
-    <div class="w3-col l6 m6 m6 s6 w3-margin-bottom">
-      <span class="shared">{{ form_label(form.adult_price)}}</span>
-      <label class="not-shared w3-hide">{%trans%}vehicle_price{%endtrans%}</label>
-      {{ form_widget(form.adult_price)}}
-    </div>
-      
-    <div class="w3-col l6 m12 s12 w3-margin-bottom">
-      {{ form_label(form.description_pt)}}
-      {{ form_widget(form.description_pt)}}
-    </div>
-      
-    <div class="w3-col l6 m12 s12 w3-margin-bottom">
-      {{ form_label(form.description_en)}}
-      {{ form_widget(form.description_en)}}
-    </div>
-    
-</div>
-
-<div class="w3-row-padding">
-
-     <div class="w3-col l2" title="Garantia da pagamento mostra ao cliente q tem q preencher os dados do cartão de crédito">
-      {{ form_label(form.warranty_payment)}}<br>
-      {{ form_widget(form.warranty_payment)}}
+      <div class="w3-col s4 l2 m2" title="Vamos mostrar esta Categoria aos clientes no site">
+        {{ form_label(form.is_active)}}<br>
+        {{ form_widget(form.is_active)}} 
+      </div>
+      <div class="w3-col s4 l1 m2" title="Veiculo é partilhado diversas compras/reservas individuais?">
+        {{ form_label(form.shared)}}<br>
+        {{ form_widget(form.shared)}}
+      </div>
+      <div class="w3-col s12 l2 m3" title="A duração desta Categoria">
+        <div style="position:relative">
+          {{ form_label(form.duration) }}
+          {{ form_widget(form.duration) }}
+        </div>
+      </div>
+      <div class="w3-col s12 l2 m3" title="A lotação desta Categoria">
+        {{ form_label(form.availability) }}
+        {{ form_widget(form.availability) }}
+      </div>
+      <div class="w3-col s12 l3 m12 w3-center" title="Vamos meter uma imagem para esta categoria">
+        <div class="w3-white w3-center w3-margin-bottom w3-border w3-imput w3-section set-image-container w3-padding" style="cursor:pointer" onclick="$('.set-image').trigger('click')">
+          <i class="fa fa-camera w3-jumbo" style="color:#05788d"></i>
+        </div>
+        {{ form_widget(form.image)}}
+      </div>
     </div>
 
-    <div class="w3-col l4 m4 s6" title="Depósito %">
-      {{ form_label(form.deposit) }}
-      {{ form_widget(form.deposit) }}
+    <div class="w3-row-padding">
+      <div class="w3-col s12 w3-center w3-text-indigo"><h3>Informações</h3></div>
+      <div class="w3-col l6 m6 s12 w3-margin-bottom">
+        {{ form_label(form.name_pt) }}
+        {{ form_widget(form.name_pt) }}
+      </div>
+      <div class="w3-col l6 m6 s12 w3-margin-bottom">
+        {{ form_label(form.name_en) }}
+        {{ form_widget(form.name_en)}}
+      </div>
+      <div class="w3-col l6 m12 s12 w3-margin-bottom">
+        {{ form_label(form.description_pt)}}
+        {{ form_widget(form.description_pt)}}
+      </div>
+      <div class="w3-col l6 m12 s12 w3-margin-bottom">
+        {{ form_label(form.description_en)}}
+        {{ form_widget(form.description_en)}}
+      </div>
     </div>
-</div>
 
-<div class="w3-row-padding">
+    <div class="w3-row-padding">
+      <div class="w3-col s12 w3-center w3-text-indigo"><h3>Preços</h3></div>
+      <div class="w3-col l4 m6 s12 w3-margin-bottom shared">
+        {{ form_label(form.children_price)}}
+        {{ form_widget(form.children_price)}}
+      </div> 
+      <div class="w3-col l4 m6 m6 s12 w3-margin-bottom">
+        <span class="shared">{{ form_label(form.adult_price)}}</span>
+        <label class="not-shared w3-hide">{%trans%}vehicle_price{%endtrans%}</label>
+        {{ form_widget(form.adult_price)}}
+      </div>
+    </div>
 
-    <div class="w3-col l6" title="Texto PT a informar o cliente sobre a garantia da pagamento">
-      {{ form_label(form.warranty_payment_pt)}}<br>
-      {{ form_widget(form.warranty_payment_pt)}}
+    <div class="w3-row-padding">
+      <div class="w3-col s12 w3-center w3-text-indigo"><h3>Pagamento</h3></div>
+       <div class="w3-col l2" title="Garantia da pagamento mostra ao cliente q tem q preencher os dados do cartão de crédito">
+        {{ form_label(form.warranty_payment)}}<br>
+        {{ form_widget(form.warranty_payment)}}
+      </div>
+      <div class="w3-col l4 m4 s6" title="Depósito %">
+        {{ form_label(form.deposit) }}
+        {{ form_widget(form.deposit) }}
+      </div>
     </div>
-    <div class="w3-col l6" title="Texto EN a informar o cliente sobre a garantia da pagamento">
-      {{ form_label(form.warranty_payment_en)}}<br>
-      {{ form_widget(form.warranty_payment_en)}}
+    <div class="w3-row-padding">
+      <div class="w3-col l6" title="Texto PT a informar o cliente sobre a garantia da pagamento">
+        {{ form_label(form.warranty_payment_pt)}}<br>
+        {{ form_widget(form.warranty_payment_pt)}}
+      </div>
+      <div class="w3-col l6" title="Texto EN a informar o cliente sobre a garantia da pagamento">
+        {{ form_label(form.warranty_payment_en)}}<br>
+        {{ form_widget(form.warranty_payment_en)}}
+      </div>
     </div>
-</div>
+
+
+
+    <div class="w3-row-padding">
+      <div class="w3-col s12 w3-center w3-text-indigo"><h3>Eventos</h3></div>
 
     <div class="w3-col l3 m1 s0 w3-hide-small">&nbsp;</div>
 
@@ -147,6 +143,11 @@ input, select{color: #000!important}
       <div class="w3-hide">
         {{ form_widget(form.submit)}}
       </div>
+
+
+</div>
+
+
 
       <div class="w3-col s12 w3-margin-top w3-margin-bottom w3-border-top">
         <span class="w3-btn w3-border w3-green w3-right w3-margin-top" onclick="$('#category-form').trigger('submit')">
