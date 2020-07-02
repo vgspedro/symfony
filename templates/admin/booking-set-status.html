@@ -2,7 +2,6 @@
     .icon{background:url("{{ asset('images/icon-') }}{{ seeBooking.language }}.jpg");height: 48px;width: 48px;background-size: contain}
     .bolder{font-weight: bolder}
   </style>
-
     <form id="bookingstatus" class="w3-col w3-row-padding">
       <div class="w3-col l4 m6 s12">
         <input type="hidden" name="index" value="{{ seeBooking.index }}">
@@ -34,6 +33,9 @@
         <label><i class="fas fa-clock"></i> Hora</label>
         <input class="w3-input w3-border" readonly value="{{ seeBooking.hour }}">
       </div>
+    
+      {% if seeBooking.shared %}
+
       <div class="w3-col l4 m4 s4">
         <label><i class="far fa-user"></i> Adulto</label>
          <input class="w3-input w3-border" readonly value="{{ seeBooking.adult }}">
@@ -46,6 +48,9 @@
         <label><i class="far fa-smile"></i> Bébé</label>
          <input class="w3-input w3-border" readonly value="{{ seeBooking.baby }}">
       </div>
+
+      {% endif %}
+
       <div class="w3-col l4 m4 s12">
         <label><i class="fas fa-user-cog"></i> Alterar Estado</label>
         <select id='bookingstatus_status' name="status" class="form-control">

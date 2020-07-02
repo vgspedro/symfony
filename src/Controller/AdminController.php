@@ -137,6 +137,7 @@ class AdminController extends AbstractController
                 'date' => $booking->getDateEvent()->format('d/m/Y'),
                 'hour' => $booking->getTimeEvent()->format('H:i'),
                 'tour' => $booking->getAvailable()->getCategory()->getNamePt(),
+                'shared' => $booking->getAvailable()->getCategory()->getShared(),
                 'notes' => $booking->getNotes(),
                 'user_id' => $client->getId(),   
                 'username' => $client->getUsername(),
