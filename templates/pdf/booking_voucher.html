@@ -119,7 +119,7 @@
 
 	  	<tr>
 	    	<td style="text-align:center">{{booking.adult}}</td>
-	    	<td>{{booking.client.locale.name == 'pt_PT' ? booking.available.category.smallDescritptionPt : booking.available.category.smallDescritptionEn }}</td>
+	    	<td>{{booking.client.locale.name == 'pt_PT' ? booking.available.category.smallDescriptionPt : booking.available.category.smallDescriptionEn }}</td>
 	    	<td style="text-align:right">{{(booking.available.category.adultPrice.amount/100)|number_format(2, '.', ',')}}€</td>
 	    	<td style="text-align:right">{{(booking.available.category.adultPrice.amount/100 * booking.adult)|number_format(2, '.', ',')}}€</td>
 	  	</tr>
