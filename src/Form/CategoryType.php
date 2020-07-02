@@ -106,7 +106,7 @@ class CategoryType extends AbstractType
             ->add('shared', CheckboxType::class, array(
                 'label'    => 'Partilhado',
                 'required' => false,
-                'attr' => ['class' => 'w3-check']
+                'attr' => ['class' => 'w3-check', 'onclick' => 'setShared()']
             ))
 
             ->add('highlight', CheckboxType::class, array(

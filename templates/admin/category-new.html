@@ -69,13 +69,14 @@ input, select{color: #000!important}
       {{ form_widget(form.name_en)}}
     </div>
       
-    <div class="w3-col l6 m6 s6 w3-margin-bottom">
+    <div class="w3-col l6 m6 s6 w3-margin-bottom shared">
       {{ form_label(form.children_price)}}
       {{ form_widget(form.children_price)}}
     </div>
       
     <div class="w3-col l6 m6 m6 s6 w3-margin-bottom">
-      {{ form_label(form.adult_price)}}
+      <span class="shared">{{ form_label(form.adult_price)}}</span>
+      <label class="not-shared w3-hide">{%trans%}vehicle_price{%endtrans%}</label>
       {{ form_widget(form.adult_price)}}
     </div>
       
@@ -251,5 +252,19 @@ $('#category_duration').datetimepicker({format: 'HH:mm', ignoreReadonly:true ,ic
     })
   //}, 500)
 })
+
+setTimeout(function(){ $('#category_shared').prop( "checked", true )}, 0);
+
+function setShared(){
+  if($('#category_shared').is(":checked")){
+    $('.shared').removeClass('w3-hide') 
+    $('.not-shared').addClass('w3-hide')
+  }
+  else{
+    $('.shared').addClass('w3-hide') 
+    $('.not-shared').removeClass('w3-hide')
+  }
+}
+
 </script>
 

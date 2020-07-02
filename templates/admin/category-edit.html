@@ -73,29 +73,16 @@
         {{ form_widget(form.name_en) }}
       </div>
 
-      {% if category.shared %}
-
-      <div class="w3-col l6 m6 s6 w3-margin-bottom">
-        {{ form_label(form.children_price)}}
-        {{ form_widget(form.children_price.amount)}}
-      </div>
-      <div class="w3-col l6 m6 m6 s6 w3-margin-bottom">
-        {{ form_label(form.adult_price)}}
-        {{ form_widget(form.adult_price.amount)}}
-      </div>
-
-      {%else%}
-
-      <div class="w3-col l6 m6 s6 w3-margin-bottom w3-hide">
-        {{ form_label(form.children_price)}}
-        {{ form_widget(form.children_price.amount)}}
-      </div>
-      <div class="w3-col l6 m6 m6 s6 w3-margin-bottom">
-        <label>Preço Veiculo (€)*</label>
-        {{ form_widget(form.adult_price.amount)}}
-      </div>
-
-      {% endif %}
+      <div class="w3-col l6 m6 s6 w3-margin-bottom shared">
+      {{ form_label(form.children_price)}}
+      {{ form_widget(form.children_price)}}
+    </div>
+      
+    <div class="w3-col l6 m6 m6 s6 w3-margin-bottom">
+      <span class="shared">{{ form_label(form.adult_price)}}</span>
+      <label class="not-shared w3-hide">{%trans%}vehicle_price{%endtrans%}</label>
+      {{ form_widget(form.adult_price)}}
+    </div>
 
       <div class="w3-col s12 w3-margin-bottom">
         {{ form_label(form.description_pt)}}
@@ -257,6 +244,21 @@ $('#category-form').on('submit',function(e){
     })
 //  }, 500)
 })
+
+
+
+function setShared(){
+  if($('#category_shared').is(":checked")){
+    $('.shared').removeClass('w3-hide') 
+    $('.not-shared').addClass('w3-hide')
+  }
+  else{
+    $('.shared').addClass('w3-hide') 
+    $('.not-shared').removeClass('w3-hide')
+  }
+}
+
+setShared()
 
 </script>
 

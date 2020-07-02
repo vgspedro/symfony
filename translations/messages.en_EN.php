@@ -333,4 +333,5 @@ www.consumoalgarve.pt or to any of the entities duly indicated in the list avail
 'max_pax_10' => 'Boat 10 people Máx.',
 'lotation' => 'Lotation/Quantity *',
 'duration' => 'Duration *',
+'vehicle_price' => 'Vehicle Price (€)*',
 );
