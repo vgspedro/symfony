@@ -35,8 +35,8 @@ table.dataTable thead > tr > th {padding-left: 8px!important}
       <th class="w3-center">Acções</th>    
       <th class="w3-center">Nome PT</th>    
       <th class="w3-center">Nome EN</th>    
-      <th class="w3-center">Preço Adulto</th>    
-      <th class="w3-center">Preço Criança</th>    
+      <th class="w3-center w3-hide">Preço Adulto</th>    
+      <th class="w3-center w3-hide">Preço Criança</th>    
       <th class="w3-center">Descriçao PT</th>    
       <th class="w3-center">Descriçao EN</th>    
       <th class="w3-center">Horas</th>    
@@ -81,8 +81,8 @@ table.dataTable thead > tr > th {padding-left: 8px!important}
         </td>
         <td>{{ category.namePt }}</td>
         <td>{{ category.nameEn }}</td>
-        <td class="w3-center">{{ category.adultAmount}}</td>
-        <td class="w3-center">{{ category.childrenAmount}}</td>
+        <td class="w3-center w3-hide">{{ category.adultAmount}}</td>
+        <td class="w3-center w3-hide">{{ category.childrenAmount}}</td>
         <td>{{ category.descriptionPt }}</td>
         <td>{{ category.descriptionEn }}</td>
         <td>{{ category.event }}</td>
@@ -135,8 +135,8 @@ table.dataTable thead > tr > th {padding-left: 8px!important}
         <td></td>
         <td></td>
         <td></td>
-        <td></td>
-        <td></td>
+        <td class="w3-hide"></td>
+        <td class="w3-hide"></td>
         <td></td>
         <td></td>
         <td></td>
