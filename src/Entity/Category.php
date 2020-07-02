@@ -69,6 +69,10 @@ class Category
 
     /** @ORM\Column(type="boolean", name="is_active", options={"default":0}) */
     private $isActive;
+    
+    /** @ORM\Column(type="boolean", name="shared", options={"default":0}) */
+    private $shared;
+
     /**
      * @ORM\Column(type="string", name="image")
      * @Assert\File(mimeTypes={"image/gif", "image/png", "image/jpeg"})
@@ -204,6 +208,15 @@ class Category
 
     public function setIsActive($isActive) {
         $this->isActive = $isActive;
+    }
+
+
+    public function getShared() {
+        return $this->shared;
+    }
+
+    public function setShared($shared) {
+        $this->shared = $shared;
     }
 
     public function getId()

@@ -216,6 +216,7 @@ class CategoryController extends AbstractController
                 'duration' => $c->getDuration(),
                 'deposit' => $c->getDeposit()*100,
                 'event' => $ev,
+                'shared' => $c->getShared(),
                 'order' => $c->getOrderBy()
              );
 

@@ -37,8 +37,8 @@ class CategoryType extends AbstractType
             ->add('availability', IntegerType::class,
             array(
                 'required' => true,
-                'label' => 'Lotação *',
-                'attr' => ['class' => 'w3-input w3-border w3-white','placeholder'=>'Lotação *',]
+                'label' => 'lotation',
+                'attr' => ['class' => 'w3-input w3-border w3-white','placeholder'=>'lotation',]
             ))
             ->add('deposit', PercentType::class,
             array(
@@ -52,8 +52,8 @@ class CategoryType extends AbstractType
             ->add('duration', TextType::class,
             array(
                 'required' => true,
-                'label' => 'Duração *',
-                'attr' => ['class' => 'w3-input w3-border w3-white','placeholder'=>'Duração *', 'readonly' => true]
+                'label' => 'duration',
+                'attr' => ['class' => 'w3-input w3-border w3-white','placeholder'=>'dutation', 'readonly' => true]
             ))
             ->add('name_en', TextType::class, array(
                 'required' => false,
@@ -102,6 +102,13 @@ class CategoryType extends AbstractType
                 'required' => false,
                 'attr' => ['class' => 'w3-check']
             ))
+
+            ->add('shared', CheckboxType::class, array(
+                'label'    => 'Partilhado',
+                'required' => false,
+                'attr' => ['class' => 'w3-check']
+            ))
+
             ->add('highlight', CheckboxType::class, array(
                 'label'    => 'Destaque',
                 'required' => false,

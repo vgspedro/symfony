@@ -69,6 +69,13 @@
             {% endif %}
 
             <p class="">
+333
+
+{{category.shared}}
+
+{% if category.shared%}
+
+
             {% if category.adultAmount > 0 %}
                 <span>{% trans %}part_tree.adult{% endtrans %}</span>&nbsp;
                 <span>{{ category.adultAmount }}<span class="w3-small">{{company.currency.currency}}</span></span>
@@ -91,8 +98,19 @@
                 <span>-/-</span>
                 <br>
 
+{% else %}
+
+              <span>{% trans %} max_pax_10 {% endtrans %}</span>&nbsp;
+              <span>{{ category.adultAmount }}<span class="w3-small">{{company.currency.currency}}</span></span>
+              <br>
+
+{% endif %}
+
 
               </p>
+
+
+
             </div>
           </div>
           

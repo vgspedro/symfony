@@ -20,11 +20,18 @@
               <b>{%trans%}address{%endtrans%}:</b> {{data.user.address}}<br>
               <hr>
             </div>
+
+
+
+            
               
             <div class="col-12 col-xl-6 col-lg-6 col-md-6">
               <b>{%trans%}tour{%endtrans%}:</b> {{data.booking.tour}}<br>
               <b>{%trans%}date{%endtrans%}:</b> {{data.booking.date}}<br>
               <b>{%trans%}hour{%endtrans%}:</b> {{data.booking.hour}}<br>
+
+          {% if data.booking.shared %}
+
               <b>{%trans%}adults{%endtrans%}:</b> {{data.adult.quantity}}x {{data.adult.subtotal_money}}<span class="f-10">{{data.adult.subtotal.currency}}</span>
               <span class="float-right">{{data.adult.total_money}}<span class="f-10">{{data.adult.total.currency}}</span></span>
               <br>
@@ -43,6 +50,15 @@
               <br>
 
               {% endif %}
+
+          {% else %}
+
+              <b>{%trans%}max_pax_10 {%endtrans%}:</b>
+              <span class="float-right">{{data.adult.total_money}}<span class="f-10">{{data.adult.total.currency}}</span></span>
+              <br>
+
+          {% endif %}
+
 
               <hr>
             </div>

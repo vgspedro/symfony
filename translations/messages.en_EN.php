@@ -330,4 +330,7 @@ www.consumoalgarve.pt or to any of the entities duly indicated in the list avail
 'has_changed_to' => 'has changed to',
 'notes' => 'Notes',
 'about_your_booking' => 'about your booking',
+'max_pax_10' => 'Boat 10 people Máx.',
+'lotation' => 'Lotation/Quantity *',
+'duration' => 'Duration *',
 );

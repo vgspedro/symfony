@@ -21,9 +21,19 @@
 			{{ 'tour' | trans({}, "messages", locale) }}: {{ tour }}<br>
 			{{ 'date' | trans({}, "messages", locale) }}: {{ booking.available.datetimeStart|date("d/m/Y")}}<br>
 			{{ 'hour' | trans({}, "messages", locale) }}: {{ booking.available.datetimeStart|date("H:i")}}<br>
+			
+			{%if booking.available.category.shared %}
+
 			{{ 'adults' | trans({}, "messages", locale) }}: {{ booking.adult }}<br>
 			{{ 'childrens' | trans({}, "messages", locale) }}: {{ booking.children }}<br>
 			{{ 'babies' | trans({}, "messages", locale) }}: {{ booking.baby }}<br>
+			
+			{% else %}
+
+			{{ 'max_pax_10' | trans({}, "messages", locale) }}
+
+			{% endif %}
+
 		</p>
 
 		{% if booking.available.category.warrantyPayment %}

@@ -89,9 +89,28 @@ span.sp a {height:32px;width: 32px;border-radius: 50%;background:#01e675; positi
                 </div>
                 <div class="d-flex" style="border-top:1px solid #aaa">
                   <div class="mr-auto">
-                    {% trans %}part_tree.adult{% endtrans %} <b>{{category.adultAmount}}</b><span class="f-10">{{company.currency.currency}}</span><br>
-                    {% trans %}part_tree.children{% endtrans %} <b>{{category.childrenAmount}}</b><span class="f-10">{{company.currency.currency}}</span><br>
-                    {% trans %}part_tree.baby{% endtrans %} <b>0.00</b><span class="f-10">{{company.currency.currency}}</span><br>
+                    
+
+                  {% if category.shared%}
+
+                    {% trans %}part_tree.adult{% endtrans %} <b>{{category.adultAmount}}</b>
+                    <span class="f-10">{{company.currency.currency}}</span><br>
+                    {% trans %}part_tree.children{% endtrans %} <b>{{category.childrenAmount}}</b>
+                    <span class="f-10">{{company.currency.currency}}</span><br>
+                    {% trans %}part_tree.baby{% endtrans %} <b>0.00</b>
+                    <span class="f-10">{{company.currency.currency}}</span><br>
+                  
+                  {% else %}
+
+                    {% trans %} max_pax_10 {% endtrans %} <b>{{category.adultAmount}}</b>
+                    <span class="f-10">{{company.currency.currency}}</span><br>
+                    &nbsp;<b>&nbsp;</b>
+                    <br>
+                    &nbsp;<b>&nbsp;</b>
+                    <br>
+
+                  {% endif %}
+
                   </div>
                 </div>
                   <div class="text-center price p-2">
@@ -101,7 +120,7 @@ span.sp a {height:32px;width: 32px;border-radius: 50%;background:#01e675; positi
                       {% trans %}unavailable{% endtrans %}
                     </button>
                     {% else %}
-                    <span onclick="navigation('.ftco-booking', {{ category.id }})" class="btn btn-primary btn-outline-primary px-4 py-2"> 
+                    <span onclick="navigation('.ftco-booking', {{ category.id }}, {{ category.shared }})" class="btn btn-primary btn-outline-primary px-4 py-2"> 
                       {% trans %}book_now{% endtrans %}
                     </span>
 
@@ -128,18 +147,37 @@ span.sp a {height:32px;width: 32px;border-radius: 50%;background:#01e675; positi
 
 <script>
 
-function navigation(pos,id){
+function navigation(pos,id,shared){
+
   clearInfo()
+  if (id){
+    isShared(shared)
+    $('select[name=category]').val(id)
+  }
+
   vl = 45;
   $(".nav-space").val() ? vl = vl + parseInt($(".nav-space").val()) : vl;
   $("html, body").animate({
     scrollTop: $(pos).offset().top -vl
   }, 750)
-  if (id){
-    $('select[name=category]').val(id)
-  }
+
 }
 
+
+function isShared(shared){
+
+ if(!shared){
+    $('.shared').addClass('d-none')
+    $('[name=adult]').val(1)
+    $('[name=children], [name=baby]').val('')
+  }
+  else{
+    $('.shared').removeClass('d-none')
+    $('[name=adult], [name=children], [name=baby]').val('')
+  }
+
+
+}
 
 </script>
 

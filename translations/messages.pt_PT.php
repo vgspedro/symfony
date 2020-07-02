@@ -348,7 +348,9 @@ ou a qualquer uma das entidades devidamente indicadas na lista disponibilizada p
 'has_changed_to' => 'mudou para',
 'notes' => 'Observações', 
 'about_your_booking' => 'sobre a sua reserva',
-
+'max_pax_10' => 'Barco Máximo 10 pessoas',
+'lotation' => 'Lotação/Quantidade *',
+'duration' => 'Duração *',
 
 );
 

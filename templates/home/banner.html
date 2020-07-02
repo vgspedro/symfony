@@ -18,10 +18,14 @@
         <div class="row no-gutters slider-text js-fullheight justify-content-center align-items-center">
           <div class="col-lg-12 ftco-animate d-flex align-items-center">
           	<div class="text text-center">
+              
               {% if category %}
 		  				  <span class="subheading">{% trans %}welcome_to{% endtrans %} {{company.name}}</span>
                 <h1 class="mb-4">{{ category.name }}</h1>
   		  				
+
+          {% if category.shared%}
+
                 {% if category.adultAmount> 0 %}
                   <h4>{% trans %}part_tree.adult{% endtrans %} {{ category.adultAmount}}<span>{{company.currency.currency}}</span>
                   </h4>
@@ -42,9 +46,17 @@
                 </h4>
                 
                 {% endif %}
-                
+
+          {%else%}
+
+                  <h4>{% trans %} max_pax_10 {% endtrans %} {{ category.adultAmount}}<span>{{company.currency.currency}}</span>
+                  </h4>
+
+          {% endif %}               
+
+
                 <p>
-                  <a href="#" onclick="navigation('.ftco-booking', {{ category.id }})" class="btn btn-primary btn-outline-primary px-4 py-2">{% trans %}book_now{% endtrans %}</a>
+                  <a href="#" onclick="navigation('.ftco-booking', {{ category.id }}, {{category.shared}})" class="btn btn-primary btn-outline-primary px-4 py-2">{% trans %}book_now{% endtrans %}</a>
                 </p>
               {%else%}
                   <h1 class="mb-4">{% trans %}welcome_to{% endtrans %}<br>{{company.name}}</h1>

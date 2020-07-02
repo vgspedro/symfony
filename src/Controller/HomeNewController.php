@@ -116,7 +116,8 @@ class HomeNewController extends AbstractController
                 'adultAmount' => $moneyFormatter->format($categoryHl->getAdultPrice()),
                 'childrenAmount'  => $moneyFormatter->format($categoryHl->getChildrenPrice()),
                 'name' => $this->session->get('_locale') == 'pt_PT' ? $categoryHl->getNamePt() : $categoryHl->getNameEn(),
-                'id' => $categoryHl->getId()]
+                'id' => $categoryHl->getId(),
+                'shared' => $categoryHl->getShared()]
             :
             $cH = [];
         
@@ -149,6 +150,7 @@ class HomeNewController extends AbstractController
                 'warrantyPaymentTxt' => $this->session->get('_locale') == 'pt_PT' ? $categories->getwarrantyPaymentPt() :  $categories->getwarrantyPaymentEn(),
                 'duration' => $minutes,
                 'no_stock' => $flag,
+                'shared' => $categories->getShared()
             ];
         }
 
@@ -293,8 +295,8 @@ class HomeNewController extends AbstractController
                 'charge_message' => $translator->trans('charge_message'),
                 'to_be_charged_money' => $moneyFormatter->format($total),
                 'to_be_charged' => $to_be_charged = $total->subtract($total_to_charge), 
-                'to_be_charged_money' => $moneyFormatter->format($to_be_charged)
-            
+                'to_be_charged_money' => $moneyFormatter->format($to_be_charged),
+                'shared' => $available->getCategory()->getShared()
             ],
             'user' => [
                 'name' => $name,

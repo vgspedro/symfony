@@ -22,24 +22,28 @@
 
     <input type="hidden" name="id" value="{{ category.id }}">
 
-
     <div class="w3-padding-16 w3-row-padding w3-border w3-sand">
   
-    <div class="w3-col s6 l2 m3" title="Em destaque no banner">
+    <div class="w3-col s6 l1 m2" title="Em destaque no banner">
       {{ form_label(form.highlight)}}<br>
       {{ form_widget(form.highlight)}}
     </div>
 
-    <div class="w3-col s6 l2 m3" title="Vamos mostrar esta categoria aos clientes no site">
+    <div class="w3-col s6 l1 m2" title="Vamos mostrar esta categoria aos clientes no site">
       {{ form_label(form.is_active)}}<br>
       {{ form_widget(form.is_active)}}
     </div>
 
+    <div class="w3-col s6 l2 m2" title="Veiculo é partilhado por compras individuais?">
+      {{ form_label(form.shared)}}<br>
+      {{ form_widget(form.shared)}}
+    </div>
+
     <div class="w3-col s6 l2 m3" title="A duração desta Categoria">
       <div style="position:relative">
-      {{ form_label(form.duration) }}
-      {{ form_widget(form.duration) }}
-    </div>
+        {{ form_label(form.duration) }}
+        {{ form_widget(form.duration) }}
+      </div>
     </div>
 
     <div class="w3-col s6 l2 m3" title="A lotação desta Categoria">
@@ -66,8 +70,11 @@
       </div>
       <div class="w3-col l6 m6 s12 w3-margin-bottom">
         {{ form_label(form.name_en) }}
-        {{ form_widget(form.name_en)}}
+        {{ form_widget(form.name_en) }}
       </div>
+
+      {% if category.shared %}
+
       <div class="w3-col l6 m6 s6 w3-margin-bottom">
         {{ form_label(form.children_price)}}
         {{ form_widget(form.children_price.amount)}}
@@ -76,6 +83,20 @@
         {{ form_label(form.adult_price)}}
         {{ form_widget(form.adult_price.amount)}}
       </div>
+
+      {%else%}
+
+      <div class="w3-col l6 m6 s6 w3-margin-bottom w3-hide">
+        {{ form_label(form.children_price)}}
+        {{ form_widget(form.children_price.amount)}}
+      </div>
+      <div class="w3-col l6 m6 m6 s6 w3-margin-bottom">
+        <label>Preço Veiculo (€)*</label>
+        {{ form_widget(form.adult_price.amount)}}
+      </div>
+
+      {% endif %}
+
       <div class="w3-col s12 w3-margin-bottom">
         {{ form_label(form.description_pt)}}
         {{ form_widget(form.description_pt)}}
