@@ -11,17 +11,21 @@ use App\Entity\TermsConditions;
 use App\Entity\Client;
 use App\Entity\Company;
 use App\Entity\EasyText;
-use Symfony\Component\HttpFoundation\Response;
+
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\Translation\TranslatorInterface;
+
 use App\Form\CategoryType;
 use App\Form\GalleryType;
 //use App\Form\BlockdatesType;
 use App\Form\EventType;
 use App\Form\EasyTextType;
+
 use App\Service\MoneyFormatter;
 use App\Service\MoneyParser;
 use App\Service\Menu;
@@ -329,9 +333,9 @@ class AdminController extends AbstractController
                 $seeBookings[] =
                     [
                         'id' => $booking->getId(),
-                        'adult' => $booking->getAdult(),
-                        'children' => $booking->getChildren(),
-                        'baby' => $booking->getBaby(),
+                        'adult' => $booking->getAvailable()->getCategory()->getShared() ? $booking->getAdult() : 0,
+                        'children' => $booking->getAvailable()->getCategory()->getShared() ? $booking->getChildren() : 0,
+                        'baby' => $booking->getAvailable()->getCategory()->getShared() ? $booking->getBaby() : 0,
                         'status' => $booking->getStatus(),
                         'row_color' => $this->setRowColors($booking->getPaymentStatus()),
                         'status_txt' => strtoupper($translator->trans($booking->getStatus())),

@@ -60,6 +60,19 @@ class CategoryType extends AbstractType
                 'label' => 'Nome (EN)*',
                 'attr' => ['class' => 'w3-input w3-border w3-white','placeholder'=>'Nome (EN)*']
             ))
+
+            ->add('small_description_en', TextType::class, array(
+                'required' => false,
+                'label' => 'Info (EN)',
+                'attr' => ['class' => 'w3-input w3-border w3-white','placeholder'=>'Info (EN)']
+            ))
+
+            ->add('small_description_pt', TextType::class, array(
+                'required' => false,
+                'label' => 'Info (PT)',
+                'attr' => ['class' => 'w3-input w3-border w3-white','placeholder'=>'Info (PT)']
+            ))
+
             ->add('description_pt', TextareaType::class,
             array(
                 'required' => false,

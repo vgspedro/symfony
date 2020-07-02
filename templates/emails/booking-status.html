@@ -29,9 +29,7 @@
 			{{ 'babies' | trans({}, "messages", locale) }}: {{ booking.baby }}<br>
 			
 			{% else %}
-
-			{{ 'max_pax_10' | trans({}, "messages", locale) }}
-
+			{{locale == 'pt_PT' ? booking.available.category.smallDescriptionPt : booking.available.category.smallDescriptionEn }}
 			{% endif %}
 
 		</p>

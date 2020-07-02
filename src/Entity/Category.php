@@ -42,6 +42,17 @@ class Category
      */
     private $descriptionEn;
 
+
+    /**
+     * @ORM\Column(type="string", name="small_description_pt", length=50)
+     */
+    private $smallDescriptionPt;
+
+    /**
+     * @ORM\Column(type="string", name="small_description_en", length=50)
+     */
+    private $smallDescriptionEn;
+
     /**
      * @ORM\Column(type="string", length=1000, name="warranty_payment_pt", nullable=true)
      */
@@ -263,6 +274,33 @@ class Category
     {
         $this->descriptionEn = str_replace("'","’",$descriptionEn);
     }
+
+
+    public function getSmallDescriptionPt()
+    {
+        return $this->smallDescriptionPt;
+    }
+
+    public function setSmallDescriptionPt($smallDescriptionPt)
+    {
+        $this->smallDescriptionPt = str_replace("'","’",$smallDescriptionPt);
+    }
+
+    public function getSmallDescriptionEn()
+    {
+        return $this->smallDescriptionEn;
+    }
+
+    public function setSmallDescriptionEn($smallDescriptionEn)
+    {
+        $this->smallDescriptionEn = str_replace("'","’",$smallDescriptionEn);
+    }
+
+
+
+
+
+
 
     public function getEvent()
     {

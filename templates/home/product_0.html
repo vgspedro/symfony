@@ -102,7 +102,7 @@ span.sp a {height:32px;width: 32px;border-radius: 50%;background:#01e675; positi
                   
                   {% else %}
 
-                    {% trans %} max_pax_10 {% endtrans %} <b>{{category.adultAmount}}</b>
+                    {{ category.smallDescription}} <b>{{category.adultAmount}}</b>
                     <span class="f-10">{{company.currency.currency}}</span><br>
                     &nbsp;<b>&nbsp;</b>
                     <br>

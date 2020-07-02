@@ -88,6 +88,15 @@
         {{ form_label(form.description_en)}}
         {{ form_widget(form.description_en)}}
       </div>
+
+      <div class="w3-col l6 m12 s12 w3-margin-bottom not-shared w3-hide">
+        <label onclick="viewShortInfo()" style="cursor:pointer" title="Texto que aparece email e pdf, clicar para ver +">Info PT <i class="w3-text-blue fa fa-info-circle"></i></label>
+         {{ form_widget(form.small_description_pt)}}
+      </div>
+      <div class="w3-col l6 m12 s12 w3-margin-bottom not-shared w3-hide">
+        <label onclick="viewShortInfo()" style="cursor:pointer" title="Texto que aparece email e pdf, clicar para ver +">Info EN <i class="w3-text-blue fa fa-info-circle"></i></label>
+         {{ form_widget(form.small_description_en)}}
+      </div>
     </div>
 
     <div class="w3-row-padding">
@@ -269,6 +278,18 @@ function setShared(){
 }
 
 setShared()
+
+
+
+  function viewShortInfo(){
+    $('.w3-overlay').show()
+    window.open('/images/short_info.jpg','window','toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,directories=no,width=550,height=450');
+    setTimeout(function(){ 
+      $('.w3-overlay').hide()
+    }, 500)
+  }
+
+
 
 </script>
 

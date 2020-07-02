@@ -20,10 +20,6 @@
               <b>{%trans%}address{%endtrans%}:</b> {{data.user.address}}<br>
               <hr>
             </div>
-
-
-
-            
               
             <div class="col-12 col-xl-6 col-lg-6 col-md-6">
               <b>{%trans%}tour{%endtrans%}:</b> {{data.booking.tour}}<br>
@@ -53,7 +49,7 @@
 
           {% else %}
 
-              <b>{%trans%}max_pax_10 {%endtrans%}:</b>
+              <b>{{data.booking.small_description}}:</b>
               <span class="float-right">{{data.adult.total_money}}<span class="f-10">{{data.adult.total.currency}}</span></span>
               <br>
 
