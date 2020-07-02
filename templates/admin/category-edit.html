@@ -9,6 +9,8 @@
 #category_event_0_event{display:none}
 .table-condensed>tbody>tr>td, .table-condensed>tbody>tr>th, .table-condensed>tfoot>tr>td, .table-condensed>tfoot>tr>th, .table-condensed>thead>tr>td, .table-condensed>thead>tr>th {border: 3px solid transparent!important} 
  .w3-input {border-bottom: 0px solid #05788d}
+.w3-modal-content{width:100%!important; margin:0!important}
+.w3-modal{background-color:#FFF}
 </style>
 <header class="w3-container" style="padding-top:22px">
     <h5>
@@ -18,52 +20,58 @@
   </h5>
 </header>
 <div class="">
+
   {{ form_start(form, {'attr': {'id': 'category-form'}})  }}
 
-    <input type="hidden" name="id" value="{{ category.id }}">
-
-    <div class="w3-padding-16 w3-row-padding w3-border w3-sand">
+  <input type="hidden" name="id" value="{{ category.id }}">
+  <div class="w3-padding-16 w3-row-padding w3-border w3-sand">
   
-    <div class="w3-col s6 l1 m2" title="Em destaque no banner">
-      {{ form_label(form.highlight)}}<br>
-      {{ form_widget(form.highlight)}}
-    </div>
+    <div class="w3-row-padding">
+      <div class="w3-col s12 w3-center w3-text-indigo"><h3>Especificações</h3></div>
+      <div class="w3-col s4 l2 m2 w3-margin-bottom" title="Em destaque no banner">
+        {{ form_label(form.highlight)}}<br>
+        {{ form_widget(form.highlight)}}
+      </div>
+      <div class="w3-col s4 l2 m2 w3-margin-bottom" title="Vamos mostrar esta categoria aos clientes no site">
+        {{ form_label(form.is_active)}}<br>
+        {{ form_widget(form.is_active)}}
+      </div>
+      <div class="w3-col s4 l1 m2 w3-margin-bottom" title="Veiculo é partilhado por compras/reservas individuais?">
+        {{ form_label(form.shared)}}<br>
+        {{ form_widget(form.shared)}}
+      </div>
+      <div class="w3-col s12 l2 m3 w3-margin-bottom" title="A duração desta Categoria">
+        <div style="position:relative">
+          {{ form_label(form.duration) }}
+          {{ form_widget(form.duration) }}
+        </div>
+      </div>
+      <div class="w3-col s12 l2 m3 w3-margin-bottom" title="A lotação desta Categoria">
+        {{ form_label(form.availability) }}
+        {{ form_widget(form.availability) }}
+      </div>
+      <div class="w3-col s12 l3 m12 w3-center" title="Vamos meter uma imagem para esta categoria">
+        <div class="w3-center w3-margin-bottom w3-border w3-imput w3-section set-image-container w3-padding" style="cursor:pointer"onclick="$('.set-image').trigger('click')">
 
-    <div class="w3-col s6 l1 m2" title="Vamos mostrar esta categoria aos clientes no site">
-      {{ form_label(form.is_active)}}<br>
-      {{ form_widget(form.is_active)}}
-    </div>
+          {% if category.image %}
+          {% set url=category.image|split('/public_html/') %}
 
-    <div class="w3-col s6 l2 m2" title="Veiculo é partilhado por compras individuais?">
-      {{ form_label(form.shared)}}<br>
-      {{ form_widget(form.shared)}}
-    </div>
+            <img id="output" src="/{{ url[1] }}" class="w3-image w3-animate-zoom">
 
-    <div class="w3-col s6 l2 m3" title="A duração desta Categoria">
-      <div style="position:relative">
-        {{ form_label(form.duration) }}
-        {{ form_widget(form.duration) }}
+          {% else %}
+
+          <i class="fa fa-camera w3-jumbo" style="color:#05788d"></i>
+
+          {% endif %}
+        </div>
+
+        {{ form_widget(form.image)}}
+
       </div>
     </div>
-
-    <div class="w3-col s6 l2 m3" title="A lotação desta Categoria">
-      {{ form_label(form.availability) }}
-      {{ form_widget(form.availability) }}
-    </div>
-
-    <div class="w3-col s12 l4 m12 w3-center" title="Vamos meter uma imagem para esta categoria">
-      <div class="w3-center w3-margin-bottom w3-border w3-imput w3-section set-image-container w3-padding" style="cursor:pointer"onclick="$('.set-image').trigger('click')">
-
-        {% if category.image %}
-        {% set url=category.image|split('/public_html/') %}
-          <img id="output" src="/{{ url[1] }}" class="w3-image w3-animate-zoom">
-        {% else %}
-        <i class="fa fa-camera w3-jumbo" style="color:#05788d"></i>
-        {% endif %}
-      </div>
-      {{ form_widget(form.image)}}
-    </div>
-
+    
+    <div class="w3-row-padding">
+      <div class="w3-col s12 w3-center w3-text-indigo"><h3>Informações</h3></div>
       <div class="w3-col l6 m6 s12 w3-margin-bottom">
         {{ form_label(form.name_pt) }}
         {{ form_widget(form.name_pt) }}
@@ -72,42 +80,41 @@
         {{ form_label(form.name_en) }}
         {{ form_widget(form.name_en) }}
       </div>
-
-      <div class="w3-col l6 m6 s6 w3-margin-bottom shared">
-      {{ form_label(form.children_price)}}
-      {{ form_widget(form.children_price)}}
-    </div>
-      
-    <div class="w3-col l6 m6 m6 s6 w3-margin-bottom">
-      <span class="shared">{{ form_label(form.adult_price)}}</span>
-      <label class="not-shared w3-hide">{%trans%}vehicle_price{%endtrans%}</label>
-      {{ form_widget(form.adult_price)}}
-    </div>
-
-      <div class="w3-col s12 w3-margin-bottom">
+      <div class="w3-col l6 m6 s12 w3-margin-bottom">
         {{ form_label(form.description_pt)}}
         {{ form_widget(form.description_pt)}}
       </div>
-        <div class="w3-col s12 w3-margin-bottom">
+      <div class="w3-col l6 m6 s12 w3-margin-bottom">
         {{ form_label(form.description_en)}}
         {{ form_widget(form.description_en)}}
       </div>
+    </div>
 
+    <div class="w3-row-padding">
+      <div class="w3-col s12 w3-center w3-text-indigo"><h3>Preços</h3></div>
+      <div class="w3-col l6 m6 s12 w3-margin-bottom shared">
+        {{ form_label(form.children_price)}}
+        {{ form_widget(form.children_price)}}
+      </div>
+      <div class="w3-col l6 m6 m6 s12 w3-margin-bottom">
+        <span class="shared">{{ form_label(form.adult_price)}}</span>
+        <label class="not-shared w3-hide">{%trans%}vehicle_price{%endtrans%}</label>
+        {{ form_widget(form.adult_price)}}
+      </div>
+    </div>
+
+    <div class="w3-row-padding">
       <div class="w3-col s12 w3-center w3-text-indigo"><h3>Pagamento</h3></div>
-
-    <div class="w3-col l2 m3 s5 w3-margin-bottom" title="Activar/desativar o pagamento Online de acordo com percentagem do campo Depósito">
+      <div class="w3-col l2 w3-margin-bottom" title="Activar/desativar o pagamento Online de acordo com percentagem do campo Depósito">
         {{ form_label(form.warranty_payment)}}<br>
         {{ form_widget(form.warranty_payment)}}
-    </div>
-    
-    <div class="w3-col l6 m6 s7 w3-margin-bottom" title="Depósito %">
+      </div>
+      <div class="w3-col l4 m4 s12 w3-margin-bottom" title="Depósito %">
         {{ form_label(form.deposit) }}
         {{ form_widget(form.deposit) }}
-    </div>
-
-    <div class="w3-col l4 m3 s0 w3-hide-small" style="height:112px">&nbsp;</div>
-
-      <div class="w3-col l6" title="Texto PT a informar o cliente sobre o pagamento">
+      </div>
+      <div class="w3-col l4 m3 s0 w3-hide-small" style="height:112px">&nbsp;</div>
+      <div class="w3-col l6 w3-margin-bottom" title="Texto PT a informar o cliente sobre o pagamento">
         {{ form_label(form.warranty_payment_pt)}}<br>
         {{ form_widget(form.warranty_payment_pt)}}
       </div>
@@ -115,7 +122,9 @@
         {{ form_label(form.warranty_payment_en)}}<br>
         {{ form_widget(form.warranty_payment_en)}}
       </div>
+    </div>
 
+    <div class="w3-row-padding">
       <div class="w3-col s12 w3-center w3-text-indigo"><h3>Eventos</h3></div>
 
       <div class="w3-col l3 m1 s0 w3-hide-small">&nbsp;</div>
@@ -138,14 +147,15 @@
         </div>
         {{ form_widget(form.event)}}
       </div>
-
-        {{ form_widget(form.blockdate)}}
-      <div class="w3-hide">
-        {{ form_widget(form.submit)}}
-      </div>
+      {{ form_widget(form.blockdate)}}
     </div>
-      {{ form_end(form) }}
+
+    <div class="w3-hide">
+      {{ form_widget(form.submit)}}
+    </div>
   </div>
+    {{ form_end(form) }}
+</div>
   
 <script src="{{ asset('js/moment-with-locales.min.comp.js') }}"></script>
 <script src="{{ asset('js/bootstrap-datetimepicker.min.js') }}"></script>

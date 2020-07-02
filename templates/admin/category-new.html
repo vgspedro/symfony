@@ -23,25 +23,25 @@ input, select{color: #000!important}
 
     <div class="w3-row-padding">
       <div class="w3-col s12 w3-center w3-text-indigo"><h3>Especificações</h3></div>
-      <div class="w3-col s4 l2 m2" title="Em destaque no banner">
+      <div class="w3-col s4 l2 m2 w3-margin-bottom" title="Em destaque no banner">
         {{ form_label(form.highlight)}}<br>
         {{ form_widget(form.highlight)}}
       </div>
-      <div class="w3-col s4 l2 m2" title="Vamos mostrar esta Categoria aos clientes no site">
+      <div class="w3-col s4 l2 m2 w3-margin-bottom" title="Vamos mostrar esta Categoria aos clientes no site">
         {{ form_label(form.is_active)}}<br>
         {{ form_widget(form.is_active)}} 
       </div>
-      <div class="w3-col s4 l1 m2" title="Veiculo é partilhado diversas compras/reservas individuais?">
+      <div class="w3-col s4 l1 m2 w3-margin-bottom" title="Veiculo é partilhado diversas compras/reservas individuais?">
         {{ form_label(form.shared)}}<br>
         {{ form_widget(form.shared)}}
       </div>
-      <div class="w3-col s12 l2 m3" title="A duração desta Categoria">
+      <div class="w3-col s12 l2 m3 w3-margin-bottom" title="A duração desta Categoria">
         <div style="position:relative">
           {{ form_label(form.duration) }}
           {{ form_widget(form.duration) }}
         </div>
       </div>
-      <div class="w3-col s12 l2 m3" title="A lotação desta Categoria">
+      <div class="w3-col s12 l2 m3 w3-margin-bottom" title="A lotação desta Categoria">
         {{ form_label(form.availability) }}
         {{ form_widget(form.availability) }}
       </div>
@@ -88,21 +88,21 @@ input, select{color: #000!important}
 
     <div class="w3-row-padding">
       <div class="w3-col s12 w3-center w3-text-indigo"><h3>Pagamento</h3></div>
-       <div class="w3-col l2" title="Garantia da pagamento mostra ao cliente q tem q preencher os dados do cartão de crédito">
+       <div class="w3-col l2 w3-margin-bottom" title="Activar/desativar o pagamento Online de acordo com percentagem do campo Depósito">
         {{ form_label(form.warranty_payment)}}<br>
         {{ form_widget(form.warranty_payment)}}
       </div>
-      <div class="w3-col l4 m4 s6" title="Depósito %">
+      <div class="w3-col l4 m4 s12 w3-margin-bottom" title="Depósito %">
         {{ form_label(form.deposit) }}
         {{ form_widget(form.deposit) }}
       </div>
     </div>
     <div class="w3-row-padding">
-      <div class="w3-col l6" title="Texto PT a informar o cliente sobre a garantia da pagamento">
+      <div class="w3-col l6 w3-margin-bottom" title="Texto PT a informar o cliente sobre a garantia da pagamento">
         {{ form_label(form.warranty_payment_pt)}}<br>
         {{ form_widget(form.warranty_payment_pt)}}
       </div>
-      <div class="w3-col l6" title="Texto EN a informar o cliente sobre a garantia da pagamento">
+      <div class="w3-col l6 w3-margin-bottom" title="Texto EN a informar o cliente sobre a garantia da pagamento">
         {{ form_label(form.warranty_payment_en)}}<br>
         {{ form_widget(form.warranty_payment_en)}}
       </div>
