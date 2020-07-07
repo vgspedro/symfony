@@ -305,25 +305,25 @@ class AvailableController extends AbstractController
 
         $availables = $em->getRepository(Available::class)->findAvailableFromInterval($start, $end);
 
-        $data_events = array();
+        $data_events = [];
         
-        $data_resources = array();
+        $data_resources = [];
 
-        $rand_color = array('','blue','green','black','blueviolet','brown','forestgreen','cadetblue','cornflowerblue','chocolate','darkcyan','orange','darkgoldenrod');
+        $rand_color = ['blue','green','black','blueviolet','brown','cadetblue','coral','indigo','olivedrab','orange','darkgoldenrod'];
 
         $id = null;
 
         $counter = 0;
 
         foreach ($categories as $category) {
-            $counter++;
-            $data_resources[] = array(
+            $data_resources[] = [
                 'eventColor' => $rand_color[$counter],
                 'id' => $category->getId(),
                 'lotation' => $category->getAvailability(),
                 'title' => $category->getNamePt(),
                 'order' => $category->getOrderBy()
-            );
+            ];
+            $counter++;
         }
 
         foreach ($availables as $available) {
