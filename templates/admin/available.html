@@ -10,8 +10,6 @@
 <script src="{{ asset('fullcalendar/packages/resource-common/main.js') }}"></script>
 <script src="{{ asset('fullcalendar/packages/resource-daygrid/main.js') }}"></script>
 <script src="{{ asset('fullcalendar/packages/resource-timegrid/main.js') }}"></script>
-<script src="{{ asset('fullcalendar/packages/popper.min.js') }}"></script>
-<script src="{{ asset('fullcalendar/packages/tooltip.min.js') }}"></script>
 
 <script src="{{ asset('js/bootstrap-datepicker.min.js') }}"></script>
 <script src="{{ asset('js/ui.datepicker-pt-BR.js') }}"></script>
@@ -34,15 +32,23 @@ input, select{color: #000!important}
 .fc-time-grid-event{cursor: pointer}
 .fc-license-message{display: none!important}
 .fc-content{color:#FFF}
+.fc-popover .fc-day-grid-event {padding: 14px 8px}
+.fc-day-grid-event {cursor: pointer}
+.fc-day-grid-event:hover{opacity: 0.7}
+.fc-resource-cell {font-size: 10px}
+.opacity{opacity:0}
+#availability{max-width: 1000px; margin: 0 auto}
+.fc-day-grid-event{padding: 2px;margin-bottom: 2px}
+
 </style>
 
 <script>
 
-var obj =''
-
 $('.w3-overlay').show()
 
-function getResources(t) {
+var edit = false
+
+function getAvailabilityResources(t) {
 
   var d = new Date()
   var start = d.getTime()
@@ -56,7 +62,7 @@ function getResources(t) {
     cache:false,
     success: function(data) {
       //console.log(data)
-      startCalendar(data)
+      startAvailability(data)
       for (var k in data.resources)
         template += '<span class="w3-border w3-border-gray w3-text-white" style="padding: 7px 0px 10px 8px;width:25%;background-color:'+data.resources[k].eventColor+';margin:2px 2px">'+data.resources[k].title+' &nbsp;<button title="Editar Disponibilidades desta Categoria" onclick="resourceActions('+data.resources[k].id+',\''+data.resources[k].title+'\', '+data.resources[k].lotation+',\''+data.resources[k].eventColor+'\')" class="w3-blue w3-btn w3-border" style="padding:4px 14px"><i class="far fa-edit"></i></button></span>'
       $('#legend').html(template)
@@ -64,12 +70,11 @@ function getResources(t) {
   })
 }
 
+var availability = ''
 
-var calendar = ''
+function startAvailability(data){
 
-function startCalendar(data){
-
-    calendar = new FullCalendar.Calendar(document.getElementById('calendar'), {
+    availability = new FullCalendar.Calendar(document.getElementById('availability'), {
     plugins: [ 'interaction', 'resourceDayGrid', 'resourceTimeGrid' ],
     defaultView: 'dayGridMonth',
     defaultDate: '{{ "now"|date("Y-m-d H:i:s") }}',
@@ -84,16 +89,16 @@ function startCalendar(data){
       prev: ' fa-chevron-left fa',
       next: ' fa-chevron-right fa',
     },
-    minTime : '8:00:00',
-    maxTime : '20:00:00',
+    minTime : '9:00:00',
+    maxTime : '19:00:00',
     slotLabelFormat: [
     { hour: '2-digit',
       minute: '2-digit'
     }
     ],
-    slotMinutes: 15,
-    slotDuration: '00:15:00',
-    slotLabelInterval: 15,
+    slotMinutes: 20,
+    slotDuration: '00:20:00',
+    slotLabelInterval: 20,
     selectable: false,
     locale: 'pt',
     hour12: false,
@@ -107,47 +112,55 @@ function startCalendar(data){
     header: {
       left: 'prev,next',
       center: 'title',
-      right: 'resourceTimeGridTwoDay,resourceTimeGridTreeDay,dayGridMonth'
+      right: 'resourceTimeGridOneDay,dayGridMonth'
     },
     views: {
-      resourceTimeGridTwoDay: {
+      resourceTimeGridOneDay: {
         type: 'resourceTimeGrid',
         duration: { days: 2 },
         buttonText: '2 Dias'
-      },
-      resourceTimeGridTreeDay: {
-        type: 'resourceTimeGrid',
-        duration: { days: 3 },
-        buttonText: '3 Dias'
       },
       dayGridMonth: {
         buttonText: 'Mês',
         hour12: true
       }
     },
-    eventRender: function(info) {
-      var tooltip = new Tooltip(info.el, {
-        title: info.event.extendedProps.description,
-        placement: 'top',
-        trigger: 'hover',
-        container: 'body'
-      });
-    },
     allDaySlot: false,
     resourceOrder: 'order',
     resources: data.resources,
     // events: data.events,
     events: function(info, successCallback, failureCallback) {
+      
+      //console.log(info)
+
       $.ajax({
         url: '{{ path("admin_available_list") }}',
-        data:'start='+info.start.valueOf()/1000+'&end='+info.end.valueOf()/1000,
+        data: 'start='+info.start.valueOf()/1000+'&end='+info.end.valueOf()/1000,
         dataType: 'json',
-        cache:false,
+        cache: false,
         success: function(info) {
           //console.log(info.events)
           ev = info.events
+
           successCallback(ev)
-        }
+          
+          if($('.fc-resourceTimeGridOneDay-button').hasClass('fc-state-active') && edit){
+
+            $('#availability').addClass('opacity')
+
+            setTimeout(function(){
+              $('.fc-dayGridMonth-button').trigger('click')
+            }, 50)
+
+            setTimeout(function(){
+              $('.fc-resourceTimeGridOneDay-button').trigger('click')
+              $('.w3-overlay').hide()
+              $('#availability').removeClass('opacity')
+              $('#modal-edit-stock').hide()
+              edit = false
+            }, 150)
+          }
+        }     
       })
     },
     dateClick: function(arg) {
@@ -165,17 +178,16 @@ function startCalendar(data){
       $('#set-stock-available').val(evt[0])
       $('#set-stock-info').html(evt[2])
       info.el.style.borderColor = 'red'
-
     },
-      eventRender: function(info) {
-        $(info.el).addClass('evt-'+info.event.id)
+    eventRender: function(info) {
+      $(info.el).addClass('evt-'+info.event.id)
     }
   });
-  calendar.render()
+  availability.render()
 }
 
 setTimeout(function(){
-  getResources()
+  getAvailabilityResources()
 },0)
 
 $('#add').next().remove()
@@ -190,12 +202,12 @@ $('.w3-overlay').show()
       data: $('#set-stock').serialize(),
       dataType:'json',
       success: function(data){
-        $('.w3-overlay').hide()
         if(data.status == 1){
-          $('#modal-edit-stock').hide()
-          calendar.refetchEvents()
+          edit = true
+          availability.refetchEvents()
         }
         else {
+          $('.w3-overlay').hide()
           $('#info-client').show()                
           $('#info-client-head').removeClass('w3-green w3-red w3-amber').addClass('w3-blue').html('<span onclick="$(\'#info-client\').hide()" class="w3-button w3-display-topright w3-large"><i class="fa fa-times"></i></span><h1><i class="fa fa-info-circle"></i> Verifique</h1>')
           $('#client-txt').html(data.message)
@@ -224,7 +236,7 @@ function deleteAvailable(){
         $('.w3-overlay').hide()
         $("#modal-edit-stock").hide()
         if(data.status == 1)
-          calendar.refetchEvents()
+          availability.refetchEvents()
         else{
           $('#info-client').show()                
           $('#info-client-head').removeClass('w3-green w3-red w3-amber').addClass('w3-blue').html('<span onclick="$(\'#info-client\').hide()" class="w3-button w3-display-topright w3-large"><i class="fa fa-times"></i></span><h1><i class="fa fa-info-circle"></i> Verifique</h1>')
@@ -271,7 +283,8 @@ function resourceAction(){
           $('#info-client').show()                
           $('#info-client-head').removeClass('w3-red w3-amber w3-blue').addClass('w3-green').html('<span onclick="$(\'#info-client\').hide()" class="w3-button w3-display-topright w3-large"><i class="fa fa-times"></i></span><h1><i class="fa fa-check"></i> Sucesso</h1>')
           $('#client-txt').html(data.message).addClass('w3-center')
-          calendar.refetchEvents()
+          availability.refetchEvents()
+          
         }
         else{
           $('#info-client').show()                
@@ -318,13 +331,13 @@ $(function(){
 
 </script>
 
-<input type="hidden" id="obj">
+<!--input type="hidden" id="obj"-->
 
 <header class="w3-container" style="padding-top:22px">
    <h5><b><i class="far fa-calendar-check"></i> Disponibilidades</b></h5>
 </header>
 
-<div id='calendar' style="padding-bottom:64px"></div>
+<div id='availability' style="padding-bottom:64px"></div>
 
 <div class="w3-hide-small w3-row w3-center w3-padding-small" style="background:rgba(0, 0, 0, 0.75);position:fixed;bottom:0px;z-index:99;width:100%">
   <div id="legend" class="w3-center"></div>
