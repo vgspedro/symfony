@@ -469,7 +469,7 @@ class AvailableController extends AbstractController
             if($request->request->get('date'))
                 $start = \DateTime::createFromFormat('Y-m-d', $request->request->get('date'), new \DateTimeZone('Europe/Lisbon'));
             else{
-                if($now->format('Y-m-d H:i:s') >= $now->format('Y-m-d '.$this->in_advance_hours)) 
+                if($now->format('Y-m-d H:i:s') >= $now->format('Y-m-d '.$this->in_advance_hours) && $now->format('Y-m-d H:i:s') <= $now->format('Y-m-d 23:59:59')) 
                     $start = new \DateTime('tomorrow +1 day', new \DateTimeZone('Europe/Lisbon'));
                 else 
                     $start = new \DateTime('tomorrow', new \DateTimeZone('Europe/Lisbon'));
@@ -479,7 +479,7 @@ class AvailableController extends AbstractController
             if($request->request->get('date'))
                 $start = \DateTime::createFromFormat('Y-m-d', $request->request->get('date'), new \DateTimeZone('Europe/Lisbon'));
             else{
-                if($now->format('Y-m-d H:i:s') >= $now->format('Y-m-d '.$this->in_advance_hours)) 
+                if($now->format('Y-m-d H:i:s') >= $now->format('Y-m-d '.$this->in_advance_hours) && $now->format('Y-m-d H:i:s') <= $now->format('Y-m-d 23:59:59')) 
                     $start = new \DateTime('tomorrow +1 day', new \DateTimeZone('Europe/Lisbon'));
                 else 
                     $start = new \DateTime('tomorrow', new \DateTimeZone('Europe/Lisbon'));
