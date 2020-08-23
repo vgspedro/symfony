@@ -21,8 +21,11 @@ class AvailableController extends AbstractController
 
     private $session;
 
+    private $in_advance_hours;
+
     public function __construct(SessionInterface $session)
     {
+        $this->in_advance_hours = '23:00:00';
         $this->session = $session; 
     }
 
@@ -457,13 +460,30 @@ class AvailableController extends AbstractController
         $total_pax = $adult + $children + $baby;
 
         $next = $request->request->get('next') ? $request->request->get('next') : 1;
+        
+        $now = new \DateTime('now', new \DateTimeZone('Europe/Lisbon'));
 
         //if -1 is the previous week
         if($next == -1){
-            $start = $request->request->get('date') ? \DateTime::createFromFormat('Y-m-d', $request->request->get('date')) : new \DateTime('tomorrow');
+
+            if($request->request->get('date'))
+                $start = \DateTime::createFromFormat('Y-m-d', $request->request->get('date'), new \DateTimeZone('Europe/Lisbon'));
+            else{
+                if($now->format('Y-m-d H:i:s') >= $now->format('Y-m-d '.$this->in_advance_hours)) 
+                    $start = new \DateTime('tomorrow +1 day', new \DateTimeZone('Europe/Lisbon'));
+                else 
+                    $start = new \DateTime('tomorrow', new \DateTimeZone('Europe/Lisbon'));
+            }
         } 
         else{
-            $start = $request->request->get('date') ? \DateTime::createFromFormat('Y-m-d', $request->request->get('date')) : new \DateTime('tomorrow');
+            if($request->request->get('date'))
+                $start = \DateTime::createFromFormat('Y-m-d', $request->request->get('date'), new \DateTimeZone('Europe/Lisbon'));
+            else{
+                if($now->format('Y-m-d H:i:s') >= $now->format('Y-m-d '.$this->in_advance_hours)) 
+                    $start = new \DateTime('tomorrow +1 day', new \DateTimeZone('Europe/Lisbon'));
+                else 
+                    $start = new \DateTime('tomorrow', new \DateTimeZone('Europe/Lisbon'));
+            }
         }
 
         $availability = $em->getRepository(Available::class)->findCategoryAvailabilityByWeekAndPax($category, $start, $total_pax);
@@ -524,7 +544,8 @@ class AvailableController extends AbstractController
                 'payment' => $category->getWarrantyPayment(),
                 'week' => $final,
                 'expiration' => 900,
-                'expiration_start' => $this->session->get('start_time')
+                'expiration_start' => $this->session->get('start_time'),
+                'now' => $now->format('Y-m-d H:i:s') 
                 ] //Build the week
             ]);
     }

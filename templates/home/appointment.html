@@ -251,7 +251,7 @@ function getAvailability(){
       data: $('.appointment-form').serialize(),
       cache: false,
       success: function(data){ 
-      //console.log(data)         
+        console.log(data)         
         $('#ftco-loader').css({'opacity' : 0,'visibility' : 'hidden','z-index' : 1000})
         if (data.status == 1 && data.data.available_dates.length > 0){
 
