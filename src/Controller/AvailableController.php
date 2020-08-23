@@ -545,7 +545,8 @@ class AvailableController extends AbstractController
                 'week' => $final,
                 'expiration' => 900,
                 'expiration_start' => $this->session->get('start_time'),
-                'now' => $now->format('Y-m-d H:i:s') 
+                'now' => $now->format('Y-m-d H:i:s'),
+                'start' => $start->format('Y-m-d H:i:s') 
                 ] //Build the week
             ]);
     }
