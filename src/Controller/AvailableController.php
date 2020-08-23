@@ -25,7 +25,7 @@ class AvailableController extends AbstractController
 
     public function __construct(SessionInterface $session)
     {
-        $this->in_advance_hours = '12:55:00';
+        $this->in_advance_hours = '23:00:00';
         $this->session = $session; 
     }
 
@@ -462,14 +462,14 @@ class AvailableController extends AbstractController
         $next = $request->request->get('next') ? $request->request->get('next') : 1;
         
         $now = new \DateTime('now', new \DateTimeZone('Europe/Lisbon'));
-
+        $tomorrow new \DateTime('tomorrow', new \DateTimeZone('Europe/Lisbon'));
         //if -1 is the previous week
         if($next == -1){
 
             if($request->request->get('date'))
                 $start = \DateTime::createFromFormat('Y-m-d', $request->request->get('date'), new \DateTimeZone('Europe/Lisbon'));
             else{
-                if($now->format('Y-m-d H:i:s') >= $now->format('Y-m-d '.$this->in_advance_hours) && $now->format('Y-m-d H:i:s') <= $now->format('Y-m-d 23:59:59')) 
+                if($now->format('Y-m-d H:i:s') >= $now->format('Y-m-d '.$this->in_advance_hours) && $now->format('Y-m-d H:i:s') < $tomorrow->format('Y-m-d 00:00:00')) 
                     $start = new \DateTime('tomorrow +1 day', new \DateTimeZone('Europe/Lisbon'));
                 else 
                     $start = new \DateTime('tomorrow', new \DateTimeZone('Europe/Lisbon'));
@@ -479,7 +479,7 @@ class AvailableController extends AbstractController
             if($request->request->get('date'))
                 $start = \DateTime::createFromFormat('Y-m-d', $request->request->get('date'), new \DateTimeZone('Europe/Lisbon'));
             else{
-                if($now->format('Y-m-d H:i:s') >= $now->format('Y-m-d '.$this->in_advance_hours) && $now->format('Y-m-d H:i:s') <= $now->format('Y-m-d 23:59:59')) 
+                if($now->format('Y-m-d H:i:s') >= $now->format('Y-m-d '.$this->in_advance_hours) && $now->format('Y-m-d H:i:s') < $tomorrow->format('Y-m-d 00:00:00')) 
                     $start = new \DateTime('tomorrow +1 day', new \DateTimeZone('Europe/Lisbon'));
                 else 
                     $start = new \DateTime('tomorrow', new \DateTimeZone('Europe/Lisbon'));
