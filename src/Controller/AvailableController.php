@@ -21,6 +21,7 @@ class AvailableController extends AbstractController
 
     private $session;
 
+    //Close tomorrow bookings by hour
     private $in_advance_hours;
 
     public function __construct(SessionInterface $session)
@@ -462,6 +463,7 @@ class AvailableController extends AbstractController
         $next = $request->request->get('next') ? $request->request->get('next') : 1;
         
         $now = new \DateTime('now', new \DateTimeZone('Europe/Lisbon'));
+        
         $tomorrow = new \DateTime('tomorrow', new \DateTimeZone('Europe/Lisbon'));
         //if -1 is the previous week
         if($next == -1){
