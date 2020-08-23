@@ -6,6 +6,7 @@ use App\Entity\Booking;
 use App\Entity\Event;
 use App\Entity\Logs;
 use App\Entity\Available;
+use App\Entity\Company;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -451,6 +452,7 @@ class AvailableController extends AbstractController
 
         $category = $em->getRepository(Category::class)->find($request->request->get('category'));
 
+
         if(!$category)
             return new JsonResponse([
                 'status' => 2,
@@ -458,12 +460,16 @@ class AvailableController extends AbstractController
                 'data' => null
             ]);
 
+        $company = $em->getRepository(Company::class)->find(1);
+
+        $advance_hours = !$company ? $this->in_advance_hours : $company->getCloseBookTime()->format('H:i:s');
+
         $total_pax = $adult + $children + $baby;
 
         $next = $request->request->get('next') ? $request->request->get('next') : 1;
         
         $now = new \DateTime('now', new \DateTimeZone('Europe/Lisbon'));
-        
+
         $tomorrow = new \DateTime('tomorrow', new \DateTimeZone('Europe/Lisbon'));
         //if -1 is the previous week
         if($next == -1){
@@ -471,7 +477,7 @@ class AvailableController extends AbstractController
             if($request->request->get('date'))
                 $start = \DateTime::createFromFormat('Y-m-d', $request->request->get('date'), new \DateTimeZone('Europe/Lisbon'));
             else{
-                if($now->format('Y-m-d H:i:s') >= $now->format('Y-m-d '.$this->in_advance_hours) && $now->format('Y-m-d H:i:s') < $tomorrow->format('Y-m-d 00:00:00')) 
+                if($now->format('Y-m-d H:i:s') >= $now->format('Y-m-d '.$advance_hours) && $now->format('Y-m-d H:i:s') < $tomorrow->format('Y-m-d 00:00:00')) 
                     $start = new \DateTime('tomorrow +1 day', new \DateTimeZone('Europe/Lisbon'));
                 else 
                     $start = new \DateTime('tomorrow', new \DateTimeZone('Europe/Lisbon'));
@@ -481,7 +487,7 @@ class AvailableController extends AbstractController
             if($request->request->get('date'))
                 $start = \DateTime::createFromFormat('Y-m-d', $request->request->get('date'), new \DateTimeZone('Europe/Lisbon'));
             else{
-                if($now->format('Y-m-d H:i:s') >= $now->format('Y-m-d '.$this->in_advance_hours) && $now->format('Y-m-d H:i:s') < $tomorrow->format('Y-m-d 00:00:00')) 
+                if($now->format('Y-m-d H:i:s') >= $now->format('Y-m-d '.$advance_hours) && $now->format('Y-m-d H:i:s') < $tomorrow->format('Y-m-d 00:00:00')) 
                     $start = new \DateTime('tomorrow +1 day', new \DateTimeZone('Europe/Lisbon'));
                 else 
                     $start = new \DateTime('tomorrow', new \DateTimeZone('Europe/Lisbon'));
@@ -530,8 +536,7 @@ class AvailableController extends AbstractController
                 'event' => $temp
             ];
             
-            $temp = []; 
-        
+            $temp = [];
         }
         
         //since we have stock, set the expiration time to end the booking process
@@ -548,7 +553,8 @@ class AvailableController extends AbstractController
                 'expiration' => 900,
                 'expiration_start' => $this->session->get('start_time'),
                 'now' => $now->format('Y-m-d H:i:s'),
-                'start' => $start->format('Y-m-d H:i:s') 
+                'start' => $start->format('Y-m-d H:i:s'), 
+                'adv' => $advance_hours
                 ] //Build the week
             ]);
     }

@@ -141,6 +141,9 @@ class Company
         /** @ORM\Column(type="string", name="stripe_sk",nullable=true)*/
     private $stripe_sk;
 
+     /** @ORM\Column(name="close_book_time", type="time", nullable=true) */
+    private $close_book_time;
+
     public function getStripePK()
     {
         return $this->stripe_pk;
@@ -512,4 +515,16 @@ class Company
     {
         $this->link_snapchat_active = $link_snapchat_active;
     }
+
+
+    public function setCloseBookTime($close_book_time)
+    {
+        $this->close_book_time = $close_book_time;
+    }
+
+    public function getCloseBookTime()
+    {
+        return $this->close_book_time;
+    }
+
 }

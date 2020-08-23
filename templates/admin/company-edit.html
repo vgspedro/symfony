@@ -1,4 +1,4 @@
-
+<link rel="stylesheet" href="/css/bootstrap-datetimepicker.min.css">
 <style>
 .w3-select {padding: 11.5px 4px}
 </style>
@@ -31,31 +31,42 @@
       {{ form_label(form.name) }}
       {{ form_widget(form.name) }}
     </div>
-    
+
     <div class="w3-col l6 m6 s12 w3-margin-bottom">
       {{ form_label(form.address) }}
       {{ form_widget(form.address) }}
     </div>
 
-    <div class="w3-col l4 m6 s5 w3-margin-bottom">
+    <div class="w3-col l3 m4 s6 w3-margin-bottom">
       {{ form_label(form.p_code) }}
       {{ form_widget(form.p_code) }}
     </div>
 
-    <div class="w3-col l4 m6 s7 w3-margin-bottom">
+    <div class="w3-col l3 m4 s6 w3-margin-bottom">
       {{ form_label(form.city) }}
       {{ form_widget(form.city) }}
     </div>
 
-    <div class="w3-col l4 m6 s12 w3-margin-bottom">
+    <div class="w3-col l3 m4 s6 w3-margin-bottom">
       {{ form_label(form.country) }}
       {{ form_widget(form.country) }}
     </div>
 
-    <div class="w3-col l3 m6 s8 w3-margin-bottom">
+    <div class="w3-col s12 l3 m4 w3-margin-bottom" title="EX(Se hoje 01/01/2020 apartir da hora definida aqui até as 23:59:59, fecha o dia seguinte 02/01/2010 e abre o dia 03/01/2020)">
+      {{ form_label(form.close_book_time)}}<br>
+      <div class="w3-hide">
+        {{ form_widget(form.close_book_time)}}
+      </div>
+      <div style="position:relative">
+        <input type="text" id='close_book_time' class="w3-input w3-border w3-white" placeholder="Hora Fecho Reserva Diária" readonly="readonly">
+      </div>
+    </div>
+
+    <div class="w3-col l3 m6 s12 w3-margin-bottom">
       {{ form_label(form.fiscal_number) }}
       {{ form_widget(form.fiscal_number) }}
     </div>
+
     <div class="w3-col l2 m3 s4 w3-margin-bottom">
       {{ form_label(form.currency) }}
       {{ form_widget(form.currency) }}
@@ -196,7 +207,6 @@
       {{ form_widget(form.link_snapchat)}}
     </div>
 
-
   </div>
   <div class="w3-row-padding w3-margin-top w3-border-bottom">
     <div class="w3-hide">
@@ -213,7 +223,36 @@
 
 </div>
 
+<script src="/js/moment-with-locales.min.comp.js"></script>
+<script src="/js/bootstrap-datetimepicker.min.js"></script>
+
 <script>
+
+  $('#close_book_time').val($('#company_close_book_time_hour').val()+':'+$('#company_close_book_time_minute').val())
+
+  $('#close_book_time').datetimepicker({
+    format: 'HH:mm',
+    ignoreReadonly:true,
+    icons: {
+      time: "fa fa-clock-o",
+      date: "fa fa-calendar",
+      up: "fa fa-chevron-up",
+      down: "fa fa-chevron-down"
+    }
+  })
+
+  $('#close_book_time').on("dp.change", function (e) {
+
+    $('#company_close_book_time_hour option:selected').removeAttr('selected')
+    $('#company_close_book_time_minute option:selected').removeAttr('selected')
+    
+    n = moment(e.date).format('HH:mm')
+    dt = n ? n: '23:00';
+    r = dt.split(':')
+
+    $('#company_close_book_time_hour').val(parseInt(r[0])).trigger('change');
+    $('#company_close_book_time_minute').val(parseInt(r[1])).trigger('change');
+  })
 
   var loadFile = function(event) {
     $('.set-image-container').html('<img id="output" class="w3-image w3-animate-zoom">')
@@ -222,6 +261,7 @@
   }
 
   $('#company-form').on('submit',function(e){
+
   obj=''
   e.preventDefault()
   $('.w3-overlay').show()
