@@ -25,7 +25,7 @@ class AvailableController extends AbstractController
 
     public function __construct(SessionInterface $session)
     {
-        $this->in_advance_hours = '23:00:00';
+        $this->in_advance_hours = '13:03:00';
         $this->session = $session; 
     }
 
