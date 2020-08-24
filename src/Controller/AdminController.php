@@ -78,7 +78,7 @@ class AdminController extends AbstractController
         $start = new \DateTime('first day of this month');
         $end = new \DateTime('last day of this month');
         $booking_month = $em->getRepository(Booking::class)->dashboardCurrentMonth($start, $end);
-        $bookings_today = $em->getRepository(Booking::class)->getToday(new \DateTime('now'));
+        $bookings_today = $em->getRepository(Booking::class)->getToday(new \DateTime('now'), new \DateTimeZone('Europe/Lisbon'));
         
         return $this->render('admin/dashboard.html', [
             'booking' => $booking,
