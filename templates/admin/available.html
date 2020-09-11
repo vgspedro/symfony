@@ -204,6 +204,8 @@ $('.w3-overlay').show()
         if(data.status == 1){
           edit = true
           availability.refetchEvents()
+          $('.w3-overlay').hide()
+          $('#modal-edit-stock').hide()
         }
         else {
           $('.w3-overlay').hide()

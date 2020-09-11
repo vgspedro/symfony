@@ -158,6 +158,12 @@
     "react/stream": {
         "version": "v1.0.0"
     },
+    "sendgrid/php-http-client": {
+        "version": "3.11.1"
+    },
+    "sendgrid/sendgrid": {
+        "version": "7.8.3"
+    },
     "sensio/framework-extra-bundle": {
         "version": "4.0",
         "recipe": {
@@ -172,6 +178,9 @@
     },
     "spipu/html2pdf": {
         "version": "v5.1.0"
+    },
+    "starkbank/ecdsa": {
+        "version": "0.0.4"
     },
     "stripe/stripe-php": {
         "version": "v6.40.0"
