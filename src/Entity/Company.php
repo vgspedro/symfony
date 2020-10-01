@@ -526,5 +526,22 @@ class Company
     {
         return $this->close_book_time;
     }
+    
+    public function getLat(){
 
+        if($this->getCoordsGoogleMaps())
+           $coords = explode(',', $this->getCoordsGoogleMaps());
+            if (count($coords) > 0)
+                return str_replace(',', '',$coords[0]);
+        return '';
+    }
+
+    public function getLong(){
+
+        if($this->getCoordsGoogleMaps())
+           $coords = explode(',', $this->getCoordsGoogleMaps());
+            if (count($coords) > 0)
+                return str_replace(',', '', $coords[1]);
+        return '';
+    }
 }
