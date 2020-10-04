@@ -97,7 +97,7 @@
               {% for link in menu %}
                 <li><a href="{{ path(link.path) }}" target="{{link.target}}" class="py-2 d-block">{{link.name}}</a></li>
               {% endfor %}
-      
+                <li><a href="{{ path('login') }}" target="_self" class="py-2 d-block">Login</a></li>
               </ul>
             </div>
           </div>
