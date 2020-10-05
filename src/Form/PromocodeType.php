@@ -53,6 +53,7 @@ class PromocodeType extends AbstractType
                 'attr' => ['class' => 'w3-input w3-border w3-white w3-margin-bottom', 'placeholder' => 'Desconto *']
              ])
             ->add('category', EntityType::class, [
+                'label' => 'Category', 
                 'class' => Category::class,
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('d')
@@ -76,7 +77,7 @@ class PromocodeType extends AbstractType
             ->add('isActive', CheckboxType::class, array(
                 'label' => 'Activo',
                 'required' => false,
-                'attr' => ['class' => 'check']
+                'attr' => ['class' => 'w3-check']
             ))
         ;
     }

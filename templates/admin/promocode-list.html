@@ -13,6 +13,7 @@ input, select{color: #000!important}
 div.dataTables_length select {height: 50px}
 div.dataTables_length label{float:left}
 div.dataTables_filter label {float: right}
+select{height: 41px}
 </style>
 
 
@@ -28,7 +29,7 @@ div.dataTables_filter label {float: right}
       <th class="w3-center">Código</th>
       <th class="w3-center">Categoria</th>
       <th class="w3-center">{%trans%}discount_type{%endtrans%}</th>
-      <th class="w3-center">Valor</th>
+      <th class="w3-center">Desconto</th>
       <th class="w3-center">Activo</th>   
       <th class="w3-center">Inicio</th>
       <th class="w3-center">Fim</th>
@@ -65,50 +66,60 @@ div.dataTables_filter label {float: right}
 </div>
 </div>
 
-<div class="w3-margin-top">
+<div class="w3-container w3-padding" id="set-promocode">
+
+<header class="w3-container" style="padding-top:22px">
+    <h5>
+      <b>
+        <i class="fa fa-gift"></i> Promocode Editar ou Criar
+    </b>
+  </h5>
+</header>
   {{ form_start(form, {'attr': {'id': 'form'}}) }}
 
-    <div class="w3-row-padding">
-      <div class="w3-col s12">
-        <div class="card card-primary card-outline">
-          <div class="card-header">
-            <h5 class="m-0">Promocode Editar ou Criar<span class='id'></span></h5>
-          </div>
-          <div class="card-body">
-
-            <div class="row pb-4">
-              <div class="col-lg-1 col-md-3 col-sm-2 col-2" title="{%trans%}active{%endtrans%}">
-                {{ form_label(form.isActive)}}
-                {{ form_widget(form.isActive)}}
-                 <input type="hidden" name="id"> 
-              </div>
-              <div class="col-lg-8 col-md-9 col-sm-10 col-10">
-                {{ form_label(form.code)}}
-                {{ form_widget(form.code)}}
-              </div>
-            </div>
-
-            <div class="row pb-4">
-              <div class="col-sm-12 text-right">
-                <span class="btn btn-secondary" onclick="clearF()">
-                  <i class="fa fa-eraser"></i> Limpar
-                </span>
-                <span class="btn btn-success" onclick="$('#form').trigger('submit')">
-                  <i class="fa fa-check"></i> {%trans%}save{%endtrans%}
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
+    <input type="hidden" name="id">
+  
+  <div class="w3-border w3-sand">
+    <div class="w3-padding-16 w3-row-padding">
+      <div class="w3-col l4 m6 s12 w3-margin-bottom">
+        {{ form_label(form.code)}}
+        {{ form_widget(form.code)}}
+      </div>
+      <div class="w3-col l4 m6 s12 w3-margin-bottom">
+        <label>Categoria</label>
+        {{ form_widget(form.category)}}
+      </div>
+      <div class="w3-col l4 m6 s12">
+        {{ form_label(form.discount_type)}}
+        {{ form_widget(form.discount_type)}}
       </div>
     </div>
+      <div class="w3-row-padding">
+      <div class="w3-col l3 m6 s12 w3-margin-bottom">
+        {{ form_label(form.discount)}}
+        {{ form_widget(form.discount)}}
+      </div>
+      <div class="w3-col s12 l3 m6" style="padding: 33px 0px 33px 10px">
+        {{ form_widget(form.isActive)}}
+        {{ form_label(form.isActive)}}
+      </div>
+      <div class="w3-col s12 l3 m6 w3-margin-bottom">
+        {{ form_label(form.start)}}
+        {{ form_widget(form.start)}}
+      </div>
+      <div class="w3-col s12 l3 m6 w3-margin-bottom">
+        {{ form_label(form.end)}}
+        {{ form_widget(form.end)}}
+      </div>
+
+      <div class="w3-hide">
+        <button type="submit" id="gallery_submit" name="gallery[submit]" class="w3-btn w3-block w3-border w3-green w3-margin-top SAVE">Enviar</button>
+      </div>
+    </div>
+  </div>
+ {{ form_end(form) }}
+
 </div>
-    {{ form_end(form) }}
-
-
-
-
-
 
 <script>
  
