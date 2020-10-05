@@ -1,0 +1,257 @@
+<style>
+ .dt-button{background: #FFF;border:1px solid #ccc;
+ display: inline-block; padding: 8px 16px; vertical-align: middle;overflow: hidden;text-decoration: none; color: inherit;
+    background-color: inherit;text-align: center; cursor: pointer; white-space: nowrap;color: #000!important;background-color: #87CEEB!important;font-size:18px}
+select.input-sm, input .form-control .input-sm {height: 36px}
+table.dataTable.dtr-inline.collapsed > tbody > tr > td:first-child:before, table.dataTable.dtr-inline.collapsed > tbody > tr > th:first-child:before {
+    height: 24px;width: 24px;border-radius: 16px; text-align: center;line-height: 23px;font-size: 24px;border-radius: 0px;border: 1px solid #ddd;box-shadow: 0 0 0 #000}
+table.dataTable.dtr-inline.collapsed > tbody > tr > td:first-child, table.dataTable.dtr-inline.collapsed > tbody > tr > th:first-child {padding-left: 38px}
+.dt-button-collection{ width:100%;background: rgba(0,0,0,0.3);position: fixed;left:0px;padding: 96px 16px; z-index:99999;margin-top: 0px!important;top:0px}
+.w3-input {border-bottom: 0px solid #05788d}
+input, select{color: #000!important}
+.form-control{ border: 1px solid #ccc!important;height: 50px;padding: 0px 0px 0px 4px;padding-bottom: 0px}
+div.dataTables_length select {height: 50px}
+div.dataTables_length label{float:left}
+div.dataTables_filter label {float: right}
+</style>
+
+
+<header class="w3-container" style="padding-top:22px">
+   <h5><b><i class="fa fa-gift"></i> Promocode</b></h5>
+</header>
+<div class="w3-row-padding w3-padding-32">
+  <div class="w3-col s12">
+  <table id="dataTable" class="w3-border table table-striped centered hover table-bordered" style="width:100%">
+    <thead class="w3-sand">
+      <tr>
+      <th>Acções</th> 
+      <th class="w3-center">Código</th>
+      <th class="w3-center">Categoria</th>
+      <th class="w3-center">{%trans%}discount_type{%endtrans%}</th>
+      <th class="w3-center">Valor</th>
+      <th class="w3-center">Activo</th>   
+      <th class="w3-center">Inicio</th>
+      <th class="w3-center">Fim</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for ob in promocodes%}
+       <tr id='g-{{ ob.id}}'>
+        <td>
+           <button class="w3-btn w3-border w3-blue" onclick="edit({{ob.id}})">
+            <i class="far fa-edit fa-fw"></i>
+          </button>
+          <button class="w3-btn w3-border w3-red" style="width: 19px" onclick="deleteConfirm({{ ob.id}},'{{ ob.code }}')">
+            <i class="fas fa-trash-alt"></i>
+          </button>
+        </td>
+        <td class="w3-center">{{ob.code}}</td>
+        <td class="w3-center">{{ob.category.namePt}}</td>
+        <td class="w3-center">{{ob.discountType|trans}}</td>
+        <td class="w3-center">{{ob.discount}}</td>
+        <td class="w3-center">
+          {% if ob.IsActive%}
+            <i class="w3-text-green w3-xlarge fas fa-check-circle"></i>
+          {% else %}
+            <i class="w3-text-red w3-xlarge fas fa-times-circle"></i>
+          {% endif %}
+        </td>
+        <td class="w3-center">{{ ob.start|date("d/m/Y H:i")}}</td>
+        <td class="w3-center">{{ ob.end|date("d/m/Y H:i")}}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+</div>
+
+<div class="w3-margin-top">
+  {{ form_start(form, {'attr': {'id': 'form'}}) }}
+
+    <div class="w3-row-padding">
+      <div class="w3-col s12">
+        <div class="card card-primary card-outline">
+          <div class="card-header">
+            <h5 class="m-0">Promocode Editar ou Criar<span class='id'></span></h5>
+          </div>
+          <div class="card-body">
+
+            <div class="row pb-4">
+              <div class="col-lg-1 col-md-3 col-sm-2 col-2" title="{%trans%}active{%endtrans%}">
+                {{ form_label(form.isActive)}}
+                {{ form_widget(form.isActive)}}
+                 <input type="hidden" name="id"> 
+              </div>
+              <div class="col-lg-8 col-md-9 col-sm-10 col-10">
+                {{ form_label(form.code)}}
+                {{ form_widget(form.code)}}
+              </div>
+            </div>
+
+            <div class="row pb-4">
+              <div class="col-sm-12 text-right">
+                <span class="btn btn-secondary" onclick="clearF()">
+                  <i class="fa fa-eraser"></i> Limpar
+                </span>
+                <span class="btn btn-success" onclick="$('#form').trigger('submit')">
+                  <i class="fa fa-check"></i> {%trans%}save{%endtrans%}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+    {{ form_end(form) }}
+
+
+
+
+
+
+<script>
+ 
+stored = []
+/*if(!localStorage.getItem("tablecategory") ){
+  localStorage.setItem("tablecategory", JSON.stringify(tablecategory))
+  stored = JSON.parse(localStorage.getItem("tablecategory"))
+}
+else
+  stored = JSON.parse(localStorage.getItem("tablecategory"))
+*/
+
+function edit(id){
+  $('.w3-overlay').show()
+  setTimeout(function(){
+  $.ajax({  
+    url:'{{ path('edit_promocode') }}',
+    type: "POST",
+    data:'id='+id,
+    success: function(data){
+      $('.w3-overlay').hide()
+      $('#set-id').text(id)
+      $('#set-gallery').html(data)
+      $('#modal-edit-gallery').show()
+      if (data.message == 'success'){
+        $('#info-client').show()                
+        $('#info-client-head').removeClass('w3-red').addClass('w3-green').html('<span onclick="$(\'#info-client\').hide()" class="w3-button w3-display-topright w3-large"><i class="fa fa-times"></i></span><h1><i class="fa fa-check"></i> Sucesso</h1>')
+        $('#client-txt').html('')
+      }
+    },
+    error:function(data){
+      $('.w3-overlay').hide()
+      $('#modal-error').show()
+    }
+  })
+  }, 500)
+}
+
+function deleteConfirm(id,n){
+  $('#delete-gallery').html('<p class="w3-center w3-large">Tem a certeza que pretende apagar a Imagem, <b>'+n+'</b> ?</p>')
+  $('#delete-id').val(id)
+  $('#modal-delete-gallery').show()
+}
+
+function del(id){
+  $('.w3-overlay').show()
+  setTimeout(function(){
+    $.ajax({  
+      url:'{{ path('delete_promocode') }}',
+      type: "POST",
+      data:'id='+id,
+      success: function(data){
+        $('.w3-overlay').hide()
+        if (data.status == 1){
+          $('#modal-delete-gallery').hide()
+          $('#g-'+data.message).remove()
+        }
+      },
+      error:function(data){
+        $('.w3-overlay').hide()
+        $('#modal-error').show()
+      }
+    })
+  }, 500)
+}
+
+
+$(function(){
+
+
+  table = $('#dataTable').DataTable({
+    dom: 'lBfrtip',
+    order: [ 3, "ASC" ],
+    buttons: [
+      {
+        extend:    'excelHtml5',
+        text:      '<i class="far fa-file-excel"></i>',
+        titleAttr: 'Excel',
+        exportOptions: {
+          columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8]
+          }
+        },
+
+        {
+        extend:    'pdfHtml5',
+        text:      '<i class="far fa-file-pdf"></i>',
+        titleAttr: 'PDF',
+        exportOptions: {
+          columns: [ 0, 1, 2, 3, 4,5,6, 7,8]
+          },
+          customize: function (doc) {
+            //doc.content[1].table.widths = Array(doc.content[1].table.body[0].length + 1).join('*').split('')
+              doc['footer']=(function(page, pages) {
+                return {
+                  columns: [
+                    {
+                      alignment: 'right',
+                      text: ['']
+                    },
+                  ],
+                  margin: 20
+                }
+              })
+            }
+        },
+        {
+        extend: 'colvis',
+        columns: ':gt(0)',
+        text:      '<i class="far fa-eye-slash"></i>',
+        titleAttr: 'Colunas',
+        exportOptions: {
+          columns: [ 0, 1, 2, 3, 4, 5,6, 7 ,8]
+        }
+      }
+    ],
+    "columnDefs": [
+      //{ className:"my_class", "targets": [4] },
+      //{ "orderData":[ 2 ], "targets": [ 3 ] },
+        {
+          "targets": stored,
+          "visible": false
+          //"searchable": false
+        }
+    ],
+    "pageLength": 25,
+    "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+      responsive: true,
+      searching: true,
+      language: {
+        "lengthMenu": "Mostrar _MENU_ por pagina",
+        "zeroRecords": "0 Resultados",
+        "info": "Mostrar _PAGE_ de _PAGES_",
+        "infoEmpty": "Sem resultados",
+        "search": "Pesquisar",
+        "paginate": {
+        "previous": "Anterior",
+        "next": "Seguinte",
+      }
+    },
+    order: [[ 1, 'asc' ]]
+  })
+  $('#dataTable_length, .dt-buttons').addClass('w3-center w3-col s12 m6 l4 w3-section')
+  $('#dataTable_filter').addClass('w3-col s8 m12 l4 w3-center w3-section')
+})
+
+</script>

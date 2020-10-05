@@ -18,6 +18,9 @@ return array(
     'thu' => 'Qui',
     'fri' => 'Sex',
     'sat' => 'Sáb',
+    'percent' => 'Percentagem',
+    'discount_type' => 'Tipo Desconto',
+    'value' => 'Valor',
 
     'issue' => 'Problema',
     'to_be_improved' => 'A melhorar',

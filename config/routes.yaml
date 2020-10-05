@@ -421,9 +421,6 @@ admin_warning_edit:
     path: /admin-warning-edit/
     controller: App\Controller\WarningController::adminWarningEdit
 
-
-
-
 ##
 # STAFF
 ##
@@ -597,4 +594,29 @@ charge_extra_payment:
 get_charge_extra_payment:
     path: /get-charge-extra-payment
     controller: App\Controller\ExtraPaymentController::getCharge
+    methods: [POST]
+
+##
+# PROMOCODE
+##
+list_promocode:
+    path: /promocode/
+    controller: App\Controller\PromocodeController::index
+
+delete_promocode:
+    path: /delete-promocode/
+    controller: App\Controller\PromocodeController::delete
+    condition: 'request.isXmlHttpRequest()'
+    methods: [POST]
+
+edit_promocode:
+    path: /edit-promocode/
+    controller: App\Controller\PromocodeController::edit
+    condition: 'request.isXmlHttpRequest()'
+    methods: [POST]
+
+create_promocode:
+    path: /create-promocode/
+    controller: App\Controller\PromocodeController::create
+    condition: 'request.isXmlHttpRequest()'
     methods: [POST]

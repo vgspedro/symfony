@@ -42,8 +42,9 @@ class Menu
         $su[] = ['path' => '#', 'name'=> 'Editar/Listar', 'icon' => 'far fa-edit fa-fw', 'target' => '', 'id' => 'user-list', 'color' => 'w3-pink', 'submenu' => [] ];
         $su[] = ['path' => '#', 'name'=> 'Novo', 'icon' => 'far fa-plus-square fa-fw', 'target' => '', 'id' => 'user-new', 'color' => 'w3-pink', 'submenu' => [] ];
         $e[] = ['path' => '#', 'name'=> 'Utilizadores', 'icon' => 'fas fa-user-shield fa-fw w3-text-pink', 'target' => '', 'id' => 'user', 'submenu' => $su ];
-        
+
         //unique links
+        $e[] = ['path' => '#', 'name'=> 'Promocode', 'icon' => 'fa fa-gift', 'target' => '', 'id' => 'promocode', 'submenu' => [] ];
         $e[] = ['path' => '#', 'name'=> 'Painel Controlo', 'icon' => 'fas fa-tachometer-alt', 'target' => '', 'id' => 'dashboard', 'submenu' => [] ];
         $e[] = ['path' => '#', 'name'=> 'Disponibilidades', 'icon' => 'far fa-calendar-check', 'target' => '', 'id' => 'available', 'submenu' => [] ];
         $e[] = ['path' => '#', 'name'=> 'Reservas', 'icon' => 'far fa-calendar-alt fa-fw', 'target' => '', 'id' => 'booking', 'submenu' => [] ];

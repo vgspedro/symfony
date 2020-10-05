@@ -18,6 +18,9 @@ return array(
     'thu' => 'Thu',
     'fri' => 'Fri',
     'sat' => 'Sat',
+    'percent' => 'Percent',
+    'discount_type' => 'Descont Type',
+    'value' => 'Value',
 
     'issue' => 'Issue',
     'to_be_improved' => 'To be Improved',
