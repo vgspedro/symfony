@@ -81,11 +81,11 @@ select{height: 41px}
   
   <div class="w3-border w3-sand">
     <div class="w3-padding-16 w3-row-padding">
-      <div class="w3-col l4 m6 s12 w3-margin-bottom">
+      <div class="w3-col l4 m6 s12">
         {{ form_label(form.code)}}
         {{ form_widget(form.code)}}
       </div>
-      <div class="w3-col l4 m6 s12 w3-margin-bottom">
+      <div class="w3-col l4 m6 s12">
         <label>Categoria</label>
         {{ form_widget(form.category)}}
       </div>
@@ -99,15 +99,16 @@ select{height: 41px}
         {{ form_label(form.discount)}}
         {{ form_widget(form.discount)}}
       </div>
-      <div class="w3-col s12 l2 m6" style="padding: 33px 0px 33px 10px">
+      <div class="w3-col s12 l2 m6">
+        <label class="w3-hide-small w3-block">&nbsp;</label>
         {{ form_widget(form.isActive)}}
         {{ form_label(form.isActive)}}
       </div>
-      <div class="w3-col s12 l4 m6 w3-margin-bottom">
+      <div class="w3-col s12 l4 m6">
         {{ form_label(form.start)}}
         {{ form_widget(form.start)}}
       </div>
-      <div class="w3-col s12 l4 m6 w3-margin-bottom">
+      <div class="w3-col s12 l4 m6">
         {{ form_label(form.end)}}
         {{ form_widget(form.end)}}
       </div>
