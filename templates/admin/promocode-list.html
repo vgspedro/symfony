@@ -48,7 +48,7 @@ select{height: 41px}
         </td>
         <td class="w3-center">{{ob.code}}</td>
         <td class="w3-center">{{ob.category.namePt}}</td>
-        <td class="w3-center">{{ob.discountType|trans}}</td>
+        <td class="w3-center" title="Percentagem é calculado o valor desconto ao total da Reserva, se Valor é subtraido o valor desconto ao total da Reserva.">{{ob.discountType|trans}}</td>
         <td class="w3-center">{{ob.discount}}</td>
         <td class="w3-center">
           {% if ob.IsActive%}
@@ -77,7 +77,7 @@ select{height: 41px}
 </header>
   {{ form_start(form, {'attr': {'id': 'form'}}) }}
 
-    <input type="hidden" name="id">
+  <input type="hidden" name="id">
   
   <div class="w3-border w3-sand">
     <div class="w3-padding-16 w3-row-padding">
@@ -89,31 +89,27 @@ select{height: 41px}
         <label>Categoria</label>
         {{ form_widget(form.category)}}
       </div>
-      <div class="w3-col l4 m6 s12">
+      <div class="w3-col l4 m6 s12" title="Percentagem é calculado o valor desconto ao total da Reserva, se Valor é subtraido o valor desconto ao total da Reserva.">
         {{ form_label(form.discount_type)}}
         {{ form_widget(form.discount_type)}}
       </div>
     </div>
       <div class="w3-row-padding">
-      <div class="w3-col l3 m6 s12 w3-margin-bottom">
+      <div class="w3-col l2 m6 s12 w3-margin-bottom">
         {{ form_label(form.discount)}}
         {{ form_widget(form.discount)}}
       </div>
-      <div class="w3-col s12 l3 m6" style="padding: 33px 0px 33px 10px">
+      <div class="w3-col s12 l2 m6" style="padding: 33px 0px 33px 10px">
         {{ form_widget(form.isActive)}}
         {{ form_label(form.isActive)}}
       </div>
-      <div class="w3-col s12 l3 m6 w3-margin-bottom">
+      <div class="w3-col s12 l4 m6 w3-margin-bottom">
         {{ form_label(form.start)}}
         {{ form_widget(form.start)}}
       </div>
-      <div class="w3-col s12 l3 m6 w3-margin-bottom">
+      <div class="w3-col s12 l4 m6 w3-margin-bottom">
         {{ form_label(form.end)}}
         {{ form_widget(form.end)}}
-      </div>
-
-      <div class="w3-hide">
-        <button type="submit" id="gallery_submit" name="gallery[submit]" class="w3-btn w3-block w3-border w3-green w3-margin-top SAVE">Enviar</button>
       </div>
     </div>
   </div>

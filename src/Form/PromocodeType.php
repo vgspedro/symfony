@@ -23,8 +23,8 @@ class PromocodeType extends AbstractType
             ->add('discount_type', ChoiceType::class, [
                 'label' => 'discount_type', 
                 'choices'  => [
-                    'value' => 'value',
                     'percent' => 'percent',
+                    'value' => 'value'
                 ],
                 'attr' => ['class' => 'w3-input w3-border w3-white w3-margin-bottom']
             ])
