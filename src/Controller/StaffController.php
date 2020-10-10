@@ -288,23 +288,6 @@ class StaffController extends AbstractController
             }
         }
 
-        foreach ($errors as $error) {
-            if ($error == 'NAME_PT')
-                $err [] = 'Nome (PT)*';
-            else if ($error == 'NAME_EN')
-                $err [] = 'Nome (EN)*';
-            else if ($error == 'DESCRIPTION_PT')
-                $err [] = 'Descrição (PT)*';
-            else if ($error == 'DESCRIPTION_EN')
-                $err [] = 'Descrição (EN)*';
-            else if ($error == 'ADULT_PRICE')
-                $err [] = 'Preço Adulto (€)*';
-            else if ($error == 'CHILDREN_PRICE')
-                $err [] = 'Preço Criança (€)*';
-            else 
-                $err [] = $error;
-        }
-
         return $err;
     }
 
