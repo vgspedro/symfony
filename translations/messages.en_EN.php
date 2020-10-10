@@ -179,7 +179,7 @@ return array(
     'phone' => 'Phone',
     'promocode' => 'Promocode',
     'was' => 'Was',
-    'discount' => 'Discoint',
+    'discount' => 'Discount',
 
 'link' => array(
     'where_we_are'=>'Where we Are',
