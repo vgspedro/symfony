@@ -18,7 +18,7 @@ self.addEventListener('activate', function () {
 });
 
 self.addEventListener('fetch', function(event) {
-  event.respondWith(
+/*  event.respondWith(
     caches.match(event.request)
       .then(function(res) {
         if (res) {
@@ -27,5 +27,5 @@ self.addEventListener('fetch', function(event) {
           return fetch(event.request);
         }
       })
-  );
+  );*/
 });
