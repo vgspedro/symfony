@@ -37,7 +37,7 @@
 
               {% if data.booking.shared %}
 
-                SHARED = 1
+                <!-- SHARED = 1 -->
                 <b>{%trans%}adults{%endtrans%}:</b> {{data.adult.quantity}}x {{data.adult.subtotal_money}}<span class="f-10">{{data.adult.subtotal.currency}}</span>
                 <span class="float-right">{{data.adult.total_money}}<span class="f-10">{{data.adult.total.currency}}</span></span>
                 <br>
@@ -60,7 +60,7 @@
 
               {% else %}
 
-                SHARED = 0 
+                <!-- SHARED = 0 --> 
                 <b>{{data.booking.small_description}}:</b>
                 <span class="float-right">{{data.adult.total_money}}<span class="f-10">{{data.adult.total.currency}}</span></span>
                 <br>
@@ -75,10 +75,10 @@
               <!--  -->
               {% if data.payment.enabled %}
               <!-- START payment Enabled -->
-              PAY = 1
+              <!--  PAY = 1 -->
               {% if data.payment.deposit != 100 %}
                 <!-- START no full payment -->
-                FULL PAY = 0
+              <!-- FULL PAY = 0 -->
               <div class="f-22 text-center" style="margin-top:-12px">
 
                 {%if data.booking.discount_money > 0 %}
@@ -105,7 +105,7 @@
 
               <!-- END no full payment -->
               {%else%}
-              FULL PAY = 1
+              <!-- FULL PAY = 1 -->
               <!-- START full payment-->
               <div class="f-22 text-center" style="margin-top:-12px">
 
@@ -145,7 +145,7 @@
 
               {% else%}
               <!-- START No payment -->
-              PAY = 0
+              <!-- PAY = 0 -->
               <div class="f-22 text-center" style="margin-top:-12px">
                 
                 {%if data.booking.discount_money > 0 %}
