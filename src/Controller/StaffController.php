@@ -248,7 +248,7 @@ class StaffController extends AbstractController
 
         $staff= $em->getRepository(Staff::class)->find($staff_id);
        
-        if (!$styaff) {
+        if (!$staff) {
             $response = ['status' => 0, 'message' => 'Staff #'.$staff_id .' não existe.', 'data' => null];
         }
         else{
