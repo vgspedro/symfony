@@ -30,11 +30,11 @@ class Promocode
 
     /** @ORM\ManyToOne(targetEntity="Category") */
     private $category;
-    /** @ORM\Column(name="start", type="datetime")
+    /** @ORM\Column(name="start", type="date")
     * @Assert\NotBlank(message="Inicio *")
     */
     private $start;
-    /** @ORM\Column(name="end", type="datetime")
+    /** @ORM\Column(name="end", type="date")
     * @Assert\NotBlank(message="Fim *")
     */
     private $end;
@@ -125,4 +125,17 @@ class Promocode
         }
         $this->discount_type = $discount_type;
     }
+
+    public function calculateDiscount($total){
+
+        $discount = $this->getDiscountType() == 'percent' 
+        ?
+        $total*$this->getDiscount()
+        :
+        $this->getDiscount()*100;
+
+        return $discount > $total ? $discount : 0; 
+    }
+
+
 }

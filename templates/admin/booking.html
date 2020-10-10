@@ -2,26 +2,6 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"/>
 <link href="{{ asset('css/admin-booking.css') }}" rel="stylesheet">
 
-<style>
-.pending{color: #fff!important;background-color: #f44336!important;opacity: .75;padding:4px;}
-.canceled, .parcial_refund, .refunded{color: #fff!important;background-color: #2196F3!important;opacity: .75;padding:4px}
-.confirmed, .succeeded{color: #fff!important;background-color: #4CAF50!important;opacity: .75;padding:4px}
-.w3-input {border-bottom: 0px solid #05788d}
-input, select, {color: #000!important}
-.form-control{ border: 1px solid #ccc!important;height: 50px;padding: 0px 0px 0px 4px;padding-bottom: 0px}
-div.dataTables_length select {height: 50px}
-.StripeElement {box-sizing: border-box;
-  height: 45px;
-  padding: 11px 12px;
-  border: 1px solid transparent;
-  background-color: white;
-  box-shadow: 0 1px 3px 0 #e6ebf1;
-  -webkit-transition: box-shadow 150ms ease;
-  transition: box-shadow 150ms ease;}.StripeElement--focus {box-shadow: 0 1px 3px 0 #cfd7df;}
-  .StripeElement--invalid {border-color: #fa755a}
-  .StripeElement--webkit-autofill {background-color: #fefde5 !important;}
-</style>
-
 <div id="results" class="w3-hide" style="top:66px;right:16px;position: fixed;z-index: 9999999">
   <span class="w3-center w3-padding w3-light-blue w3-large w3-animate-right" id="results_txt"></span>
 </div>
@@ -241,7 +221,7 @@ function modalRefund(id){
   }, 500)
 }
 
-tablebooking = [0, 11, 13, 14, 16, 17]
+tablebooking = [0,14,16,17,19]
 
 var table = ''
 var index = 0
@@ -432,10 +412,13 @@ function searchValue(){
       { data: "tour"},
       { data: "date"},
       { data: "hour"},
+      { data: "promocode"},
       { data: "adult"},
       { data: "children"},
       { data: "baby"},
+      { data: "discount", className: "w3-text-red w3-center"},
       { data: "deposit"},
+      { data: "net" , className: "w3-text-indigo w3-center"},
       { data: "total"},
       { data: "payment_status_txt"},
       { data: "notes"},
@@ -443,8 +426,7 @@ function searchValue(){
       { data: "email"},
       { data: "address"},
       { data: "telephone"},
-      { data: "posted_at"},
-      { data: "wp"}
+      { data: "posted_at"}
     ],
      lengthMenu: [[25, 50, -1, 10], [25, 50, "Todos", 10]],
         buttons: [
@@ -526,7 +508,7 @@ function searchValue(){
           }
           // Total over all pages
         
-        for (k = 5; k<10;k++){
+        for (k = 6; k<13;k++){
           total = api
             .column( k )
             .data()
@@ -541,7 +523,7 @@ function searchValue(){
                   return intVal(a) + intVal(b);
               }, 0 )
             // Update footer
-            k == 8 || k == 9 ? 
+            k == 8 || k == 9 || k == 10 || k == 11 || k == 12  ? 
             $( api.column( k ).footer() ).html(parseFloat(pageTotal).toFixed(2)+'€ ('+parseFloat(total).toFixed(2)+'€)')
             : 
             $( api.column( k ).footer() ).html(pageTotal+' ('+total+')')

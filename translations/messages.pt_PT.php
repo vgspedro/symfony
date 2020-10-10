@@ -196,6 +196,9 @@ return array(
     'fraudulent' => 'Fraude',
     'requested_by_customer' => 'Requisitado pelo Cliente',
     'phone' => 'Telefone',
+    'promocode' => 'Promocode',
+    'was' => 'Antes',
+    'discount' => 'Desconto',
 
 'link' => array(
     'where_we_are'=>'Onde Estamos',

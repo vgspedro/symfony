@@ -609,14 +609,8 @@ delete_promocode:
     condition: 'request.isXmlHttpRequest()'
     methods: [POST]
 
-edit_promocode:
-    path: /edit-promocode/
-    controller: App\Controller\PromocodeController::edit
-    condition: 'request.isXmlHttpRequest()'
-    methods: [POST]
-
-create_promocode:
-    path: /create-promocode/
-    controller: App\Controller\PromocodeController::create
+submit_promocode:
+    path: /submit-promocode/
+    controller: App\Controller\PromocodeController::submit
     condition: 'request.isXmlHttpRequest()'
     methods: [POST]

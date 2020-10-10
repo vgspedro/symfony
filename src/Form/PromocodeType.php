@@ -38,19 +38,19 @@ class PromocodeType extends AbstractType
                 [
                 'label' => 'Incio *', 
                 'required' => false,
-                'attr' => ['class' => 'w3-input w3-border w3-white w3-margin-bottom', 'placeholder' => 'Inicio *']
+                'attr' => ['class' => 'w3-input w3-border w3-white w3-margin-bottom', 'placeholder' => 'Inicio *', 'readonly' => true]
              ])
             ->add('end', TextType::class,
                 [
                 'label' => 'Fim *', 
                 'required' => false,
-                'attr' => ['class' => 'w3-input w3-border w3-white w3-margin-bottom', 'placeholder' => 'Fim *']
+                'attr' => ['class' => 'w3-input w3-border w3-white w3-margin-bottom', 'placeholder' => 'Fim *', 'readonly' => true]
              ])
             ->add('discount', IntegerType::class,
                 [
                 'label' => 'Desconto * (Min:1, Máx:100)', 
                 'required' => false,
-                'attr' => ['class' => 'w3-input w3-border w3-white w3-margin-bottom', 'placeholder' => 'Desconto *']
+                'attr' => ['class' => 'w3-input w3-border w3-white w3-margin-bottom', 'placeholder' => 'Desconto *', 'step' => 1, 'min' => 1, 'max' => 100]
              ])
             ->add('category', EntityType::class, [
                 'label' => 'Category', 

@@ -1,9 +1,14 @@
 ﻿label {margin-top: 8px;margin-bottom:0px}
 .margin-top-8{margin-top: -8px}
 textarea {resize: none}
-.dt-button{background: #FFF;border:1px solid #ccc;
- display: inline-block; padding: 8px 16px; vertical-align: middle;overflow: hidden;text-decoration: none; color: inherit;
-    background-color: inherit;text-align: center; cursor: pointer; white-space: nowrap;color: #000!important;background-color: #87CEEB!important;font-size:18px}
+.dt-button{ margin: 2px;border: 1px solid #ccc;display: inline-block;
+    padding: 6px 14px;vertical-align: middle;
+    overflow: hidden;text-decoration: none;
+    color: inherit;background-color: inherit;
+    text-align: center;cursor: pointer;
+    white-space: nowrap;color: #000!important;
+    background-color: #FFF;font-size: 16px}
+ .dt-button.active{background-color: #8bc34a!important}
 select.input-sm, input .form-control .input-sm {height: 36px}
 table.dataTable.dtr-inline.collapsed > tbody > tr > td:first-child:before, table.dataTable.dtr-inline.collapsed > tbody > tr > th:first-child:before {
     height: 24px;width: 24px;border-radius: 16px; text-align: center;line-height: 23px;font-size: 24px;border-radius: 0px;border: 1px solid #ddd;box-shadow: 0 0 0 #000}
@@ -23,3 +28,21 @@ table.dataTable.dtr-inline.collapsed > tbody > tr > td:first-child, table.dataTa
 .datepicker-inline {width: 100%}
 .w3-select {padding: 22px 4px}
 .datepicker { margin-top:4px!important}
+.pending{color: #fff!important;background-color: #f44336!important;opacity: .75;padding:4px;}
+.canceled, .parcial_refund, .refunded{color: #fff!important;background-color: #2196F3!important;opacity: .75;padding:4px}
+.confirmed, .succeeded{color: #fff!important;background-color: #4CAF50!important;opacity: .75;padding:4px}
+.w3-input {border-bottom: 0px solid #05788d}
+input, select, {color: #000!important}
+.form-control{ border: 1px solid #ccc!important;height: 50px;padding: 0px 0px 0px 4px;padding-bottom: 0px}
+div.dataTables_length select {height: 50px}
+.StripeElement {box-sizing: border-box;
+  height: 45px;
+  padding: 11px 12px;
+  border: 1px solid transparent;
+  background-color: white;
+  box-shadow: 0 1px 3px 0 #e6ebf1;
+  -webkit-transition: box-shadow 150ms ease;
+  transition: box-shadow 150ms ease;}.StripeElement--focus {box-shadow: 0 1px 3px 0 #cfd7df;}
+  .StripeElement--invalid {border-color: #fa755a}
+  .StripeElement--webkit-autofill {background-color: #fefde5 !important;}
+#modal-fields{background: rgba(0,0,0,0.4)}

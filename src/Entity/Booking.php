@@ -98,6 +98,33 @@ class Booking
     /** @ORM\Column(type="money", name="deposit_amount", options={"unsigned"=true}) */
     private $depositAmount = 0;
 
+    /** @ORM\Column(type="text", name="promocode_code", nullable=true ) */
+    private $promocode_code;
+
+
+    /** @ORM\Column(type="money", name="promocode_discount_amount", nullable=true, options={"unsigned"=true}) */
+    private $promocode_discount_amount = 0;
+
+    public function getPromocodeCode()
+    {
+        return $this->promocode_code;
+    }
+
+    public function setPromocodeCode($promocode_code)
+    {
+        $this->promocode_code = $promocode_code;
+    }
+
+    public function setPromocodeDiscountAmount(Money $promocode_discount_amount) {
+        $this->promocode_discount_amount = $promocode_discount_amount;
+    }
+    /** 
+     * @return \Money\Money
+     */
+    public function getPromocodeDiscountAmount() {
+        return $this->promocode_discount_amount;
+    }
+
     public function setAmount(Money $amount) {
         $this->amount = $amount;
     }
@@ -250,4 +277,19 @@ class Booking
     {
         $this->postedAt = $postedAt;
     }
+
+    public function getBookingTotal()
+    {
+        return $this->getPromocodeDiscountAmount() ?
+            $this->getAmount()->add($this->getPromocodeDiscountAmount())
+            :
+            $this->getAmount();
+    }
+
+    public function getNetTotal()
+    {
+        return $this->getAmount();
+    }
+
+
 }

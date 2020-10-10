@@ -293,7 +293,7 @@ class AdminController extends AbstractController
         $status[] = ['color' =>'w3-green', 'name' => 'confirmed', 'action' => strtoupper($translator->trans('confirmed'))];
         $status[] = ['color' =>'w3-black', 'name' => 'total', 'action' => ''];
 
-        $table=['Reserva','Acções','Tour','Data','Hora','Adulto','Criança','Bébé','Depósito', 'Total' ,'Pagamento','Notas','Cliente','Email','Morada','Telefone','Compra','W.P.'];
+        $table=['Reserva','Acções','Tour','Data','Hora','Promo','Adulto','Criança','Bébé','Desconto','Depósito','Net','Total' ,'Pagamento','Notas','Cliente','Email','Morada','Telefone','Compra'];
 
         return $this->render('admin/booking.html', ['status' => $status, 'table' => $table]);
     }
@@ -351,8 +351,12 @@ class AdminController extends AbstractController
                         'username' => $client->getUsername(),
                         'address' => $client->getAddress(),
                         'email' => $client->getEmail(),
+                        'promocode' => $booking->getPromocodeCode(),
+                        'discount' => $moneyFormatter->format($booking->getPromocodeDiscountAmount()),
+                        'net' => $moneyFormatter->format($booking->getNetTotal()),
+                        'total' => $moneyFormatter->format($booking->getBookingTotal()),
                         'telephone' => $client->getTelephone(),
-                        'total' => $moneyFormatter->format($booking->getAmount()),
+                        //'total' => $moneyFormatter->format($booking->getAmount()),
                         'wp' => $client->getCvv() ? 1 : 0,
                         'posted_at' => $booking->getPostedAt()->format('d/m/Y H:i:s'),
                     ];

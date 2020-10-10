@@ -179,7 +179,7 @@ $(document).ready(function(){
         $('.w3-overlay').hide()
         if (data.status == 1){
           info = data.data.data.data[0]
-          console.log(data)
+          //console.log(data)
           $('#payment-form').trigger('reset')
           modalConditions (0, data.message.text+' '+data.message.status+'<br><div class="w3-center w3-large"><a class="w3-button w3-border w3-blue w3-round" target="_blank" href='+info.receipt_url+'>{{translator.receipt}}</a></div>', '{{translator.success}}')
           $('.bps').addClass(info.status).text(data.message.status)

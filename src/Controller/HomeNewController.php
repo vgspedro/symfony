@@ -29,6 +29,8 @@ use App\Entity\Feedback;
 use App\Entity\Available;
 use App\Entity\TermsConditions;
 use App\Entity\StripePaymentLogs;
+use App\Entity\Promocode;
+
 
 use App\Service\MoneyFormatter;
 use App\Service\RequestInfo;
@@ -266,11 +268,14 @@ class HomeNewController extends AbstractController
             ]);
         
         $company = $em->getRepository(Company::class)->find(1);
+        
+        $promocode = $em->getRepository(Promocode::class)->findbyCodeAndCategoryAndPeriod($available, $request->request->get('promocode'));
 
-        //total amount of booking
+  //total amount of booking
         $amountA = Money::EUR(0);
         $amountC = Money::EUR(0);
         $total = Money::EUR(0);
+        $discount = Money::EUR(0);
 
         $amountA = $available->getCategory()->getAdultPrice();
         $amountA = $amountA->multiply($adult);
@@ -278,6 +283,9 @@ class HomeNewController extends AbstractController
         $amountC = $amountC->multiply($children);
         $total = $amountA->add($amountC);
 
+        if($promocode)
+            if($promocode->calculateDiscount((int)$moneyFormatter->format($total)) > 0 )
+                $discount = Money::EUR($promocode->calculateDiscount((int)$moneyFormatter->format($total)));
 
         $deposit_percent = $available->getCategory()->getDeposit() != '0.00' ? 
             $available->getCategory()->getDeposit()
@@ -290,14 +298,17 @@ class HomeNewController extends AbstractController
                 'date' => $available->getDatetimeStart()->format('d/m/Y'),
                 'hour' => $available->getDatetimeStart()->format('H:i'),
                 'total' => $total,
+                'discount' => $discount,
+                'discount_money' => $moneyFormatter->format($discount),
                 'total_money' => $moneyFormatter->format($total),
-                'total_to_charge' => $total_to_charge = $total->multiply($deposit_percent),
-                'total_to_charge_money' => $moneyFormatter->format($total_to_charge),
-                'to_be_charged' => $total->subtract(), 
+                'total_to_charge' => $total->subtract($discount)->multiply($deposit_percent),
+                'total_to_charge_money' => $moneyFormatter->format($total->subtract($discount)->multiply($deposit_percent)),
+
                 'charge_message' => $translator->trans('charge_message'),
+                'to_be_charged' => $total->subtract(),
                 'to_be_charged_money' => $moneyFormatter->format($total),
-                'to_be_charged' => $to_be_charged = $total->subtract($total_to_charge), 
-                'to_be_charged_money' => $moneyFormatter->format($to_be_charged),
+                'to_be_charged' => $total->subtract($discount)->subtract($total->subtract($discount)->multiply($deposit_percent)), 
+                'to_be_charged_money' => $moneyFormatter->format($total->subtract($discount)->subtract($total->subtract($discount)->multiply($deposit_percent))),
                 'shared' => $available->getCategory()->getShared(),
                 'small_description' => $this->session->get('_locale') == 'pt_PT' ? $available->getCategory()->getSmallDescriptionPt() : $available->getCategory()->getSmallDescriptionEn()
             ],
@@ -334,7 +345,8 @@ class HomeNewController extends AbstractController
                 'public_key' => $company->getStripePK(),
                 'payment_intent' => $available->getCategory()->getWarrantyPayment() ? $stripe->createUpdatePaymentIntent($company, $request, null) : null,
                 'deposit' => ($available->getCategory()->getDeposit() != '0.00' ? $available->getCategory()->getDeposit() : 1 )*100
-            ]
+            ],
+            'promocode' => $promocode ? $promocode : []
         ];
 
         return $this->render('home/modal_payment.html', 
@@ -403,7 +415,6 @@ class HomeNewController extends AbstractController
                 'expiration' => 0
             ]);
 
-
         //Create booking
         $em->getConnection()->beginTransaction();
             
@@ -411,10 +422,10 @@ class HomeNewController extends AbstractController
         $category = $em->getRepository(Category::class)->find($request->request->get('category'));
         $company = $em->getRepository(Company::class)->find(1);
         $tomorrow = new \DateTime('tomorrow');
-
+        $promocode = $em->getRepository(Promocode::class)->findbyCodeAndCategoryAndPeriod($available, $request->request->get('promocode'));
+        
         //Validate the Event with the Category and min Date, to prevent the user changing data on html injections (inspect elements)  
         $valid = $available->getCategory() == $category && $available->getDatetimeStart()->format('Y-m-d') >= $tomorrow->format('Y-m-d') ? true : false;
-
 
         if(!$valid)
             //throw new Exception("Error Processing Request Available", 1);
@@ -452,13 +463,23 @@ class HomeNewController extends AbstractController
             $amountA = Money::EUR(0);
             $amountC = Money::EUR(0);
             $total = Money::EUR(0);
+            $discount = Money::EUR(0);
 
             $amountA = $available->getCategory()->getAdultPrice();
             $amountA = $amountA->multiply($adult);
             $amountC = $available->getCategory()->getChildrenPrice();
             $amountC = $amountC->multiply($children);
-            $total = $amountA->add($amountC);   
-            
+            $total = $amountA->add($amountC);
+        
+            if($promocode)
+                if($promocode->calculateDiscount((int)$moneyFormatter->format($total)) > 0 )
+                    $discount = Money::EUR($promocode->calculateDiscount((int)$moneyFormatter->format($total)));
+
+            $deposit_percent = $available->getCategory()->getDeposit() != '0.00' ? 
+                $available->getCategory()->getDeposit()
+            :
+            1;
+
             // Create Booking.
             $booking = new Booking();
             $booking->setAvailable($available);
@@ -466,7 +487,11 @@ class HomeNewController extends AbstractController
             $booking->setChildren($children);
             $booking->setBaby($baby);
             $booking->setPostedAt(new \DateTime());
-            $booking->setAmount($total);
+            
+            $booking->setAmount($total->subtract($discount));
+            $booking->setPromocodeDiscountAmount($discount);
+            
+            $booking->setPromocodeCode($promocode ? $promocode->getCode() : '');
             $booking->setClient($client);
             $booking->setDateEvent($available->getDatetimeStart());
             $booking->setTimeEvent($available->getDatetimeStart());

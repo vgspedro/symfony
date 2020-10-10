@@ -1,9 +1,17 @@
+<style>
+  .line-through{-webkit-text-decoration-line: line-through;text-decoration-line: line-through}
+  .currency{margin-left:-6px}
+  .f-20{font-size: 20px}
+  .f-22{font-size: 22px}
+</style>
+
 <div id="fsModal-payment" class="modal modal-full animated fade" tabindex="-1" role="dialog"aria-labelledby="myModalLabel" aria-hidden="true">
   <!-- dialog -->
   <div class="modal-dialog modal-dialog-full">
     <!-- content -->
     <div class="modal-content modal-content-full">
       <!-- header -->
+
       <div class="modal-header modal-header-full">
        <h4 class="text-center">{% trans %}confirm_booking{% endtrans %}</h4>
           <span class="pointer mr-2 proceed" style="margin-top:-6px" data-dismiss="modal"><i class="icon-times"></i></span>
@@ -21,50 +29,71 @@
               <hr>
             </div>
               
+            <!-- START show the values if tour is shared or not -->
             <div class="col-12 col-xl-6 col-lg-6 col-md-6">
               <b>{%trans%}tour{%endtrans%}:</b> {{data.booking.tour}}<br>
               <b>{%trans%}date{%endtrans%}:</b> {{data.booking.date}}<br>
               <b>{%trans%}hour{%endtrans%}:</b> {{data.booking.hour}}<br>
 
-          {% if data.booking.shared %}
+              {% if data.booking.shared %}
 
-              <b>{%trans%}adults{%endtrans%}:</b> {{data.adult.quantity}}x {{data.adult.subtotal_money}}<span class="f-10">{{data.adult.subtotal.currency}}</span>
-              <span class="float-right">{{data.adult.total_money}}<span class="f-10">{{data.adult.total.currency}}</span></span>
-              <br>
+                SHARED = 1
+                <b>{%trans%}adults{%endtrans%}:</b> {{data.adult.quantity}}x {{data.adult.subtotal_money}}<span class="f-10">{{data.adult.subtotal.currency}}</span>
+                <span class="float-right">{{data.adult.total_money}}<span class="f-10">{{data.adult.total.currency}}</span></span>
+                <br>
 
-              {% if data.children.quantity > 0 %}
+                {% if data.children.quantity > 0 %}
 
-              <b>{%trans%}childrens{%endtrans%}:</b> {{data.children.quantity}}x {{data.children.subtotal_money}}<span class="f-10">{{data.children.subtotal.currency}}</span>
-              <span class="float-right">{{data.children.total_money}}<span class="f-10">{{data.children.total.currency}}</span></span>
-              <br>
+                <b>{%trans%}childrens{%endtrans%}:</b> {{data.children.quantity}}x {{data.children.subtotal_money}}<span class="f-10">{{data.children.subtotal.currency}}</span>
+                <span class="float-right">{{data.children.total_money}}<span class="f-10">{{data.children.total.currency}}</span></span>
+                <br>
+
+                {% endif %}
+
+                {% if data.baby.quantity > 0 %}
+
+                <b>{%trans%}babies{%endtrans%}:</b> {{data.baby.quantity}}x {{data.baby.subtotal_money}}<span class="f-10">{{data.baby.subtotal.currency}}</span>
+                <span class="float-right">{{data.baby.total_money}}<span class="f-10">{{data.baby.total.currency}}</span></span>
+                <br>
+
+                {% endif %}
+
+              {% else %}
+
+                SHARED = 0 
+                <b>{{data.booking.small_description}}:</b>
+                <span class="float-right">{{data.adult.total_money}}<span class="f-10">{{data.adult.total.currency}}</span></span>
+                <br>
 
               {% endif %}
-              {% if data.baby.quantity > 0 %}
-
-              <b>{%trans%}babies{%endtrans%}:</b> {{data.baby.quantity}}x {{data.baby.subtotal_money}}<span class="f-10">{{data.baby.subtotal.currency}}</span>
-              <span class="float-right">{{data.baby.total_money}}<span class="f-10">{{data.baby.total.currency}}</span></span>
-              <br>
-
-              {% endif %}
-
-          {% else %}
-
-              <b>{{data.booking.small_description}}:</b>
-              <span class="float-right">{{data.adult.total_money}}<span class="f-10">{{data.adult.total.currency}}</span></span>
-              <br>
-
-          {% endif %}
-
 
               <hr>
             </div>
-              
-            <div class="col-12">
-                         
-              {% if data.payment.enabled %}
-              {% if data.payment.deposit != 100 %}
+            <!-- END show the values if tour is shared or not -->  
 
-              <div class="f-24 text-center" style="margin-top:-12px">
+            <div class="col-12">
+              <!--  -->
+              {% if data.payment.enabled %}
+              <!-- START payment Enabled -->
+              PAY = 1
+              {% if data.payment.deposit != 100 %}
+                <!-- START no full payment -->
+                FULL PAY = 0
+              <div class="f-22 text-center" style="margin-top:-12px">
+
+                {%if data.booking.discount_money > 0 %}
+                
+                <div>
+                <span class="f-16 line-through text-danger"><b>{%trans%}was{%endtrans%}:</b> {{data.booking.total_money}}</span>
+                <span class="f-10 currency">{{data.booking.total.currency}}</span>
+                </div>
+                <div style="margin: -10px 0px -10px 0px">
+                <span class="text-info"><b>{%trans%}discount{%endtrans%}:</b></span> -{{data.booking.discount_money}}
+                <span class="f-10 currency">{{data.booking.total.currency}}</span>
+                </div>
+
+                {% endif %}
+
                 <span>
                   <b>{%trans%}pay{%endtrans%}:</b>
                 </span>{{data.booking.total_to_charge_money}}<span class="f-10">{{data.booking.total.currency}}</span>
@@ -72,41 +101,78 @@
                 <span>
                   <b>{{data.booking.charge_message}}:</b>
                 </span>{{data.booking.to_be_charged_money}}<span class="f-10">{{data.booking.total.currency}}</span>
-                </span>
               </div>
 
+              <!-- END no full payment -->
               {%else%}
-                <div class="f-24 text-center" style="margin-top:-12px">
-                <span>
-                  <b>{%trans%}total{%endtrans%} :</b></span>{{data.booking.total_money}}<span class="f-10">{{data.booking.total.currency}}
-                </span>
+              FULL PAY = 1
+              <!-- START full payment-->
+              <div class="f-22 text-center" style="margin-top:-12px">
+
+                {%if data.booking.discount_money > 0 %}
+                
+                <div>
+                  <span class="f-16 line-through text-danger"><b>{%trans%}was{%endtrans%}:</b> {{data.booking.total_money}}</span>
+                  <span class="f-10 currency">{{data.booking.total.currency}}</span>
+                </div>
+                <div style="margin: -10px 0px -10px 0px">
+                  <span class="text-info"><b>{%trans%}discount{%endtrans%}:</b></span> -{{data.booking.discount_money}}
+                  <span class="f-10 currency">{{data.booking.total.currency}}</span>
+                </div>
+
+                {% endif %}
+
+                <div>
+                  <span class=""><b>{%trans%}total{%endtrans%} :</b></span> {{data.booking.total_to_charge_money}}
+                  <span class="f-10 currency">{{data.booking.total_to_charge.currency}}</span>
+                </div>
               </div>
 
               {%endif%}
+              <!-- END full payment -->
 
               <div>
                 {% include 'home/category_payment.html' %}
               </div>
+
               <div class="text-center check-out d-none">
                 <button class="btn btn-outline-success px-4 py-2 mt-4" onclick="checkOut()">
                   {%trans%}confirm_pay{%endtrans%}
                 </button>
               </div>
 
-              
+              <!-- END payment Enabled -->
+
               {% else%}
-              
-              <div class="f-24 text-center" style="margin-top:-12px">
-                <span>
-                  <b>{%trans%}total{%endtrans%}:</b></span> {{data.booking.total_money}}<span class="f-10">{{data.booking.total.currency}}
-                </span>
+              <!-- START No payment -->
+              PAY = 0
+              <div class="f-22 text-center" style="margin-top:-12px">
+                
+                {%if data.booking.discount_money > 0 %}
+                
+                <div>
+                  <span class="f-16 line-through text-danger"><b>{%trans%}was{%endtrans%}:</b> {{data.booking.total_money}}</span>
+                  <span class="f-10 currency">{{data.booking.total.currency}}</span>
+                </div>
+                <div style="margin: -10px 0px -10px 0px">
+                  <span class="text-info"><b>{%trans%}discount{%endtrans%}:</b></span> -{{data.booking.discount_money}}
+                  <span class="f-10 currency">{{data.booking.total.currency}}</span>
+                </div>
+                
+                {%endif%}
+
+                <div>
+                  <span class=""><b>{%trans%}total{%endtrans%} :</b></span> {{data.booking.total_to_charge_money}}
+                  <span class="f-10 currency">{{data.booking.total_to_charge.currency}}</span>
+                </div>
               </div>
+
               <div class="text-center">
                 <button class="btn btn-outline-success px-4 py-2" onclick="checkOut()">
                   {%trans%}info.confirm{%endtrans%}
                 </button>
               </div>
-              
+              <!--END No payment -->
               {% endif %}
 
             </div>
@@ -119,6 +185,7 @@
   <!-- dialog -->
 </div>
 <!-- modal -->
+
 <script>
 
 function checkOut(){
@@ -222,4 +289,5 @@ function endBuy(){
 
 
 </script>
+
 

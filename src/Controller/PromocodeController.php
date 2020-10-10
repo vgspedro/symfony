@@ -6,92 +6,140 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 use App\Form\PromocodeType;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 use Doctrine\DBAL\DBALException;
 
 class PromocodeController extends AbstractController
 {
 
-    public function index(Request $request, ValidatorInterface $validator)
+    public function index(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
         $promocodes = $em->getRepository(Promocode::class)->findAll();
         $form = $this->createForm(PromocodeType::class);
+
         return $this->render('admin/promocode-list.html', [
             'form' => $form->createView(),
             'promocodes' => $promocodes
         ]);
     }
 
-    public function aboutUsEdit(Request $request, ValidatorInterface $validator)
+    public function submit(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
+
+        $err = [];
+        $id = $request->request->get('id');
+
+        $promocode = $id ? $em->getRepository(Promocode::class)->find($id) : null;
         
-        $aboutUs = $em->getRepository(AboutUs::class)->find($request->request->get('id'));
+        if(!$promocode)
+            $promocode = new Promocode();
 
-        $form = $this->createForm(AboutUsType::class, $aboutUs);
-
+        $form = $this->createForm(PromocodeType::class, $promocode);
         $form->handleRequest($request);
+
+        $form->get('start')->getData() ? false : $err [] = 'Data Inicio Obrigatório';
+        $form->get('end')->getData() ? false : $err [] = 'Data Fim Obrigatório';
+        $form->get('code')->getData() ? false : $err [] = 'Código Obrigatório';
+        $form->get('discount')->getData() ? false : $err [] = 'Desconto Obrigatório';
+
+        //$form->get('isActive')->getData();
+        if (count($err) > 0 )
+            return new JsonResponse([
+                'status' => 2,
+                'message' => 'fields_fail',
+                'data' =>  $err
+            ]);
+        
+        $form->get('discount')->getData() < 1 || $form->get('discount')->getData() > 100 ? $err [] = 'Desconto, entre 1 e 100 apenas' :
+        false;
+
+        if (count($err) > 0 )
+            return new JsonResponse([
+                'status' => 2,
+                'message' => 'fields_fail',
+                'data' =>  $err
+            ]);
+
+        $start = \DateTime::createFromFormat('d/m/Y',  $form->get('start')->getData(), new \DateTimeZone('Europe/Lisbon'));
+        $end = \DateTime::createFromFormat('d/m/Y',  $form->get('end')->getData(), new \DateTimeZone('Europe/Lisbon'));
+
+        if($form->isSubmitted() && $form->isValid()){
+
+            $promocode = $form->getData();
             
-        if($form->isSubmitted()){
+            $em->getConnection()->beginTransaction();
+            
+            try {
+                $promocode->setStart($start);
+                $promocode->setEnd($end);
+
+                $em->persist($promocode);
+                $em->flush();
+                $em->getConnection()->commit();
                 
-            if($form->isValid()){ 
-
-            $aboutUs = $form->getData();
-
-                try {
-                    $em->persist($aboutUs);
-                    $em->flush();
-
-                    $response = array(
-                        'status' => 1,
-                        'message' => 'Sucesso',
-                        'data' => 'O registo '.$aboutUs->getId().' foi gravado.');
-                } 
-                catch(DBALException $e){
-
-                    $a = array("Contate administrador sistema sobre: ".$e->getMessage());
-
-                    $response = array(
-                        'status' => 0,
-                        'message' => 'fail',
-                        'data' => $a);
-                }
-            }
-            
-            else{   
-                $response = array(
-                    'result' => 0,
-                    'message' => 'fail',
-                    'data' => $this->getErrorMessages($form)
-                );
+                return new JsonResponse([
+                    'status' => 1,
+                    'message' => 'success',
+                    'data' => 'Promocode #'.$promocode->getId().', sucesso.'
+                ]);
+            } 
+            catch(DBALException $e){
+                $em->getConnection()->rollBack();
+                return new JsonResponse([
+                    'status' => 0,
+                    'message' => 'db_fail',
+                    'data' => $e->getMessage()
+                ]);
             }
         }
-        return new JsonResponse($response);
+        return new JsonResponse([
+            'result' => 0,
+            'message' => 'fail',
+            'data' => $this->getErrorMessages($form)]);
     }
 
 
-    public function aboutUsDelete(Request $request){
 
-        $response = array();
-        $aboutUsId = $request->request->get('id');
-        $em = $this->getDoctrine()->getManager();
-        
-        $aboutUs = $em->getRepository(AboutUs::class)->find($aboutUsId);
+    public function delete(Request $request)
+    {
+        $id = $request->request->get('id');
        
-        if (!$aboutUs) {
-            $response = array('message'=>'fail', 'status' => 'Registo #'.$aboutUsId . ' não existe.');
-        }
-        else{
-            $em->remove($aboutUs);
-            $em->flush();
+        if (!$id)
+            return new JsonResponse([
+                'status' => 0,
+                'message' => 'Promocode não encontrado (#'.$id.'-POST)!',
+                'data' => $id
+            ]);
 
-            $response = array('message'=>'success', 'status' => $aboutUsId);
+        $em = $this->getDoctrine()->getManager();
+        $promocode = $em->getRepository(Promocode::class)->find($id);
+        
+        if (!$promocode)
+            return new JsonResponse([
+                'status' => 0,
+                'message' =>  'Promocode não encontrado (#'.$id.'-ENTITY)!',
+                'data' => $id
+            ]);
+        
+        try{
+            $em->remove($promocode);
+            $em->flush();
         }
-        return new JsonResponse($response);
+        catch(DBALException $e){
+                $em->getConnection()->rollBack();
+                return new JsonResponse([
+                    'status' => 2,
+                    'message' => 'db_fail',
+                    'data' => $e->getMessage()
+                ]);
+        }
+        return new JsonResponse([
+            'status'=> 1,
+            'data' => $id,
+            'message' => 'Promocode #'.$id.' foi apagado.'
+        ]);
     }
 
 

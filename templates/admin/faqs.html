@@ -163,7 +163,7 @@ $('#form').on('submit',function(e){
       type: "POST",
       data:$('#form').serialize(),
       success: function(data){ 
-      console.log(data) 
+        //console.log(data) 
         $('.w3-overlay').hide()
          if (data.status == 1){
           ajaxUpload('faqs')

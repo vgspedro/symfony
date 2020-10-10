@@ -80,7 +80,7 @@ $('#form').on('submit',function(e){
       contentType: false,
       cache: false,
       success: function(data){  
-        console.log(data)
+        //console.log(data)
         $('.w3-overlay').hide()
         if (data.message == 'success'){
           ajaxUpload('staff-list')

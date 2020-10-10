@@ -177,6 +177,9 @@ return array(
     'fraudulent' => 'Fraudulent',
     'requested_by_customer' => 'Requested by Customer',
     'phone' => 'Phone',
+    'promocode' => 'Promocode',
+    'was' => 'Was',
+    'discount' => 'Discoint',
 
 'link' => array(
     'where_we_are'=>'Where we Are',

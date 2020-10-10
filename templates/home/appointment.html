@@ -107,6 +107,12 @@ hr {margin-top: 0.5rem;margin-bottom: 0.5rem}
             </div>
 
             <div class="col-sm-12 col-md-12">
+              <div class="form-group">
+                <input type="text" name="promocode" class="form-control" placeholder="{% trans %}promocode{%endtrans %}">
+              </div>    
+            </div>
+
+            <div class="col-sm-12 col-md-12">
               <input type="checkbox" style="height: 26px; width: 26px;vertical-align:text-bottom" name="check_rgpd">
               <label class="mb-0">{% trans %}part_seven.rgpd{% endtrans %}</label>
 
@@ -251,7 +257,7 @@ function getAvailability(){
       data: $('.appointment-form').serialize(),
       cache: false,
       success: function(data){ 
-        console.log(data)         
+        //console.log(data)         
         $('#ftco-loader').css({'opacity' : 0,'visibility' : 'hidden','z-index' : 1000})
         if (data.status == 1 && data.data.available_dates.length > 0){
 

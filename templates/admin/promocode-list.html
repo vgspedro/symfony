@@ -1,7 +1,4 @@
 <style>
- .dt-button{background: #FFF;border:1px solid #ccc;
- display: inline-block; padding: 8px 16px; vertical-align: middle;overflow: hidden;text-decoration: none; color: inherit;
-    background-color: inherit;text-align: center; cursor: pointer; white-space: nowrap;color: #000!important;background-color: #87CEEB!important;font-size:18px}
 select.input-sm, input .form-control .input-sm {height: 36px}
 table.dataTable.dtr-inline.collapsed > tbody > tr > td:first-child:before, table.dataTable.dtr-inline.collapsed > tbody > tr > th:first-child:before {
     height: 24px;width: 24px;border-radius: 16px; text-align: center;line-height: 23px;font-size: 24px;border-radius: 0px;border: 1px solid #ddd;box-shadow: 0 0 0 #000}
@@ -16,6 +13,8 @@ div.dataTables_filter label {float: right}
 select{height: 41px}
 </style>
 
+<link href="{{ asset('css/bootstrap-datepicker.min.css') }}" rel="stylesheet">
+<link href="{{ asset('css/admin-booking.css') }}" rel="stylesheet">
 
 <header class="w3-container" style="padding-top:22px">
    <h5><b><i class="fa fa-gift"></i> Promocode</b></h5>
@@ -39,7 +38,7 @@ select{height: 41px}
       {% for ob in promocodes%}
        <tr id='g-{{ ob.id}}'>
         <td>
-           <button class="w3-btn w3-border w3-blue" onclick="edit({{ob.id}})">
+           <button class="w3-btn w3-border w3-blue" onclick="edit({{ob.id}}, this )">
             <i class="far fa-edit fa-fw"></i>
           </button>
           <button class="w3-btn w3-border w3-red" style="width: 19px" onclick="deleteConfirm({{ ob.id}},'{{ ob.code }}')">
@@ -57,8 +56,8 @@ select{height: 41px}
             <i class="w3-text-red w3-xlarge fas fa-times-circle"></i>
           {% endif %}
         </td>
-        <td class="w3-center">{{ ob.start|date("d/m/Y H:i")}}</td>
-        <td class="w3-center">{{ ob.end|date("d/m/Y H:i")}}</td>
+        <td class="w3-center">{{ ob.start|date("d/m/Y")}}</td>
+        <td class="w3-center">{{ ob.end|date("d/m/Y")}}</td>
       </tr>
     {% endfor %}
     </tbody>
@@ -71,7 +70,7 @@ select{height: 41px}
 <header class="w3-container">
     <h5>
       <b>
-        <i class="fa fa-gift"></i> Promocode Editar ou Criar
+        <i class="fa fa-gift"></i> Promocode Editar ou Criar&nbsp;<span class="id"></span>
     </b>
   </h5>
 </header>
@@ -112,67 +111,128 @@ select{height: 41px}
         {{ form_label(form.end)}}
         {{ form_widget(form.end)}}
       </div>
+      <div class="w3-col s12 w3-margin-top w3-margin-bottom">
+        <span class="w3-btn-block w3-margin-left w3-right w3-button w3-border w3-green" onclick="$('#form').trigger('submit')">
+          <i class="fa fa-check"></i> Gravar
+        </span>
+        <span class="w3-btn-block w3-button w3-right w3-border w3-white" onclick="clearF()">
+          <i class="fa fa-eraser"></i> Limpar
+        </span>
+      </div>
     </div>
   </div>
  {{ form_end(form) }}
 
 </div>
 
+<div id="modal-delete-promocode" class="w3-modal" style="z-index: 9999999; padding-top: 12px; padding-bottom: 32px">
+  <div class="w3-modal-content w3-animate-zoom" style="max-width:400px">
+    <div class="w3-container w3-red w3-padding">
+      <span onclick="$('#modal-delete-promocode').hide()" class="w3-padding w3-button w3-display-topright">
+        <i class="w3-xlarge fa fa-times"></i>
+      </span>
+      <h2>
+        <i class="fas fa-exclamation-circle"></i>
+        <span>Apagar ?<input type="hidden" id="delete-id"></span>
+      </h2>
+    </div>
+    <div class="w3-container w3-padding" id="delete-promocode"></div>
+    <div class="w3-row-padding w3-border-top">
+      <div class="w3-col s12 w3-margin-top w3-margin-bottom">
+        <span class="w3-btn-block w3-margin-left w3-right w3-button w3-border w3-green" onclick="del($('#delete-id').val())">
+          <i class="fas fa-trash-alt"></i> Apagar
+        </span>
+        <span class="w3-btn-block w3-button w3-left w3-border w3-white" onclick="$('#modal-delete-promocode').hide()">
+          <i class="fa fa-times"></i> Fechar
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div id="modal-fields-promocode" class="w3-modal" style="z-index: 9999999; padding-top: 60px;padding-bottom: 32px">
+  <div class="w3-modal-content w3-animate-zoom" style="max-width:400px;margin: 0 auto">
+    <div class="w3-col s12">
+      <div class="w3-row">
+        <div class="w3-panel w3-leftbar w3-col s12 w3-pale-yellow w3-border-amber w3-left-align w3-large">
+          <span class="w3-closebtn w3-padding-small" onclick="$('#modal-fields-promocode').hide()">
+            <i class="fa fa-times"></i>
+          </span>
+          <h2>
+            <i class="fa fa-warning"></i>
+            <span class="ATENCAO">Atenção!</span>
+          </h2>
+          <div class="w3-padding-small" id="set-fields"></div>
+          <div class="w3-margin-bottom"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="{{ asset('js/bootstrap-datepicker.min.js') }}"></script>
+<script src="{{ asset('js/ui.datepicker-pt-BR.js') }}"></script>
+
 <script>
  
 stored = []
-/*if(!localStorage.getItem("tablecategory") ){
-  localStorage.setItem("tablecategory", JSON.stringify(tablecategory))
-  stored = JSON.parse(localStorage.getItem("tablecategory"))
-}
-else
-  stored = JSON.parse(localStorage.getItem("tablecategory"))
-*/
 
-function edit(id){
-  $('.w3-overlay').show()
-  setTimeout(function(){
-  $.ajax({  
-    url:'{{ path('edit_promocode') }}',
-    type: "POST",
-    data:'id='+id,
-    success: function(data){
-      $('.w3-overlay').hide()
-      $('#set-id').text(id)
-      $('#set-gallery').html(data)
-      $('#modal-edit-gallery').show()
-      if (data.message == 'success'){
-        $('#info-client').show()                
-        $('#info-client-head').removeClass('w3-red').addClass('w3-green').html('<span onclick="$(\'#info-client\').hide()" class="w3-button w3-display-topright w3-large"><i class="fa fa-times"></i></span><h1><i class="fa fa-check"></i> Sucesso</h1>')
-        $('#client-txt').html('')
-      }
-    },
-    error:function(data){
-      $('.w3-overlay').hide()
-      $('#modal-error').show()
-    }
-  })
-  }, 500)
-}
+
+  var index = '';
+  var table = '';
+
+  function edit(id, obj){
+    $('[name=id]').val(id);
+    $('.id').html('<b class="badge badge-primary">#'+id+'</b>');
+    parent = $(obj).parent().parent();
+    $(parent).click(function() {
+      index = table.row( this ).index();
+      $('#promocode_code').val((table.cell( index, 1).data().trim()))
+      v1 = $('#promocode_category option:contains('+table.cell( index, 2).data().trim()+')').val()
+      $('#promocode_category').val(v1).trigger('change');
+      v2 = $('#promocode_discount_type option:contains('+table.cell( index, 3).data().trim()+')').val()
+      $('#promocode_discount_type').val(v2).trigger('change');
+      $('#promocode_discount').val((table.cell( index, 4).data().trim()))
+      table.cell( index, 5).data().match(/check/g) ? $('#promocode_isActive').attr('checked', true) : $('#promocode_isActive').attr('checked', false);      
+      $('#promocode_start').val((table.cell( index, 6).data().trim()))
+      $('#promocode_end').val((table.cell( index, 7).data().trim()))
+      $("html, body").animate({scrollTop: $('#form').offset().top -50 }, 250);
+    })
+  }
 
 function deleteConfirm(id,n){
-  $('#delete-gallery').html('<p class="w3-center w3-large">Tem a certeza que pretende apagar a Imagem, <b>'+n+'</b> ?</p>')
+  $('#delete-promocode').html('<p class="w3-center w3-large">Tem a certeza que pretende apagar o Promocode, <b>'+n+'</b> ?</p>')
   $('#delete-id').val(id)
-  $('#modal-delete-gallery').show()
+  $('#modal-delete-promocode').show()
 }
 
 function del(id){
   $('.w3-overlay').show()
   setTimeout(function(){
-    $.ajax({  
+    $.ajax({
       url:'{{ path('delete_promocode') }}',
       type: "POST",
       data:'id='+id,
       success: function(data){
         $('.w3-overlay').hide()
         if (data.status == 1){
-          $('#modal-delete-gallery').hide()
-          $('#g-'+data.message).remove()
+          $('#modal-delete-promocode').hide()
+          $('#g-'+data.data).remove()
         }
       },
       error:function(data){
@@ -183,9 +243,14 @@ function del(id){
   }, 500)
 }
 
+function clearF(){
+  $('#form').trigger('reset');
+  $('#promocode_isActive').attr('checked', false);
+  $('.id').empty();
+  $('[name=id]').val('');
+}
 
 $(function(){
-
 
   table = $('#dataTable').DataTable({
     dom: 'lBfrtip',
@@ -260,6 +325,63 @@ $(function(){
   })
   $('#dataTable_length, .dt-buttons').addClass('w3-center w3-col s12 m6 l4 w3-section')
   $('#dataTable_filter').addClass('w3-col s8 m12 l4 w3-center w3-section')
+
+  $('#promocode_start').datepicker({
+      language:'pt-BR',
+      format: 'dd/mm/yyyy',
+      weekStart: 1,
+      todayHighlight: true,
+      autoclose: true,
+    }).on("changeDate",function (e) {
+      $('#promocode_end').datepicker("setStartDate", e.date)
+    })
+
+    $('#promocode_end').datepicker({
+      language:'pt-BR',
+      format: 'dd/mm/yyyy',
+      todayHighlight: true,
+      weekStart: 1,
+      autoclose: true
+    }).on("changeDate",function (e) {
+     $('#promocode_start').datepicker("setEndDate", e.date)
+  })
+
+  $('#form').on('submit', function(e){
+      obj='';
+      e.preventDefault();
+      form = new FormData($(this)[0]);
+      $('.w3-overlay').show()
+      setTimeout(function(){
+        $.ajax({  
+          url:'{{path("submit_promocode")}}',
+          type: "POST",
+          data: form,
+          processData: false,
+          contentType: false,
+          cache: false,
+          success: function(data){  
+          $('.w3-overlay').hide()
+            if (data.status == 1){
+              ajaxUpload("promocode")
+            }
+            else if (data.status == 0){
+              $('#set-fields').html(obj)
+              ('#modal-fields-promocode').show()
+            }
+            else{
+              for(var i in data.data)
+                obj += data.data[i]+'<br>'; 
+              $('#set-fields').html(obj)
+              $('#modal-fields-promocode').show()
+            }
+          },
+          error:function(data){
+            $('.loader').addClass('d-none');
+            toastr['error']('{%trans%}wifi_error{%endtrans%}');
+          }
+        })
+      }, 500)
+    })
 })
 
 </script>
