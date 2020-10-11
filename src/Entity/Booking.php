@@ -291,5 +291,10 @@ class Booking
         return $this->getAmount();
     }
 
+    public function getToBePaid()
+    {
+        return $this->getAmount()->subtract($this->getDepositAmount());
+    }
+
 
 }
