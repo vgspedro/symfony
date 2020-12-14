@@ -41,7 +41,9 @@ home_get_charge:
     controller: App\Controller\HomeNewController::onlineGetCharge
     methods: [POST]
 
-
+offline:
+    path: /offline
+    controller: App\Controller\HomeNewController::offline
 ###
 # site
 ###

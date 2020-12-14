@@ -1,8 +1,14 @@
 var cacheName='v1::';
 
 initialCache = [
+          '/offline',
+          '/img/offline.png',
           '/'
         ];
+
+offlinePage = '/offline';
+
+
 
 self.addEventListener("install", function(e) {
     //console.log("Alloy service worker installation");
@@ -37,11 +43,14 @@ self.addEventListener("activate", function(e) {
     return self.clients.claim();
 });
 
-
-
-
-
 self.addEventListener("fetch", function(e) {
+
+  if (e.request.method !== 'GET') {
+     //If we don't block the event as shown below, then the request will go to the network as usual.
+    //console.log('WORKER: fetch event ignored.', e.request.method, e.request.url);
+    return;
+  }
+
     if (new URL(e.request.url).origin !== location.origin) return;
 
     if (e.request.mode === "navigate" && navigator.onLine) {
@@ -75,4 +84,3 @@ self.addEventListener("fetch", function(e) {
             })
     );
 });
-

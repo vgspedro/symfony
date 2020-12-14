@@ -748,7 +748,13 @@ class HomeNewController extends AbstractController
 
         return $expired;
     }
-}
 
+
+    public function offline(){
+        return $this->render('offline.html');
+    }
+
+
+}
 
 ?>
